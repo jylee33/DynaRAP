@@ -78,12 +78,7 @@ namespace DynaRAP
             workspaceManager1.SaveWorkspace(workspaceName1, file, true);
         }
 
-        private void barButtonItem1_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            
-        }
-
-        private void barButtonItem2_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        private void btnPythonTest_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             ScriptEngine engine = Python.CreateEngine();
             ScriptSource source = engine.CreateScriptSourceFromFile("../../../Calculator.py");
