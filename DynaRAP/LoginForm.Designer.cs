@@ -102,6 +102,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "LoginForm";
+            this.Opacity = 0.8D;
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.LoginForm_MouseDown);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.LoginForm_MouseMove);
             this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.LoginForm_MouseUp);
