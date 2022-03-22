@@ -81,7 +81,7 @@ namespace DynaRAP
         private void btnPythonTest_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             ScriptEngine engine = Python.CreateEngine();
-            ScriptSource source = engine.CreateScriptSourceFromFile("../../../Calculator.py");
+            ScriptSource source = engine.CreateScriptSourceFromFile("Python/Calculator.py");
             ScriptScope scope = engine.CreateScope();
             source.Execute(scope);
 
@@ -89,6 +89,12 @@ namespace DynaRAP
             dynamic calc = Calculator();
             int result = calc.add(4, 5);
             Console.WriteLine("result = {0}", result);
+        }
+
+        private void btnChartTest_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            Form1 form = new Form1();
+            form.Show();
         }
     }
 }

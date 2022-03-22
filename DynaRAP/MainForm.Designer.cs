@@ -63,6 +63,7 @@ namespace DynaRAP
             this.tabbedView1 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.TabbedView(this.components);
             this.workspaceManager1 = new DevExpress.Utils.WorkspaceManager(this.components);
             this.btnPythonTest = new DevExpress.XtraBars.BarButtonItem();
+            this.btnChartTest = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.documentGroup1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.userControl1Document)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.userControl2Document)).BeginInit();
@@ -120,9 +121,10 @@ namespace DynaRAP
             this.barManager1.DockManager = this.dockManager1;
             this.barManager1.Form = this;
             this.barManager1.Items.AddRange(new DevExpress.XtraBars.BarItem[] {
-            this.btnPythonTest});
+            this.btnPythonTest,
+            this.btnChartTest});
             this.barManager1.MainMenu = this.bar2;
-            this.barManager1.MaxItemId = 6;
+            this.barManager1.MaxItemId = 7;
             this.barManager1.StatusBar = this.bar3;
             // 
             // bar1
@@ -132,7 +134,8 @@ namespace DynaRAP
             this.bar1.DockRow = 1;
             this.bar1.DockStyle = DevExpress.XtraBars.BarDockStyle.Top;
             this.bar1.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
-            new DevExpress.XtraBars.LinkPersistInfo(this.btnPythonTest)});
+            new DevExpress.XtraBars.LinkPersistInfo(this.btnPythonTest),
+            new DevExpress.XtraBars.LinkPersistInfo(this.btnChartTest)});
             this.bar1.Text = "Tools";
             this.bar1.Visible = false;
             // 
@@ -385,10 +388,17 @@ namespace DynaRAP
             // 
             // btnPythonTest
             // 
-            this.btnPythonTest.Caption = "PythonTest";
+            this.btnPythonTest.Caption = "Python";
             this.btnPythonTest.Id = 5;
             this.btnPythonTest.Name = "btnPythonTest";
             this.btnPythonTest.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnPythonTest_ItemClick);
+            // 
+            // btnChartTest
+            // 
+            this.btnChartTest.Caption = "Chart";
+            this.btnChartTest.Id = 6;
+            this.btnChartTest.Name = "btnChartTest";
+            this.btnChartTest.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnChartTest_ItemClick);
             // 
             // MainForm
             // 
@@ -461,5 +471,6 @@ namespace DynaRAP
         private DevExpress.XtraBars.BarDockControl barDockControlBottom;
         private DevExpress.XtraBars.BarDockControl barDockControlRight;
         private DevExpress.XtraBars.BarButtonItem btnPythonTest;
+        private DevExpress.XtraBars.BarButtonItem btnChartTest;
     }
 }
