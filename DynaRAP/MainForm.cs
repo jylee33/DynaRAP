@@ -96,5 +96,11 @@ namespace DynaRAP
             Form1 form = new Form1();
             form.Show();
         }
+
+        private void btnLogin_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            LoginForm form = new LoginForm();
+            form.Show();
+        }
     }
 }
