@@ -1,4 +1,5 @@
-﻿using DevExpress.XtraEditors;
+﻿using DevExpress.XtraBars.Docking;
+using DevExpress.XtraEditors;
 using IronPython.Hosting;
 using Microsoft.Scripting.Hosting;
 using System;
@@ -16,8 +17,12 @@ namespace DynaRAP
     public partial class MainForm : DevExpress.XtraEditors.XtraForm
     {
 
-        string file = "layout.xml";
-        string workspaceName1 = "Default Layout";
+        string defaultLayoutFile = "Default.xml";
+        string defaultWorkspaceName = "Default";
+        string projectLayoutFile = "Project.xml";
+        string projectWorkspaceName = "Project";
+
+        DockPanel panelBottom = null;
 
         public MainForm()
         {
@@ -30,8 +35,8 @@ namespace DynaRAP
 
         void LoadWorkspaces()
         {
-            workspaceManager1.LoadWorkspace(workspaceName1, file);
-            workspaceManager1.LoadWorkspace("jylee", @"jylee.xml");
+            workspaceManager1.LoadWorkspace(defaultWorkspaceName, defaultLayoutFile);
+            workspaceManager1.LoadWorkspace(projectWorkspaceName, projectLayoutFile);
         }
 
         void tabbedView1_QueryControl(object sender, DevExpress.XtraBars.Docking2010.Views.QueryControlEventArgs e)
@@ -67,15 +72,19 @@ namespace DynaRAP
             //...
 
             //Load DevExpress controls' layouts from a file
-            if (workspaceManager1.LoadWorkspace(workspaceName1, file, true))
-                workspaceManager1.ApplyWorkspace(workspaceName1);
+            if (workspaceManager1.LoadWorkspace(projectWorkspaceName, projectLayoutFile, true))
+                workspaceManager1.ApplyWorkspace(projectWorkspaceName);
+
+
+
         }
 
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             //Save DevExpress controls' layouts to a file
-            workspaceManager1.CaptureWorkspace(workspaceName1, true);
-            workspaceManager1.SaveWorkspace(workspaceName1, file, true);
+            workspaceManager1.CaptureWorkspace(projectWorkspaceName, true);
+            workspaceManager1.SaveWorkspace(projectWorkspaceName, projectLayoutFile, true);
+            
         }
 
         private void btnPythonTest_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -102,5 +111,70 @@ namespace DynaRAP
             LoginForm form = new LoginForm();
             form.Show();
         }
+
+        private void btnPanel_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            //DockPanel panel = this.panelContainer1.AddPanel();
+            //panel.Dock = DockingStyle.Fill;
+            //panel.Location = new Point(0, 0);
+            //panel.Name = "newPanel";
+            //panel.Text = "New Panel";
+
+            //DockPanel panel1 = dockManager1.AddPanel(DockingStyle.Bottom);
+            //panel1.Text = "Panel 1";
+            //// Add a new panel to panel1. This forms a split container that owns panel1 and panel2.
+            //DockPanel panel2 = panel1.AddPanel();
+            //panel2.Text = "Panel 2";
+            //// Transform the split container into a tab container.
+            //DockPanel container = panel1.ParentPanel;
+            //container.Tabbed = true;
+
+
+
+            //DockPanel panel = this.panelContainer2.AddPanel();
+            //panel.Dock = DockingStyle.Fill;
+            //panelContainer2.Tabbed = true;
+
+            //DockPanel container = panel.ParentPanel;
+            //if (container == null) return;
+            // Transform the split container to a tab container.
+            //container.Tabbed = true;
+
+            //if(panelBottom == null)
+            //{
+            //    panelBottom = dockManager1.AddPanel(DockingStyle.Bottom);
+            //    panelBottom.ClosedPanel += PanelBottom_ClosedPanel;
+            //}
+            //else
+            //{
+            //    DockPanel panel = panelBottom.AddPanel();
+            //    panel.ClosedPanel += Panel_ClosedPanel;
+            //    //DockPanel container = panel.ParentPanel;
+            //    //if (container == null)
+            //    //    return;
+            //    //container.Tabbed = true;
+            //}
+
+            DockPanel panel = panelContainer2.AddPanel();
+            panel.Name = "panel";
+            panel.Text = "addedPanel";
+            panelContainer2.Tabbed = true;
+            panelContainer2.ActiveChild = panel;
+
+        }
+
+        private void PanelBottom_ClosedPanel(object sender, DockPanelEventArgs e)
+        {
+            //panelBottom.ClosedPanel -= PanelBottom_ClosedPanel;
+            //panelBottom = null;
+        }
+        private void Panel_ClosedPanel(object sender, DockPanelEventArgs e)
+        {
+            DockPanel panel = sender as DockPanel;
+            DockPanel container = panel.ParentPanel;
+            if (container == null)
+                panelBottom = null;
+        }
+
     }
 }
