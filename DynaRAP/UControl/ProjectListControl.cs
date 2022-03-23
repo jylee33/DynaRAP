@@ -1,7 +1,12 @@
-﻿using DevExpress.XtraTreeList;
+﻿using DevExpress.Utils;
+using DevExpress.XtraEditors.Controls;
+using DevExpress.XtraEditors.Repository;
+using DevExpress.XtraTreeList;
 using DevExpress.XtraTreeList.Columns;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 namespace DynaRAP.UControl
@@ -37,7 +42,7 @@ namespace DynaRAP.UControl
             //You do not need to call the TreeList.PopulateColumns method unless the treeList1.OptionsBehavior.AutoPopulatefColumns option is disabled.
 
             treeListProject.RowHeight = 23;
-            treeListProject.OptionsView.ShowColumns = false;
+            treeListProject.OptionsView.ShowColumns = true;
             treeListProject.OptionsView.ShowHorzLines = false;
             treeListProject.OptionsView.ShowVertLines = false;
             treeListProject.OptionsView.ShowIndicator = false;
@@ -63,6 +68,14 @@ namespace DynaRAP.UControl
             //Sort data against the Project column
             colProjectName.SortIndex = -1;// 0;
 
+            this.repositoryItemImageComboBox1.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(0, 0));
+            this.repositoryItemImageComboBox1.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(1, 1));
+
+            this.repositoryItemImageComboBox1.GlyphAlignment = HorzAlignment.Center;
+            this.repositoryItemImageComboBox1.Buttons[0].Visible = false;
+
+            this.repositoryItemImageComboBox1.Click += RepositoryItemImageComboBox1_Click;
+
             treeListProject.ExpandAll();
 
             //Calculate the optimal column widths after the treelist is shown.
@@ -72,7 +85,11 @@ namespace DynaRAP.UControl
             }));
         }
 
+        private void RepositoryItemImageComboBox1_Click(object sender, EventArgs e)
+        {
+            RepositoryItemImageComboBox combo = sender as RepositoryItemImageComboBox;
 
+        }
     }
 
     public class ProjectData
@@ -82,7 +99,7 @@ namespace DynaRAP.UControl
         {
             ID = UniqueID++;
         }
-        public ProjectData(int id, int parentId, string projectName, decimal link)
+        public ProjectData(int id, int parentId, string projectName, int link)
         {
             ID = id;
             ParentID = parentId;
@@ -92,7 +109,7 @@ namespace DynaRAP.UControl
         public int ID { get; set; }
         public int ParentID { get; set; }
         public string ProjectName { get; set; }
-        public decimal Link { get; set; }
+        public int Link { get; set; }
     }
 
     public class ProjectDataGenertor
@@ -100,81 +117,81 @@ namespace DynaRAP.UControl
         public static List<ProjectData> CreateData()
         {
             List<ProjectData> sales = new List<ProjectData>();
-            sales.Add(new ProjectData(0, -1, "Project Name", 30540));
-            sales.Add(new ProjectData(1, 0, "비행데이터", 22000));
-            sales.Add(new ProjectData(2, 0, "버펫팅데이터", 22000));
-            sales.Add(new ProjectData(3, 0, "Short Block", 22000));
+            sales.Add(new ProjectData(0, -1, "Project Name", 0));
+            sales.Add(new ProjectData(1, 0, "비행데이터", 0));
+            sales.Add(new ProjectData(2, 0, "버펫팅데이터", 0));
+            sales.Add(new ProjectData(3, 0, "Short Block", 0));
 
             ProjectData data = new ProjectData();
             data.ParentID = 1;
             data.ProjectName = "2022-03-03_형상A_1호기.bin";
-            data.Link = 10000;
+            data.Link = 1;
             sales.Add(data);
 
             data = new ProjectData();
             data.ParentID = 1;
             data.ProjectName = "2022-03-03_형상B_3호기.bin";
-            data.Link = 10000;
+            data.Link = 1;
             sales.Add(data);
 
             data = new ProjectData();
             data.ParentID = 1;
             data.ProjectName = "2022-03-03_형상A_2호기.bin";
-            data.Link = 10000;
+            data.Link = 1;
             sales.Add(data);
 
             data = new ProjectData();
             data.ParentID = 2;
             data.ProjectName = "버펫팅_01.bpt";
-            data.Link = 10000;
+            data.Link = 1;
             sales.Add(data);
 
             data = new ProjectData();
             data.ParentID = 2;
             data.ProjectName = "버펫팅_02.bpt";
-            data.Link = 10000;
+            data.Link = 1;
             sales.Add(data);
 
             data = new ProjectData();
             data.ParentID = 2;
             data.ProjectName = "버펫팅_03.bpt";
-            data.Link = 10000;
+            data.Link = 1;
             sales.Add(data);
 
             data = new ProjectData();
             data.ParentID = 2;
             data.ProjectName = "버펫팅_04.bpt";
-            data.Link = 10000;
+            data.Link = 1;
             sales.Add(data);
 
             data = new ProjectData();
             data.ParentID = 3;
             data.ProjectName = "ShortBlock_01.sbl";
-            data.Link = 10000;
+            data.Link = 1;
             sales.Add(data);
 
             data = new ProjectData();
             data.ParentID = 3;
             data.ProjectName = "ShortBlock_02.sbl";
-            data.Link = 10000;
+            data.Link = 1;
             sales.Add(data);
 
             data = new ProjectData();
             data.ParentID = 3;
             data.ProjectName = "ShortBlock_03.sbl";
-            data.Link = 10000;
+            data.Link = 1;
             sales.Add(data);
 
             data = new ProjectData();
             data.ParentID = 3;
             data.ProjectName = "ShortBlock_04.sbl";
-            data.Link = 10000;
+            data.Link = 1;
             sales.Add(data);
 
             data = new ProjectData();
             data.ParentID = 3;
             data.ProjectName = "ShortBlock_05.sbl";
-            data.Link = 10000;
+            data.Link = 1;
             sales.Add(data);
 
             return sales;

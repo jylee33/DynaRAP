@@ -180,6 +180,8 @@
     <Content Include="Python\Calculator.py">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="Resources\link.png" />
+    <EmbeddedResource Include="Resources\none.png" />
     <None Include="Resources\login.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
