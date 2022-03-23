@@ -1,10 +1,16 @@
 ﻿using DevExpress.XtraBars.Docking;
 using DevExpress.XtraEditors;
+using DevExpress.XtraEditors.Repository;
+using DevExpress.XtraTreeList.Columns;
+using DevExpress.XtraTreeList.Nodes;
+using DevExpress.XtraTreeList.StyleFormatConditions;
+using DynaRAP.TEST;
 using IronPython.Hosting;
 using Microsoft.Scripting.Hosting;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Drawing;
 using System.Linq;
@@ -51,6 +57,12 @@ namespace DynaRAP
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            InitializeWorkspace();
+
+        }
+
+        private void InitializeWorkspace()
+        {
             //Use the WorkspaceManager to handle the layout of DevExpress controls that reside within the current form.
             workspaceManager1.TargetControl = this;
 
@@ -72,10 +84,8 @@ namespace DynaRAP
             //...
 
             //Load DevExpress controls' layouts from a file
-            if (workspaceManager1.LoadWorkspace(projectWorkspaceName, projectLayoutFile, true))
-                workspaceManager1.ApplyWorkspace(projectWorkspaceName);
-
-
+            //if (workspaceManager1.LoadWorkspace(projectWorkspaceName, projectLayoutFile, true))
+            //    workspaceManager1.ApplyWorkspace(projectWorkspaceName);
 
         }
 
@@ -168,6 +178,7 @@ namespace DynaRAP
             //panelBottom.ClosedPanel -= PanelBottom_ClosedPanel;
             //panelBottom = null;
         }
+
         private void Panel_ClosedPanel(object sender, DockPanelEventArgs e)
         {
             DockPanel panel = sender as DockPanel;
@@ -176,5 +187,11 @@ namespace DynaRAP
                 panelBottom = null;
         }
 
+        private void toolTreeTest_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            TreeTestForm form = new TreeTestForm();
+            form.Show();
+        }
     }
+
 }

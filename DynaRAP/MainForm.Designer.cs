@@ -30,8 +30,8 @@ namespace DynaRAP
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            DevExpress.Utils.Animation.PushTransition pushTransition2 = new DevExpress.Utils.Animation.PushTransition();
-            DevExpress.XtraBars.Docking2010.Views.Tabbed.DockingContainer dockingContainer2 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.DockingContainer();
+            DevExpress.Utils.Animation.PushTransition pushTransition1 = new DevExpress.Utils.Animation.PushTransition();
+            DevExpress.XtraBars.Docking2010.Views.Tabbed.DockingContainer dockingContainer1 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.DockingContainer();
             this.documentGroup1 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.DocumentGroup(this.components);
             this.userControl1Document = new DevExpress.XtraBars.Docking2010.Views.Tabbed.Document(this.components);
             this.userControl2Document = new DevExpress.XtraBars.Docking2010.Views.Tabbed.Document(this.components);
@@ -43,6 +43,7 @@ namespace DynaRAP
             this.btnChartTest = new DevExpress.XtraBars.BarButtonItem();
             this.btnLogin = new DevExpress.XtraBars.BarButtonItem();
             this.btnPanel = new DevExpress.XtraBars.BarButtonItem();
+            this.toolTreeTest = new DevExpress.XtraBars.BarButtonItem();
             this.bar2 = new DevExpress.XtraBars.Bar();
             this.Workspace = new DevExpress.XtraBars.BarWorkspaceMenuItem();
             this.workspaceManager1 = new DevExpress.Utils.WorkspaceManager(this.components);
@@ -52,6 +53,11 @@ namespace DynaRAP
             this.barDockControlLeft = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlRight = new DevExpress.XtraBars.BarDockControl();
             this.dockManager1 = new DevExpress.XtraBars.Docking.DockManager(this.components);
+            this.panelContainer2 = new DevExpress.XtraBars.Docking.DockPanel();
+            this.panelLogs2 = new DevExpress.XtraBars.Docking.DockPanel();
+            this.dockPanel4_Container = new DevExpress.XtraBars.Docking.ControlContainer();
+            this.panelLogs = new DevExpress.XtraBars.Docking.DockPanel();
+            this.controlContainer1 = new DevExpress.XtraBars.Docking.ControlContainer();
             this.panelContainer3 = new DevExpress.XtraBars.Docking.DockPanel();
             this.panelPlot = new DevExpress.XtraBars.Docking.DockPanel();
             this.dockPanel2_Container = new DevExpress.XtraBars.Docking.ControlContainer();
@@ -59,11 +65,7 @@ namespace DynaRAP
             this.dockPanel3_Container = new DevExpress.XtraBars.Docking.ControlContainer();
             this.panelScenario = new DevExpress.XtraBars.Docking.DockPanel();
             this.dockPanel1_Container = new DevExpress.XtraBars.Docking.ControlContainer();
-            this.panelContainer2 = new DevExpress.XtraBars.Docking.DockPanel();
-            this.panelLogs2 = new DevExpress.XtraBars.Docking.DockPanel();
-            this.dockPanel4_Container = new DevExpress.XtraBars.Docking.ControlContainer();
-            this.panelLogs = new DevExpress.XtraBars.Docking.DockPanel();
-            this.controlContainer1 = new DevExpress.XtraBars.Docking.ControlContainer();
+            this.projectListControl = new DynaRAP.UControl.ProjectListControl();
             this.tabbedView1 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.TabbedView(this.components);
             this.panelContainer1 = new DevExpress.XtraBars.Docking.DockPanel();
             ((System.ComponentModel.ISupportInitialize)(this.documentGroup1)).BeginInit();
@@ -72,13 +74,14 @@ namespace DynaRAP
             ((System.ComponentModel.ISupportInitialize)(this.documentManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dockManager1)).BeginInit();
+            this.panelContainer2.SuspendLayout();
+            this.panelLogs2.SuspendLayout();
+            this.panelLogs.SuspendLayout();
             this.panelContainer3.SuspendLayout();
             this.panelPlot.SuspendLayout();
             this.panelProperties.SuspendLayout();
             this.panelScenario.SuspendLayout();
-            this.panelContainer2.SuspendLayout();
-            this.panelLogs2.SuspendLayout();
-            this.panelLogs.SuspendLayout();
+            this.dockPanel1_Container.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tabbedView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -128,9 +131,10 @@ namespace DynaRAP
             this.btnLogin,
             this.btnPanel,
             this.Workspace,
-            this.barSubItem1});
+            this.barSubItem1,
+            this.toolTreeTest});
             this.barManager1.MainMenu = this.bar2;
-            this.barManager1.MaxItemId = 12;
+            this.barManager1.MaxItemId = 13;
             this.barManager1.StatusBar = this.bar3;
             // 
             // bar1
@@ -152,7 +156,8 @@ namespace DynaRAP
             new DevExpress.XtraBars.LinkPersistInfo(this.btnPythonTest),
             new DevExpress.XtraBars.LinkPersistInfo(this.btnChartTest),
             new DevExpress.XtraBars.LinkPersistInfo(this.btnLogin),
-            new DevExpress.XtraBars.LinkPersistInfo(this.btnPanel)});
+            new DevExpress.XtraBars.LinkPersistInfo(this.btnPanel),
+            new DevExpress.XtraBars.LinkPersistInfo(this.toolTreeTest)});
             this.barSubItem1.Name = "barSubItem1";
             // 
             // btnPythonTest
@@ -183,6 +188,13 @@ namespace DynaRAP
             this.btnPanel.Name = "btnPanel";
             this.btnPanel.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnPanel_ItemClick);
             // 
+            // toolTreeTest
+            // 
+            this.toolTreeTest.Caption = "Tree";
+            this.toolTreeTest.Id = 12;
+            this.toolTreeTest.Name = "toolTreeTest";
+            this.toolTreeTest.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.toolTreeTest_ItemClick);
+            // 
             // bar2
             // 
             this.bar2.BarName = "Main menu";
@@ -206,7 +218,7 @@ namespace DynaRAP
             // workspaceManager1
             // 
             this.workspaceManager1.TargetControl = this;
-            this.workspaceManager1.TransitionType = pushTransition2;
+            this.workspaceManager1.TransitionType = pushTransition1;
             // 
             // bar3
             // 
@@ -274,6 +286,60 @@ namespace DynaRAP
             "DevExpress.XtraBars.FluentDesignSystem.FluentDesignFormControl",
             "DevExpress.XtraBars.ToolbarForm.ToolbarFormControl"});
             // 
+            // panelContainer2
+            // 
+            this.panelContainer2.ActiveChild = this.panelLogs2;
+            this.panelContainer2.Controls.Add(this.panelLogs);
+            this.panelContainer2.Controls.Add(this.panelLogs2);
+            this.panelContainer2.Dock = DevExpress.XtraBars.Docking.DockingStyle.Bottom;
+            this.panelContainer2.FloatVertical = true;
+            this.panelContainer2.ID = new System.Guid("7f89a891-9919-48b6-a684-d80605a70d4a");
+            this.panelContainer2.Location = new System.Drawing.Point(0, 483);
+            this.panelContainer2.Name = "panelContainer2";
+            this.panelContainer2.OriginalSize = new System.Drawing.Size(200, 200);
+            this.panelContainer2.Size = new System.Drawing.Size(1090, 200);
+            this.panelContainer2.Tabbed = true;
+            this.panelContainer2.Text = "panelContainer2";
+            // 
+            // panelLogs2
+            // 
+            this.panelLogs2.Controls.Add(this.dockPanel4_Container);
+            this.panelLogs2.Dock = DevExpress.XtraBars.Docking.DockingStyle.Fill;
+            this.panelLogs2.FloatVertical = true;
+            this.panelLogs2.ID = new System.Guid("6dfc02a1-a41a-4100-a459-234398a2ca56");
+            this.panelLogs2.Location = new System.Drawing.Point(3, 26);
+            this.panelLogs2.Name = "panelLogs2";
+            this.panelLogs2.Options.ShowCloseButton = false;
+            this.panelLogs2.OriginalSize = new System.Drawing.Size(684, 145);
+            this.panelLogs2.Size = new System.Drawing.Size(1084, 145);
+            this.panelLogs2.Text = "Logs";
+            // 
+            // dockPanel4_Container
+            // 
+            this.dockPanel4_Container.Location = new System.Drawing.Point(0, 0);
+            this.dockPanel4_Container.Name = "dockPanel4_Container";
+            this.dockPanel4_Container.Size = new System.Drawing.Size(1084, 145);
+            this.dockPanel4_Container.TabIndex = 0;
+            // 
+            // panelLogs
+            // 
+            this.panelLogs.Controls.Add(this.controlContainer1);
+            this.panelLogs.Dock = DevExpress.XtraBars.Docking.DockingStyle.Fill;
+            this.panelLogs.ID = new System.Guid("d9a0ca3c-ea60-4ccb-b13a-157b5c5f38f6");
+            this.panelLogs.Location = new System.Drawing.Point(3, 26);
+            this.panelLogs.Name = "panelLogs";
+            this.panelLogs.Options.ShowCloseButton = false;
+            this.panelLogs.OriginalSize = new System.Drawing.Size(684, 145);
+            this.panelLogs.Size = new System.Drawing.Size(1084, 145);
+            this.panelLogs.Text = "Logs";
+            // 
+            // controlContainer1
+            // 
+            this.controlContainer1.Location = new System.Drawing.Point(0, 0);
+            this.controlContainer1.Name = "controlContainer1";
+            this.controlContainer1.Size = new System.Drawing.Size(1084, 145);
+            this.controlContainer1.TabIndex = 0;
+            // 
             // panelContainer3
             // 
             this.panelContainer3.Controls.Add(this.panelPlot);
@@ -329,70 +395,26 @@ namespace DynaRAP
             this.panelScenario.ID = new System.Guid("ac197e9b-7668-43be-9d4c-dece8fdffa98");
             this.panelScenario.Location = new System.Drawing.Point(0, 48);
             this.panelScenario.Name = "panelScenario";
-            this.panelScenario.OriginalSize = new System.Drawing.Size(200, 200);
-            this.panelScenario.Size = new System.Drawing.Size(200, 435);
+            this.panelScenario.OriginalSize = new System.Drawing.Size(301, 200);
+            this.panelScenario.Size = new System.Drawing.Size(301, 435);
             this.panelScenario.Text = "Scenario";
             // 
             // dockPanel1_Container
             // 
+            this.dockPanel1_Container.Controls.Add(this.projectListControl);
             this.dockPanel1_Container.Location = new System.Drawing.Point(3, 25);
             this.dockPanel1_Container.Name = "dockPanel1_Container";
-            this.dockPanel1_Container.Size = new System.Drawing.Size(193, 407);
+            this.dockPanel1_Container.Size = new System.Drawing.Size(294, 407);
             this.dockPanel1_Container.TabIndex = 0;
             // 
-            // panelContainer2
+            // projectListControl
             // 
-            this.panelContainer2.ActiveChild = this.panelLogs2;
-            this.panelContainer2.Controls.Add(this.panelLogs);
-            this.panelContainer2.Controls.Add(this.panelLogs2);
-            this.panelContainer2.Dock = DevExpress.XtraBars.Docking.DockingStyle.Bottom;
-            this.panelContainer2.FloatVertical = true;
-            this.panelContainer2.ID = new System.Guid("7f89a891-9919-48b6-a684-d80605a70d4a");
-            this.panelContainer2.Location = new System.Drawing.Point(0, 483);
-            this.panelContainer2.Name = "panelContainer2";
-            this.panelContainer2.OriginalSize = new System.Drawing.Size(200, 200);
-            this.panelContainer2.Size = new System.Drawing.Size(1090, 200);
-            this.panelContainer2.Tabbed = true;
-            this.panelContainer2.Text = "panelContainer2";
-            // 
-            // panelLogs2
-            // 
-            this.panelLogs2.Controls.Add(this.dockPanel4_Container);
-            this.panelLogs2.Dock = DevExpress.XtraBars.Docking.DockingStyle.Fill;
-            this.panelLogs2.FloatVertical = true;
-            this.panelLogs2.ID = new System.Guid("6dfc02a1-a41a-4100-a459-234398a2ca56");
-            this.panelLogs2.Location = new System.Drawing.Point(3, 26);
-            this.panelLogs2.Name = "panelLogs2";
-            this.panelLogs2.Options.ShowCloseButton = false;
-            this.panelLogs2.OriginalSize = new System.Drawing.Size(684, 145);
-            this.panelLogs2.Size = new System.Drawing.Size(1084, 145);
-            this.panelLogs2.Text = "Logs";
-            // 
-            // dockPanel4_Container
-            // 
-            this.dockPanel4_Container.Location = new System.Drawing.Point(0, 0);
-            this.dockPanel4_Container.Name = "dockPanel4_Container";
-            this.dockPanel4_Container.Size = new System.Drawing.Size(1084, 145);
-            this.dockPanel4_Container.TabIndex = 0;
-            // 
-            // panelLogs
-            // 
-            this.panelLogs.Controls.Add(this.controlContainer1);
-            this.panelLogs.Dock = DevExpress.XtraBars.Docking.DockingStyle.Fill;
-            this.panelLogs.ID = new System.Guid("d9a0ca3c-ea60-4ccb-b13a-157b5c5f38f6");
-            this.panelLogs.Location = new System.Drawing.Point(3, 26);
-            this.panelLogs.Name = "panelLogs";
-            this.panelLogs.Options.ShowCloseButton = false;
-            this.panelLogs.OriginalSize = new System.Drawing.Size(684, 145);
-            this.panelLogs.Size = new System.Drawing.Size(1084, 145);
-            this.panelLogs.Text = "Logs";
-            // 
-            // controlContainer1
-            // 
-            this.controlContainer1.Location = new System.Drawing.Point(0, 0);
-            this.controlContainer1.Name = "controlContainer1";
-            this.controlContainer1.Size = new System.Drawing.Size(1084, 145);
-            this.controlContainer1.TabIndex = 0;
+            this.projectListControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.projectListControl.Location = new System.Drawing.Point(0, 0);
+            this.projectListControl.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.projectListControl.Name = "projectListControl";
+            this.projectListControl.Size = new System.Drawing.Size(294, 407);
+            this.projectListControl.TabIndex = 0;
             // 
             // tabbedView1
             // 
@@ -401,9 +423,9 @@ namespace DynaRAP
             this.tabbedView1.Documents.AddRange(new DevExpress.XtraBars.Docking2010.Views.BaseDocument[] {
             this.userControl1Document,
             this.userControl2Document});
-            dockingContainer2.Element = this.documentGroup1;
+            dockingContainer1.Element = this.documentGroup1;
             this.tabbedView1.RootContainer.Nodes.AddRange(new DevExpress.XtraBars.Docking2010.Views.Tabbed.DockingContainer[] {
-            dockingContainer2});
+            dockingContainer1});
             // 
             // panelContainer1
             // 
@@ -430,7 +452,6 @@ namespace DynaRAP
             this.Controls.Add(this.barDockControlTop);
             this.Name = "MainForm";
             this.Text = "DynaRAP";
-            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
             this.Load += new System.EventHandler(this.MainForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.documentGroup1)).EndInit();
@@ -439,13 +460,14 @@ namespace DynaRAP
             ((System.ComponentModel.ISupportInitialize)(this.documentManager1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dockManager1)).EndInit();
+            this.panelContainer2.ResumeLayout(false);
+            this.panelLogs2.ResumeLayout(false);
+            this.panelLogs.ResumeLayout(false);
             this.panelContainer3.ResumeLayout(false);
             this.panelPlot.ResumeLayout(false);
             this.panelProperties.ResumeLayout(false);
             this.panelScenario.ResumeLayout(false);
-            this.panelContainer2.ResumeLayout(false);
-            this.panelLogs2.ResumeLayout(false);
-            this.panelLogs.ResumeLayout(false);
+            this.dockPanel1_Container.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.tabbedView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -488,5 +510,7 @@ namespace DynaRAP
         private DevExpress.XtraBars.BarWorkspaceMenuItem Workspace;
         private DevExpress.XtraBars.Docking.DockPanel panelContainer3;
         private DevExpress.XtraBars.BarSubItem barSubItem1;
+        private DevExpress.XtraBars.BarButtonItem toolTreeTest;
+        private UControl.ProjectListControl projectListControl;
     }
 }
