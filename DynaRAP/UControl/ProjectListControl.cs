@@ -42,7 +42,7 @@ namespace DynaRAP.UControl
             //You do not need to call the TreeList.PopulateColumns method unless the treeList1.OptionsBehavior.AutoPopulatefColumns option is disabled.
 
             treeListProject.RowHeight = 23;
-            treeListProject.OptionsView.ShowColumns = true;
+            treeListProject.OptionsView.ShowColumns = false;
             treeListProject.OptionsView.ShowHorzLines = false;
             treeListProject.OptionsView.ShowVertLines = false;
             treeListProject.OptionsView.ShowIndicator = false;
