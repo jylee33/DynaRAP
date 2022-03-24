@@ -47,10 +47,14 @@ namespace DynaRAP
 
         void tabbedView1_QueryControl(object sender, DevExpress.XtraBars.Docking2010.Views.QueryControlEventArgs e)
         {
-            if (e.Document == userControl1Document)
-                e.Control = new DynaRAP.UserControl1();
-            if (e.Document == userControl2Document)
-                e.Control = new DynaRAP.UserControl2();
+            if (e.Document == initialViewControlDocument)
+                e.Control = new DynaRAP.UControl.InitialViewControl();
+            //if (e.Document == projectListControlDocument)
+            //    e.Control = new DynaRAP.UControl.ProjectListControl();
+            //if (e.Document == userControl1Document)
+            //    e.Control = new DynaRAP.UserControl1();
+            //if (e.Document == userControl2Document)
+            //    e.Control = new DynaRAP.UserControl2();
             if (e.Control == null)
                 e.Control = new System.Windows.Forms.Control();
         }
