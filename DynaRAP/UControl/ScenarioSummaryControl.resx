@@ -117,44 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="initialViewControlDocument.Caption" xml:space="preserve">
-    <value>시작 화면</value>
-  </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>1191, 820</value>
-  </data>
-  <data name="hideContainerBottom.Location" type="System.Drawing.Point, System.Drawing">
-    <value>36, 762</value>
-  </data>
-  <data name="hideContainerBottom.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1119, 36</value>
-  </data>
-  <data name="hideContainerLeft.Size" type="System.Drawing.Size, System.Drawing">
-    <value>36, 750</value>
-  </data>
-  <data name="hideContainerRight.Location" type="System.Drawing.Point, System.Drawing">
-    <value>1155, 48</value>
-  </data>
-  <data name="hideContainerRight.Size" type="System.Drawing.Size, System.Drawing">
-    <value>36, 750</value>
-  </data>
-  <data name="barDockControlTop.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1191, 48</value>
-  </data>
-  <data name="barDockControlBottom.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 798</value>
-  </data>
-  <data name="barDockControlBottom.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1191, 22</value>
-  </data>
-  <data name="barDockControlRight.Location" type="System.Drawing.Point, System.Drawing">
-    <value>1191, 48</value>
-  </data>
-  <data name="barDockControlRight.Size" type="System.Drawing.Size, System.Drawing">
-    <value>0, 750</value>
-  </data>
-  <data name="barDockControlLeft.Size" type="System.Drawing.Size, System.Drawing">
-    <value>0, 750</value>
-  </data>
 </root>

@@ -131,20 +131,20 @@
   <data name="hideContainerBottom.Location" type="System.Drawing.Point, System.Drawing">
     <value>36, 647</value>
   </data>
-  <data name="panelContainer1.Text" xml:space="preserve">
-    <value>panelContainer1</value>
-  </data>
-  <data name="&gt;&gt;barManager1.Type" xml:space="preserve">
-    <value>DevExpress.XtraBars.BarManager, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  <data name="&gt;&gt;btnLogin.Type" xml:space="preserve">
+    <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
   <data name="&gt;&gt;barDockControlLeft.Name" xml:space="preserve">
     <value>barDockControlLeft</value>
   </data>
-  <data name="hideContainerBottom.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1018, 36</value>
+  <data name="&gt;&gt;workspaceManager1.Name" xml:space="preserve">
+    <value>workspaceManager1</value>
   </data>
   <data name="&gt;&gt;projectListControl.Name" xml:space="preserve">
     <value>projectListControl</value>
+  </data>
+  <data name="&gt;&gt;barDockControlRight.ZOrder" xml:space="preserve">
+    <value>5</value>
   </data>
   <data name="&gt;&gt;dockPanel3_Container.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.Docking.ControlContainer, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
@@ -192,14 +192,11 @@
   <data name="&gt;&gt;dockPanel1.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.Docking.DockPanel, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
-  <data name="&gt;&gt;barDockControlLeft.Parent" xml:space="preserve">
-    <value>$this</value>
+  <data name="&gt;&gt;btnLogin.Name" xml:space="preserve">
+    <value>btnLogin</value>
   </data>
   <data name="&gt;&gt;hideContainerLeft.Parent" xml:space="preserve">
     <value>$this</value>
-  </data>
-  <data name="&gt;&gt;hideContainerBottom.Name" xml:space="preserve">
-    <value>hideContainerBottom</value>
   </data>
   <data name="&gt;&gt;controlContainer2.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.Docking.ControlContainer, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
@@ -207,17 +204,8 @@
   <data name="&gt;&gt;dockPanel2_Container.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.Docking.ControlContainer, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
-  <data name="&gt;&gt;btnLogin.Name" xml:space="preserve">
-    <value>btnLogin</value>
-  </data>
   <data name="btnPanel.Caption" xml:space="preserve">
     <value>Test</value>
-  </data>
-  <data name="&gt;&gt;tabbedView1.Name" xml:space="preserve">
-    <value>tabbedView1</value>
-  </data>
-  <data name="&gt;&gt;bar2.Type" xml:space="preserve">
-    <value>DevExpress.XtraBars.Bar, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
   <data name="barSubItem1.ImageOptions.LargeImageIndex" type="System.Int32, mscorlib">
     <value>-1</value>
@@ -249,8 +237,8 @@
   <data name="barDockControlLeft.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Left</value>
   </data>
-  <data name="&gt;&gt;barDockControlRight.ZOrder" xml:space="preserve">
-    <value>5</value>
+  <data name="&gt;&gt;dockPanel1.Parent" xml:space="preserve">
+    <value>panelContainer4</value>
   </data>
   <data name="&gt;&gt;barSubItem1.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.BarSubItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
@@ -261,8 +249,11 @@
   <data name="btnPythonTest.ImageOptions.LargeImageIndex" type="System.Int32, mscorlib">
     <value>-1</value>
   </data>
-  <data name="barDockControlRight.Size" type="System.Drawing.Size, System.Drawing">
-    <value>0, 635</value>
+  <data name="btnLogin.ImageOptions.ImageIndex" type="System.Int32, mscorlib">
+    <value>-1</value>
+  </data>
+  <data name="dockPanel1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>294, 607</value>
   </data>
   <data name="&gt;&gt;panelProperties.ZOrder" xml:space="preserve">
     <value>1</value>
@@ -273,9 +264,6 @@
   <data name="&gt;&gt;bar1.Name" xml:space="preserve">
     <value>bar1</value>
   </data>
-  <data name="btnPythonTest.ImageOptions.SvgImage" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="&gt;&gt;$this.Type" xml:space="preserve">
     <value>DevExpress.XtraEditors.XtraForm, DevExpress.Utils.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
@@ -285,26 +273,23 @@
   <data name="dockPanel2_Container.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
   </data>
-  <data name="&gt;&gt;hideContainerLeft.Type" xml:space="preserve">
-    <value>DevExpress.XtraBars.Docking.AutoHideContainer, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  <data name="&gt;&gt;barDockControlLeft.Type" xml:space="preserve">
+    <value>DevExpress.XtraBars.BarDockControl, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
-  <data name="controlContainer1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
+  <data name="bar3.Text" xml:space="preserve">
+    <value>Status bar</value>
   </data>
   <data name="hideContainerRight.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Right</value>
   </data>
-  <data name="&gt;&gt;tabbedView1.Type" xml:space="preserve">
-    <value>DevExpress.XtraBars.Docking2010.Views.Tabbed.TabbedView, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  <data name="&gt;&gt;bar3.Type" xml:space="preserve">
+    <value>DevExpress.XtraBars.Bar, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>MainForm</value>
   </data>
   <data name="Workspace.ImageOptions.ImageIndex" type="System.Int32, mscorlib">
     <value>-1</value>
-  </data>
-  <data name="&gt;&gt;dockPanel1.Parent" xml:space="preserve">
-    <value>panelContainer4</value>
   </data>
   <data name="&gt;&gt;panelLogs2.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.Docking.DockPanel, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
@@ -327,8 +312,8 @@
   <data name="dockPanel1_Container.Size" type="System.Drawing.Size, System.Drawing">
     <value>294, 607</value>
   </data>
-  <data name="dockPanel3_Container.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 25</value>
+  <data name="&gt;&gt;barManager1.Name" xml:space="preserve">
+    <value>barManager1</value>
   </data>
   <data name="hideContainerBottom.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Bottom</value>
@@ -342,23 +327,17 @@
   <data name="panelLogs.Text" xml:space="preserve">
     <value>Logs</value>
   </data>
-  <data name="&gt;&gt;workspaceManager1.Name" xml:space="preserve">
-    <value>workspaceManager1</value>
-  </data>
   <data name="&gt;&gt;hideContainerRight.Name" xml:space="preserve">
     <value>hideContainerRight</value>
   </data>
   <data name="panelContainer4.Text" xml:space="preserve">
     <value>panelContainer4</value>
   </data>
-  <data name="&gt;&gt;barManager1.Name" xml:space="preserve">
-    <value>barManager1</value>
-  </data>
   <data name="&gt;&gt;barDockControlTop.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.BarDockControl, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
-  <data name="&gt;&gt;panelContainer4.Name" xml:space="preserve">
-    <value>panelContainer4</value>
+  <data name="&gt;&gt;panelPlot.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
   <data name="&gt;&gt;panelPlot.Parent" xml:space="preserve">
     <value>hideContainerRight</value>
@@ -372,8 +351,8 @@
   <data name="panelContainer2.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
   </data>
-  <data name="panelPlot.Text" xml:space="preserve">
-    <value>Plot</value>
+  <data name="&gt;&gt;toolTreeTest.Name" xml:space="preserve">
+    <value>toolTreeTest</value>
   </data>
   <data name="&gt;&gt;panelContainer2.Name" xml:space="preserve">
     <value>panelContainer2</value>
@@ -389,6 +368,9 @@
   </data>
   <data name="panelLogs2.Size" type="System.Drawing.Size, System.Drawing">
     <value>1012, 171</value>
+  </data>
+  <data name="&gt;&gt;dockPanel1_Container.Type" xml:space="preserve">
+    <value>DevExpress.XtraBars.Docking.ControlContainer, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
   <data name="&gt;&gt;panelProperties.Name" xml:space="preserve">
     <value>panelProperties</value>
@@ -408,17 +390,11 @@
   <data name="&gt;&gt;projectListControl.Type" xml:space="preserve">
     <value>DynaRAP.UControl.ProjectListControl, DynaRAP, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
   </data>
-  <data name="&gt;&gt;barDockControlLeft.Type" xml:space="preserve">
-    <value>DevExpress.XtraBars.BarDockControl, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
-  </data>
   <data name="&gt;&gt;panelContainer2.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="panelContainer1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>36, 483</value>
-  </data>
-  <data name="barDockControlLeft.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 48</value>
+  <data name="barDockControlRight.Size" type="System.Drawing.Size, System.Drawing">
+    <value>0, 635</value>
   </data>
   <data name="Workspace.Caption" xml:space="preserve">
     <value>Workspace</value>
@@ -429,11 +405,14 @@
   <data name="projectListControl.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
   </data>
-  <data name="&gt;&gt;barDockControlRight.Parent" xml:space="preserve">
-    <value>$this</value>
+  <data name="&gt;&gt;barManager1.Type" xml:space="preserve">
+    <value>DevExpress.XtraBars.BarManager, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
   <data name="&gt;&gt;panelLogs.Name" xml:space="preserve">
     <value>panelLogs</value>
+  </data>
+  <data name="controlContainer1.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
   </data>
   <data name="&gt;&gt;hideContainerLeft.Name" xml:space="preserve">
     <value>hideContainerLeft</value>
@@ -456,11 +435,20 @@
   <data name="&gt;&gt;panelContainer2.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.Docking.DockPanel, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
+  <data name="&gt;&gt;panelContainer4.Name" xml:space="preserve">
+    <value>panelContainer4</value>
+  </data>
   <data name="hideContainerLeft.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Left</value>
   </data>
   <data name="panelContainer4.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
+  </data>
+  <data name="&gt;&gt;dockPanel2_Container.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;btnPanel.Type" xml:space="preserve">
+    <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
   <data name="&gt;&gt;initialViewControlDocument.Name" xml:space="preserve">
     <value>initialViewControlDocument</value>
@@ -468,14 +456,11 @@
   <data name="&gt;&gt;documentManager1.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.Docking2010.DocumentManager, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
-  <data name="&gt;&gt;documentGroup1.Type" xml:space="preserve">
-    <value>DevExpress.XtraBars.Docking2010.Views.Tabbed.DocumentGroup, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  <data name="panelContainer1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>1018, 200</value>
   </data>
   <data name="&gt;&gt;Workspace.Name" xml:space="preserve">
     <value>Workspace</value>
-  </data>
-  <data name="&gt;&gt;panelContainer4.Type" xml:space="preserve">
-    <value>DevExpress.XtraBars.Docking.DockPanel, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
   <data name="&gt;&gt;panelScenario.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.Docking.DockPanel, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
@@ -486,8 +471,8 @@
   <data name="&gt;&gt;hideContainerRight.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.Docking.AutoHideContainer, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
-  <data name="&gt;&gt;toolTreeTest.Type" xml:space="preserve">
-    <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  <data name="barDockControlBottom.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 683</value>
   </data>
   <data name="&gt;&gt;controlContainer2.ZOrder" xml:space="preserve">
     <value>0</value>
@@ -495,17 +480,14 @@
   <data name="&gt;&gt;barDockControlTop.ZOrder" xml:space="preserve">
     <value>7</value>
   </data>
-  <data name="&gt;&gt;panelPlot.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
   <data name="&gt;&gt;panelScenario.Parent" xml:space="preserve">
     <value>panelContainer4</value>
   </data>
   <data name="panelProperties.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
   </data>
-  <data name="barDockControlLeft.Size" type="System.Drawing.Size, System.Drawing">
-    <value>0, 635</value>
+  <data name="btnPythonTest.ImageOptions.SvgImage" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
   <data name="panelScenario.Text" xml:space="preserve">
     <value>Scenario</value>
@@ -513,17 +495,20 @@
   <data name="panelContainer4.Size" type="System.Drawing.Size, System.Drawing">
     <value>301, 635</value>
   </data>
-  <data name="panelContainer1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1018, 200</value>
-  </data>
   <data name="&gt;&gt;panelPlot.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.Docking.DockPanel, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  </data>
+  <data name="&gt;&gt;dockPanel1_Container.Name" xml:space="preserve">
+    <value>dockPanel1_Container</value>
   </data>
   <data name="&gt;&gt;dockPanel3_Container.Name" xml:space="preserve">
     <value>dockPanel3_Container</value>
   </data>
   <data name="dockPanel4_Container.Size" type="System.Drawing.Size, System.Drawing">
     <value>1012, 171</value>
+  </data>
+  <data name="&gt;&gt;hideContainerBottom.ZOrder" xml:space="preserve">
+    <value>1</value>
   </data>
   <data name="&gt;&gt;controlContainer1.Parent" xml:space="preserve">
     <value>panelLogs</value>
@@ -533,9 +518,6 @@
   </data>
   <data name="dockPanel1_Container.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
-  </data>
-  <data name="controlContainer1.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
   </data>
   <data name="panelPlot.Size" type="System.Drawing.Size, System.Drawing">
     <value>200, 635</value>
@@ -549,8 +531,8 @@
   <data name="&gt;&gt;bar2.Name" xml:space="preserve">
     <value>bar2</value>
   </data>
-  <data name="btnPanel.ImageOptions.ImageIndex" type="System.Int32, mscorlib">
-    <value>-1</value>
+  <data name="hideContainerBottom.Size" type="System.Drawing.Size, System.Drawing">
+    <value>1018, 36</value>
   </data>
   <data name="&gt;&gt;controlContainer2.Parent" xml:space="preserve">
     <value>dockPanel1</value>
@@ -558,26 +540,26 @@
   <data name="&gt;&gt;panelLogs.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.Docking.DockPanel, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
-  <data name="&gt;&gt;btnLogin.Type" xml:space="preserve">
-    <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
-  </data>
   <data name="&gt;&gt;bar1.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.Bar, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
-  <data name="&gt;&gt;toolTreeTest.Name" xml:space="preserve">
-    <value>toolTreeTest</value>
+  <data name="&gt;&gt;tabbedView1.Type" xml:space="preserve">
+    <value>DevExpress.XtraBars.Docking2010.Views.Tabbed.TabbedView, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
   <data name="btnChartTest.ImageOptions.ImageIndex" type="System.Int32, mscorlib">
     <value>-1</value>
   </data>
-  <data name="&gt;&gt;bar3.Type" xml:space="preserve">
-    <value>DevExpress.XtraBars.Bar, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  <data name="panelContainer1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>36, 483</value>
   </data>
-  <data name="barDockControlBottom.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 683</value>
+  <data name="&gt;&gt;toolTreeTest.Type" xml:space="preserve">
+    <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
   <data name="&gt;&gt;hideContainerRight.Parent" xml:space="preserve">
     <value>$this</value>
+  </data>
+  <data name="&gt;&gt;panelPlot.Name" xml:space="preserve">
+    <value>panelPlot</value>
   </data>
   <data name="barDockControlBottom.Size" type="System.Drawing.Size, System.Drawing">
     <value>1090, 22</value>
@@ -588,23 +570,23 @@
   <data name="&gt;&gt;barDockControlBottom.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-  <data name="toolTreeTest.ImageOptions.LargeImageIndex" type="System.Int32, mscorlib">
-    <value>-1</value>
-  </data>
-  <data name="toolTreeTest.ImageOptions.SvgImage" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
+  <data name="controlContainer1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>1012, 171</value>
   </data>
   <data name="controlContainer2.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
   </data>
+  <data name="&gt;&gt;documentGroup1.Type" xml:space="preserve">
+    <value>DevExpress.XtraBars.Docking2010.Views.Tabbed.DocumentGroup, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  </data>
   <data name="&gt;&gt;btnChartTest.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
-  <data name="&gt;&gt;projectListControl.Parent" xml:space="preserve">
-    <value>dockPanel1_Container</value>
+  <data name="btnPanel.ImageOptions.ImageIndex" type="System.Int32, mscorlib">
+    <value>-1</value>
   </data>
-  <data name="panelLogs2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 26</value>
+  <data name="&gt;&gt;barDockControlRight.Parent" xml:space="preserve">
+    <value>$this</value>
   </data>
   <data name="&gt;&gt;dockManager1.Name" xml:space="preserve">
     <value>dockManager1</value>
@@ -612,11 +594,11 @@
   <data name="panelLogs2.Text" xml:space="preserve">
     <value>Logs</value>
   </data>
-  <data name="&gt;&gt;dockPanel1_Container.Name" xml:space="preserve">
-    <value>dockPanel1_Container</value>
+  <data name="barDockControlLeft.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 48</value>
   </data>
-  <data name="controlContainer2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>294, 607</value>
+  <data name="&gt;&gt;hideContainerBottom.Name" xml:space="preserve">
+    <value>hideContainerBottom</value>
   </data>
   <data name="panelLogs.Location" type="System.Drawing.Point, System.Drawing">
     <value>3, 26</value>
@@ -633,6 +615,9 @@
   <data name="&gt;&gt;barDockControlBottom.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.BarDockControl, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
+  <data name="panelLogs2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 26</value>
+  </data>
   <data name="&gt;&gt;documentManager1.Name" xml:space="preserve">
     <value>documentManager1</value>
   </data>
@@ -642,14 +627,17 @@
   <data name="hideContainerRight.Location" type="System.Drawing.Point, System.Drawing">
     <value>1054, 48</value>
   </data>
-  <data name="projectListControl.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="&gt;&gt;bar2.Type" xml:space="preserve">
+    <value>DevExpress.XtraBars.Bar, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  </data>
+  <data name="controlContainer2.Size" type="System.Drawing.Size, System.Drawing">
     <value>294, 607</value>
   </data>
   <data name="btnPythonTest.ImageOptions.ImageIndex" type="System.Int32, mscorlib">
     <value>-1</value>
   </data>
-  <data name="dockPanel1.Text" xml:space="preserve">
-    <value>Other Tab</value>
+  <data name="panelContainer1.Text" xml:space="preserve">
+    <value>panelContainer1</value>
   </data>
   <data name="&gt;&gt;projectListControl.ZOrder" xml:space="preserve">
     <value>0</value>
@@ -662,6 +650,9 @@
   </data>
   <data name="barDockControlTop.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
+  </data>
+  <data name="btnLogin.Caption" xml:space="preserve">
+    <value>Login</value>
   </data>
   <data name="&gt;&gt;barDockControlTop.Name" xml:space="preserve">
     <value>barDockControlTop</value>
@@ -684,8 +675,8 @@
   <data name="&gt;&gt;panelScenario.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="&gt;&gt;dockPanel1_Container.Type" xml:space="preserve">
-    <value>DevExpress.XtraBars.Docking.ControlContainer, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  <data name="controlContainer1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
   </data>
   <data name="&gt;&gt;dockManager1.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.Docking.DockManager, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
@@ -705,8 +696,11 @@
   <data name="Workspace.ImageOptions.SvgImage" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
-  <data name="controlContainer1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1012, 171</value>
+  <data name="&gt;&gt;panelContainer4.Type" xml:space="preserve">
+    <value>DevExpress.XtraBars.Docking.DockPanel, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  </data>
+  <data name="projectListControl.Size" type="System.Drawing.Size, System.Drawing">
+    <value>294, 607</value>
   </data>
   <data name="barSubItem1.ImageOptions.ImageIndex" type="System.Int32, mscorlib">
     <value>-1</value>
@@ -723,11 +717,14 @@
   <data name="&gt;&gt;panelLogs2.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <data name="bar3.Text" xml:space="preserve">
-    <value>Status bar</value>
+  <data name="barDockControlLeft.Size" type="System.Drawing.Size, System.Drawing">
+    <value>0, 635</value>
   </data>
   <data name="&gt;&gt;dockPanel4_Container.Parent" xml:space="preserve">
     <value>panelLogs2</value>
+  </data>
+  <data name="&gt;&gt;Workspace.Type" xml:space="preserve">
+    <value>DevExpress.XtraBars.BarWorkspaceMenuItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
   <data name="&gt;&gt;hideContainerLeft.ZOrder" xml:space="preserve">
     <value>2</value>
@@ -747,29 +744,32 @@
   <data name="btnPanel.ImageOptions.SvgImage" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
+  <data name="dockPanel1.Text" xml:space="preserve">
+    <value>Other Tab</value>
+  </data>
   <data name="barDockControlRight.Location" type="System.Drawing.Point, System.Drawing">
     <value>1090, 48</value>
   </data>
   <data name="btnChartTest.Caption" xml:space="preserve">
     <value>Chart</value>
   </data>
-  <data name="&gt;&gt;dockPanel2_Container.ZOrder" xml:space="preserve">
-    <value>0</value>
+  <data name="panelPlot.Text" xml:space="preserve">
+    <value>Plot</value>
   </data>
   <data name="&gt;&gt;panelContainer1.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.Docking.DockPanel, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
-  <data name="dockPanel2_Container.Size" type="System.Drawing.Size, System.Drawing">
-    <value>193, 607</value>
+  <data name="toolTreeTest.ImageOptions.LargeImageIndex" type="System.Int32, mscorlib">
+    <value>-1</value>
   </data>
   <data name="panelProperties.Text" xml:space="preserve">
     <value>Properties</value>
   </data>
-  <data name="&gt;&gt;btnPanel.Type" xml:space="preserve">
-    <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  <data name="&gt;&gt;tabbedView1.Name" xml:space="preserve">
+    <value>tabbedView1</value>
   </data>
-  <data name="&gt;&gt;hideContainerBottom.ZOrder" xml:space="preserve">
-    <value>1</value>
+  <data name="dockPanel2_Container.Size" type="System.Drawing.Size, System.Drawing">
+    <value>193, 607</value>
   </data>
   <data name="btnChartTest.ImageOptions.LargeImageIndex" type="System.Int32, mscorlib">
     <value>-1</value>
@@ -780,11 +780,11 @@
   <data name="&gt;&gt;panelLogs2.Name" xml:space="preserve">
     <value>panelLogs2</value>
   </data>
-  <data name="&gt;&gt;Workspace.Type" xml:space="preserve">
-    <value>DevExpress.XtraBars.BarWorkspaceMenuItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  <data name="toolTreeTest.ImageOptions.SvgImage" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
-  <data name="dockPanel1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>294, 607</value>
+  <data name="&gt;&gt;projectListControl.Parent" xml:space="preserve">
+    <value>dockPanel1_Container</value>
   </data>
   <data name="panelContainer2.Text" xml:space="preserve">
     <value>panelContainer2</value>
@@ -798,8 +798,8 @@
   <data name="&gt;&gt;dockPanel4_Container.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="btnLogin.ImageOptions.ImageIndex" type="System.Int32, mscorlib">
-    <value>-1</value>
+  <data name="&gt;&gt;hideContainerLeft.Type" xml:space="preserve">
+    <value>DevExpress.XtraBars.Docking.AutoHideContainer, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
   <data name="btnChartTest.ImageOptions.SvgImage" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
@@ -807,14 +807,14 @@
   <data name="&gt;&gt;barSubItem1.Name" xml:space="preserve">
     <value>barSubItem1</value>
   </data>
-  <data name="btnLogin.Caption" xml:space="preserve">
-    <value>Login</value>
+  <data name="&gt;&gt;barDockControlLeft.Parent" xml:space="preserve">
+    <value>$this</value>
   </data>
   <data name="projectListControl.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 4, 3, 4</value>
   </data>
-  <data name="&gt;&gt;panelPlot.Name" xml:space="preserve">
-    <value>panelPlot</value>
+  <data name="dockPanel3_Container.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 25</value>
   </data>
   <metadata name="documentManager1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
