@@ -183,7 +183,7 @@
   <data name="&gt;&gt;dockPanel3_Container.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="initialViewControlDocument.Caption" xml:space="preserve">
+  <data name="startScreenControlDocument.Caption" xml:space="preserve">
     <value>Start Screen</value>
   </data>
   <data name="&gt;&gt;panelLogs.Parent" xml:space="preserve">
@@ -450,8 +450,8 @@
   <data name="&gt;&gt;btnPanel.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
-  <data name="&gt;&gt;initialViewControlDocument.Name" xml:space="preserve">
-    <value>initialViewControlDocument</value>
+  <data name="&gt;&gt;startScreenControlDocument.Name" xml:space="preserve">
+    <value>startScreenControlDocument</value>
   </data>
   <data name="&gt;&gt;documentManager1.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.Docking2010.DocumentManager, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
@@ -792,7 +792,7 @@
   <data name="&gt;&gt;panelLogs.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="&gt;&gt;initialViewControlDocument.Type" xml:space="preserve">
+  <data name="&gt;&gt;startScreenControlDocument.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.Docking2010.Views.Tabbed.Document, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
   <data name="&gt;&gt;dockPanel4_Container.ZOrder" xml:space="preserve">

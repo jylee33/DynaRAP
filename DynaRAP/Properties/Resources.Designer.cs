@@ -61,11 +61,29 @@ namespace DynaRAP.Properties {
         }
         
         /// <summary>
+        ///   Add Tag과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string AddTag {
+            get {
+                return ResourceManager.GetString("AddTag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   ID과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string IdPlaceholder {
             get {
                 return ResourceManager.GetString("IdPlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Input Scenario Name과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string InputScenarioName {
+            get {
+                return ResourceManager.GetString("InputScenarioName", resourceCulture);
             }
         }
         

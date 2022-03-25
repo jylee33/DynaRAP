@@ -1,6 +1,6 @@
 ﻿namespace DynaRAP.UControl
 {
-    partial class InitialViewControl
+    partial class StartScreenControl
     {
         /// <summary> 
         /// Required designer variable.
@@ -287,14 +287,14 @@
             this.gridView1.GridControl = this.gridControl1;
             this.gridView1.Name = "gridView1";
             // 
-            // InitialViewControl
+            // StartScreenControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.tableLayoutPanel1);
-            this.Name = "InitialViewControl";
+            this.Name = "StartScreenControl";
             this.Size = new System.Drawing.Size(1327, 840);
-            this.Load += new System.EventHandler(this.InitialViewControl_Load);
+            this.Load += new System.EventHandler(this.StartScreenControl_Load);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.tableLayoutPanel2.ResumeLayout(false);

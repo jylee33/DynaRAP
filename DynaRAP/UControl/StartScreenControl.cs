@@ -15,14 +15,14 @@ using System.Windows.Forms;
 
 namespace DynaRAP.UControl
 {
-    public partial class InitialViewControl : DevExpress.XtraEditors.XtraUserControl
+    public partial class StartScreenControl : DevExpress.XtraEditors.XtraUserControl
     {
-        public InitialViewControl()
+        public StartScreenControl()
         {
             InitializeComponent();
         }
 
-        private void InitialViewControl_Load(object sender, EventArgs e)
+        private void StartScreenControl_Load(object sender, EventArgs e)
         {
             InitializeRecentProjectList();
         }
@@ -65,8 +65,8 @@ namespace DynaRAP.UControl
 
         private void hyperlinkLabelControl1_Click(object sender, EventArgs e)
         {
-            TreeTestForm form = new TreeTestForm();
-            form.Show();
+            NewSenarioForm form = new NewSenarioForm();
+            form.ShowDialog();
         }
     }
 

@@ -34,7 +34,7 @@ namespace DynaRAP
             DevExpress.Utils.Animation.PushTransition pushTransition1 = new DevExpress.Utils.Animation.PushTransition();
             DevExpress.XtraBars.Docking2010.Views.Tabbed.DockingContainer dockingContainer1 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.DockingContainer();
             this.documentGroup1 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.DocumentGroup(this.components);
-            this.initialViewControlDocument = new DevExpress.XtraBars.Docking2010.Views.Tabbed.Document(this.components);
+            this.startScreenControlDocument = new DevExpress.XtraBars.Docking2010.Views.Tabbed.Document(this.components);
             this.documentManager1 = new DevExpress.XtraBars.Docking2010.DocumentManager(this.components);
             this.barManager1 = new DevExpress.XtraBars.BarManager(this.components);
             this.bar1 = new DevExpress.XtraBars.Bar();
@@ -74,7 +74,7 @@ namespace DynaRAP
             this.tabbedView1 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.TabbedView(this.components);
             this.panelContainer1 = new DevExpress.XtraBars.Docking.DockPanel();
             ((System.ComponentModel.ISupportInitialize)(this.documentGroup1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.initialViewControlDocument)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.startScreenControlDocument)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.documentManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dockManager1)).BeginInit();
@@ -97,13 +97,13 @@ namespace DynaRAP
             // 
             resources.ApplyResources(this.documentGroup1, "documentGroup1");
             this.documentGroup1.Items.AddRange(new DevExpress.XtraBars.Docking2010.Views.Tabbed.Document[] {
-            this.initialViewControlDocument});
+            this.startScreenControlDocument});
             // 
-            // initialViewControlDocument
+            // startScreenControlDocument
             // 
-            resources.ApplyResources(this.initialViewControlDocument, "initialViewControlDocument");
-            this.initialViewControlDocument.ControlName = "InitialViewControl";
-            this.initialViewControlDocument.ControlTypeName = "DynaRAP.UControl.InitialViewControl";
+            resources.ApplyResources(this.startScreenControlDocument, "startScreenControlDocument");
+            this.startScreenControlDocument.ControlName = "StartScreenControl";
+            this.startScreenControlDocument.ControlTypeName = "DynaRAP.UControl.StartScreenControl";
             // 
             // documentManager1
             // 
@@ -458,7 +458,7 @@ namespace DynaRAP
             this.tabbedView1.DocumentGroups.AddRange(new DevExpress.XtraBars.Docking2010.Views.Tabbed.DocumentGroup[] {
             this.documentGroup1});
             this.tabbedView1.Documents.AddRange(new DevExpress.XtraBars.Docking2010.Views.BaseDocument[] {
-            this.initialViewControlDocument});
+            this.startScreenControlDocument});
             dockingContainer1.Element = this.documentGroup1;
             this.tabbedView1.RootContainer.Nodes.AddRange(new DevExpress.XtraBars.Docking2010.Views.Tabbed.DockingContainer[] {
             dockingContainer1});
@@ -487,7 +487,7 @@ namespace DynaRAP
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
             this.Load += new System.EventHandler(this.MainForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.documentGroup1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.initialViewControlDocument)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.startScreenControlDocument)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.documentManager1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dockManager1)).EndInit();
@@ -550,6 +550,6 @@ namespace DynaRAP
         private DevExpress.XtraBars.Docking.AutoHideContainer hideContainerRight;
         private DevExpress.XtraBars.Docking.AutoHideContainer hideContainerBottom;
         private DevExpress.XtraBars.Docking2010.Views.Tabbed.DocumentGroup documentGroup1;
-        private DevExpress.XtraBars.Docking2010.Views.Tabbed.Document initialViewControlDocument;
+        private DevExpress.XtraBars.Docking2010.Views.Tabbed.Document startScreenControlDocument;
     }
 }

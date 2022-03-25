@@ -117,8 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AddTag" xml:space="preserve">
+    <value>태그 추가</value>
+  </data>
   <data name="IdPlaceholder" xml:space="preserve">
     <value>아이디 입력 (Email 형식)</value>
+  </data>
+  <data name="InputScenarioName" xml:space="preserve">
+    <value>시나리오 이름 입력</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="login" type="System.Resources.ResXFileRef, System.Windows.Forms">

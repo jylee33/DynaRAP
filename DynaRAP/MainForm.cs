@@ -47,8 +47,8 @@ namespace DynaRAP
 
         void tabbedView1_QueryControl(object sender, DevExpress.XtraBars.Docking2010.Views.QueryControlEventArgs e)
         {
-            if (e.Document == initialViewControlDocument)
-                e.Control = new DynaRAP.UControl.InitialViewControl();
+            if (e.Document == startScreenControlDocument)
+                e.Control = new DynaRAP.UControl.StartScreenControl();
             //if (e.Document == projectListControlDocument)
             //    e.Control = new DynaRAP.UControl.ProjectListControl();
             //if (e.Document == userControl1Document)
