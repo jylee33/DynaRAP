@@ -1,5 +1,8 @@
-﻿using DevExpress.XtraEditors;
+﻿using DevExpress.LookAndFeel;
+using DevExpress.Skins;
+using DevExpress.XtraEditors;
 using DevExpress.XtraGrid.Columns;
+using DynaRAP.TEST;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -27,9 +30,12 @@ namespace DynaRAP.UControl
         private void InitializeRecentProjectList()
         {
             List<RecentProject> list = new List<RecentProject>();
-            list.Add(new RecentProject(DateTime.Now, "Scenario Name 1"));
-            list.Add(new RecentProject(DateTime.Now, "Scenario Name 2"));
-            list.Add(new RecentProject(DateTime.Now, "Scenario Name 3"));
+            DateTime dtNow = DateTime.Now;
+            string strNow = string.Format("{0:yyyy/MM/dd HH:mm:ss}", dtNow);
+
+            list.Add(new RecentProject(strNow, "Scenario Name 1 Scenario Name 1 Scenario Name 1 Scenario Name 1"));
+            list.Add(new RecentProject(strNow, "Scenario Name 2"));
+            list.Add(new RecentProject(strNow, "Scenario Name 3"));
 
             this.gridControl1.DataSource = list;
 
@@ -40,14 +46,27 @@ namespace DynaRAP.UControl
             gridView1.OptionsView.ShowIndicator = false;
             gridView1.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.False;
             gridView1.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.False;
+            gridView1.OptionsView.ColumnAutoWidth = false;
 
             gridView1.OptionsBehavior.ReadOnly = true;
+            gridView1.OptionsBehavior.Editable = false;
 
             gridView1.OptionsSelection.MultiSelectMode = DevExpress.XtraGrid.Views.Grid.GridMultiSelectMode.RowSelect;
+            gridView1.OptionsSelection.EnableAppearanceFocusedCell = false;
 
-            GridColumn dateCol = gridView1.Columns["Date"];
-            dateCol.Width = 20;
+            GridColumn colDate = gridView1.Columns["Date"];
+            GridColumn colProjectName = gridView1.Columns["ProjectName"];
+            colDate.OptionsColumn.FixedWidth = true;
+            colProjectName.OptionsColumn.FixedWidth = true;
+            colDate.Width = 130;
+            colProjectName.Width = 250;
 
+        }
+
+        private void hyperlinkLabelControl1_Click(object sender, EventArgs e)
+        {
+            TreeTestForm form = new TreeTestForm();
+            form.Show();
         }
     }
 
@@ -56,12 +75,12 @@ namespace DynaRAP.UControl
         public RecentProject()
         {
         }
-        public RecentProject(DateTime date, string projectName)
+        public RecentProject(string date, string projectName)
         {
             Date = date;
             ProjectName = projectName;
         }
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
         public string ProjectName { get; set; }
     }
 
