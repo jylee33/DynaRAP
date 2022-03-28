@@ -18,7 +18,7 @@ namespace DynaRAP.UControl
         {
             set
             {
-                labelControl1.Text = value;
+                //labelControl1.Text = value;
             }
         }
 

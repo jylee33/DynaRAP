@@ -31,6 +31,10 @@ namespace DynaRAP
 
         DockPanel panelBottom = null;
 
+        StartScreenControl startControl = null;
+        ImportModuleControl importModuleControl = null;
+
+
         public MainForm()
         {
             InitializeComponent();
@@ -48,8 +52,8 @@ namespace DynaRAP
 
         void tabbedView1_QueryControl(object sender, DevExpress.XtraBars.Docking2010.Views.QueryControlEventArgs e)
         {
-            if (e.Document == startScreenControlDocument)
-                e.Control = new DynaRAP.UControl.StartScreenControl();
+            //if (e.Document == startScreenControlDocument)
+            //    e.Control = new DynaRAP.UControl.StartScreenControl();
             //if (e.Document == projectListControlDocument)
             //    e.Control = new DynaRAP.UControl.ProjectListControl();
             //if (e.Document == userControl1Document)
@@ -64,11 +68,25 @@ namespace DynaRAP
         {
             InitializeWorkspace();
 
-            StartScreenControl ctrl = new StartScreenControl();
-            DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(ctrl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
-            //doc.Caption = "Import Module";
-            tabbedView1.ActivateDocument(ctrl);
+            tabbedView1.DocumentRemoved += TabbedView1_DocumentRemoved;
 
+            startControl = new StartScreenControl();
+            DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(startControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
+            doc.Caption = "시작화면";
+            tabbedView1.ActivateDocument(startControl);
+
+        }
+
+        private void TabbedView1_DocumentRemoved(object sender, DevExpress.XtraBars.Docking2010.Views.DocumentEventArgs e)
+        {
+            if (e.Document.Control is StartScreenControl)
+            {
+                startControl = null;
+            }
+            else if (e.Document.Control is ImportModuleControl)
+            {
+                importModuleControl = null;
+            }
         }
 
         private void InitializeWorkspace()
@@ -175,16 +193,25 @@ namespace DynaRAP
             //    //container.Tabbed = true;
             //}
 
+            //아래에 panel 추가
             //DockPanel panel = panelContainer2.AddPanel();
             //panel.Name = "panel";
             //panel.Text = "addedPanel";
             //panelContainer2.Tabbed = true;
             //panelContainer2.ActiveChild = panel;
 
-            ImportModuleControl ctrl = new ImportModuleControl();
-            DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(ctrl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
-            doc.Caption = "Import Module";
-            tabbedView1.ActivateDocument(ctrl);
+            if (importModuleControl == null)
+            {
+                importModuleControl = new ImportModuleControl();
+                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(importModuleControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
+                doc.Caption = "Import Module";
+                tabbedView1.ActivateDocument(importModuleControl);
+            }
+
+            if (startControl != null)
+            {
+                tabbedView1.RemoveDocument(startControl);
+            }
 
         }
 
@@ -206,6 +233,17 @@ namespace DynaRAP
         {
             TreeTestForm form = new TreeTestForm();
             form.Show();
+        }
+
+        private void btnStart_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            if (startControl == null)
+            {
+                startControl = new StartScreenControl();
+                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(startControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
+                doc.Caption = "시작화면";
+                tabbedView1.ActivateDocument(startControl);
+            }
         }
     }
 

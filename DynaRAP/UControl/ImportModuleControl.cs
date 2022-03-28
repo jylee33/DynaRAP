@@ -1,6 +1,7 @@
 ﻿using DevExpress.Utils;
 using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Controls;
+using DevExpress.XtraEditors.Repository;
 using DevExpress.XtraGrid.Columns;
 using System;
 using System.Collections.Generic;
@@ -123,31 +124,51 @@ namespace DynaRAP.UControl
             gridView1.OptionsView.ColumnAutoWidth = false;
 
             gridView1.OptionsBehavior.ReadOnly = true;
-            gridView1.OptionsBehavior.Editable = false;
+            //gridView1.OptionsBehavior.Editable = false;
 
             gridView1.OptionsSelection.MultiSelectMode = DevExpress.XtraGrid.Views.Grid.GridMultiSelectMode.RowSelect;
             gridView1.OptionsSelection.EnableAppearanceFocusedCell = false;
 
             GridColumn colName = gridView1.Columns["IntervalName"];
+            colName.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
             colName.OptionsColumn.FixedWidth = true;
             colName.Width = 130;
             colName.Caption = "구간이름";
 
             GridColumn colStartTime = gridView1.Columns["StartTime"];
-            colName.OptionsColumn.FixedWidth = true;
-            colName.Width = 130;
-            colName.Caption = "시작시간";
+            colStartTime.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
+            colStartTime.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
+            colStartTime.OptionsColumn.FixedWidth = true;
+            colStartTime.Width = 130;
+            colStartTime.Caption = "시작시간";
 
             GridColumn colEndTime = gridView1.Columns["EndTime"];
-            colName.OptionsColumn.FixedWidth = true;
-            colName.Width = 130;
-            colName.Caption = "종료시간";
+            colEndTime.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
+            colEndTime.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
+            colEndTime.OptionsColumn.FixedWidth = true;
+            colEndTime.Width = 130;
+            colEndTime.Caption = "종료시간";
 
             GridColumn colView = gridView1.Columns["View"];
-            colName.OptionsColumn.FixedWidth = true;
-            colName.Width = 130;
-            colName.Caption = "보기";
+            colView.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
+            colView.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
+            colView.OptionsColumn.FixedWidth = true;
+            colView.Width = 130;
+            colView.Caption = "보기";
 
+            this.repositoryItemImageComboBox1.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(0, 0));
+            this.repositoryItemImageComboBox1.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(1, 1));
+
+            this.repositoryItemImageComboBox1.GlyphAlignment = HorzAlignment.Center;
+            this.repositoryItemImageComboBox1.Buttons[0].Visible = false;
+
+            this.repositoryItemImageComboBox1.Click += RepositoryItemImageComboBox1_Click;
+
+        }
+
+        private void RepositoryItemImageComboBox1_Click(object sender, EventArgs e)
+        {
+            RepositoryItemImageComboBox combo = sender as RepositoryItemImageComboBox;
 
         }
 
@@ -216,7 +237,7 @@ namespace DynaRAP.UControl
         }
 
 
-        int index = 23;
+        int index = 22;
         private void btnAddParameter_ButtonClick(object sender, ButtonPressedEventArgs e)
         {
             AddParameter();
