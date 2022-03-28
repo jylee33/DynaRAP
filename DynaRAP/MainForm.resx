@@ -540,11 +540,11 @@
   <data name="btnLogin.Caption" xml:space="preserve">
     <value>Login</value>
   </data>
-  <data name="btnPanel.Caption" xml:space="preserve">
-    <value>Test</value>
-  </data>
   <data name="toolTreeTest.Caption" xml:space="preserve">
     <value>Tree</value>
+  </data>
+  <data name="btnPanel.Caption" xml:space="preserve">
+    <value>Test</value>
   </data>
   <data name="bar1.Text" xml:space="preserve">
     <value>Tools</value>

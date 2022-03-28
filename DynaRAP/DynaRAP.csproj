@@ -118,6 +118,18 @@
     <Compile Include="UControl\CustomSimpleButton.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="UControl\ImportModuleControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\ImportModuleControl.Designer.cs">
+      <DependentUpon>ImportModuleControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\ParameterControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\ParameterControl.Designer.cs">
+      <DependentUpon>ParameterControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="UControl\StartScreenControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -202,6 +214,12 @@
     </Compile>
     <EmbeddedResource Include="TEST\TreeTestForm.resx">
       <DependentUpon>TreeTestForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\ImportModuleControl.resx">
+      <DependentUpon>ImportModuleControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\ParameterControl.resx">
+      <DependentUpon>ParameterControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\StartScreenControl.resx">
       <DependentUpon>StartScreenControl.cs</DependentUpon>

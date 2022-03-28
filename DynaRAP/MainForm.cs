@@ -64,6 +64,11 @@ namespace DynaRAP
         {
             InitializeWorkspace();
 
+            StartScreenControl ctrl = new StartScreenControl();
+            DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(ctrl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
+            //doc.Caption = "Import Module";
+            tabbedView1.ActivateDocument(ctrl);
+
         }
 
         private void InitializeWorkspace()
@@ -170,14 +175,16 @@ namespace DynaRAP
             //    //container.Tabbed = true;
             //}
 
-            DockPanel panel = panelContainer2.AddPanel();
-            panel.Name = "panel";
-            panel.Text = "addedPanel";
-            panelContainer2.Tabbed = true;
-            panelContainer2.ActiveChild = panel;
+            //DockPanel panel = panelContainer2.AddPanel();
+            //panel.Name = "panel";
+            //panel.Text = "addedPanel";
+            //panelContainer2.Tabbed = true;
+            //panelContainer2.ActiveChild = panel;
 
-            ProjectListControl cont = new ProjectListControl();
-            documentManager1.View.AddDocument(cont);
+            ImportModuleControl ctrl = new ImportModuleControl();
+            DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(ctrl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
+            doc.Caption = "Import Module";
+            tabbedView1.ActivateDocument(ctrl);
 
         }
 

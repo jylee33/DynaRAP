@@ -203,7 +203,7 @@
             // 
             // panelFuseLage
             // 
-            this.panelFuseLage.Location = new System.Drawing.Point(-1, -1);
+            this.panelFuseLage.Location = new System.Drawing.Point(-1, 1);
             this.panelFuseLage.Name = "panelFuseLage";
             this.panelFuseLage.Size = new System.Drawing.Size(532, 114);
             this.panelFuseLage.TabIndex = 0;

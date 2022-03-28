@@ -143,7 +143,8 @@ namespace DynaRAP
             this.bar1.DockRow = 1;
             this.bar1.DockStyle = DevExpress.XtraBars.BarDockStyle.Top;
             this.bar1.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
-            new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem1)});
+            new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem1),
+            new DevExpress.XtraBars.LinkPersistInfo(this.btnPanel)});
             resources.ApplyResources(this.bar1, "bar1");
             // 
             // barSubItem1
@@ -154,7 +155,6 @@ namespace DynaRAP
             new DevExpress.XtraBars.LinkPersistInfo(this.btnPythonTest),
             new DevExpress.XtraBars.LinkPersistInfo(this.btnChartTest),
             new DevExpress.XtraBars.LinkPersistInfo(this.btnLogin),
-            new DevExpress.XtraBars.LinkPersistInfo(this.btnPanel),
             new DevExpress.XtraBars.LinkPersistInfo(this.toolTreeTest)});
             this.barSubItem1.Name = "barSubItem1";
             // 
