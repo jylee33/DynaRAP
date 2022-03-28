@@ -5,6 +5,7 @@ using DevExpress.XtraTreeList.Columns;
 using DevExpress.XtraTreeList.Nodes;
 using DevExpress.XtraTreeList.StyleFormatConditions;
 using DynaRAP.TEST;
+using DynaRAP.UControl;
 using IronPython.Hosting;
 using Microsoft.Scripting.Hosting;
 using System;
@@ -174,6 +175,9 @@ namespace DynaRAP
             panel.Text = "addedPanel";
             panelContainer2.Tabbed = true;
             panelContainer2.ActiveChild = panel;
+
+            ProjectListControl cont = new ProjectListControl();
+            documentManager1.View.AddDocument(cont);
 
         }
 

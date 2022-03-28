@@ -65,6 +65,8 @@ namespace DynaRAP.UControl
             colProjectName.OptionsColumn.ReadOnly = true;
             colLink.OptionsColumn.ReadOnly = true;
 
+            colProjectName.OptionsColumn.AllowEdit = false;
+
             //Sort data against the Project column
             colProjectName.SortIndex = -1;// 0;
 
