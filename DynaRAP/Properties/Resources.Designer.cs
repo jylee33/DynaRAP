@@ -70,6 +70,24 @@ namespace DynaRAP.Properties {
         }
         
         /// <summary>
+        ///   Basic processing of flight data is in progress...과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string BasicProcessingFlightData {
+            get {
+                return ResourceManager.GetString("BasicProcessingFlightData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Extract flight data and save DB...과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string ExtractFlightData {
+            get {
+                return ResourceManager.GetString("ExtractFlightData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   ID과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string IdPlaceholder {
@@ -103,6 +121,15 @@ namespace DynaRAP.Properties {
         internal static string PwPlaceholder {
             get {
                 return ResourceManager.GetString("PwPlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Uploading flight data...과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string UploadingFlightData {
+            get {
+                return ResourceManager.GetString("UploadingFlightData", resourceCulture);
             }
         }
     }

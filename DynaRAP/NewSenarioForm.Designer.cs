@@ -36,7 +36,7 @@
             this.labelControl4 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl5 = new DevExpress.XtraEditors.LabelControl();
             this.hyperlinkLabelControl2 = new DevExpress.XtraEditors.HyperlinkLabelControl();
-            this.simpleButton1 = new DevExpress.XtraEditors.SimpleButton();
+            this.btnCreate = new DevExpress.XtraEditors.SimpleButton();
             this.dropScenarioType = new DevExpress.XtraEditors.DropDownButton();
             this.edtScenarioName = new DevExpress.XtraEditors.ButtonEdit();
             this.dateScenario = new DevExpress.XtraEditors.DateEdit();
@@ -142,13 +142,14 @@
             this.hyperlinkLabelControl2.TabIndex = 4;
             this.hyperlinkLabelControl2.Text = "Browse Files...";
             // 
-            // simpleButton1
+            // btnCreate
             // 
-            this.simpleButton1.Location = new System.Drawing.Point(264, 487);
-            this.simpleButton1.Name = "simpleButton1";
-            this.simpleButton1.Size = new System.Drawing.Size(75, 23);
-            this.simpleButton1.TabIndex = 5;
-            this.simpleButton1.Text = "Create";
+            this.btnCreate.Location = new System.Drawing.Point(264, 487);
+            this.btnCreate.Name = "btnCreate";
+            this.btnCreate.Size = new System.Drawing.Size(75, 23);
+            this.btnCreate.TabIndex = 5;
+            this.btnCreate.Text = "Create";
+            this.btnCreate.Click += new System.EventHandler(this.btnCreate_Click);
             // 
             // dropScenarioType
             // 
@@ -254,7 +255,7 @@
             this.Controls.Add(this.edtTag);
             this.Controls.Add(this.edtScenarioName);
             this.Controls.Add(this.dropScenarioType);
-            this.Controls.Add(this.simpleButton1);
+            this.Controls.Add(this.btnCreate);
             this.Controls.Add(this.hyperlinkLabelControl2);
             this.Controls.Add(this.labelControl5);
             this.Controls.Add(this.labelControl4);
@@ -268,6 +269,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "NewSenarioForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "New Scenario...";
             this.Load += new System.EventHandler(this.NewSenarioForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.buttonEdit1.Properties)).EndInit();
@@ -295,7 +297,7 @@
         private DevExpress.XtraEditors.LabelControl labelControl4;
         private DevExpress.XtraEditors.LabelControl labelControl5;
         private DevExpress.XtraEditors.HyperlinkLabelControl hyperlinkLabelControl2;
-        private DevExpress.XtraEditors.SimpleButton simpleButton1;
+        private DevExpress.XtraEditors.SimpleButton btnCreate;
         private DevExpress.XtraEditors.DropDownButton dropScenarioType;
         private DevExpress.XtraEditors.ButtonEdit edtScenarioName;
         private DevExpress.XtraEditors.DateEdit dateScenario;

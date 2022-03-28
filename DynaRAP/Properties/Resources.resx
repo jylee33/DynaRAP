@@ -120,6 +120,12 @@
   <data name="AddTag" xml:space="preserve">
     <value>Add Tag</value>
   </data>
+  <data name="BasicProcessingFlightData" xml:space="preserve">
+    <value>Basic processing of flight data is in progress...</value>
+  </data>
+  <data name="ExtractFlightData" xml:space="preserve">
+    <value>Extract flight data and save DB...</value>
+  </data>
   <data name="IdPlaceholder" xml:space="preserve">
     <value>ID</value>
   </data>
@@ -132,5 +138,8 @@
   </data>
   <data name="PwPlaceholder" xml:space="preserve">
     <value>Password</value>
+  </data>
+  <data name="UploadingFlightData" xml:space="preserve">
+    <value>Uploading flight data...</value>
   </data>
 </root>

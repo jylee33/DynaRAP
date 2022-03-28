@@ -385,6 +385,12 @@ namespace DynaRAP
                 Console.WriteLine(combo.SelectedText);
             }
         }
+
+        private void btnCreate_Click(object sender, EventArgs e)
+        {
+            CreateScenarioProgressForm form = new CreateScenarioProgressForm();
+            form.ShowDialog();
+        }
     }
 
     public class CustomFormPainter : FormPainter
