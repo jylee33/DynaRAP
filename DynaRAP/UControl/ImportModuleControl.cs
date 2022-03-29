@@ -237,7 +237,7 @@ namespace DynaRAP.UControl
         }
 
 
-        int index = 22;
+        int index = 23;
         private void btnAddParameter_ButtonClick(object sender, ButtonPressedEventArgs e)
         {
             AddParameter();

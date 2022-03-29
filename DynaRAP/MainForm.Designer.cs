@@ -40,6 +40,7 @@ namespace DynaRAP
             this.btnChartTest = new DevExpress.XtraBars.BarButtonItem();
             this.btnLogin = new DevExpress.XtraBars.BarButtonItem();
             this.toolTreeTest = new DevExpress.XtraBars.BarButtonItem();
+            this.btnStart = new DevExpress.XtraBars.BarButtonItem();
             this.btnPanel = new DevExpress.XtraBars.BarButtonItem();
             this.bar2 = new DevExpress.XtraBars.Bar();
             this.Workspace = new DevExpress.XtraBars.BarWorkspaceMenuItem();
@@ -70,7 +71,6 @@ namespace DynaRAP
             this.dockPanel4_Container = new DevExpress.XtraBars.Docking.ControlContainer();
             this.tabbedView1 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.TabbedView(this.components);
             this.panelContainer1 = new DevExpress.XtraBars.Docking.DockPanel();
-            this.btnStart = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.documentManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dockManager1)).BeginInit();
@@ -171,7 +171,15 @@ namespace DynaRAP
             resources.ApplyResources(this.toolTreeTest, "toolTreeTest");
             this.toolTreeTest.Id = 12;
             this.toolTreeTest.Name = "toolTreeTest";
+            this.toolTreeTest.Visibility = DevExpress.XtraBars.BarItemVisibility.Never;
             this.toolTreeTest.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.toolTreeTest_ItemClick);
+            // 
+            // btnStart
+            // 
+            resources.ApplyResources(this.btnStart, "btnStart");
+            this.btnStart.Id = 13;
+            this.btnStart.Name = "btnStart";
+            this.btnStart.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnStart_ItemClick);
             // 
             // btnPanel
             // 
@@ -426,13 +434,6 @@ namespace DynaRAP
             resources.ApplyResources(this.panelContainer1, "panelContainer1");
             this.panelContainer1.Name = "panelContainer1";
             this.panelContainer1.OriginalSize = new System.Drawing.Size(200, 200);
-            // 
-            // btnStart
-            // 
-            resources.ApplyResources(this.btnStart, "btnStart");
-            this.btnStart.Id = 13;
-            this.btnStart.Name = "btnStart";
-            this.btnStart.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnStart_ItemClick);
             // 
             // MainForm
             // 

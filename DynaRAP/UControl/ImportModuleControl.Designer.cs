@@ -45,13 +45,12 @@
             this.dateScenario = new DevExpress.XtraEditors.DateEdit();
             this.labelControl12 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl10 = new DevExpress.XtraEditors.LabelControl();
-            this.xtraScrollableControl1 = new DevExpress.XtraEditors.XtraScrollableControl();
             this.panelFuseLage = new System.Windows.Forms.FlowLayoutPanel();
             this.labelControl15 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl16 = new DevExpress.XtraEditors.LabelControl();
             this.edtTag = new DevExpress.XtraEditors.ButtonEdit();
-            this.xtraScrollableControl2 = new DevExpress.XtraEditors.XtraScrollableControl();
             this.panelTag = new System.Windows.Forms.FlowLayoutPanel();
+            this.labelControl4 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl6 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl14 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl17 = new DevExpress.XtraEditors.LabelControl();
@@ -81,9 +80,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.edtScenarioName.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dateScenario.Properties.CalendarTimeProperties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dateScenario.Properties)).BeginInit();
-            this.xtraScrollableControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.edtTag.Properties)).BeginInit();
-            this.xtraScrollableControl2.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnViewData.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnAddParameter.Properties)).BeginInit();
@@ -114,7 +111,7 @@
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 5;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 450F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 468F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
@@ -152,7 +149,7 @@
             this.labelControl1.Appearance.Options.UseTextOptions = true;
             this.labelControl1.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
             this.labelControl1.Dock = System.Windows.Forms.DockStyle.Right;
-            this.labelControl1.Location = new System.Drawing.Point(137, 493);
+            this.labelControl1.Location = new System.Drawing.Point(137, 511);
             this.labelControl1.Name = "labelControl1";
             this.labelControl1.Size = new System.Drawing.Size(60, 17);
             this.labelControl1.TabIndex = 1;
@@ -170,11 +167,12 @@
             this.panelData.Controls.Add(this.dateScenario);
             this.panelData.Controls.Add(this.labelControl12);
             this.panelData.Controls.Add(this.labelControl10);
-            this.panelData.Controls.Add(this.xtraScrollableControl1);
+            this.panelData.Controls.Add(this.panelFuseLage);
             this.panelData.Controls.Add(this.labelControl15);
             this.panelData.Controls.Add(this.labelControl16);
             this.panelData.Controls.Add(this.edtTag);
-            this.panelData.Controls.Add(this.xtraScrollableControl2);
+            this.panelData.Controls.Add(this.panelTag);
+            this.panelData.Controls.Add(this.labelControl4);
             this.panelData.Controls.Add(this.labelControl6);
             this.panelData.Controls.Add(this.labelControl14);
             this.panelData.Controls.Add(this.labelControl17);
@@ -289,19 +287,12 @@
             this.labelControl10.TabIndex = 9;
             this.labelControl10.Text = "비행 기체 선택";
             // 
-            // xtraScrollableControl1
-            // 
-            this.xtraScrollableControl1.Controls.Add(this.panelFuseLage);
-            this.xtraScrollableControl1.Location = new System.Drawing.Point(3, 227);
-            this.xtraScrollableControl1.Name = "xtraScrollableControl1";
-            this.xtraScrollableControl1.Size = new System.Drawing.Size(551, 80);
-            this.xtraScrollableControl1.TabIndex = 26;
-            // 
             // panelFuseLage
             // 
-            this.panelFuseLage.Location = new System.Drawing.Point(-1, 1);
+            this.panelFuseLage.AutoScroll = true;
+            this.panelFuseLage.Location = new System.Drawing.Point(3, 227);
             this.panelFuseLage.Name = "panelFuseLage";
-            this.panelFuseLage.Size = new System.Drawing.Size(532, 120);
+            this.panelFuseLage.Size = new System.Drawing.Size(548, 80);
             this.panelFuseLage.TabIndex = 0;
             // 
             // labelControl15
@@ -333,26 +324,27 @@
             this.edtTag.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.edtTag_ButtonClick);
             this.edtTag.KeyUp += new System.Windows.Forms.KeyEventHandler(this.edtTag_KeyUp);
             // 
-            // xtraScrollableControl2
-            // 
-            this.xtraScrollableControl2.Controls.Add(this.panelTag);
-            this.xtraScrollableControl2.Location = new System.Drawing.Point(3, 382);
-            this.xtraScrollableControl2.Name = "xtraScrollableControl2";
-            this.xtraScrollableControl2.Size = new System.Drawing.Size(551, 80);
-            this.xtraScrollableControl2.TabIndex = 27;
-            // 
             // panelTag
             // 
-            this.panelTag.Location = new System.Drawing.Point(0, 2);
+            this.panelTag.AutoScroll = true;
+            this.panelTag.Location = new System.Drawing.Point(3, 382);
             this.panelTag.Name = "panelTag";
-            this.panelTag.Size = new System.Drawing.Size(531, 120);
+            this.panelTag.Size = new System.Drawing.Size(548, 80);
             this.panelTag.TabIndex = 0;
+            // 
+            // labelControl4
+            // 
+            this.labelControl4.Location = new System.Drawing.Point(3, 468);
+            this.labelControl4.Name = "labelControl4";
+            this.labelControl4.Size = new System.Drawing.Size(204, 14);
+            this.labelControl4.TabIndex = 10;
+            this.labelControl4.Text = "                                                   ";
             // 
             // labelControl6
             // 
             this.labelControl6.Appearance.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold);
             this.labelControl6.Appearance.Options.UseFont = true;
-            this.labelControl6.Location = new System.Drawing.Point(3, 468);
+            this.labelControl6.Location = new System.Drawing.Point(3, 488);
             this.labelControl6.Name = "labelControl6";
             this.labelControl6.Size = new System.Drawing.Size(52, 17);
             this.labelControl6.TabIndex = 14;
@@ -360,7 +352,7 @@
             // 
             // labelControl14
             // 
-            this.labelControl14.Location = new System.Drawing.Point(3, 491);
+            this.labelControl14.Location = new System.Drawing.Point(3, 511);
             this.labelControl14.Name = "labelControl14";
             this.labelControl14.Size = new System.Drawing.Size(472, 28);
             this.labelControl14.TabIndex = 15;
@@ -369,7 +361,7 @@
             // 
             // labelControl17
             // 
-            this.labelControl17.Location = new System.Drawing.Point(3, 525);
+            this.labelControl17.Location = new System.Drawing.Point(3, 545);
             this.labelControl17.Name = "labelControl17";
             this.labelControl17.Size = new System.Drawing.Size(204, 14);
             this.labelControl17.TabIndex = 16;
@@ -383,12 +375,12 @@
             this.tableLayoutPanel2.Controls.Add(this.labelControl13, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.btnViewData, 1, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 545);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 565);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 1;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(551, 24);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(548, 24);
             this.tableLayoutPanel2.TabIndex = 28;
             // 
             // labelControl13
@@ -404,7 +396,7 @@
             // btnViewData
             // 
             this.btnViewData.EditValue = "데이터 보기";
-            this.btnViewData.Location = new System.Drawing.Point(454, 3);
+            this.btnViewData.Location = new System.Drawing.Point(451, 3);
             this.btnViewData.Name = "btnViewData";
             this.btnViewData.Properties.Appearance.Options.UseTextOptions = true;
             this.btnViewData.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
@@ -421,7 +413,7 @@
             this.lblFlyingData.Appearance.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Bold);
             this.lblFlyingData.Appearance.Options.UseFont = true;
             this.lblFlyingData.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
-            this.lblFlyingData.Location = new System.Drawing.Point(3, 575);
+            this.lblFlyingData.Location = new System.Drawing.Point(3, 595);
             this.lblFlyingData.Name = "lblFlyingData";
             this.lblFlyingData.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
             this.lblFlyingData.Size = new System.Drawing.Size(51, 13);
@@ -430,7 +422,7 @@
             // 
             // labelControl18
             // 
-            this.labelControl18.Location = new System.Drawing.Point(3, 594);
+            this.labelControl18.Location = new System.Drawing.Point(3, 614);
             this.labelControl18.Name = "labelControl18";
             this.labelControl18.Size = new System.Drawing.Size(204, 14);
             this.labelControl18.TabIndex = 18;
@@ -440,7 +432,7 @@
             // 
             this.btnAddParameter.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnAddParameter.EditValue = "파라미터 추가";
-            this.btnAddParameter.Location = new System.Drawing.Point(460, 614);
+            this.btnAddParameter.Location = new System.Drawing.Point(457, 634);
             this.btnAddParameter.Name = "btnAddParameter";
             this.btnAddParameter.Properties.Appearance.Options.UseTextOptions = true;
             this.btnAddParameter.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
@@ -456,7 +448,7 @@
             // 
             this.labelControl19.Appearance.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold);
             this.labelControl19.Appearance.Options.UseFont = true;
-            this.labelControl19.Location = new System.Drawing.Point(3, 640);
+            this.labelControl19.Location = new System.Drawing.Point(3, 660);
             this.labelControl19.Name = "labelControl19";
             this.labelControl19.Size = new System.Drawing.Size(88, 17);
             this.labelControl19.TabIndex = 29;
@@ -464,7 +456,7 @@
             // 
             // labelControl20
             // 
-            this.labelControl20.Location = new System.Drawing.Point(3, 663);
+            this.labelControl20.Location = new System.Drawing.Point(3, 683);
             this.labelControl20.Name = "labelControl20";
             this.labelControl20.Size = new System.Drawing.Size(548, 28);
             this.labelControl20.TabIndex = 30;
@@ -475,7 +467,7 @@
             // 
             this.btnAddSplittedInterval.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnAddSplittedInterval.EditValue = "분할구간 추가";
-            this.btnAddSplittedInterval.Location = new System.Drawing.Point(460, 697);
+            this.btnAddSplittedInterval.Location = new System.Drawing.Point(457, 717);
             this.btnAddSplittedInterval.Name = "btnAddSplittedInterval";
             this.btnAddSplittedInterval.Properties.Appearance.Options.UseTextOptions = true;
             this.btnAddSplittedInterval.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
@@ -490,12 +482,12 @@
             // gridControl1
             // 
             this.gridControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridControl1.Location = new System.Drawing.Point(3, 723);
+            this.gridControl1.Location = new System.Drawing.Point(3, 743);
             this.gridControl1.MainView = this.gridView1;
             this.gridControl1.Name = "gridControl1";
             this.gridControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemImageComboBox1});
-            this.gridControl1.Size = new System.Drawing.Size(551, 175);
+            this.gridControl1.Size = new System.Drawing.Size(548, 175);
             this.gridControl1.TabIndex = 32;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
@@ -565,11 +557,11 @@
             this.tableLayoutPanel3.Controls.Add(this.labelControl21, 0, 0);
             this.tableLayoutPanel3.Controls.Add(this.btnSaveSplittedInterval, 1, 0);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 904);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 924);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 1;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(551, 24);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(548, 24);
             this.tableLayoutPanel3.TabIndex = 33;
             // 
             // labelControl21
@@ -585,7 +577,7 @@
             // btnSaveSplittedInterval
             // 
             this.btnSaveSplittedInterval.EditValue = "분할구간 저장";
-            this.btnSaveSplittedInterval.Location = new System.Drawing.Point(454, 3);
+            this.btnSaveSplittedInterval.Location = new System.Drawing.Point(451, 3);
             this.btnSaveSplittedInterval.Name = "btnSaveSplittedInterval";
             this.btnSaveSplittedInterval.Properties.Appearance.Options.UseTextOptions = true;
             this.btnSaveSplittedInterval.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
@@ -613,9 +605,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.edtScenarioName.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dateScenario.Properties.CalendarTimeProperties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dateScenario.Properties)).EndInit();
-            this.xtraScrollableControl1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.edtTag.Properties)).EndInit();
-            this.xtraScrollableControl2.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnViewData.Properties)).EndInit();
@@ -657,9 +647,6 @@
         private DevExpress.XtraEditors.LabelControl labelControl17;
         private DevExpress.XtraEditors.LabelControl labelControl13;
         private DevExpress.XtraEditors.ButtonEdit btnAddParameter;
-        internal DevExpress.XtraEditors.XtraScrollableControl xtraScrollableControl1;
-        private System.Windows.Forms.FlowLayoutPanel panelFuseLage;
-        internal DevExpress.XtraEditors.XtraScrollableControl xtraScrollableControl2;
         private System.Windows.Forms.FlowLayoutPanel panelTag;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private DevExpress.XtraEditors.ButtonEdit btnViewData;
@@ -679,5 +666,7 @@
         private DevExpress.XtraGrid.Columns.GridColumn EndTime;
         private DevExpress.XtraGrid.Columns.GridColumn View;
         private DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox repositoryItemImageComboBox1;
+        private System.Windows.Forms.FlowLayoutPanel panelFuseLage;
+        private DevExpress.XtraEditors.LabelControl labelControl4;
     }
 }

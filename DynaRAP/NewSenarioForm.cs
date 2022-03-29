@@ -26,11 +26,11 @@ namespace DynaRAP
         }
 
         // Form Title 을 중앙에 배치
-        protected override DevExpress.Skins.XtraForm.FormPainter CreateFormBorderPainter()
-        {
-            HorzAlignment formCaptionAlignment = HorzAlignment.Center;
-            return new CustomFormPainter(this, LookAndFeel, formCaptionAlignment);
-        }
+        //protected override DevExpress.Skins.XtraForm.FormPainter CreateFormBorderPainter()
+        //{
+        //    HorzAlignment formCaptionAlignment = HorzAlignment.Center;
+        //    return new CustomFormPainter(this, LookAndFeel, formCaptionAlignment);
+        //}
 
         TextEdit[] txtList;
         string strInputScenarioName = Properties.Resources.InputScenarioName;

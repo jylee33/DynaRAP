@@ -41,20 +41,16 @@
             this.edtScenarioName = new DevExpress.XtraEditors.ButtonEdit();
             this.dateScenario = new DevExpress.XtraEditors.DateEdit();
             this.edtTag = new DevExpress.XtraEditors.ButtonEdit();
-            this.xtraScrollableControl1 = new DevExpress.XtraEditors.XtraScrollableControl();
             this.panelFuseLage = new System.Windows.Forms.FlowLayoutPanel();
-            this.xtraScrollableControl2 = new DevExpress.XtraEditors.XtraScrollableControl();
-            this.panelTag = new System.Windows.Forms.FlowLayoutPanel();
             this.textEdit1 = new DevExpress.XtraEditors.TextEdit();
             this.cboScenarioType = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.panelTag = new System.Windows.Forms.FlowLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)(this.buttonEdit1.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit1.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtScenarioName.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dateScenario.Properties.CalendarTimeProperties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dateScenario.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtTag.Properties)).BeginInit();
-            this.xtraScrollableControl1.SuspendLayout();
-            this.xtraScrollableControl2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.textEdit1.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cboScenarioType.Properties)).BeginInit();
             this.SuspendLayout();
@@ -92,7 +88,7 @@
             // 
             this.labelControl2.Appearance.Font = new System.Drawing.Font("Tahoma", 13F, System.Drawing.FontStyle.Bold);
             this.labelControl2.Appearance.Options.UseFont = true;
-            this.labelControl2.Location = new System.Drawing.Point(28, 152);
+            this.labelControl2.Location = new System.Drawing.Point(28, 148);
             this.labelControl2.Name = "labelControl2";
             this.labelControl2.Size = new System.Drawing.Size(88, 22);
             this.labelControl2.TabIndex = 3;
@@ -102,7 +98,7 @@
             // 
             this.labelControl3.Appearance.Font = new System.Drawing.Font("Tahoma", 13F, System.Drawing.FontStyle.Bold);
             this.labelControl3.Appearance.Options.UseFont = true;
-            this.labelControl3.Location = new System.Drawing.Point(28, 271);
+            this.labelControl3.Location = new System.Drawing.Point(28, 281);
             this.labelControl3.Name = "labelControl3";
             this.labelControl3.Size = new System.Drawing.Size(26, 22);
             this.labelControl3.TabIndex = 3;
@@ -112,7 +108,7 @@
             // 
             this.labelControl4.Appearance.Font = new System.Drawing.Font("Tahoma", 13F, System.Drawing.FontStyle.Bold);
             this.labelControl4.Appearance.Options.UseFont = true;
-            this.labelControl4.Location = new System.Drawing.Point(28, 412);
+            this.labelControl4.Location = new System.Drawing.Point(28, 441);
             this.labelControl4.Name = "labelControl4";
             this.labelControl4.Size = new System.Drawing.Size(114, 22);
             this.labelControl4.TabIndex = 3;
@@ -124,7 +120,7 @@
             this.labelControl5.Appearance.ForeColor = System.Drawing.Color.Red;
             this.labelControl5.Appearance.Options.UseFont = true;
             this.labelControl5.Appearance.Options.UseForeColor = true;
-            this.labelControl5.Location = new System.Drawing.Point(162, 414);
+            this.labelControl5.Location = new System.Drawing.Point(162, 443);
             this.labelControl5.Name = "labelControl5";
             this.labelControl5.Size = new System.Drawing.Size(156, 18);
             this.labelControl5.TabIndex = 3;
@@ -135,19 +131,19 @@
             this.hyperlinkLabelControl2.Appearance.Font = new System.Drawing.Font("Tahoma", 8F);
             this.hyperlinkLabelControl2.Appearance.Options.UseFont = true;
             this.hyperlinkLabelControl2.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
-            this.hyperlinkLabelControl2.Location = new System.Drawing.Point(28, 440);
+            this.hyperlinkLabelControl2.Location = new System.Drawing.Point(28, 469);
             this.hyperlinkLabelControl2.Name = "hyperlinkLabelControl2";
             this.hyperlinkLabelControl2.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
             this.hyperlinkLabelControl2.Size = new System.Drawing.Size(74, 13);
-            this.hyperlinkLabelControl2.TabIndex = 4;
+            this.hyperlinkLabelControl2.TabIndex = 6;
             this.hyperlinkLabelControl2.Text = "Browse Files...";
             // 
             // btnCreate
             // 
-            this.btnCreate.Location = new System.Drawing.Point(264, 487);
+            this.btnCreate.Location = new System.Drawing.Point(264, 497);
             this.btnCreate.Name = "btnCreate";
             this.btnCreate.Size = new System.Drawing.Size(75, 23);
-            this.btnCreate.TabIndex = 5;
+            this.btnCreate.TabIndex = 7;
             this.btnCreate.Text = "Create";
             this.btnCreate.Click += new System.EventHandler(this.btnCreate_Click);
             // 
@@ -184,44 +180,22 @@
             // 
             // edtTag
             // 
-            this.edtTag.Location = new System.Drawing.Point(28, 299);
+            this.edtTag.Location = new System.Drawing.Point(28, 309);
             this.edtTag.Name = "edtTag";
             this.edtTag.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Plus)});
             this.edtTag.Size = new System.Drawing.Size(301, 20);
-            this.edtTag.TabIndex = 3;
+            this.edtTag.TabIndex = 4;
             this.edtTag.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.edtTag_ButtonClick);
             this.edtTag.KeyUp += new System.Windows.Forms.KeyEventHandler(this.edtTag_KeyUp);
             // 
-            // xtraScrollableControl1
-            // 
-            this.xtraScrollableControl1.Controls.Add(this.panelFuseLage);
-            this.xtraScrollableControl1.Location = new System.Drawing.Point(28, 180);
-            this.xtraScrollableControl1.Name = "xtraScrollableControl1";
-            this.xtraScrollableControl1.Size = new System.Drawing.Size(551, 71);
-            this.xtraScrollableControl1.TabIndex = 7;
-            // 
             // panelFuseLage
             // 
-            this.panelFuseLage.Location = new System.Drawing.Point(-1, 1);
+            this.panelFuseLage.AutoScroll = true;
+            this.panelFuseLage.Location = new System.Drawing.Point(28, 175);
             this.panelFuseLage.Name = "panelFuseLage";
-            this.panelFuseLage.Size = new System.Drawing.Size(532, 114);
-            this.panelFuseLage.TabIndex = 0;
-            // 
-            // xtraScrollableControl2
-            // 
-            this.xtraScrollableControl2.Controls.Add(this.panelTag);
-            this.xtraScrollableControl2.Location = new System.Drawing.Point(28, 325);
-            this.xtraScrollableControl2.Name = "xtraScrollableControl2";
-            this.xtraScrollableControl2.Size = new System.Drawing.Size(551, 71);
-            this.xtraScrollableControl2.TabIndex = 8;
-            // 
-            // panelTag
-            // 
-            this.panelTag.Location = new System.Drawing.Point(0, -1);
-            this.panelTag.Name = "panelTag";
-            this.panelTag.Size = new System.Drawing.Size(531, 108);
-            this.panelTag.TabIndex = 0;
+            this.panelFuseLage.Size = new System.Drawing.Size(532, 90);
+            this.panelFuseLage.TabIndex = 3;
             // 
             // textEdit1
             // 
@@ -242,15 +216,23 @@
             this.cboScenarioType.TabIndex = 0;
             this.cboScenarioType.SelectedIndexChanged += new System.EventHandler(this.cboScenarioType_SelectedIndexChanged);
             // 
+            // panelTag
+            // 
+            this.panelTag.AutoScroll = true;
+            this.panelTag.Location = new System.Drawing.Point(29, 336);
+            this.panelTag.Name = "panelTag";
+            this.panelTag.Size = new System.Drawing.Size(531, 90);
+            this.panelTag.TabIndex = 5;
+            // 
             // NewSenarioForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(603, 522);
+            this.ClientSize = new System.Drawing.Size(603, 532);
+            this.Controls.Add(this.panelTag);
+            this.Controls.Add(this.panelFuseLage);
             this.Controls.Add(this.cboScenarioType);
             this.Controls.Add(this.textEdit1);
-            this.Controls.Add(this.xtraScrollableControl2);
-            this.Controls.Add(this.xtraScrollableControl1);
             this.Controls.Add(this.dateScenario);
             this.Controls.Add(this.edtTag);
             this.Controls.Add(this.edtScenarioName);
@@ -278,8 +260,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.dateScenario.Properties.CalendarTimeProperties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dateScenario.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtTag.Properties)).EndInit();
-            this.xtraScrollableControl1.ResumeLayout(false);
-            this.xtraScrollableControl2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.textEdit1.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cboScenarioType.Properties)).EndInit();
             this.ResumeLayout(false);
@@ -302,11 +282,9 @@
         private DevExpress.XtraEditors.ButtonEdit edtScenarioName;
         private DevExpress.XtraEditors.DateEdit dateScenario;
         private DevExpress.XtraEditors.ButtonEdit edtTag;
-        internal DevExpress.XtraEditors.XtraScrollableControl xtraScrollableControl1;
-        internal DevExpress.XtraEditors.XtraScrollableControl xtraScrollableControl2;
-        private System.Windows.Forms.FlowLayoutPanel panelTag;
         private System.Windows.Forms.FlowLayoutPanel panelFuseLage;
         private DevExpress.XtraEditors.TextEdit textEdit1;
         private DevExpress.XtraEditors.ComboBoxEdit cboScenarioType;
+        private System.Windows.Forms.FlowLayoutPanel panelTag;
     }
 }
