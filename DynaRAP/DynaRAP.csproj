@@ -277,9 +277,11 @@
     <Content Include="Python\Calculator.py">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="Resources\delete.png" />
+    <EmbeddedResource Include="Resources\view.png" />
     <EmbeddedResource Include="Resources\link.png" />
     <EmbeddedResource Include="Resources\none.png" />
-    <None Include="Resources\login.jpg" />
+    <EmbeddedResource Include="Resources\login.jpg" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
