@@ -724,24 +724,19 @@ namespace DynaRAP.UControl
 
         }
 
-
-        int index = 23;
-        private void btnAddParameter_ButtonClick(object sender, ButtonPressedEventArgs e)
-        {
-            AddParameter();
-        }
-
         private void btnAddParameter_ButtonClick(object sender, EventArgs e)
         {
             AddParameter();
         }
 
+        int index = 23;
+
         private void AddParameter()
         {
-            ParameterControl ctrl = new ParameterControl();
-            ctrl.Title = "Parameter " + index.ToString();
-            panelData.Controls.Add(ctrl);
-            panelData.Controls.SetChildIndex(ctrl, index++);
+            //ParameterControl ctrl = new ParameterControl();
+            //ctrl.Title = "Parameter " + index.ToString();
+            //panelData.Controls.Add(ctrl);
+            //panelData.Controls.SetChildIndex(ctrl, index++);
 
         }
 

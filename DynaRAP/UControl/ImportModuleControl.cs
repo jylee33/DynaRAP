@@ -237,17 +237,12 @@ namespace DynaRAP.UControl
 
         }
 
-
-        int index = 23;
-        private void btnAddParameter_ButtonClick(object sender, ButtonPressedEventArgs e)
-        {
-            AddParameter();
-        }
-
         private void btnAddParameter_ButtonClick(object sender, EventArgs e)
         {
             AddParameter();
         }
+
+        int index = 23;
 
         private void AddParameter()
         {

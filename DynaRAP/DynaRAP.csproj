@@ -92,6 +92,7 @@
     </Compile>
     <Compile Include="Data\OverviewDataPoint.cs" />
     <Compile Include="Data\DataSlicing.cs" />
+    <Compile Include="Data\FlyingData.cs" />
     <Compile Include="Data\ProjectData.cs" />
     <Compile Include="Data\RecentProject.cs" />
     <Compile Include="Data\SalesData.cs" />
@@ -104,6 +105,7 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="GridCheckMarksSelection.cs" />
     <Compile Include="LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -123,8 +125,32 @@
       <DependentUpon>NewSenarioForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
+    <Compile Include="SelectSBForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SelectSBForm.Designer.cs">
+      <DependentUpon>SelectSBForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TEST\GridGroupingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TEST\GridGroupingForm.Designer.cs">
+      <DependentUpon>GridGroupingForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\BinParameterControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\BinParameterControl.Designer.cs">
+      <DependentUpon>BinParameterControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="UControl\CustomSimpleButton.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UControl\BinControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\BinControl.Designer.cs">
+      <DependentUpon>BinControl.cs</DependentUpon>
     </Compile>
     <Compile Include="UControl\ShortBlockControl.cs">
       <SubType>UserControl</SubType>
@@ -232,8 +258,20 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="SelectSBForm.resx">
+      <DependentUpon>SelectSBForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TEST\GridGroupingForm.resx">
+      <DependentUpon>GridGroupingForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="TEST\TreeTestForm.resx">
       <DependentUpon>TreeTestForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\BinControl.resx">
+      <DependentUpon>BinControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\BinParameterControl.resx">
+      <DependentUpon>BinParameterControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\ShortBlockControl.resx">
       <DependentUpon>ShortBlockControl.cs</DependentUpon>

@@ -34,6 +34,7 @@ namespace DynaRAP
         StartScreenControl startControl = null;
         ImportModuleControl importModuleControl = null;
         ShortBlockControl shortBlockControl = null;
+        BinControl binControl = null;
 
 
         public MainForm()
@@ -98,6 +99,10 @@ namespace DynaRAP
             else if (e.Document.Control is ShortBlockControl)
             {
                 shortBlockControl = null;
+            }
+            else if (e.Document.Control is BinControl)
+            {
+                binControl = null;
             }
         }
 
@@ -278,6 +283,26 @@ namespace DynaRAP
             else
             {
                 tabbedView1.ActivateDocument(shortBlockControl);
+            }
+
+            if (startControl != null)
+            {
+                tabbedView1.RemoveDocument(startControl);
+            }
+        }
+
+        private void btnBin_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            if (binControl == null)
+            {
+                binControl = new BinControl();
+                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(binControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
+                doc.Caption = "BIN 구성";
+                tabbedView1.ActivateDocument(binControl);
+            }
+            else
+            {
+                tabbedView1.ActivateDocument(binControl);
             }
 
             if (startControl != null)

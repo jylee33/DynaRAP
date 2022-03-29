@@ -441,7 +441,6 @@
             this.btnAddParameter.Properties.ReadOnly = true;
             this.btnAddParameter.Size = new System.Drawing.Size(94, 20);
             this.btnAddParameter.TabIndex = 12;
-            this.btnAddParameter.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.btnAddParameter_ButtonClick);
             this.btnAddParameter.Click += new System.EventHandler(this.btnAddParameter_ButtonClick);
             // 
             // labelControl19

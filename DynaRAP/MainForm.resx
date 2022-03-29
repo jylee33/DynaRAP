@@ -549,6 +549,9 @@
   <data name="btnShortBlock.Caption" xml:space="preserve">
     <value>ShortBlock</value>
   </data>
+  <data name="btnBin.Caption" xml:space="preserve">
+    <value>BIN 구성</value>
+  </data>
   <data name="bar1.Text" xml:space="preserve">
     <value>Tools</value>
   </data>
@@ -678,12 +681,6 @@
   <data name="&gt;&gt;btnPythonTest.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
-  <data name="&gt;&gt;btnChartTest.Name" xml:space="preserve">
-    <value>btnChartTest</value>
-  </data>
-  <data name="&gt;&gt;btnChartTest.Type" xml:space="preserve">
-    <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
-  </data>
   <data name="&gt;&gt;btnLogin.Name" xml:space="preserve">
     <value>btnLogin</value>
   </data>
@@ -694,6 +691,12 @@
     <value>toolTreeTest</value>
   </data>
   <data name="&gt;&gt;toolTreeTest.Type" xml:space="preserve">
+    <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  </data>
+  <data name="&gt;&gt;btnChartTest.Name" xml:space="preserve">
+    <value>btnChartTest</value>
+  </data>
+  <data name="&gt;&gt;btnChartTest.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
   <data name="&gt;&gt;btnStart.Name" xml:space="preserve">
@@ -749,6 +752,12 @@
   </data>
   <data name="&gt;&gt;tabbedView1.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.Docking2010.Views.Tabbed.TabbedView, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  </data>
+  <data name="&gt;&gt;btnBin.Name" xml:space="preserve">
+    <value>btnBin</value>
+  </data>
+  <data name="&gt;&gt;btnBin.Type" xml:space="preserve">
+    <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>MainForm</value>
