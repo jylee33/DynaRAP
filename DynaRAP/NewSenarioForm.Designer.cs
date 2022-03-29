@@ -194,7 +194,7 @@
             this.panelFuseLage.AutoScroll = true;
             this.panelFuseLage.Location = new System.Drawing.Point(28, 175);
             this.panelFuseLage.Name = "panelFuseLage";
-            this.panelFuseLage.Size = new System.Drawing.Size(532, 90);
+            this.panelFuseLage.Size = new System.Drawing.Size(558, 90);
             this.panelFuseLage.TabIndex = 3;
             // 
             // textEdit1
@@ -221,7 +221,7 @@
             this.panelTag.AutoScroll = true;
             this.panelTag.Location = new System.Drawing.Point(29, 336);
             this.panelTag.Name = "panelTag";
-            this.panelTag.Size = new System.Drawing.Size(531, 90);
+            this.panelTag.Size = new System.Drawing.Size(557, 90);
             this.panelTag.TabIndex = 5;
             // 
             // NewSenarioForm

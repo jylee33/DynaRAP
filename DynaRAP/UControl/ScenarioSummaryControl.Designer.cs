@@ -37,11 +37,11 @@
             this.labelControl5 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl6 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl3 = new DevExpress.XtraEditors.LabelControl();
-            this.chartControl1 = new DevExpress.XtraCharts.ChartControl();
+            this.chartOverview = new DevExpress.XtraCharts.ChartControl();
             this.gridControl1 = new DevExpress.XtraGrid.GridControl();
             this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.tableLayoutPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.chartControl1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chartOverview)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(xyDiagram1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(series1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(lineSeriesView1)).BeginInit();
@@ -60,7 +60,7 @@
             this.tableLayoutPanel1.Controls.Add(this.labelControl5, 1, 2);
             this.tableLayoutPanel1.Controls.Add(this.labelControl6, 2, 1);
             this.tableLayoutPanel1.Controls.Add(this.labelControl3, 1, 4);
-            this.tableLayoutPanel1.Controls.Add(this.chartControl1, 1, 5);
+            this.tableLayoutPanel1.Controls.Add(this.chartOverview, 1, 5);
             this.tableLayoutPanel1.Controls.Add(this.gridControl1, 1, 9);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
@@ -127,22 +127,22 @@
             this.labelControl3.TabIndex = 0;
             this.labelControl3.Text = "Data Overview";
             // 
-            // chartControl1
+            // chartOverview
             // 
-            this.tableLayoutPanel1.SetColumnSpan(this.chartControl1, 2);
+            this.tableLayoutPanel1.SetColumnSpan(this.chartOverview, 2);
             xyDiagram1.AxisX.VisibleInPanesSerializable = "-1";
             xyDiagram1.AxisY.VisibleInPanesSerializable = "-1";
-            this.chartControl1.Diagram = xyDiagram1;
-            this.chartControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chartControl1.Location = new System.Drawing.Point(20, 120);
-            this.chartControl1.Margin = new System.Windows.Forms.Padding(0);
-            this.chartControl1.Name = "chartControl1";
+            this.chartOverview.Diagram = xyDiagram1;
+            this.chartOverview.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.chartOverview.Location = new System.Drawing.Point(20, 120);
+            this.chartOverview.Margin = new System.Windows.Forms.Padding(0);
+            this.chartOverview.Name = "chartOverview";
             series1.Name = "Series 1";
             series1.View = lineSeriesView1;
-            this.chartControl1.SeriesSerializable = new DevExpress.XtraCharts.Series[] {
+            this.chartOverview.SeriesSerializable = new DevExpress.XtraCharts.Series[] {
         series1};
-            this.chartControl1.Size = new System.Drawing.Size(738, 120);
-            this.chartControl1.TabIndex = 3;
+            this.chartOverview.Size = new System.Drawing.Size(738, 120);
+            this.chartOverview.TabIndex = 3;
             // 
             // gridControl1
             // 
@@ -177,7 +177,7 @@
             ((System.ComponentModel.ISupportInitialize)(xyDiagram1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(lineSeriesView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(series1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.chartControl1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chartOverview)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
             this.ResumeLayout(false);
@@ -192,7 +192,7 @@
         private DevExpress.XtraEditors.LabelControl labelControl5;
         private DevExpress.XtraEditors.LabelControl labelControl6;
         private DevExpress.XtraEditors.LabelControl labelControl3;
-        private DevExpress.XtraCharts.ChartControl chartControl1;
+        private DevExpress.XtraCharts.ChartControl chartOverview;
         private DevExpress.XtraGrid.GridControl gridControl1;
         private DevExpress.XtraGrid.Views.Grid.GridView gridView1;
     }

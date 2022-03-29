@@ -2,6 +2,7 @@
 using DevExpress.Skins;
 using DevExpress.XtraEditors;
 using DevExpress.XtraGrid.Columns;
+using DynaRAP.Data;
 using DynaRAP.TEST;
 using System;
 using System.Collections.Generic;
@@ -70,19 +71,7 @@ namespace DynaRAP.UControl
         }
     }
 
-    public class RecentProject
-    {
-        public RecentProject()
-        {
-        }
-        public RecentProject(string date, string projectName)
-        {
-            Date = date;
-            ProjectName = projectName;
-        }
-        public string Date { get; set; }
-        public string ProjectName { get; set; }
-    }
+    
 
     
 }

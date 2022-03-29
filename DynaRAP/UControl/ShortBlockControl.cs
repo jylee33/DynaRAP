@@ -1,4 +1,10 @@
-﻿using System;
+﻿using DevExpress.Utils;
+using DevExpress.XtraEditors;
+using DevExpress.XtraEditors.Controls;
+using DevExpress.XtraEditors.Repository;
+using DevExpress.XtraGrid.Columns;
+using DynaRAP.Data;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -9,43 +15,56 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 
-namespace DynaRAP
+namespace DynaRAP.UControl
 {
-    public partial class Form1 : Form
+    public partial class ShortBlockControl : DevExpress.XtraEditors.XtraUserControl
     {
+        string selectedFuselage = string.Empty;
         Series series1 = new Series();
         ChartArea myChartArea = new ChartArea("LineChartArea");
 
-        SizeF curRange = SizeF.Empty;
-        List<SizeF> ranges = new List<SizeF>();
-        List<int> selectedIndices = new List<int>();
-
-        public Form1()
+        public ShortBlockControl()
         {
             InitializeComponent();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void ShortBlockControl_Load(object sender, EventArgs e)
         {
-            //myChartArea.AxisX.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Hours;
+            InitializeFlyingList();
+            InitializeSBParamComboList();
+            InitializeSBParamList();
+            InitializeSplittedList();
+            InitializePreviewChart();
 
-            //myChartArea.AxisX.MajorGrid.Interval = 1D;
-            //myChartArea.AxisX.MajorGrid.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Days;
-            //myChartArea.AxisX.MinorGrid.Enabled = true;
-            //myChartArea.AxisX.MinorGrid.Interval = 3D;
-            //myChartArea.AxisX.MinorGrid.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Hours;
-            //myChartArea.AxisX.MinorGrid.LineColor = System.Drawing.Color.Gray;
-            //myChartArea.AxisX.MinorGrid.LineDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.Dot;
-            //myChartArea.AxisX.MinorTickMark.Enabled = true;
-            //myChartArea.AxisX.MinorTickMark.Interval = 3D;
-            //myChartArea.AxisX.MinorTickMark.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Hours;
-            ////myChartArea.AxisX.ScaleView.MinSize = 3D;
-            ////myChartArea.AxisX.ScaleView.MinSizeType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Days;
-            //myChartArea.AxisX.ScaleView.Size = 3D;
-            //myChartArea.AxisX.ScaleView.SizeType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Days;
-            //myChartArea.AxisX.ScaleView.SmallScrollMinSizeType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Hours;
-            //myChartArea.AxisX.ScaleView.SmallScrollSizeType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Days;
+            //DateTime dtNow = DateTime.Now;
+            //string strNow = string.Format("{0:yyyy-MM-dd}", dtNow);
+            //dateScenario.Text = strNow;
 
+            panelData.AutoScroll = true;
+            panelData.WrapContents = false;
+            panelData.HorizontalScroll.Visible = false;
+            panelData.VerticalScroll.Visible = true;
+
+            edtSBLength.Properties.AutoHeight = false;
+            edtOverlap.Properties.AutoHeight = false;
+            edtSBLength.Dock = DockStyle.Fill;
+            edtOverlap.Dock = DockStyle.Fill;
+
+            edtSBLength.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Numeric;
+            edtSBLength.Properties.Mask.EditMask = @"f2";
+            //edtSBLength.Properties.Mask.PlaceHolder = '0';
+            //edtSBLength.Properties.Mask.SaveLiteral = true;
+            //edtSBLength.Properties.Mask.ShowPlaceHolders = true;
+            edtSBLength.Properties.Mask.UseMaskAsDisplayFormat = true;
+
+            edtOverlap.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Numeric;
+            edtOverlap.Properties.Mask.EditMask = @"d2";
+            edtOverlap.Properties.Mask.UseMaskAsDisplayFormat = true;
+
+        }
+
+        private void InitializePreviewChart()
+        {
             ////
             myChartArea.CursorX.IsUserEnabled = true;
             myChartArea.CursorX.IsUserSelectionEnabled = true;
@@ -53,8 +72,13 @@ namespace DynaRAP
             ////
 
 
-            chart1.ChartAreas.RemoveAt(0);
-            chart1.ChartAreas.Add(myChartArea);
+            chartPreview.BackColor = Color.FromArgb(45, 45, 48);
+
+            chartPreview.ChartAreas.RemoveAt(0);
+            chartPreview.ChartAreas.Add(myChartArea);
+            chartPreview.ChartAreas[0].AxisX.LabelStyle.Enabled = false;
+            chartPreview.ChartAreas[0].AxisY.LabelStyle.Enabled = false;
+
 
             series1.ChartType = SeriesChartType.Line;
             series1.Name = "VAS";
@@ -62,12 +86,12 @@ namespace DynaRAP
             series1.IsValueShownAsLabel = false;
             //series1.IsVisibleInLegend = false;
             series1.LabelForeColor = Color.Red;
-            series1.MarkerStyle = MarkerStyle.Square;
+            series1.MarkerStyle = MarkerStyle.None;
             series1.MarkerSize = 3;
             series1.MarkerColor = Color.Red;
 
             SettingMyData();
-            chart1.Series.Add(series1);
+            chartPreview.Series.Add(series1);
         }
 
         private void SettingMyData()
@@ -439,6 +463,7 @@ namespace DynaRAP
 
 
         }
+
         private void Push_Data(Series series, DateTime dt, int data)
         {
             DataPoint dp = new DataPoint(); //데이타 기록하기 정도
@@ -447,51 +472,310 @@ namespace DynaRAP
 
         }
 
-        private void chart1_SelectionRangeChanging(object sender, CursorEventArgs e)
+        private void InitializeFlyingList()
         {
-            curRange = new SizeF((float)e.NewSelectionStart, (float)e.NewSelectionEnd);
-            //DateTime dt1 =  DateTime.FromOADate(e.NewSelectionStart);
-            //DateTime dt2 =  DateTime.FromOADate(e.NewSelectionEnd);
-            //Console.WriteLine("start : {0}, end : {1}", dt1, dt2);
+            cboFlying.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+
+            cboFlying.SelectedIndexChanged += CboFlying_SelectedIndexChanged;
+
+            cboFlying.Properties.Items.Add("비행분할 #1");
+            cboFlying.Properties.Items.Add("비행분할 #2");
+            cboFlying.Properties.Items.Add("비행분할 #3");
+
+            cboFlying.SelectedIndex = 0;
+
         }
 
-        private void chart1_SelectionRangeChanged(object sender, CursorEventArgs e)
+        private void CboFlying_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //Console.WriteLine(curRange.ToString());
-
-            selectedIndices.Union(collectDataPoints(chart1.Series[0],
-                                  curRange.Width, curRange.Height))
-                           .Distinct();
-
-            StripLine sl = new StripLine();
-            sl.BackColor = Color.FromArgb(255, Color.LightSeaGreen);
-            sl.IntervalOffset = Math.Min(curRange.Width, curRange.Height);
-            sl.StripWidth = Math.Abs(curRange.Height - curRange.Width);
-            chart1.ChartAreas[0].AxisX.StripLines.Add(sl);
-
-            //int x1 = ((int)((PointF)curRange).X);
-            //int x2 = ((int)((PointF)curRange).X) + ((int)sl.StripWidth);
-
-            //Console.WriteLine("x1 : {0}, x2 : {1}", x1, x2);
-            //Console.WriteLine("x1 : {0}, x2 : {1}", ((PointF)curRange).X, ((PointF)curRange).X);
-
-            DateTime dt1 = DateTime.FromOADate(((PointF)curRange).X);
-            DateTime dt2 = DateTime.FromOADate(((PointF)curRange).X + sl.StripWidth);
-
-            if (!dt1.Equals(dt2))
-            {
-                Console.WriteLine("start : {0}, end : {1}", dt1, dt2);
-                ranges.Add(curRange);
-            }
         }
 
-        List<int> collectDataPoints(Series s, double min, double max)
+        private void InitializeSBParamComboList()
         {
-            List<int> hits = new List<int>();
-            for (int i = 0; i < s.Points.Count; i++)
-                if (s.Points[i].XValue >= min && s.Points[i].XValue <= max) hits.Add(i);
-            return hits;
+            cboSBParameter.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+
+            cboSBParameter.SelectedIndexChanged += CboSBParameter_SelectedIndexChanged;
+
+            cboSBParameter.Properties.Items.Add("ShortBlock 파라미너 Preset #1");
+            cboSBParameter.Properties.Items.Add("ShortBlock 파라미너 Preset #2");
+            cboSBParameter.Properties.Items.Add("ShortBlock 파라미너 Preset #3");
+
+            cboSBParameter.SelectedIndex = 0;
         }
 
+        private void CboSBParameter_SelectedIndexChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void InitializeSBParamList()
+        {
+            List<SBParameter> list = new List<SBParameter>();
+
+            repositoryItemComboBox1.TextEditStyle = TextEditStyles.DisableTextEditor;
+            repositoryItemComboBox1.Items.Add("MACH");
+            repositoryItemComboBox1.Items.Add("동압");
+            repositoryItemComboBox1.Items.Add("고도");
+            repositoryItemComboBox1.Items.Add("AOA");
+            repositoryItemComboBox1.Items.Add("AOS");
+            repositoryItemComboBox1.Items.Add("NZ");
+            repositoryItemComboBox1.Items.Add("ROLL RATE");
+            repositoryItemComboBox1.Items.Add("PITCH RATE");
+
+            repositoryItemComboBox2.TextEditStyle = TextEditStyles.DisableTextEditor;
+            repositoryItemComboBox2.Items.Add("SW903_NM RATE");
+            repositoryItemComboBox2.Items.Add("SW904_NM RATE");
+            repositoryItemComboBox2.Items.Add("SW905_NM RATE");
+            repositoryItemComboBox2.Items.Add("SW906_NM RATE");
+
+            list.Add(new SBParameter("MACH", "SW903_NM", 0, 0, 0, 1));
+            list.Add(new SBParameter("동압", "SW903_NM", 0, 0, 0, 1));
+            list.Add(new SBParameter("고도", "SW903_NM", 0, 0, 0, 1));
+            list.Add(new SBParameter("AOA", "SW903_NM", 0, 0, 0, 1));
+            list.Add(new SBParameter("MACH", "SW903_NM", 0, 0, 0, 1));
+            list.Add(new SBParameter("MACH", "SW903_NM", 0, 0, 0, 1));
+            list.Add(new SBParameter("MACH", "SW903_NM", 0, 0, 0, 1));
+            list.Add(new SBParameter("MACH", "SW903_NM", 0, 0, 0, 1));
+            list.Add(new SBParameter("MACH", "SW903_NM", 0, 0, 0, 1));
+            list.Add(new SBParameter("MACH", "SW903_NM", 0, 0, 0, 1));
+            list.Add(new SBParameter("MACH", "SW903_NM", 0, 0, 0, 1));
+            list.Add(new SBParameter("MACH", "SW903_NM", 0, 0, 0, 1));
+            list.Add(new SBParameter("MACH", "SW903_NM", 0, 0, 0, 1));
+            list.Add(new SBParameter("MACH", "SW903_NM", 0, 0, 0, 1));
+            list.Add(new SBParameter("MACH", "SW903_NM", 0, 0, 0, 1));
+
+            this.gridControl1.DataSource = list;
+
+            gridView1.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+
+            gridView1.OptionsView.ShowColumnHeaders = true;
+            gridView1.OptionsView.ShowGroupPanel = false;
+            gridView1.OptionsView.ShowIndicator = false;
+            gridView1.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.False;
+            gridView1.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.False;
+            gridView1.OptionsView.ColumnAutoWidth = true;
+
+            gridView1.OptionsBehavior.ReadOnly = false;
+            //gridView1.OptionsBehavior.Editable = false;
+
+            gridView1.OptionsSelection.MultiSelectMode = DevExpress.XtraGrid.Views.Grid.GridMultiSelectMode.RowSelect;
+            gridView1.OptionsSelection.EnableAppearanceFocusedCell = false;
+
+            GridColumn colType = gridView1.Columns["ParameterType"];
+            colType.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
+            colType.OptionsColumn.FixedWidth = true;
+            colType.Width = 120;
+            colType.Caption = "파라미터 구분";
+
+            GridColumn colName = gridView1.Columns["ParameterName"];
+            colName.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
+            colName.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
+            colName.OptionsColumn.FixedWidth = true;
+            colName.Width = 150;
+            colName.Caption = "파라미터 이름";
+
+            GridColumn colMin = gridView1.Columns["Min"];
+            colMin.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
+            colMin.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
+            colMin.OptionsColumn.FixedWidth = true;
+            colMin.Width = 60;
+            colMin.Caption = "MIN";
+            colMin.OptionsColumn.ReadOnly = true;
+
+            GridColumn colMax = gridView1.Columns["Max"];
+            colMax.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
+            colMax.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
+            colMax.OptionsColumn.FixedWidth = true;
+            colMax.Width = 60;
+            colMax.Caption = "MAX";
+            colMax.OptionsColumn.ReadOnly = true;
+
+            GridColumn colAvg = gridView1.Columns["Avg"];
+            colAvg.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
+            colAvg.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
+            colAvg.OptionsColumn.FixedWidth = true;
+            colAvg.Width = 60;
+            colAvg.Caption = "AVG";
+            colAvg.OptionsColumn.ReadOnly = true;
+
+            GridColumn colDel = gridView1.Columns["Del"];
+            colDel.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
+            colDel.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
+            colDel.OptionsColumn.FixedWidth = true;
+            colDel.Width = 40;
+            colDel.Caption = "삭제";
+            colDel.OptionsColumn.ReadOnly = true;
+
+            this.repositoryItemImageComboBox1.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(0, 0));
+            this.repositoryItemImageComboBox1.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(1, 1));
+
+            this.repositoryItemImageComboBox1.GlyphAlignment = HorzAlignment.Center;
+            this.repositoryItemImageComboBox1.Buttons[0].Visible = false;
+
+            this.repositoryItemImageComboBox1.Click += RepositoryItemImageComboBox1_Click;
+
+        }
+
+        private void InitializeSplittedList()
+        {
+            List<SplittedSB> list = new List<SplittedSB>();
+
+            DateTime dtNow = DateTime.Now;
+            string strNow = string.Format("{0:HH:mm:ss}", dtNow);
+
+            list.Add(new SplittedSB("ShortBlock #1", strNow, strNow, 1));
+            list.Add(new SplittedSB("ShortBlock #1", strNow, strNow, 1));
+            list.Add(new SplittedSB("ShortBlock #1", strNow, strNow, 1));
+            list.Add(new SplittedSB("ShortBlock #1", strNow, strNow, 1));
+            list.Add(new SplittedSB("ShortBlock #1", strNow, strNow, 1));
+            list.Add(new SplittedSB("ShortBlock #1", strNow, strNow, 1));
+            list.Add(new SplittedSB("ShortBlock #1", strNow, strNow, 1));
+            list.Add(new SplittedSB("ShortBlock #1", strNow, strNow, 1));
+            list.Add(new SplittedSB("ShortBlock #1", strNow, strNow, 1));
+            list.Add(new SplittedSB("ShortBlock #1", strNow, strNow, 1));
+            list.Add(new SplittedSB("ShortBlock #1", strNow, strNow, 1));
+            list.Add(new SplittedSB("ShortBlock #1", strNow, strNow, 1));
+            list.Add(new SplittedSB("ShortBlock #1", strNow, strNow, 1));
+            list.Add(new SplittedSB("ShortBlock #1", strNow, strNow, 1));
+            list.Add(new SplittedSB("ShortBlock #1", strNow, strNow, 1));
+            list.Add(new SplittedSB("ShortBlock #1", strNow, strNow, 1));
+
+            this.gridControl2.DataSource = list;
+
+            gridView2.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+
+            gridView2.OptionsView.ShowColumnHeaders = true;
+            gridView2.OptionsView.ShowGroupPanel = false;
+            gridView2.OptionsView.ShowIndicator = false;
+            gridView2.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.False;
+            gridView2.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.False;
+            gridView2.OptionsView.ColumnAutoWidth = true;
+
+            gridView2.OptionsBehavior.ReadOnly = true;
+            //gridView2.OptionsBehavior.Editable = false;
+
+            gridView2.OptionsSelection.MultiSelectMode = DevExpress.XtraGrid.Views.Grid.GridMultiSelectMode.RowSelect;
+            gridView2.OptionsSelection.EnableAppearanceFocusedCell = false;
+
+            GridColumn colName = gridView2.Columns["SbName"];
+            colName.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
+            colName.OptionsColumn.FixedWidth = true;
+            colName.Width = 120;
+            colName.Caption = "구간이름";
+
+            GridColumn colStartTime = gridView2.Columns["StartTime"];
+            colStartTime.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
+            colStartTime.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
+            colStartTime.OptionsColumn.FixedWidth = true;
+            colStartTime.Width = 160;
+            colStartTime.Caption = "시작시간";
+
+            GridColumn colEndTime = gridView2.Columns["EndTime"];
+            colEndTime.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
+            colEndTime.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
+            colEndTime.OptionsColumn.FixedWidth = true;
+            colEndTime.Width = 60;
+            colEndTime.Caption = "종료시간";
+
+
+            GridColumn colView = gridView2.Columns["View"];
+            colView.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
+            colView.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
+            colView.OptionsColumn.FixedWidth = true;
+            colView.Width = 40;
+            colView.Caption = "동작";
+
+            this.repositoryItemImageComboBox2.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(0, 0));
+            this.repositoryItemImageComboBox2.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(1, 1));
+
+            this.repositoryItemImageComboBox2.GlyphAlignment = HorzAlignment.Center;
+            this.repositoryItemImageComboBox2.Buttons[0].Visible = false;
+
+            this.repositoryItemImageComboBox2.Click += RepositoryItemImageComboBox2_Click;
+
+        }
+
+        private void RepositoryItemImageComboBox1_Click(object sender, EventArgs e)
+        {
+            RepositoryItemImageComboBox combo = sender as RepositoryItemImageComboBox;
+
+        }
+
+        private void RepositoryItemImageComboBox2_Click(object sender, EventArgs e)
+        {
+            RepositoryItemImageComboBox combo = sender as RepositoryItemImageComboBox;
+
+        }
+
+
+        private void edtScenarioName_ClearButtonClick(object sender, ButtonPressedEventArgs e)
+        {
+            //edtScenarioName.Text = String.Empty;
+
+        }
+
+
+        private void btnViewData_ButtonClick(object sender, ButtonPressedEventArgs e)
+        {
+
+        }
+
+        private void btnViewData_ButtonClick(object sender, EventArgs e)
+        {
+
+        }
+
+
+        int index = 23;
+        private void btnAddParameter_ButtonClick(object sender, ButtonPressedEventArgs e)
+        {
+            AddParameter();
+        }
+
+        private void btnAddParameter_ButtonClick(object sender, EventArgs e)
+        {
+            AddParameter();
+        }
+
+        private void AddParameter()
+        {
+            ParameterControl ctrl = new ParameterControl();
+            ctrl.Title = "Parameter " + index.ToString();
+            panelData.Controls.Add(ctrl);
+            panelData.Controls.SetChildIndex(ctrl, index++);
+
+        }
+
+        private void btnAddSplittedParameter_ButtonClick(object sender, ButtonPressedEventArgs e)
+        {
+
+        }
+
+        private void btnAddSplittedParameter_ButtonClick(object sender, EventArgs e)
+        {
+
+        }
+
+
+        private void btnSaveSplittedParameter_ButtonClick(object sender, ButtonPressedEventArgs e)
+        {
+
+        }
+
+        private void btnSaveSplittedParameter_ButtonClick(object sender, EventArgs e)
+        {
+
+        }
+
+        private void edtSBLength_ButtonClick(object sender, ButtonPressedEventArgs e)
+        {
+            edtSBLength.Text = String.Empty;
+        }
+
+        private void edtOverlap_ButtonClick(object sender, ButtonPressedEventArgs e)
+        {
+            edtOverlap.Text = String.Empty;
+        }
     }
+
+    
 }

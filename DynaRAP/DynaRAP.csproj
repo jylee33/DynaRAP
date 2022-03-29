@@ -90,6 +90,14 @@
     <Compile Include="CreateScenarioProgressForm.Designer.cs">
       <DependentUpon>CreateScenarioProgressForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Data\OverviewDataPoint.cs" />
+    <Compile Include="Data\DataSlicing.cs" />
+    <Compile Include="Data\ProjectData.cs" />
+    <Compile Include="Data\RecentProject.cs" />
+    <Compile Include="Data\SalesData.cs" />
+    <Compile Include="Data\SplittedSB.cs" />
+    <Compile Include="Data\SBParameter.cs" />
+    <Compile Include="Data\SplittedInterval.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -117,6 +125,12 @@
     <Compile Include="Program.cs" />
     <Compile Include="UControl\CustomSimpleButton.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UControl\ShortBlockControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\ShortBlockControl.Designer.cs">
+      <DependentUpon>ShortBlockControl.cs</DependentUpon>
     </Compile>
     <Compile Include="UControl\ImportModuleControl.cs">
       <SubType>UserControl</SubType>
@@ -221,6 +235,9 @@
     <EmbeddedResource Include="TEST\TreeTestForm.resx">
       <DependentUpon>TreeTestForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UControl\ShortBlockControl.resx">
+      <DependentUpon>ShortBlockControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UControl\ImportModuleControl.resx">
       <DependentUpon>ImportModuleControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -264,5 +281,6 @@
     <EmbeddedResource Include="Resources\none.png" />
     <None Include="Resources\login.jpg" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

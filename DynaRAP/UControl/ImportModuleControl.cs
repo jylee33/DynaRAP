@@ -3,6 +3,7 @@ using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Controls;
 using DevExpress.XtraEditors.Repository;
 using DevExpress.XtraGrid.Columns;
+using DynaRAP.Data;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -280,21 +281,5 @@ namespace DynaRAP.UControl
 
     }
 
-    public class SplittedInterval
-    {
-        public SplittedInterval()
-        {
-        }
-        public SplittedInterval(string intervalName, string startTime, string endTime, int view)
-        {
-            IntervalName = intervalName;
-            StartTime = startTime;
-            EndTime = endTime;
-            View = view;
-        }
-        public string IntervalName { get; set; }
-        public string StartTime { get; set; }
-        public string EndTime { get; set; }
-        public int View { get; set; }
-    }
+    
 }

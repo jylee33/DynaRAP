@@ -42,6 +42,7 @@ namespace DynaRAP
             this.toolTreeTest = new DevExpress.XtraBars.BarButtonItem();
             this.btnStart = new DevExpress.XtraBars.BarButtonItem();
             this.btnPanel = new DevExpress.XtraBars.BarButtonItem();
+            this.btnShortBlock = new DevExpress.XtraBars.BarButtonItem();
             this.bar2 = new DevExpress.XtraBars.Bar();
             this.Workspace = new DevExpress.XtraBars.BarWorkspaceMenuItem();
             this.workspaceManager1 = new DevExpress.Utils.WorkspaceManager(this.components);
@@ -117,9 +118,10 @@ namespace DynaRAP
             this.Workspace,
             this.barSubItem1,
             this.toolTreeTest,
-            this.btnStart});
+            this.btnStart,
+            this.btnShortBlock});
             this.barManager1.MainMenu = this.bar2;
-            this.barManager1.MaxItemId = 14;
+            this.barManager1.MaxItemId = 15;
             this.barManager1.StatusBar = this.bar3;
             // 
             // bar1
@@ -130,8 +132,10 @@ namespace DynaRAP
             this.bar1.DockStyle = DevExpress.XtraBars.BarDockStyle.Top;
             this.bar1.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
             new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem1),
+            new DevExpress.XtraBars.LinkPersistInfo(this.btnChartTest),
             new DevExpress.XtraBars.LinkPersistInfo(this.btnStart),
-            new DevExpress.XtraBars.LinkPersistInfo(this.btnPanel)});
+            new DevExpress.XtraBars.LinkPersistInfo(this.btnPanel),
+            new DevExpress.XtraBars.LinkPersistInfo(this.btnShortBlock)});
             resources.ApplyResources(this.bar1, "bar1");
             // 
             // barSubItem1
@@ -140,7 +144,6 @@ namespace DynaRAP
             this.barSubItem1.Id = 11;
             this.barSubItem1.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
             new DevExpress.XtraBars.LinkPersistInfo(this.btnPythonTest),
-            new DevExpress.XtraBars.LinkPersistInfo(this.btnChartTest),
             new DevExpress.XtraBars.LinkPersistInfo(this.btnLogin),
             new DevExpress.XtraBars.LinkPersistInfo(this.toolTreeTest)});
             this.barSubItem1.Name = "barSubItem1";
@@ -187,6 +190,13 @@ namespace DynaRAP
             this.btnPanel.Id = 8;
             this.btnPanel.Name = "btnPanel";
             this.btnPanel.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnPanel_ItemClick);
+            // 
+            // btnShortBlock
+            // 
+            resources.ApplyResources(this.btnShortBlock, "btnShortBlock");
+            this.btnShortBlock.Id = 14;
+            this.btnShortBlock.Name = "btnShortBlock";
+            this.btnShortBlock.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnShortBlock_ItemClick);
             // 
             // bar2
             // 
@@ -511,5 +521,6 @@ namespace DynaRAP
         private DevExpress.XtraBars.Docking.AutoHideContainer hideContainerRight;
         private DevExpress.XtraBars.Docking.AutoHideContainer hideContainerBottom;
         private DevExpress.XtraBars.BarButtonItem btnStart;
+        private DevExpress.XtraBars.BarButtonItem btnShortBlock;
     }
 }

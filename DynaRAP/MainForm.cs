@@ -33,6 +33,7 @@ namespace DynaRAP
 
         StartScreenControl startControl = null;
         ImportModuleControl importModuleControl = null;
+        ShortBlockControl shortBlockControl = null;
 
 
         public MainForm()
@@ -70,10 +71,17 @@ namespace DynaRAP
 
             tabbedView1.DocumentRemoved += TabbedView1_DocumentRemoved;
 
-            startControl = new StartScreenControl();
-            DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(startControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
-            doc.Caption = "시작화면";
-            tabbedView1.ActivateDocument(startControl);
+            if (startControl == null)
+            {
+                startControl = new StartScreenControl();
+                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(startControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
+                doc.Caption = "시작화면";
+                tabbedView1.ActivateDocument(startControl);
+            }
+            else
+            {
+                tabbedView1.ActivateDocument(startControl);
+            }
 
         }
 
@@ -86,6 +94,10 @@ namespace DynaRAP
             else if (e.Document.Control is ImportModuleControl)
             {
                 importModuleControl = null;
+            }
+            else if (e.Document.Control is ShortBlockControl)
+            {
+                shortBlockControl = null;
             }
         }
 
@@ -207,6 +219,10 @@ namespace DynaRAP
                 doc.Caption = "Import Module";
                 tabbedView1.ActivateDocument(importModuleControl);
             }
+            else
+            {
+                tabbedView1.ActivateDocument(importModuleControl);
+            }
 
             if (startControl != null)
             {
@@ -243,6 +259,30 @@ namespace DynaRAP
                 DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(startControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
                 doc.Caption = "시작화면";
                 tabbedView1.ActivateDocument(startControl);
+            }
+            else
+            {
+                tabbedView1.ActivateDocument(startControl);
+            }
+        }
+
+        private void btnShortBlock_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            if (shortBlockControl == null)
+            {
+                shortBlockControl = new ShortBlockControl();
+                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(shortBlockControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
+                doc.Caption = "Short Block";
+                tabbedView1.ActivateDocument(shortBlockControl);
+            }
+            else
+            {
+                tabbedView1.ActivateDocument(shortBlockControl);
+            }
+
+            if (startControl != null)
+            {
+                tabbedView1.RemoveDocument(startControl);
             }
         }
     }
