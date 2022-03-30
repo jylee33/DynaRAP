@@ -137,11 +137,23 @@
     <Compile Include="TEST\GridGroupingForm.Designer.cs">
       <DependentUpon>GridGroupingForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="TEST\TestGridForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TEST\TestGridForm.Designer.cs">
+      <DependentUpon>TestGridForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="UControl\BinParameterControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="UControl\BinParameterControl.Designer.cs">
       <DependentUpon>BinParameterControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\BinTableControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\BinTableControl.Designer.cs">
+      <DependentUpon>BinTableControl.cs</DependentUpon>
     </Compile>
     <Compile Include="UControl\CustomSimpleButton.cs">
       <SubType>Component</SubType>
@@ -270,6 +282,9 @@
     <EmbeddedResource Include="TEST\GridGroupingForm.resx">
       <DependentUpon>GridGroupingForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="TEST\TestGridForm.resx">
+      <DependentUpon>TestGridForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="TEST\TreeTestForm.resx">
       <DependentUpon>TreeTestForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -278,6 +293,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\BinParameterControl.resx">
       <DependentUpon>BinParameterControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\BinTableControl.resx">
+      <DependentUpon>BinTableControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\SelectSBControl.resx">
       <DependentUpon>SelectSBControl.cs</DependentUpon>

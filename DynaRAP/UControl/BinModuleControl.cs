@@ -24,6 +24,7 @@ namespace DynaRAP.UControl
         Series series1 = new Series();
         ChartArea myChartArea = new ChartArea("LineChartArea");
         DockPanel sbListPanel = null;
+        DockPanel binTablePanel = null;
 
         public BinModuleControl()
         {
@@ -104,7 +105,23 @@ namespace DynaRAP.UControl
 
         private void btnCreateBIN_Click(object sender, EventArgs e)
         {
+            MainForm mainForm = this.ParentForm as MainForm;
 
+            //아래에 panel 추가
+            if (binTablePanel == null)
+            {
+                binTablePanel = mainForm.DockManager1.AddPanel(DockingStyle.Bottom);
+                binTablePanel.Name = "panelBinTable";
+                binTablePanel.Text = "BIN TABLE";
+                binTablePanel.Height = 240;
+                BinTableControl ctrl = new BinTableControl();
+                ctrl.Dock = DockStyle.Fill;
+                binTablePanel.Controls.Add(ctrl);
+            }
+            else
+            {
+                binTablePanel.Show();
+            }
         }
     }
 
