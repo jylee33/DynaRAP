@@ -1,6 +1,6 @@
 ﻿namespace DynaRAP.UControl
 {
-    partial class BinControl
+    partial class BinModuleControl
     {
         /// <summary> 
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BinControl));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BinModuleControl));
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.separatorControl1 = new DevExpress.XtraEditors.SeparatorControl();
             this.labelControl2 = new DevExpress.XtraEditors.LabelControl();
@@ -273,6 +273,7 @@
             this.btnCreateBIN.Size = new System.Drawing.Size(119, 23);
             this.btnCreateBIN.TabIndex = 41;
             this.btnCreateBIN.Text = "BIN 생성";
+            this.btnCreateBIN.Click += new System.EventHandler(this.btnCreateBIN_Click);
             // 
             // imageCollection1
             // 
@@ -286,14 +287,14 @@
             this.imageCollection2.Images.SetKeyName(0, "none.png");
             this.imageCollection2.Images.SetKeyName(1, "view.png");
             // 
-            // BinControl
+            // BinModuleControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.tableLayoutPanel1);
-            this.Name = "BinControl";
+            this.Name = "BinModuleControl";
             this.Size = new System.Drawing.Size(1151, 1624);
-            this.Load += new System.EventHandler(this.BinControl_Load);
+            this.Load += new System.EventHandler(this.BinModuleControl_Load);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.separatorControl1)).EndInit();

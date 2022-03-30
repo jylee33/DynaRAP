@@ -1,4 +1,5 @@
 ﻿using DevExpress.Utils;
+using DevExpress.XtraBars.Docking;
 using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Controls;
 using DevExpress.XtraEditors.Repository;
@@ -17,18 +18,19 @@ using System.Windows.Forms.DataVisualization.Charting;
 
 namespace DynaRAP.UControl
 {
-    public partial class BinControl : DevExpress.XtraEditors.XtraUserControl
+    public partial class BinModuleControl : DevExpress.XtraEditors.XtraUserControl
     {
         string selectedFuselage = string.Empty;
         Series series1 = new Series();
         ChartArea myChartArea = new ChartArea("LineChartArea");
+        DockPanel sbListPanel = null;
 
-        public BinControl()
+        public BinModuleControl()
         {
             InitializeComponent();
         }
 
-        private void BinControl_Load(object sender, EventArgs e)
+        private void BinModuleControl_Load(object sender, EventArgs e)
         {
             InitializeSBParamComboList();
 
@@ -80,8 +82,29 @@ namespace DynaRAP.UControl
 
         private void hyperlinkBrowseSB_Click(object sender, EventArgs e)
         {
-            SelectSBForm form = new SelectSBForm();
-            form.ShowDialog();
+            MainForm mainForm = this.ParentForm as MainForm;
+
+            //우측에 panel 추가
+            if (sbListPanel == null)
+            {
+                sbListPanel = mainForm.DockManager1.AddPanel(DockingStyle.Right);
+                sbListPanel.Name = "panelShortBlock";
+                sbListPanel.Text = "ImportModuleScenarioName";
+                sbListPanel.Width = 240;
+                SelectSBControl ctrl = new SelectSBControl();
+                ctrl.Dock = DockStyle.Fill;
+                sbListPanel.Controls.Add(ctrl);
+            }
+            else
+            {
+                sbListPanel.Show();
+            }
+
+        }
+
+        private void btnCreateBIN_Click(object sender, EventArgs e)
+        {
+
         }
     }
 

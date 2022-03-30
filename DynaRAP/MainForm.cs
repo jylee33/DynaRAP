@@ -23,6 +23,13 @@ namespace DynaRAP
 {
     public partial class MainForm : DevExpress.XtraEditors.XtraForm
     {
+        public DevExpress.XtraBars.Docking.DockManager DockManager1
+        {
+            get
+            {
+                return this.dockManager1;
+            }
+        }
 
         string defaultLayoutFile = "Default.xml";
         string defaultWorkspaceName = "Default";
@@ -34,7 +41,7 @@ namespace DynaRAP
         StartScreenControl startControl = null;
         ImportModuleControl importModuleControl = null;
         ShortBlockControl shortBlockControl = null;
-        BinControl binControl = null;
+        BinModuleControl binModuleControl = null;
 
 
         public MainForm()
@@ -100,9 +107,9 @@ namespace DynaRAP
             {
                 shortBlockControl = null;
             }
-            else if (e.Document.Control is BinControl)
+            else if (e.Document.Control is BinModuleControl)
             {
-                binControl = null;
+                binModuleControl = null;
             }
         }
 
@@ -293,16 +300,16 @@ namespace DynaRAP
 
         private void btnBin_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            if (binControl == null)
+            if (binModuleControl == null)
             {
-                binControl = new BinControl();
-                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(binControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
+                binModuleControl = new BinModuleControl();
+                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(binModuleControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
                 doc.Caption = "BIN 구성";
-                tabbedView1.ActivateDocument(binControl);
+                tabbedView1.ActivateDocument(binModuleControl);
             }
             else
             {
-                tabbedView1.ActivateDocument(binControl);
+                tabbedView1.ActivateDocument(binModuleControl);
             }
 
             if (startControl != null)

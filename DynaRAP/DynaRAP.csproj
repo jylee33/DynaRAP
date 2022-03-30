@@ -146,11 +146,17 @@
     <Compile Include="UControl\CustomSimpleButton.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="UControl\BinControl.cs">
+    <Compile Include="UControl\BinModuleControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UControl\BinControl.Designer.cs">
-      <DependentUpon>BinControl.cs</DependentUpon>
+    <Compile Include="UControl\BinModuleControl.Designer.cs">
+      <DependentUpon>BinModuleControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\SelectSBControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\SelectSBControl.Designer.cs">
+      <DependentUpon>SelectSBControl.cs</DependentUpon>
     </Compile>
     <Compile Include="UControl\ShortBlockControl.cs">
       <SubType>UserControl</SubType>
@@ -267,11 +273,14 @@
     <EmbeddedResource Include="TEST\TreeTestForm.resx">
       <DependentUpon>TreeTestForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UControl\BinControl.resx">
-      <DependentUpon>BinControl.cs</DependentUpon>
+    <EmbeddedResource Include="UControl\BinModuleControl.resx">
+      <DependentUpon>BinModuleControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\BinParameterControl.resx">
       <DependentUpon>BinParameterControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\SelectSBControl.resx">
+      <DependentUpon>SelectSBControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\ShortBlockControl.resx">
       <DependentUpon>ShortBlockControl.cs</DependentUpon>

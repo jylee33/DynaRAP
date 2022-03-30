@@ -43,6 +43,7 @@ namespace DynaRAP
             this.btnStart = new DevExpress.XtraBars.BarButtonItem();
             this.btnPanel = new DevExpress.XtraBars.BarButtonItem();
             this.btnShortBlock = new DevExpress.XtraBars.BarButtonItem();
+            this.btnBin = new DevExpress.XtraBars.BarButtonItem();
             this.bar2 = new DevExpress.XtraBars.Bar();
             this.Workspace = new DevExpress.XtraBars.BarWorkspaceMenuItem();
             this.workspaceManager1 = new DevExpress.Utils.WorkspaceManager(this.components);
@@ -72,7 +73,6 @@ namespace DynaRAP
             this.dockPanel4_Container = new DevExpress.XtraBars.Docking.ControlContainer();
             this.tabbedView1 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.TabbedView(this.components);
             this.panelContainer1 = new DevExpress.XtraBars.Docking.DockPanel();
-            this.btnBin = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.documentManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dockManager1)).BeginInit();
@@ -201,6 +201,13 @@ namespace DynaRAP
             this.btnShortBlock.Name = "btnShortBlock";
             this.btnShortBlock.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnShortBlock_ItemClick);
             // 
+            // btnBin
+            // 
+            resources.ApplyResources(this.btnBin, "btnBin");
+            this.btnBin.Id = 15;
+            this.btnBin.Name = "btnBin";
+            this.btnBin.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnBin_ItemClick);
+            // 
             // bar2
             // 
             this.bar2.BarName = "Main menu";
@@ -293,7 +300,7 @@ namespace DynaRAP
             // 
             // panelContainer4
             // 
-            this.panelContainer4.ActiveChild = this.dockPanelOther;
+            this.panelContainer4.ActiveChild = this.panelScenario;
             this.panelContainer4.Controls.Add(this.panelScenario);
             this.panelContainer4.Controls.Add(this.dockPanelOther);
             this.panelContainer4.Dock = DevExpress.XtraBars.Docking.DockingStyle.Left;
@@ -313,7 +320,7 @@ namespace DynaRAP
             this.dockPanelOther.ID = new System.Guid("a0efe638-b924-4a0a-aef0-81a62aa06a39");
             resources.ApplyResources(this.dockPanelOther, "dockPanelOther");
             this.dockPanelOther.Name = "dockPanelOther";
-            this.dockPanelOther.OriginalSize = new System.Drawing.Size(294, 607);
+            this.dockPanelOther.OriginalSize = new System.Drawing.Size(294, 571);
             // 
             // controlContainer2
             // 
@@ -327,7 +334,7 @@ namespace DynaRAP
             this.panelScenario.ID = new System.Guid("ac197e9b-7668-43be-9d4c-dece8fdffa98");
             resources.ApplyResources(this.panelScenario, "panelScenario");
             this.panelScenario.Name = "panelScenario";
-            this.panelScenario.OriginalSize = new System.Drawing.Size(294, 607);
+            this.panelScenario.OriginalSize = new System.Drawing.Size(294, 571);
             // 
             // dockPanel1_Container
             // 
@@ -394,7 +401,7 @@ namespace DynaRAP
             // 
             // panelContainer2
             // 
-            this.panelContainer2.ActiveChild = this.panelLogs;
+            this.panelContainer2.ActiveChild = this.panelLogs2;
             this.panelContainer2.Controls.Add(this.panelLogs);
             this.panelContainer2.Controls.Add(this.panelLogs2);
             this.panelContainer2.Dock = DevExpress.XtraBars.Docking.DockingStyle.Bottom;
@@ -416,7 +423,7 @@ namespace DynaRAP
             resources.ApplyResources(this.panelLogs, "panelLogs");
             this.panelLogs.Name = "panelLogs";
             this.panelLogs.Options.ShowCloseButton = false;
-            this.panelLogs.OriginalSize = new System.Drawing.Size(1084, 145);
+            this.panelLogs.OriginalSize = new System.Drawing.Size(1012, 171);
             // 
             // controlContainer1
             // 
@@ -432,7 +439,7 @@ namespace DynaRAP
             resources.ApplyResources(this.panelLogs2, "panelLogs2");
             this.panelLogs2.Name = "panelLogs2";
             this.panelLogs2.Options.ShowCloseButton = false;
-            this.panelLogs2.OriginalSize = new System.Drawing.Size(1084, 145);
+            this.panelLogs2.OriginalSize = new System.Drawing.Size(1012, 171);
             // 
             // dockPanel4_Container
             // 
@@ -447,13 +454,6 @@ namespace DynaRAP
             resources.ApplyResources(this.panelContainer1, "panelContainer1");
             this.panelContainer1.Name = "panelContainer1";
             this.panelContainer1.OriginalSize = new System.Drawing.Size(200, 200);
-            // 
-            // btnBin
-            // 
-            resources.ApplyResources(this.btnBin, "btnBin");
-            this.btnBin.Id = 15;
-            this.btnBin.Name = "btnBin";
-            this.btnBin.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnBin_ItemClick);
             // 
             // MainForm
             // 
