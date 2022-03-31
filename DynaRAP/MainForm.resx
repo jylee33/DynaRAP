@@ -531,14 +531,14 @@
   <data name="btnPythonTest.Caption" xml:space="preserve">
     <value>Python</value>
   </data>
-  <data name="btnLogin.Caption" xml:space="preserve">
-    <value>Login</value>
-  </data>
   <data name="toolTreeTest.Caption" xml:space="preserve">
     <value>Tree</value>
   </data>
   <data name="btnChartTest.Caption" xml:space="preserve">
     <value>Chart</value>
+  </data>
+  <data name="btnLogin.Caption" xml:space="preserve">
+    <value>Login</value>
   </data>
   <data name="btnStart.Caption" xml:space="preserve">
     <value>Start</value>

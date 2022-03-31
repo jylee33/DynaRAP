@@ -44,6 +44,7 @@ namespace DynaRAP.UControl
             panelData.HorizontalScroll.Visible = false;
             panelData.VerticalScroll.Visible = true;
 
+            btnAddParameter.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
 
         }
 

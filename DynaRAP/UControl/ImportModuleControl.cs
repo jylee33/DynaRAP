@@ -39,6 +39,10 @@ namespace DynaRAP.UControl
             panelData.HorizontalScroll.Visible = false;
             panelData.VerticalScroll.Visible = true;
 
+            btnViewData.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            btnAddParameter.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            btnAddSplittedInterval.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            btnSaveSplittedInterval.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
         }
 
         private void InitializeFuselageList()
@@ -215,6 +219,7 @@ namespace DynaRAP.UControl
             btn.Font = new Font(btn.Font, FontStyle.Bold);
             btn.Properties.Appearance.TextOptions.HAlignment = HorzAlignment.Center;
             btn.ReadOnly = true;
+            btn.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             btn.ButtonClick += removeTag_ButtonClick;
             btn.Text = name;
             panelTag.Controls.Add(btn);

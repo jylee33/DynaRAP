@@ -55,11 +55,11 @@ namespace DynaRAP
             this.dockManager1 = new DevExpress.XtraBars.Docking.DockManager(this.components);
             this.hideContainerLeft = new DevExpress.XtraBars.Docking.AutoHideContainer();
             this.panelContainer4 = new DevExpress.XtraBars.Docking.DockPanel();
-            this.dockPanelOther = new DevExpress.XtraBars.Docking.DockPanel();
-            this.controlContainer2 = new DevExpress.XtraBars.Docking.ControlContainer();
             this.panelScenario = new DevExpress.XtraBars.Docking.DockPanel();
             this.dockPanel1_Container = new DevExpress.XtraBars.Docking.ControlContainer();
             this.projectListControl = new DynaRAP.UControl.ProjectListControl();
+            this.dockPanelOther = new DevExpress.XtraBars.Docking.DockPanel();
+            this.controlContainer2 = new DevExpress.XtraBars.Docking.ControlContainer();
             this.hideContainerRight = new DevExpress.XtraBars.Docking.AutoHideContainer();
             this.panelPlot = new DevExpress.XtraBars.Docking.DockPanel();
             this.dockPanel2_Container = new DevExpress.XtraBars.Docking.ControlContainer();
@@ -67,10 +67,10 @@ namespace DynaRAP
             this.dockPanel3_Container = new DevExpress.XtraBars.Docking.ControlContainer();
             this.hideContainerBottom = new DevExpress.XtraBars.Docking.AutoHideContainer();
             this.panelContainer2 = new DevExpress.XtraBars.Docking.DockPanel();
-            this.panelLogs = new DevExpress.XtraBars.Docking.DockPanel();
-            this.controlContainer1 = new DevExpress.XtraBars.Docking.ControlContainer();
             this.panelLogs2 = new DevExpress.XtraBars.Docking.DockPanel();
             this.dockPanel4_Container = new DevExpress.XtraBars.Docking.ControlContainer();
+            this.panelLogs = new DevExpress.XtraBars.Docking.DockPanel();
+            this.controlContainer1 = new DevExpress.XtraBars.Docking.ControlContainer();
             this.tabbedView1 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.TabbedView(this.components);
             this.panelContainer1 = new DevExpress.XtraBars.Docking.DockPanel();
             ((System.ComponentModel.ISupportInitialize)(this.documentManager1)).BeginInit();
@@ -78,16 +78,16 @@ namespace DynaRAP
             ((System.ComponentModel.ISupportInitialize)(this.dockManager1)).BeginInit();
             this.hideContainerLeft.SuspendLayout();
             this.panelContainer4.SuspendLayout();
-            this.dockPanelOther.SuspendLayout();
             this.panelScenario.SuspendLayout();
             this.dockPanel1_Container.SuspendLayout();
+            this.dockPanelOther.SuspendLayout();
             this.hideContainerRight.SuspendLayout();
             this.panelPlot.SuspendLayout();
             this.panelProperties.SuspendLayout();
             this.hideContainerBottom.SuspendLayout();
             this.panelContainer2.SuspendLayout();
-            this.panelLogs.SuspendLayout();
             this.panelLogs2.SuspendLayout();
+            this.panelLogs.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tabbedView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -134,7 +134,7 @@ namespace DynaRAP
             this.bar1.DockStyle = DevExpress.XtraBars.BarDockStyle.Top;
             this.bar1.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
             new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem1),
-            new DevExpress.XtraBars.LinkPersistInfo(this.btnChartTest),
+            new DevExpress.XtraBars.LinkPersistInfo(this.btnLogin),
             new DevExpress.XtraBars.LinkPersistInfo(this.btnStart),
             new DevExpress.XtraBars.LinkPersistInfo(this.btnPanel),
             new DevExpress.XtraBars.LinkPersistInfo(this.btnShortBlock),
@@ -147,8 +147,8 @@ namespace DynaRAP
             this.barSubItem1.Id = 11;
             this.barSubItem1.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
             new DevExpress.XtraBars.LinkPersistInfo(this.btnPythonTest),
-            new DevExpress.XtraBars.LinkPersistInfo(this.btnLogin),
-            new DevExpress.XtraBars.LinkPersistInfo(this.toolTreeTest)});
+            new DevExpress.XtraBars.LinkPersistInfo(this.toolTreeTest),
+            new DevExpress.XtraBars.LinkPersistInfo(this.btnChartTest)});
             this.barSubItem1.Name = "barSubItem1";
             // 
             // btnPythonTest
@@ -178,6 +178,7 @@ namespace DynaRAP
             resources.ApplyResources(this.btnChartTest, "btnChartTest");
             this.btnChartTest.Id = 6;
             this.btnChartTest.Name = "btnChartTest";
+            this.btnChartTest.Visibility = DevExpress.XtraBars.BarItemVisibility.Never;
             this.btnChartTest.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnChartTest_ItemClick);
             // 
             // btnStart
@@ -313,20 +314,6 @@ namespace DynaRAP
             this.panelContainer4.Tabbed = true;
             this.panelContainer4.Visibility = DevExpress.XtraBars.Docking.DockVisibility.AutoHide;
             // 
-            // dockPanelOther
-            // 
-            this.dockPanelOther.Controls.Add(this.controlContainer2);
-            this.dockPanelOther.Dock = DevExpress.XtraBars.Docking.DockingStyle.Fill;
-            this.dockPanelOther.ID = new System.Guid("a0efe638-b924-4a0a-aef0-81a62aa06a39");
-            resources.ApplyResources(this.dockPanelOther, "dockPanelOther");
-            this.dockPanelOther.Name = "dockPanelOther";
-            this.dockPanelOther.OriginalSize = new System.Drawing.Size(294, 571);
-            // 
-            // controlContainer2
-            // 
-            resources.ApplyResources(this.controlContainer2, "controlContainer2");
-            this.controlContainer2.Name = "controlContainer2";
-            // 
             // panelScenario
             // 
             this.panelScenario.Controls.Add(this.dockPanel1_Container);
@@ -346,6 +333,20 @@ namespace DynaRAP
             // 
             resources.ApplyResources(this.projectListControl, "projectListControl");
             this.projectListControl.Name = "projectListControl";
+            // 
+            // dockPanelOther
+            // 
+            this.dockPanelOther.Controls.Add(this.controlContainer2);
+            this.dockPanelOther.Dock = DevExpress.XtraBars.Docking.DockingStyle.Fill;
+            this.dockPanelOther.ID = new System.Guid("a0efe638-b924-4a0a-aef0-81a62aa06a39");
+            resources.ApplyResources(this.dockPanelOther, "dockPanelOther");
+            this.dockPanelOther.Name = "dockPanelOther";
+            this.dockPanelOther.OriginalSize = new System.Drawing.Size(294, 571);
+            // 
+            // controlContainer2
+            // 
+            resources.ApplyResources(this.controlContainer2, "controlContainer2");
+            this.controlContainer2.Name = "controlContainer2";
             // 
             // hideContainerRight
             // 
@@ -415,21 +416,6 @@ namespace DynaRAP
             this.panelContainer2.Tabbed = true;
             this.panelContainer2.Visibility = DevExpress.XtraBars.Docking.DockVisibility.AutoHide;
             // 
-            // panelLogs
-            // 
-            this.panelLogs.Controls.Add(this.controlContainer1);
-            this.panelLogs.Dock = DevExpress.XtraBars.Docking.DockingStyle.Fill;
-            this.panelLogs.ID = new System.Guid("d9a0ca3c-ea60-4ccb-b13a-157b5c5f38f6");
-            resources.ApplyResources(this.panelLogs, "panelLogs");
-            this.panelLogs.Name = "panelLogs";
-            this.panelLogs.Options.ShowCloseButton = false;
-            this.panelLogs.OriginalSize = new System.Drawing.Size(1012, 171);
-            // 
-            // controlContainer1
-            // 
-            resources.ApplyResources(this.controlContainer1, "controlContainer1");
-            this.controlContainer1.Name = "controlContainer1";
-            // 
             // panelLogs2
             // 
             this.panelLogs2.Controls.Add(this.dockPanel4_Container);
@@ -445,6 +431,21 @@ namespace DynaRAP
             // 
             resources.ApplyResources(this.dockPanel4_Container, "dockPanel4_Container");
             this.dockPanel4_Container.Name = "dockPanel4_Container";
+            // 
+            // panelLogs
+            // 
+            this.panelLogs.Controls.Add(this.controlContainer1);
+            this.panelLogs.Dock = DevExpress.XtraBars.Docking.DockingStyle.Fill;
+            this.panelLogs.ID = new System.Guid("d9a0ca3c-ea60-4ccb-b13a-157b5c5f38f6");
+            resources.ApplyResources(this.panelLogs, "panelLogs");
+            this.panelLogs.Name = "panelLogs";
+            this.panelLogs.Options.ShowCloseButton = false;
+            this.panelLogs.OriginalSize = new System.Drawing.Size(1012, 171);
+            // 
+            // controlContainer1
+            // 
+            resources.ApplyResources(this.controlContainer1, "controlContainer1");
+            this.controlContainer1.Name = "controlContainer1";
             // 
             // panelContainer1
             // 
@@ -474,16 +475,16 @@ namespace DynaRAP
             ((System.ComponentModel.ISupportInitialize)(this.dockManager1)).EndInit();
             this.hideContainerLeft.ResumeLayout(false);
             this.panelContainer4.ResumeLayout(false);
-            this.dockPanelOther.ResumeLayout(false);
             this.panelScenario.ResumeLayout(false);
             this.dockPanel1_Container.ResumeLayout(false);
+            this.dockPanelOther.ResumeLayout(false);
             this.hideContainerRight.ResumeLayout(false);
             this.panelPlot.ResumeLayout(false);
             this.panelProperties.ResumeLayout(false);
             this.hideContainerBottom.ResumeLayout(false);
             this.panelContainer2.ResumeLayout(false);
-            this.panelLogs.ResumeLayout(false);
             this.panelLogs2.ResumeLayout(false);
+            this.panelLogs.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.tabbedView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

@@ -80,7 +80,8 @@ namespace DynaRAP
             buttonEdit1.Properties.Appearance.TextOptions.HAlignment = HorzAlignment.Center;
             buttonEdit1.Properties.Appearance.TextOptions.WordWrap = WordWrap.Wrap;
             buttonEdit1.Properties.AutoHeight = true;
-            buttonEdit1.ReadOnly = true;
+            //buttonEdit1.ReadOnly = true;
+            buttonEdit1.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             buttonEdit1.ButtonClick += removeTag_ButtonClick;
             buttonEdit1.Text = "TESTabcdefghijklmnTESTabcdefghijklmnTESTabcdefghijklmn";
             //// for testing ButtonEdit
@@ -369,7 +370,8 @@ namespace DynaRAP
             btn.Properties.Appearance.BorderColor = Color.White;
             btn.Font = new Font(btn.Font, FontStyle.Bold);
             btn.Properties.Appearance.TextOptions.HAlignment = HorzAlignment.Center;
-            btn.ReadOnly = true;
+            //btn.ReadOnly = true;
+            btn.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             btn.ButtonClick += removeTag_ButtonClick;
             btn.Text = name;
             panelTag.Controls.Add(btn);

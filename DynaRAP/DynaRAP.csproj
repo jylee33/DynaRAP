@@ -139,6 +139,12 @@
     <Compile Include="TEST\GridGroupingForm.Designer.cs">
       <DependentUpon>GridGroupingForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="TEST\TestForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TEST\TestForm.Designer.cs">
+      <DependentUpon>TestForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="TEST\TestGrid2Form.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -325,6 +331,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="TEST\GridGroupingForm.resx">
       <DependentUpon>GridGroupingForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TEST\TestForm.resx">
+      <DependentUpon>TestForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TEST\TestGrid2Form.resx">
       <DependentUpon>TestGrid2Form.cs</DependentUpon>

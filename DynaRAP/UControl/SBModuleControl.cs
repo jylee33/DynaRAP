@@ -59,6 +59,9 @@ namespace DynaRAP.UControl
             edtOverlap.Properties.Mask.EditMask = @"d2";
             edtOverlap.Properties.Mask.UseMaskAsDisplayFormat = true;
 
+            btnAddParameter.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            btnSaveSplittedParameter.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+
             AddSplittedInterval();
             AddSplittedInterval();
             AddSplittedInterval();
