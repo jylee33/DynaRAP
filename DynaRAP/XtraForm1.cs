@@ -84,12 +84,14 @@ namespace DynaRAP
 
         private void AddFuselage(string name)
         {
-            TextEdit edit = new TextEdit();
+            ButtonEdit edit = new ButtonEdit();
             edit.BorderStyle = BorderStyles.Simple;
             edit.ForeColor = Color.Gray;
             edit.Properties.Appearance.BorderColor = Color.Gray;
             edit.Properties.Appearance.TextOptions.HAlignment = HorzAlignment.Center;
-            edit.ReadOnly = true;
+            //edit.ReadOnly = true;
+            edit.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            edit.Properties.Buttons[0].Visible = false;
             //edit.Properties.AllowFocused = false;
             edit.Text = name;
             edit.Click += Fuselage_Click;

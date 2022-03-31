@@ -22,8 +22,10 @@ namespace DynaRAP.TEST
         {
             //buttonEdit1.Properties.ReadOnly = true;
             buttonEdit1.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            buttonEdit1.Properties.Buttons[0].Visible = false;
             buttonEdit1.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
             buttonEdit1.Text = "Test";
+            
         }
     }
 }
