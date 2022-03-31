@@ -1,4 +1,5 @@
-﻿using DevExpress.XtraEditors;
+﻿using DevExpress.XtraBars.Docking;
+using DevExpress.XtraEditors;
 using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Columns;
 using DevExpress.XtraGrid.Views.BandedGrid;
@@ -19,6 +20,9 @@ namespace DynaRAP.UControl
 {
     public partial class BinTableControl : DevExpress.XtraEditors.XtraUserControl
     {
+        DockPanel binSBTabPanel = null;
+
+
         public BinTableControl()
         {
             InitializeComponent();
@@ -36,7 +40,7 @@ namespace DynaRAP.UControl
         {
             DataTable dt = new DataTable();
 
-            dt.Columns.Add("AOA");
+            dt.Columns.Add("IdxValue");
             dt.Columns.Add("Column1");
             dt.Columns.Add("Column2");
             dt.Columns.Add("Column3");
@@ -119,11 +123,13 @@ namespace DynaRAP.UControl
             bandedGridView.Appearance.Row.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
 
             // 아래처럼 LookAndFeel 제거를 해야 원하는 컬러로 세팅이 가능하다.
-            gridControl.LookAndFeel.Style = DevExpress.LookAndFeel.LookAndFeelStyle.Flat;
-            gridControl.LookAndFeel.UseDefaultLookAndFeel = false;
-            bandedGridView.Appearance.HeaderPanel.Options.UseBackColor = true;
-            bandedGridView.Appearance.HeaderPanel.BackColor = Color.Gray;
-            //bandedGridView.Appearance.HeaderPanel.Options.UseBorderColor = false;
+            //gridControl.LookAndFeel.Style = DevExpress.LookAndFeel.LookAndFeelStyle.Flat;
+            //gridControl.LookAndFeel.UseDefaultLookAndFeel = false;
+            //bandedGridView.Appearance.HeaderPanel.Options.UseBackColor = true;
+            //bandedGridView.Appearance.HeaderPanel.BackColor = Color.Gray;
+
+            bandedGridView.RowCellStyle += BandedGridView_RowCellStyle;
+            bandedGridView.RowCellClick += BandedGridView_RowCellClick;
 
             //bandedGridView.ColumnPanelRowHeight = 40;
             //bandedGridView.IndicatorWidth = 100;
@@ -132,14 +138,16 @@ namespace DynaRAP.UControl
 
             gridBand1.Caption = "AOS";
             gridBand1.AppearanceHeader.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
-            gridBand1.AppearanceHeader.BackColor = Color.Gray;
+            //gridBand1.AppearanceHeader.BackColor = Color.Gray;
             //gridBand1.Columns.Clear();
 
-            BandedGridColumn colIndex = bandedGridView.Columns["AOA"];
+            BandedGridColumn colIndex = bandedGridView.Columns["IdxValue"];
             colIndex.OptionsColumn.FixedWidth = true;
             colIndex.Width = 80;
             //gridBand1.Columns.Add(colIndex);
-            colIndex.AppearanceCell.BackColor = Color.Gray;
+            //colIndex.AppearanceHeader.Options.UseBackColor = true;
+            //colIndex.AppearanceHeader.BackColor = Color.Gray;
+            //colIndex.AppearanceCell.BackColor = Color.Gray;
             //colIndex.AppearanceHeader.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
             //colIndex.AppearanceCell.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
             colIndex.OptionsColumn.AllowFocus = false;
@@ -172,5 +180,60 @@ namespace DynaRAP.UControl
 
         }
 
+        private void BandedGridView_RowCellClick(object sender, RowCellClickEventArgs e)
+        {
+            BandedGridView gridView = sender as BandedGridView;
+
+            string index = gridView.GetRowCellValue(e.RowHandle, "IdxValue").ToString();
+            Console.WriteLine("selected " + index);
+
+            MainForm mainForm = this.ParentForm as MainForm;
+
+            // panel 추가
+            if (binSBTabPanel == null)
+            {
+                binSBTabPanel = mainForm.DockManager1.AddPanel(DockingStyle.Float);
+                binSBTabPanel.FloatLocation = new Point(500, 100);
+                binSBTabPanel.FloatSize = new Size(466, 920);
+                binSBTabPanel.Name = "ShortBlock Panel";
+                binSBTabPanel.Text = "ShortBlock Panel";
+                BinSBTabControl ctrl = new BinSBTabControl();
+                ctrl.IdxValue = index;
+                ctrl.Dock = DockStyle.Fill;
+                binSBTabPanel.Controls.Add(ctrl);
+            }
+            else
+            {
+                foreach(Control ctrl in binSBTabPanel.Controls)
+                {
+                    if(ctrl is BinSBTabControl)
+                    {
+                        BinSBTabControl control = ctrl as BinSBTabControl;
+                        control.IdxValue = index;
+                    }
+                }
+                binSBTabPanel.Show();
+            }
+
+        }
+
+        private void BandedGridView_RowCellStyle(object sender, RowCellStyleEventArgs e)
+        {
+            BandedGridView gridView = sender as BandedGridView;
+            //e.Appearance.BackColor = Color.Black;
+
+            if (e.Column.FieldName == "Customer")
+            {
+                bool value = Convert.ToBoolean(gridView.GetRowCellValue(e.RowHandle, "Flag_Customer"));
+                if (value)
+                    e.Appearance.BackColor = Color.Red;
+            }
+            if (e.Column.FieldName == "Vendor")
+            {
+                bool value = Convert.ToBoolean(gridView.GetRowCellValue(e.RowHandle, "Flat_Vendor"));
+                if (value)
+                    e.Appearance.BackColor = Color.Red;
+            }
+        }
     }
 }

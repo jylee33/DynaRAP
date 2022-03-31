@@ -28,7 +28,7 @@ namespace DynaRAP.UControl
         private void ImportModuleControl_Load(object sender, EventArgs e)
         {
             InitializeFuselageList();
-            InitializeSplittedRegionList();
+            //InitializeSplittedRegionList();
 
             DateTime dtNow = DateTime.Now;
             string strNow = string.Format("{0:yyyy-MM-dd}", dtNow);
@@ -96,82 +96,82 @@ namespace DynaRAP.UControl
             }
         }
 
-        private void InitializeSplittedRegionList()
-        {
-            List<SplittedInterval> list = new List<SplittedInterval>();
-            DateTime dtNow = DateTime.Now;
-            string strNow = string.Format("{0:HH:mm:ss}", dtNow);
+        //private void InitializeSplittedRegionList()
+        //{
+        //    List<SplittedInterval> list = new List<SplittedInterval>();
+        //    DateTime dtNow = DateTime.Now;
+        //    string strNow = string.Format("{0:HH:mm:ss}", dtNow);
 
-            list.Add(new SplittedInterval("비행구간#1", strNow, strNow, 1));
-            list.Add(new SplittedInterval("비행구간#2", strNow, strNow, 1));
-            list.Add(new SplittedInterval("비행구간#3", strNow, strNow, 1));
-            list.Add(new SplittedInterval("비행구간#4", strNow, strNow, 1));
-            list.Add(new SplittedInterval("비행구간#5", strNow, strNow, 1));
-            list.Add(new SplittedInterval("비행구간#1", strNow, strNow, 1));
-            list.Add(new SplittedInterval("비행구간#2", strNow, strNow, 1));
-            list.Add(new SplittedInterval("비행구간#3", strNow, strNow, 1));
-            list.Add(new SplittedInterval("비행구간#4", strNow, strNow, 1));
-            list.Add(new SplittedInterval("비행구간#5", strNow, strNow, 1));
+        //    list.Add(new SplittedInterval("비행구간#1", strNow, strNow, 1));
+        //    list.Add(new SplittedInterval("비행구간#2", strNow, strNow, 1));
+        //    list.Add(new SplittedInterval("비행구간#3", strNow, strNow, 1));
+        //    list.Add(new SplittedInterval("비행구간#4", strNow, strNow, 1));
+        //    list.Add(new SplittedInterval("비행구간#5", strNow, strNow, 1));
+        //    list.Add(new SplittedInterval("비행구간#1", strNow, strNow, 1));
+        //    list.Add(new SplittedInterval("비행구간#2", strNow, strNow, 1));
+        //    list.Add(new SplittedInterval("비행구간#3", strNow, strNow, 1));
+        //    list.Add(new SplittedInterval("비행구간#4", strNow, strNow, 1));
+        //    list.Add(new SplittedInterval("비행구간#5", strNow, strNow, 1));
 
-            this.gridControl1.DataSource = list;
+        //    this.gridControl1.DataSource = list;
 
-            gridView1.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+        //    gridView1.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
 
-            gridView1.OptionsView.ShowColumnHeaders = true;
-            gridView1.OptionsView.ShowGroupPanel = false;
-            gridView1.OptionsView.ShowIndicator = false;
-            gridView1.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.False;
-            gridView1.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.False;
-            gridView1.OptionsView.ColumnAutoWidth = false;
+        //    gridView1.OptionsView.ShowColumnHeaders = true;
+        //    gridView1.OptionsView.ShowGroupPanel = false;
+        //    gridView1.OptionsView.ShowIndicator = false;
+        //    gridView1.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.False;
+        //    gridView1.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.False;
+        //    gridView1.OptionsView.ColumnAutoWidth = false;
 
-            gridView1.OptionsBehavior.ReadOnly = true;
-            //gridView1.OptionsBehavior.Editable = false;
+        //    gridView1.OptionsBehavior.ReadOnly = true;
+        //    //gridView1.OptionsBehavior.Editable = false;
 
-            gridView1.OptionsSelection.MultiSelectMode = DevExpress.XtraGrid.Views.Grid.GridMultiSelectMode.RowSelect;
-            gridView1.OptionsSelection.EnableAppearanceFocusedCell = false;
+        //    gridView1.OptionsSelection.MultiSelectMode = DevExpress.XtraGrid.Views.Grid.GridMultiSelectMode.RowSelect;
+        //    gridView1.OptionsSelection.EnableAppearanceFocusedCell = false;
 
-            GridColumn colName = gridView1.Columns["IntervalName"];
-            colName.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
-            colName.OptionsColumn.FixedWidth = true;
-            colName.Width = 130;
-            colName.Caption = "구간이름";
+        //    GridColumn colName = gridView1.Columns["IntervalName"];
+        //    colName.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
+        //    colName.OptionsColumn.FixedWidth = true;
+        //    colName.Width = 130;
+        //    colName.Caption = "구간이름";
 
-            GridColumn colStartTime = gridView1.Columns["StartTime"];
-            colStartTime.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
-            colStartTime.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
-            colStartTime.OptionsColumn.FixedWidth = true;
-            colStartTime.Width = 130;
-            colStartTime.Caption = "시작시간";
+        //    GridColumn colStartTime = gridView1.Columns["StartTime"];
+        //    colStartTime.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
+        //    colStartTime.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
+        //    colStartTime.OptionsColumn.FixedWidth = true;
+        //    colStartTime.Width = 130;
+        //    colStartTime.Caption = "시작시간";
 
-            GridColumn colEndTime = gridView1.Columns["EndTime"];
-            colEndTime.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
-            colEndTime.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
-            colEndTime.OptionsColumn.FixedWidth = true;
-            colEndTime.Width = 130;
-            colEndTime.Caption = "종료시간";
+        //    GridColumn colEndTime = gridView1.Columns["EndTime"];
+        //    colEndTime.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
+        //    colEndTime.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
+        //    colEndTime.OptionsColumn.FixedWidth = true;
+        //    colEndTime.Width = 130;
+        //    colEndTime.Caption = "종료시간";
 
-            GridColumn colView = gridView1.Columns["View"];
-            colView.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
-            colView.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
-            colView.OptionsColumn.FixedWidth = true;
-            colView.Width = 130;
-            colView.Caption = "보기";
+        //    GridColumn colView = gridView1.Columns["View"];
+        //    colView.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
+        //    colView.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
+        //    colView.OptionsColumn.FixedWidth = true;
+        //    colView.Width = 130;
+        //    colView.Caption = "보기";
 
-            this.repositoryItemImageComboBox1.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(0, 0));
-            this.repositoryItemImageComboBox1.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(1, 1));
+        //    this.repositoryItemImageComboBox1.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(0, 0));
+        //    this.repositoryItemImageComboBox1.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(1, 1));
 
-            this.repositoryItemImageComboBox1.GlyphAlignment = HorzAlignment.Center;
-            this.repositoryItemImageComboBox1.Buttons[0].Visible = false;
+        //    this.repositoryItemImageComboBox1.GlyphAlignment = HorzAlignment.Center;
+        //    this.repositoryItemImageComboBox1.Buttons[0].Visible = false;
 
-            this.repositoryItemImageComboBox1.Click += RepositoryItemImageComboBox1_Click;
+        //    this.repositoryItemImageComboBox1.Click += RepositoryItemImageComboBox1_Click;
 
-        }
+        //}
 
-        private void RepositoryItemImageComboBox1_Click(object sender, EventArgs e)
-        {
-            RepositoryItemImageComboBox combo = sender as RepositoryItemImageComboBox;
+        //private void RepositoryItemImageComboBox1_Click(object sender, EventArgs e)
+        //{
+        //    RepositoryItemImageComboBox combo = sender as RepositoryItemImageComboBox;
 
-        }
+        //}
 
         private void edtScenarioName_ClearButtonClick(object sender, ButtonPressedEventArgs e)
         {
@@ -227,11 +227,6 @@ namespace DynaRAP.UControl
 
         }
 
-        private void btnViewData_ButtonClick(object sender, ButtonPressedEventArgs e)
-        {
-
-        }
-
         private void btnViewData_ButtonClick(object sender, EventArgs e)
         {
 
@@ -242,27 +237,33 @@ namespace DynaRAP.UControl
             AddParameter();
         }
 
-        int index = 23;
+        int paramIndex = 23;
 
         private void AddParameter()
         {
-            ParameterControl ctrl = new ParameterControl();
-            ctrl.Title = "Parameter " + index.ToString();
+            ImportParamControl ctrl = new ImportParamControl();
+            ctrl.Title = "Parameter " + paramIndex.ToString();
             panelData.Controls.Add(ctrl);
-            panelData.Controls.SetChildIndex(ctrl, index++);
-
-        }
-
-        private void btnAddSplittedInterval_ButtonClick(object sender, ButtonPressedEventArgs e)
-        {
+            panelData.Controls.SetChildIndex(ctrl, paramIndex++);
 
         }
 
         private void btnAddSplittedInterval_ButtonClick(object sender, EventArgs e)
         {
-
+            AddSplittedInterval();
         }
 
+        int intervalIndex = 6;
+
+        private void AddSplittedInterval()
+        {
+            ImportIntervalControl ctrl = new ImportIntervalControl();
+            ctrl.Title = "비행구간#" + (paramIndex + intervalIndex).ToString();
+            panelData.Controls.Add(ctrl);
+            panelData.Controls.SetChildIndex(ctrl, paramIndex + intervalIndex);
+            intervalIndex++;
+
+        }
 
         private void btnSaveSplittedInterval_ButtonClick(object sender, ButtonPressedEventArgs e)
         {

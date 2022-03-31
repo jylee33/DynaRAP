@@ -17,23 +17,21 @@ using System.Windows.Forms.DataVisualization.Charting;
 
 namespace DynaRAP.UControl
 {
-    public partial class ShortBlockControl : DevExpress.XtraEditors.XtraUserControl
+    public partial class SBModuleControl : DevExpress.XtraEditors.XtraUserControl
     {
         string selectedFuselage = string.Empty;
         Series series1 = new Series();
         ChartArea myChartArea = new ChartArea("LineChartArea");
 
-        public ShortBlockControl()
+        public SBModuleControl()
         {
             InitializeComponent();
         }
 
-        private void ShortBlockControl_Load(object sender, EventArgs e)
+        private void SBModuleControl_Load(object sender, EventArgs e)
         {
             InitializeFlyingList();
             InitializeSBParamComboList();
-            InitializeSBParamList();
-            InitializeSplittedList();
             InitializePreviewChart();
 
             //DateTime dtNow = DateTime.Now;
@@ -61,6 +59,12 @@ namespace DynaRAP.UControl
             edtOverlap.Properties.Mask.EditMask = @"d2";
             edtOverlap.Properties.Mask.UseMaskAsDisplayFormat = true;
 
+            AddSplittedInterval();
+            AddSplittedInterval();
+            AddSplittedInterval();
+            AddSplittedInterval();
+            AddSplittedInterval();
+
         }
 
         private void InitializePreviewChart()
@@ -71,8 +75,8 @@ namespace DynaRAP.UControl
             myChartArea.AxisX.ScaleView.Zoomable = false;
             ////
 
-
-            chartPreview.BackColor = Color.FromArgb(45, 45, 48);
+            /*
+            //chartPreview.BackColor = Color.FromArgb(45, 45, 48);
 
             chartPreview.ChartAreas.RemoveAt(0);
             chartPreview.ChartAreas.Add(myChartArea);
@@ -92,6 +96,7 @@ namespace DynaRAP.UControl
 
             SettingMyData();
             chartPreview.Series.Add(series1);
+            */
         }
 
         private void SettingMyData()
@@ -507,249 +512,33 @@ namespace DynaRAP.UControl
         {
         }
 
-        private void InitializeSBParamList()
-        {
-            List<SBParameter> list = new List<SBParameter>();
-
-            repositoryItemComboBox1.TextEditStyle = TextEditStyles.DisableTextEditor;
-            repositoryItemComboBox1.Items.Add("MACH");
-            repositoryItemComboBox1.Items.Add("동압");
-            repositoryItemComboBox1.Items.Add("고도");
-            repositoryItemComboBox1.Items.Add("AOA");
-            repositoryItemComboBox1.Items.Add("AOS");
-            repositoryItemComboBox1.Items.Add("NZ");
-            repositoryItemComboBox1.Items.Add("ROLL RATE");
-            repositoryItemComboBox1.Items.Add("PITCH RATE");
-
-            repositoryItemComboBox2.TextEditStyle = TextEditStyles.DisableTextEditor;
-            repositoryItemComboBox2.Items.Add("SW903_NM RATE");
-            repositoryItemComboBox2.Items.Add("SW904_NM RATE");
-            repositoryItemComboBox2.Items.Add("SW905_NM RATE");
-            repositoryItemComboBox2.Items.Add("SW906_NM RATE");
-
-            list.Add(new SBParameter("MACH", "SW903_NM", 0, 0, 0, 1));
-            list.Add(new SBParameter("동압", "SW903_NM", 0, 0, 0, 1));
-            list.Add(new SBParameter("고도", "SW903_NM", 0, 0, 0, 1));
-            list.Add(new SBParameter("AOA", "SW903_NM", 0, 0, 0, 1));
-            list.Add(new SBParameter("MACH", "SW903_NM", 0, 0, 0, 1));
-            list.Add(new SBParameter("MACH", "SW903_NM", 0, 0, 0, 1));
-            list.Add(new SBParameter("MACH", "SW903_NM", 0, 0, 0, 1));
-            list.Add(new SBParameter("MACH", "SW903_NM", 0, 0, 0, 1));
-            list.Add(new SBParameter("MACH", "SW903_NM", 0, 0, 0, 1));
-            list.Add(new SBParameter("MACH", "SW903_NM", 0, 0, 0, 1));
-            list.Add(new SBParameter("MACH", "SW903_NM", 0, 0, 0, 1));
-            list.Add(new SBParameter("MACH", "SW903_NM", 0, 0, 0, 1));
-            list.Add(new SBParameter("MACH", "SW903_NM", 0, 0, 0, 1));
-            list.Add(new SBParameter("MACH", "SW903_NM", 0, 0, 0, 1));
-            list.Add(new SBParameter("MACH", "SW903_NM", 0, 0, 0, 1));
-
-            this.gridControl1.DataSource = list;
-
-            gridView1.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
-
-            gridView1.OptionsView.ShowColumnHeaders = true;
-            gridView1.OptionsView.ShowGroupPanel = false;
-            gridView1.OptionsView.ShowIndicator = false;
-            gridView1.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.False;
-            gridView1.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.False;
-            gridView1.OptionsView.ColumnAutoWidth = true;
-
-            gridView1.OptionsBehavior.ReadOnly = false;
-            //gridView1.OptionsBehavior.Editable = false;
-
-            gridView1.OptionsSelection.MultiSelectMode = DevExpress.XtraGrid.Views.Grid.GridMultiSelectMode.RowSelect;
-            gridView1.OptionsSelection.EnableAppearanceFocusedCell = false;
-
-            GridColumn colType = gridView1.Columns["ParameterType"];
-            colType.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
-            colType.OptionsColumn.FixedWidth = true;
-            colType.Width = 120;
-            colType.Caption = "파라미터 구분";
-
-            GridColumn colName = gridView1.Columns["ParameterName"];
-            colName.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
-            colName.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
-            colName.OptionsColumn.FixedWidth = true;
-            colName.Width = 150;
-            colName.Caption = "파라미터 이름";
-
-            GridColumn colMin = gridView1.Columns["Min"];
-            colMin.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
-            colMin.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
-            colMin.OptionsColumn.FixedWidth = true;
-            colMin.Width = 60;
-            colMin.Caption = "MIN";
-            colMin.OptionsColumn.ReadOnly = true;
-
-            GridColumn colMax = gridView1.Columns["Max"];
-            colMax.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
-            colMax.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
-            colMax.OptionsColumn.FixedWidth = true;
-            colMax.Width = 60;
-            colMax.Caption = "MAX";
-            colMax.OptionsColumn.ReadOnly = true;
-
-            GridColumn colAvg = gridView1.Columns["Avg"];
-            colAvg.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
-            colAvg.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
-            colAvg.OptionsColumn.FixedWidth = true;
-            colAvg.Width = 60;
-            colAvg.Caption = "AVG";
-            colAvg.OptionsColumn.ReadOnly = true;
-
-            GridColumn colDel = gridView1.Columns["Del"];
-            colDel.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
-            colDel.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
-            colDel.OptionsColumn.FixedWidth = true;
-            colDel.Width = 40;
-            colDel.Caption = "삭제";
-            colDel.OptionsColumn.ReadOnly = true;
-
-            this.repositoryItemImageComboBox1.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(0, 0));
-            this.repositoryItemImageComboBox1.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(1, 1));
-
-            this.repositoryItemImageComboBox1.GlyphAlignment = HorzAlignment.Center;
-            this.repositoryItemImageComboBox1.Buttons[0].Visible = false;
-
-            this.repositoryItemImageComboBox1.Click += RepositoryItemImageComboBox1_Click;
-
-        }
-
-        private void InitializeSplittedList()
-        {
-            List<SplittedSB> list = new List<SplittedSB>();
-
-            DateTime dtNow = DateTime.Now;
-            string strNow = string.Format("{0:HH:mm:ss}", dtNow);
-
-            list.Add(new SplittedSB("ShortBlock #1", strNow, strNow, 1));
-            list.Add(new SplittedSB("ShortBlock #1", strNow, strNow, 1));
-            list.Add(new SplittedSB("ShortBlock #1", strNow, strNow, 1));
-            list.Add(new SplittedSB("ShortBlock #1", strNow, strNow, 1));
-            list.Add(new SplittedSB("ShortBlock #1", strNow, strNow, 1));
-            list.Add(new SplittedSB("ShortBlock #1", strNow, strNow, 1));
-            list.Add(new SplittedSB("ShortBlock #1", strNow, strNow, 1));
-            list.Add(new SplittedSB("ShortBlock #1", strNow, strNow, 1));
-            list.Add(new SplittedSB("ShortBlock #1", strNow, strNow, 1));
-            list.Add(new SplittedSB("ShortBlock #1", strNow, strNow, 1));
-            list.Add(new SplittedSB("ShortBlock #1", strNow, strNow, 1));
-            list.Add(new SplittedSB("ShortBlock #1", strNow, strNow, 1));
-            list.Add(new SplittedSB("ShortBlock #1", strNow, strNow, 1));
-            list.Add(new SplittedSB("ShortBlock #1", strNow, strNow, 1));
-            list.Add(new SplittedSB("ShortBlock #1", strNow, strNow, 1));
-            list.Add(new SplittedSB("ShortBlock #1", strNow, strNow, 1));
-
-            this.gridControl2.DataSource = list;
-
-            gridView2.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
-
-            gridView2.OptionsView.ShowColumnHeaders = true;
-            gridView2.OptionsView.ShowGroupPanel = false;
-            gridView2.OptionsView.ShowIndicator = false;
-            gridView2.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.False;
-            gridView2.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.False;
-            gridView2.OptionsView.ColumnAutoWidth = true;
-
-            gridView2.OptionsBehavior.ReadOnly = true;
-            //gridView2.OptionsBehavior.Editable = false;
-
-            gridView2.OptionsSelection.MultiSelectMode = DevExpress.XtraGrid.Views.Grid.GridMultiSelectMode.RowSelect;
-            gridView2.OptionsSelection.EnableAppearanceFocusedCell = false;
-
-            GridColumn colName = gridView2.Columns["SbName"];
-            colName.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
-            colName.OptionsColumn.FixedWidth = true;
-            colName.Width = 120;
-            colName.Caption = "구간이름";
-
-            GridColumn colStartTime = gridView2.Columns["StartTime"];
-            colStartTime.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
-            colStartTime.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
-            colStartTime.OptionsColumn.FixedWidth = true;
-            colStartTime.Width = 160;
-            colStartTime.Caption = "시작시간";
-
-            GridColumn colEndTime = gridView2.Columns["EndTime"];
-            colEndTime.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
-            colEndTime.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
-            colEndTime.OptionsColumn.FixedWidth = true;
-            colEndTime.Width = 60;
-            colEndTime.Caption = "종료시간";
-
-
-            GridColumn colView = gridView2.Columns["View"];
-            colView.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
-            colView.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
-            colView.OptionsColumn.FixedWidth = true;
-            colView.Width = 40;
-            colView.Caption = "동작";
-
-            this.repositoryItemImageComboBox2.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(0, 0));
-            this.repositoryItemImageComboBox2.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(1, 1));
-
-            this.repositoryItemImageComboBox2.GlyphAlignment = HorzAlignment.Center;
-            this.repositoryItemImageComboBox2.Buttons[0].Visible = false;
-
-            this.repositoryItemImageComboBox2.Click += RepositoryItemImageComboBox2_Click;
-
-        }
-
-        private void RepositoryItemImageComboBox1_Click(object sender, EventArgs e)
-        {
-            RepositoryItemImageComboBox combo = sender as RepositoryItemImageComboBox;
-
-        }
-
-        private void RepositoryItemImageComboBox2_Click(object sender, EventArgs e)
-        {
-            RepositoryItemImageComboBox combo = sender as RepositoryItemImageComboBox;
-
-        }
-
-
-        private void edtScenarioName_ClearButtonClick(object sender, ButtonPressedEventArgs e)
-        {
-            //edtScenarioName.Text = String.Empty;
-
-        }
-
-
-        private void btnViewData_ButtonClick(object sender, ButtonPressedEventArgs e)
-        {
-
-        }
-
-        private void btnViewData_ButtonClick(object sender, EventArgs e)
-        {
-
-        }
-
         private void btnAddParameter_ButtonClick(object sender, EventArgs e)
         {
             AddParameter();
         }
 
-        int index = 23;
+        int paramIndex = 16;
 
         private void AddParameter()
         {
-            //ParameterControl ctrl = new ParameterControl();
-            //ctrl.Title = "Parameter " + index.ToString();
-            //panelData.Controls.Add(ctrl);
-            //panelData.Controls.SetChildIndex(ctrl, index++);
+            SBParamControl ctrl = new SBParamControl();
+            ctrl.Title = "Parameter " + paramIndex.ToString();
+            panelData.Controls.Add(ctrl);
+            panelData.Controls.SetChildIndex(ctrl, paramIndex++);
 
         }
 
-        private void btnAddSplittedParameter_ButtonClick(object sender, ButtonPressedEventArgs e)
+        int intervalIndex = 10;
+
+        private void AddSplittedInterval()
         {
+            SBIntervalControl ctrl = new SBIntervalControl();
+            ctrl.Title = "ShortBlock#" + (paramIndex + intervalIndex).ToString();
+            panelData.Controls.Add(ctrl);
+            panelData.Controls.SetChildIndex(ctrl, paramIndex + intervalIndex);
+            intervalIndex++;
 
         }
-
-        private void btnAddSplittedParameter_ButtonClick(object sender, EventArgs e)
-        {
-
-        }
-
 
         private void btnSaveSplittedParameter_ButtonClick(object sender, ButtonPressedEventArgs e)
         {

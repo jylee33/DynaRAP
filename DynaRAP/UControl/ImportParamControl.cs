@@ -11,25 +11,25 @@ using System.Windows.Forms;
 
 namespace DynaRAP.UControl
 {
-    public partial class ParameterControl : DevExpress.XtraEditors.XtraUserControl
+    public partial class ImportParamControl : DevExpress.XtraEditors.XtraUserControl
     {
 
         public string Title
         {
             set
             {
-                //labelControl1.Text = value;
+                labelControl1.Text = value;
             }
         }
 
-        public ParameterControl()
+        public ImportParamControl()
         {
             InitializeComponent();
         }
 
-        private void ParameterControl_Load(object sender, EventArgs e)
+        private void ImportParamControl_Load(object sender, EventArgs e)
         {
-
+            labelControl1.Visible = false;
         }
     }
 }

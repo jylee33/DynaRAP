@@ -63,17 +63,17 @@
             this.labelControl19 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl20 = new DevExpress.XtraEditors.LabelControl();
             this.btnAddSplittedInterval = new DevExpress.XtraEditors.ButtonEdit();
-            this.gridControl1 = new DevExpress.XtraGrid.GridControl();
-            this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
-            this.IntervalName = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.StartTime = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.EndTime = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.View = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.repositoryItemImageComboBox1 = new DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox();
-            this.imageCollection1 = new DevExpress.Utils.ImageCollection(this.components);
+            this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
+            this.labelControl25 = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl24 = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl22 = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl23 = new DevExpress.XtraEditors.LabelControl();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.labelControl21 = new DevExpress.XtraEditors.LabelControl();
             this.btnSaveSplittedInterval = new DevExpress.XtraEditors.ButtonEdit();
+            this.imageCollection1 = new DevExpress.Utils.ImageCollection(this.components);
+            this.separatorControl2 = new DevExpress.XtraEditors.SeparatorControl();
+            this.separatorControl3 = new DevExpress.XtraEditors.SeparatorControl();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.separatorControl1)).BeginInit();
             this.panelData.SuspendLayout();
@@ -85,12 +85,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.btnViewData.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnAddParameter.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnAddSplittedInterval.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemImageComboBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).BeginInit();
+            this.tableLayoutPanel4.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnSaveSplittedInterval.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.separatorControl2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.separatorControl3)).BeginInit();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -183,7 +183,9 @@
             this.panelData.Controls.Add(this.labelControl19);
             this.panelData.Controls.Add(this.labelControl20);
             this.panelData.Controls.Add(this.btnAddSplittedInterval);
-            this.panelData.Controls.Add(this.gridControl1);
+            this.panelData.Controls.Add(this.separatorControl2);
+            this.panelData.Controls.Add(this.tableLayoutPanel4);
+            this.panelData.Controls.Add(this.separatorControl3);
             this.panelData.Controls.Add(this.tableLayoutPanel3);
             this.panelData.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelData.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
@@ -405,7 +407,6 @@
             this.btnViewData.Properties.ReadOnly = true;
             this.btnViewData.Size = new System.Drawing.Size(94, 20);
             this.btnViewData.TabIndex = 12;
-            this.btnViewData.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.btnViewData_ButtonClick);
             this.btnViewData.Click += new System.EventHandler(this.btnViewData_ButtonClick);
             // 
             // lblFlyingData
@@ -475,78 +476,71 @@
             this.btnAddSplittedInterval.Properties.ReadOnly = true;
             this.btnAddSplittedInterval.Size = new System.Drawing.Size(94, 20);
             this.btnAddSplittedInterval.TabIndex = 31;
-            this.btnAddSplittedInterval.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.btnAddSplittedInterval_ButtonClick);
             this.btnAddSplittedInterval.Click += new System.EventHandler(this.btnAddSplittedInterval_ButtonClick);
             // 
-            // gridControl1
+            // tableLayoutPanel4
             // 
-            this.gridControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridControl1.Location = new System.Drawing.Point(3, 743);
-            this.gridControl1.MainView = this.gridView1;
-            this.gridControl1.Name = "gridControl1";
-            this.gridControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
-            this.repositoryItemImageComboBox1});
-            this.gridControl1.Size = new System.Drawing.Size(548, 175);
-            this.gridControl1.TabIndex = 32;
-            this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
-            this.gridView1});
+            this.tableLayoutPanel4.ColumnCount = 4;
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 240F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 110F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 110F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel4.Controls.Add(this.labelControl25, 3, 0);
+            this.tableLayoutPanel4.Controls.Add(this.labelControl24, 2, 0);
+            this.tableLayoutPanel4.Controls.Add(this.labelControl22, 0, 0);
+            this.tableLayoutPanel4.Controls.Add(this.labelControl23, 1, 0);
+            this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel4.Location = new System.Drawing.Point(0, 747);
+            this.tableLayoutPanel4.Margin = new System.Windows.Forms.Padding(0);
+            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
+            this.tableLayoutPanel4.RowCount = 1;
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(554, 32);
+            this.tableLayoutPanel4.TabIndex = 34;
             // 
-            // gridView1
+            // labelControl25
             // 
-            this.gridView1.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
-            this.IntervalName,
-            this.StartTime,
-            this.EndTime,
-            this.View});
-            this.gridView1.GridControl = this.gridControl1;
-            this.gridView1.Name = "gridView1";
+            this.labelControl25.Appearance.Options.UseTextOptions = true;
+            this.labelControl25.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.labelControl25.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.labelControl25.Location = new System.Drawing.Point(463, 3);
+            this.labelControl25.Name = "labelControl25";
+            this.labelControl25.Size = new System.Drawing.Size(88, 26);
+            this.labelControl25.TabIndex = 3;
+            this.labelControl25.Text = "보기";
             // 
-            // IntervalName
+            // labelControl24
             // 
-            this.IntervalName.Caption = "IntervalName";
-            this.IntervalName.FieldName = "IntervalName";
-            this.IntervalName.Name = "IntervalName";
-            this.IntervalName.Visible = true;
-            this.IntervalName.VisibleIndex = 0;
+            this.labelControl24.Appearance.Options.UseTextOptions = true;
+            this.labelControl24.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.labelControl24.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.labelControl24.Location = new System.Drawing.Point(353, 3);
+            this.labelControl24.Name = "labelControl24";
+            this.labelControl24.Size = new System.Drawing.Size(104, 26);
+            this.labelControl24.TabIndex = 2;
+            this.labelControl24.Text = "종료 시간";
             // 
-            // StartTime
+            // labelControl22
             // 
-            this.StartTime.Caption = "StartTime";
-            this.StartTime.FieldName = "StartTime";
-            this.StartTime.Name = "StartTime";
-            this.StartTime.Visible = true;
-            this.StartTime.VisibleIndex = 1;
+            this.labelControl22.Appearance.Options.UseTextOptions = true;
+            this.labelControl22.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.labelControl22.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.labelControl22.Location = new System.Drawing.Point(3, 3);
+            this.labelControl22.Name = "labelControl22";
+            this.labelControl22.Size = new System.Drawing.Size(234, 26);
+            this.labelControl22.TabIndex = 0;
+            this.labelControl22.Text = "구간 이름";
             // 
-            // EndTime
+            // labelControl23
             // 
-            this.EndTime.Caption = "EndTime";
-            this.EndTime.FieldName = "EndTime";
-            this.EndTime.Name = "EndTime";
-            this.EndTime.Visible = true;
-            this.EndTime.VisibleIndex = 2;
-            // 
-            // View
-            // 
-            this.View.Caption = "View";
-            this.View.ColumnEdit = this.repositoryItemImageComboBox1;
-            this.View.FieldName = "View";
-            this.View.Name = "View";
-            this.View.Visible = true;
-            this.View.VisibleIndex = 3;
-            // 
-            // repositoryItemImageComboBox1
-            // 
-            this.repositoryItemImageComboBox1.AutoHeight = false;
-            this.repositoryItemImageComboBox1.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.repositoryItemImageComboBox1.Name = "repositoryItemImageComboBox1";
-            this.repositoryItemImageComboBox1.SmallImages = this.imageCollection1;
-            // 
-            // imageCollection1
-            // 
-            this.imageCollection1.ImageStream = ((DevExpress.Utils.ImageCollectionStreamer)(resources.GetObject("imageCollection1.ImageStream")));
-            this.imageCollection1.Images.SetKeyName(0, "none.png");
-            this.imageCollection1.Images.SetKeyName(1, "view.png");
+            this.labelControl23.Appearance.Options.UseTextOptions = true;
+            this.labelControl23.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.labelControl23.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.labelControl23.Location = new System.Drawing.Point(243, 3);
+            this.labelControl23.Name = "labelControl23";
+            this.labelControl23.Size = new System.Drawing.Size(104, 26);
+            this.labelControl23.TabIndex = 1;
+            this.labelControl23.Text = "시작 시간";
             // 
             // tableLayoutPanel3
             // 
@@ -556,7 +550,7 @@
             this.tableLayoutPanel3.Controls.Add(this.labelControl21, 0, 0);
             this.tableLayoutPanel3.Controls.Add(this.btnSaveSplittedInterval, 1, 0);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 924);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 789);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 1;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -588,6 +582,30 @@
             this.btnSaveSplittedInterval.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.btnSaveSplittedInterval_ButtonClick);
             this.btnSaveSplittedInterval.Click += new System.EventHandler(this.btnSaveSplittedInterval_ButtonClick);
             // 
+            // imageCollection1
+            // 
+            this.imageCollection1.ImageStream = ((DevExpress.Utils.ImageCollectionStreamer)(resources.GetObject("imageCollection1.ImageStream")));
+            this.imageCollection1.Images.SetKeyName(0, "none.png");
+            this.imageCollection1.Images.SetKeyName(1, "view.png");
+            // 
+            // separatorControl2
+            // 
+            this.separatorControl2.BackColor = System.Drawing.Color.White;
+            this.separatorControl2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.separatorControl2.Location = new System.Drawing.Point(3, 743);
+            this.separatorControl2.Name = "separatorControl2";
+            this.separatorControl2.Size = new System.Drawing.Size(548, 1);
+            this.separatorControl2.TabIndex = 35;
+            // 
+            // separatorControl3
+            // 
+            this.separatorControl3.BackColor = System.Drawing.Color.White;
+            this.separatorControl3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.separatorControl3.Location = new System.Drawing.Point(3, 782);
+            this.separatorControl3.Name = "separatorControl3";
+            this.separatorControl3.Size = new System.Drawing.Size(548, 1);
+            this.separatorControl3.TabIndex = 35;
+            // 
             // ImportModuleControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 14F);
@@ -610,13 +628,14 @@
             ((System.ComponentModel.ISupportInitialize)(this.btnViewData.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnAddParameter.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnAddSplittedInterval.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemImageComboBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).EndInit();
+            this.tableLayoutPanel4.ResumeLayout(false);
+            this.tableLayoutPanel4.PerformLayout();
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnSaveSplittedInterval.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.separatorControl2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.separatorControl3)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -654,18 +673,18 @@
         private DevExpress.XtraEditors.LabelControl labelControl19;
         private DevExpress.XtraEditors.LabelControl labelControl20;
         private DevExpress.XtraEditors.ButtonEdit btnAddSplittedInterval;
-        private DevExpress.XtraGrid.GridControl gridControl1;
-        private DevExpress.XtraGrid.Views.Grid.GridView gridView1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
         private DevExpress.XtraEditors.LabelControl labelControl21;
         private DevExpress.XtraEditors.ButtonEdit btnSaveSplittedInterval;
         private DevExpress.Utils.ImageCollection imageCollection1;
-        private DevExpress.XtraGrid.Columns.GridColumn IntervalName;
-        private DevExpress.XtraGrid.Columns.GridColumn StartTime;
-        private DevExpress.XtraGrid.Columns.GridColumn EndTime;
-        private DevExpress.XtraGrid.Columns.GridColumn View;
-        private DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox repositoryItemImageComboBox1;
         private System.Windows.Forms.FlowLayoutPanel panelFuseLage;
         private DevExpress.XtraEditors.LabelControl labelControl4;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
+        private DevExpress.XtraEditors.LabelControl labelControl25;
+        private DevExpress.XtraEditors.LabelControl labelControl24;
+        private DevExpress.XtraEditors.LabelControl labelControl22;
+        private DevExpress.XtraEditors.LabelControl labelControl23;
+        private DevExpress.XtraEditors.SeparatorControl separatorControl2;
+        private DevExpress.XtraEditors.SeparatorControl separatorControl3;
     }
 }

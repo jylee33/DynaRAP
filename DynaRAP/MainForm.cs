@@ -40,7 +40,7 @@ namespace DynaRAP
 
         StartScreenControl startControl = null;
         ImportModuleControl importModuleControl = null;
-        ShortBlockControl shortBlockControl = null;
+        SBModuleControl sbModuleControl = null;
         BinModuleControl binModuleControl = null;
 
 
@@ -103,9 +103,9 @@ namespace DynaRAP
             {
                 importModuleControl = null;
             }
-            else if (e.Document.Control is ShortBlockControl)
+            else if (e.Document.Control is SBModuleControl)
             {
-                shortBlockControl = null;
+                sbModuleControl = null;
             }
             else if (e.Document.Control is BinModuleControl)
             {
@@ -280,16 +280,16 @@ namespace DynaRAP
 
         private void btnShortBlock_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            if (shortBlockControl == null)
+            if (sbModuleControl == null)
             {
-                shortBlockControl = new ShortBlockControl();
-                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(shortBlockControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
+                sbModuleControl = new SBModuleControl();
+                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(sbModuleControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
                 doc.Caption = "Short Block";
-                tabbedView1.ActivateDocument(shortBlockControl);
+                tabbedView1.ActivateDocument(sbModuleControl);
             }
             else
             {
-                tabbedView1.ActivateDocument(shortBlockControl);
+                tabbedView1.ActivateDocument(sbModuleControl);
             }
 
             if (startControl != null)

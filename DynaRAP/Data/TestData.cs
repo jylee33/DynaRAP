@@ -6,23 +6,25 @@ using System.Threading.Tasks;
 
 namespace DynaRAP.Data
 {
-    public class SBParameter
+    public class TestData
     {
-        public SBParameter()
+        public TestData()
         {
         }
-        public SBParameter(string parameterType, string parameterName, int min, int max, int avg)
+        public TestData(string parameterType, string parameterName, int min, int max, int avg, int del)
         {
             ParameterType = parameterType;
             ParameterName = parameterName;
             Min = min;
             Max = max;
             Avg = avg;
+            Del = del;
         }
         public string ParameterType { get; set; }
         public string ParameterName { get; set; }
         public int Min { get; set; }
         public int Max { get; set; }
         public int Avg { get; set; }
+        public int Del { get; set; }
     }
 }

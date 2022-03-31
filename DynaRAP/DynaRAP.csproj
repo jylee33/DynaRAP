@@ -96,6 +96,8 @@
     <Compile Include="Data\ProjectData.cs" />
     <Compile Include="Data\RecentProject.cs" />
     <Compile Include="Data\SalesData.cs" />
+    <Compile Include="Data\SBResult.cs" />
+    <Compile Include="Data\TestData.cs" />
     <Compile Include="Data\SplittedSB.cs" />
     <Compile Include="Data\SBParameter.cs" />
     <Compile Include="Data\SplittedInterval.cs" />
@@ -137,6 +139,18 @@
     <Compile Include="TEST\GridGroupingForm.Designer.cs">
       <DependentUpon>GridGroupingForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="TEST\TestGrid2Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TEST\TestGrid2Form.Designer.cs">
+      <DependentUpon>TestGrid2Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TEST\TestGrid3Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TEST\TestGrid3Form.Designer.cs">
+      <DependentUpon>TestGrid3Form.cs</DependentUpon>
+    </Compile>
     <Compile Include="TEST\TestGridForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -148,6 +162,18 @@
     </Compile>
     <Compile Include="UControl\BinParameterControl.Designer.cs">
       <DependentUpon>BinParameterControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\BinSBInfoControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\BinSBInfoControl.Designer.cs">
+      <DependentUpon>BinSBInfoControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\BinSBTabControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\BinSBTabControl.Designer.cs">
+      <DependentUpon>BinSBTabControl.cs</DependentUpon>
     </Compile>
     <Compile Include="UControl\BinTableControl.cs">
       <SubType>UserControl</SubType>
@@ -164,17 +190,29 @@
     <Compile Include="UControl\BinModuleControl.Designer.cs">
       <DependentUpon>BinModuleControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="UControl\SBParamControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\SBParamControl.Designer.cs">
+      <DependentUpon>SBParamControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\SBIntervalControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\SBIntervalControl.Designer.cs">
+      <DependentUpon>SBIntervalControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="UControl\SelectSBControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="UControl\SelectSBControl.Designer.cs">
       <DependentUpon>SelectSBControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="UControl\ShortBlockControl.cs">
+    <Compile Include="UControl\SBModuleControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UControl\ShortBlockControl.Designer.cs">
-      <DependentUpon>ShortBlockControl.cs</DependentUpon>
+    <Compile Include="UControl\SBModuleControl.Designer.cs">
+      <DependentUpon>SBModuleControl.cs</DependentUpon>
     </Compile>
     <Compile Include="UControl\ImportModuleControl.cs">
       <SubType>UserControl</SubType>
@@ -182,11 +220,17 @@
     <Compile Include="UControl\ImportModuleControl.Designer.cs">
       <DependentUpon>ImportModuleControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="UControl\ParameterControl.cs">
+    <Compile Include="UControl\ImportParamControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UControl\ParameterControl.Designer.cs">
-      <DependentUpon>ParameterControl.cs</DependentUpon>
+    <Compile Include="UControl\ImportParamControl.Designer.cs">
+      <DependentUpon>ImportParamControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\ImportIntervalControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\ImportIntervalControl.Designer.cs">
+      <DependentUpon>ImportIntervalControl.cs</DependentUpon>
     </Compile>
     <Compile Include="UControl\StartScreenControl.cs">
       <SubType>UserControl</SubType>
@@ -282,6 +326,12 @@
     <EmbeddedResource Include="TEST\GridGroupingForm.resx">
       <DependentUpon>GridGroupingForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="TEST\TestGrid2Form.resx">
+      <DependentUpon>TestGrid2Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TEST\TestGrid3Form.resx">
+      <DependentUpon>TestGrid3Form.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="TEST\TestGridForm.resx">
       <DependentUpon>TestGridForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -294,20 +344,35 @@
     <EmbeddedResource Include="UControl\BinParameterControl.resx">
       <DependentUpon>BinParameterControl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UControl\BinSBInfoControl.resx">
+      <DependentUpon>BinSBInfoControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\BinSBTabControl.resx">
+      <DependentUpon>BinSBTabControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UControl\BinTableControl.resx">
       <DependentUpon>BinTableControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\SBParamControl.resx">
+      <DependentUpon>SBParamControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\SBIntervalControl.resx">
+      <DependentUpon>SBIntervalControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\SelectSBControl.resx">
       <DependentUpon>SelectSBControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UControl\ShortBlockControl.resx">
-      <DependentUpon>ShortBlockControl.cs</DependentUpon>
+    <EmbeddedResource Include="UControl\SBModuleControl.resx">
+      <DependentUpon>SBModuleControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\ImportModuleControl.resx">
       <DependentUpon>ImportModuleControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UControl\ParameterControl.resx">
-      <DependentUpon>ParameterControl.cs</DependentUpon>
+    <EmbeddedResource Include="UControl\ImportParamControl.resx">
+      <DependentUpon>ImportParamControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\ImportIntervalControl.resx">
+      <DependentUpon>ImportIntervalControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\StartScreenControl.resx">
       <DependentUpon>StartScreenControl.cs</DependentUpon>
@@ -342,6 +407,7 @@
     <Content Include="Python\Calculator.py">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="Resources\change.png" />
     <EmbeddedResource Include="Resources\delete.png" />
     <EmbeddedResource Include="Resources\view.png" />
     <EmbeddedResource Include="Resources\link.png" />
