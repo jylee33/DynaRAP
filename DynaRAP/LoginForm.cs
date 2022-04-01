@@ -1,4 +1,5 @@
 ﻿using DevExpress.XtraEditors;
+using DynaRAP.EventData;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,6 +15,15 @@ namespace DynaRAP
 {
     public partial class LoginForm : DevExpress.XtraEditors.XtraForm
     {
+        string userId;
+
+        public string UserId
+        {
+            get { return userId; }
+        }
+
+        public event EventHandler<LoginResultEventArgs> LoginResultReceived;
+
 
         [DllImport("Gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
         private static extern IntPtr CreateRoundRectRgn
@@ -81,7 +91,20 @@ namespace DynaRAP
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
+            if (edtId.Text.Length == 0 || edtId.Text.Equals(strIdPlaceholder))
+            {
+                XtraMessageBox.Show(Properties.Resources.RequestInputID);
+                edtId.Focus();
+                return;
+            }
+            else if (edtPassword.Text.Length == 0 || edtPassword.Text.Equals(strPwPlaceholder))
+            {
+                XtraMessageBox.Show(Properties.Resources.RequestInputPassword);
+                edtPassword.Focus();
+                return;
+            }
 
+            this.Close();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)

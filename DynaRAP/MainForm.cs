@@ -149,6 +149,10 @@ namespace DynaRAP
             
         }
 
+        public void Server_LoginSucceed(object sender, EventArgs e)
+        {
+
+        }
         private void btnPythonTest_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             ScriptEngine engine = Python.CreateEngine();

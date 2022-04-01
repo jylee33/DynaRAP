@@ -125,6 +125,24 @@ namespace DynaRAP.Properties {
         }
         
         /// <summary>
+        ///   Input the user ID.과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string RequestInputID {
+            get {
+                return ResourceManager.GetString("RequestInputID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Input the user password.과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string RequestInputPassword {
+            get {
+                return ResourceManager.GetString("RequestInputPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Uploading flight data...과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string UploadingFlightData {

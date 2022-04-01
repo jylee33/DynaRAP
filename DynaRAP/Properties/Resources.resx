@@ -139,6 +139,12 @@
   <data name="PwPlaceholder" xml:space="preserve">
     <value>Password</value>
   </data>
+  <data name="RequestInputID" xml:space="preserve">
+    <value>Input the user ID.</value>
+  </data>
+  <data name="RequestInputPassword" xml:space="preserve">
+    <value>Input the user password.</value>
+  </data>
   <data name="UploadingFlightData" xml:space="preserve">
     <value>Uploading flight data...</value>
   </data>
