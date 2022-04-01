@@ -57,11 +57,15 @@
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             this.btnAddParameter = new DevExpress.XtraEditors.ButtonEdit();
             this.cboSBParameter = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.separatorControl3 = new DevExpress.XtraEditors.SeparatorControl();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.labelControl13 = new DevExpress.XtraEditors.LabelControl();
-            this.labelControl18 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl19 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl20 = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl18 = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl13 = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl32 = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl33 = new DevExpress.XtraEditors.LabelControl();
+            this.separatorControl2 = new DevExpress.XtraEditors.SeparatorControl();
             this.labelControl15 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl16 = new DevExpress.XtraEditors.LabelControl();
             this.chartPreview = new System.Windows.Forms.DataVisualization.Charting.Chart();
@@ -69,22 +73,18 @@
             this.labelControl6 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl14 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl17 = new DevExpress.XtraEditors.LabelControl();
+            this.separatorControl4 = new DevExpress.XtraEditors.SeparatorControl();
             this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
             this.labelControl28 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl29 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl30 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl31 = new DevExpress.XtraEditors.LabelControl();
+            this.separatorControl5 = new DevExpress.XtraEditors.SeparatorControl();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.labelControl21 = new DevExpress.XtraEditors.LabelControl();
             this.btnSaveSplittedParameter = new DevExpress.XtraEditors.ButtonEdit();
             this.imageCollection1 = new DevExpress.Utils.ImageCollection(this.components);
             this.imageCollection2 = new DevExpress.Utils.ImageCollection(this.components);
-            this.labelControl32 = new DevExpress.XtraEditors.LabelControl();
-            this.labelControl33 = new DevExpress.XtraEditors.LabelControl();
-            this.separatorControl2 = new DevExpress.XtraEditors.SeparatorControl();
-            this.separatorControl3 = new DevExpress.XtraEditors.SeparatorControl();
-            this.separatorControl4 = new DevExpress.XtraEditors.SeparatorControl();
-            this.separatorControl5 = new DevExpress.XtraEditors.SeparatorControl();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.separatorControl1)).BeginInit();
             this.panelData.SuspendLayout();
@@ -95,17 +95,17 @@
             this.tableLayoutPanel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnAddParameter.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cboSBParameter.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.separatorControl3)).BeginInit();
             this.tableLayoutPanel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.separatorControl2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartPreview)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.separatorControl4)).BeginInit();
             this.tableLayoutPanel6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.separatorControl5)).BeginInit();
             this.tableLayoutPanel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnSaveSplittedParameter.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.separatorControl2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.separatorControl3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.separatorControl4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.separatorControl5)).BeginInit();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -431,6 +431,15 @@
             this.cboSBParameter.Size = new System.Drawing.Size(308, 20);
             this.cboSBParameter.TabIndex = 34;
             // 
+            // separatorControl3
+            // 
+            this.separatorControl3.BackColor = System.Drawing.Color.White;
+            this.separatorControl3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.separatorControl3.Location = new System.Drawing.Point(3, 449);
+            this.separatorControl3.Name = "separatorControl3";
+            this.separatorControl3.Size = new System.Drawing.Size(548, 1);
+            this.separatorControl3.TabIndex = 39;
+            // 
             // tableLayoutPanel2
             // 
             this.tableLayoutPanel2.ColumnCount = 6;
@@ -454,28 +463,6 @@
             this.tableLayoutPanel2.Size = new System.Drawing.Size(554, 32);
             this.tableLayoutPanel2.TabIndex = 35;
             // 
-            // labelControl13
-            // 
-            this.labelControl13.Appearance.Options.UseTextOptions = true;
-            this.labelControl13.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
-            this.labelControl13.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelControl13.Location = new System.Drawing.Point(288, 3);
-            this.labelControl13.Name = "labelControl13";
-            this.labelControl13.Size = new System.Drawing.Size(79, 26);
-            this.labelControl13.TabIndex = 3;
-            this.labelControl13.Text = "MAX";
-            // 
-            // labelControl18
-            // 
-            this.labelControl18.Appearance.Options.UseTextOptions = true;
-            this.labelControl18.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
-            this.labelControl18.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelControl18.Location = new System.Drawing.Point(203, 3);
-            this.labelControl18.Name = "labelControl18";
-            this.labelControl18.Size = new System.Drawing.Size(79, 26);
-            this.labelControl18.TabIndex = 2;
-            this.labelControl18.Text = "MIN";
-            // 
             // labelControl19
             // 
             this.labelControl19.Appearance.Options.UseTextOptions = true;
@@ -497,6 +484,59 @@
             this.labelControl20.Size = new System.Drawing.Size(94, 26);
             this.labelControl20.TabIndex = 1;
             this.labelControl20.Text = "파라미터 이름";
+            // 
+            // labelControl18
+            // 
+            this.labelControl18.Appearance.Options.UseTextOptions = true;
+            this.labelControl18.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.labelControl18.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.labelControl18.Location = new System.Drawing.Point(203, 3);
+            this.labelControl18.Name = "labelControl18";
+            this.labelControl18.Size = new System.Drawing.Size(79, 26);
+            this.labelControl18.TabIndex = 2;
+            this.labelControl18.Text = "MIN";
+            // 
+            // labelControl13
+            // 
+            this.labelControl13.Appearance.Options.UseTextOptions = true;
+            this.labelControl13.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.labelControl13.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.labelControl13.Location = new System.Drawing.Point(288, 3);
+            this.labelControl13.Name = "labelControl13";
+            this.labelControl13.Size = new System.Drawing.Size(79, 26);
+            this.labelControl13.TabIndex = 3;
+            this.labelControl13.Text = "MAX";
+            // 
+            // labelControl32
+            // 
+            this.labelControl32.Appearance.Options.UseTextOptions = true;
+            this.labelControl32.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.labelControl32.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.labelControl32.Location = new System.Drawing.Point(373, 3);
+            this.labelControl32.Name = "labelControl32";
+            this.labelControl32.Size = new System.Drawing.Size(79, 26);
+            this.labelControl32.TabIndex = 3;
+            this.labelControl32.Text = "AVG";
+            // 
+            // labelControl33
+            // 
+            this.labelControl33.Appearance.Options.UseTextOptions = true;
+            this.labelControl33.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.labelControl33.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.labelControl33.Location = new System.Drawing.Point(458, 3);
+            this.labelControl33.Name = "labelControl33";
+            this.labelControl33.Size = new System.Drawing.Size(93, 26);
+            this.labelControl33.TabIndex = 3;
+            this.labelControl33.Text = "삭제";
+            // 
+            // separatorControl2
+            // 
+            this.separatorControl2.BackColor = System.Drawing.Color.White;
+            this.separatorControl2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.separatorControl2.Location = new System.Drawing.Point(3, 488);
+            this.separatorControl2.Name = "separatorControl2";
+            this.separatorControl2.Size = new System.Drawing.Size(548, 1);
+            this.separatorControl2.TabIndex = 39;
             // 
             // labelControl15
             // 
@@ -562,6 +602,15 @@
             this.labelControl17.TabIndex = 16;
             this.labelControl17.Text = "                                                   ";
             // 
+            // separatorControl4
+            // 
+            this.separatorControl4.BackColor = System.Drawing.Color.White;
+            this.separatorControl4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.separatorControl4.Location = new System.Drawing.Point(3, 764);
+            this.separatorControl4.Name = "separatorControl4";
+            this.separatorControl4.Size = new System.Drawing.Size(548, 1);
+            this.separatorControl4.TabIndex = 39;
+            // 
             // tableLayoutPanel6
             // 
             this.tableLayoutPanel6.ColumnCount = 4;
@@ -625,6 +674,15 @@
             this.labelControl31.TabIndex = 1;
             this.labelControl31.Text = "시작 시간";
             // 
+            // separatorControl5
+            // 
+            this.separatorControl5.BackColor = System.Drawing.Color.White;
+            this.separatorControl5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.separatorControl5.Location = new System.Drawing.Point(3, 803);
+            this.separatorControl5.Name = "separatorControl5";
+            this.separatorControl5.Size = new System.Drawing.Size(548, 1);
+            this.separatorControl5.TabIndex = 39;
+            // 
             // tableLayoutPanel3
             // 
             this.tableLayoutPanel3.ColumnCount = 2;
@@ -677,64 +735,6 @@
             this.imageCollection2.Images.SetKeyName(0, "none.png");
             this.imageCollection2.Images.SetKeyName(1, "view.png");
             // 
-            // labelControl32
-            // 
-            this.labelControl32.Appearance.Options.UseTextOptions = true;
-            this.labelControl32.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
-            this.labelControl32.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelControl32.Location = new System.Drawing.Point(373, 3);
-            this.labelControl32.Name = "labelControl32";
-            this.labelControl32.Size = new System.Drawing.Size(79, 26);
-            this.labelControl32.TabIndex = 3;
-            this.labelControl32.Text = "AVG";
-            // 
-            // labelControl33
-            // 
-            this.labelControl33.Appearance.Options.UseTextOptions = true;
-            this.labelControl33.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
-            this.labelControl33.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelControl33.Location = new System.Drawing.Point(458, 3);
-            this.labelControl33.Name = "labelControl33";
-            this.labelControl33.Size = new System.Drawing.Size(93, 26);
-            this.labelControl33.TabIndex = 3;
-            this.labelControl33.Text = "삭제";
-            // 
-            // separatorControl2
-            // 
-            this.separatorControl2.BackColor = System.Drawing.Color.White;
-            this.separatorControl2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.separatorControl2.Location = new System.Drawing.Point(3, 488);
-            this.separatorControl2.Name = "separatorControl2";
-            this.separatorControl2.Size = new System.Drawing.Size(548, 1);
-            this.separatorControl2.TabIndex = 39;
-            // 
-            // separatorControl3
-            // 
-            this.separatorControl3.BackColor = System.Drawing.Color.White;
-            this.separatorControl3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.separatorControl3.Location = new System.Drawing.Point(3, 449);
-            this.separatorControl3.Name = "separatorControl3";
-            this.separatorControl3.Size = new System.Drawing.Size(548, 1);
-            this.separatorControl3.TabIndex = 39;
-            // 
-            // separatorControl4
-            // 
-            this.separatorControl4.BackColor = System.Drawing.Color.White;
-            this.separatorControl4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.separatorControl4.Location = new System.Drawing.Point(3, 764);
-            this.separatorControl4.Name = "separatorControl4";
-            this.separatorControl4.Size = new System.Drawing.Size(548, 1);
-            this.separatorControl4.TabIndex = 39;
-            // 
-            // separatorControl5
-            // 
-            this.separatorControl5.BackColor = System.Drawing.Color.White;
-            this.separatorControl5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.separatorControl5.Location = new System.Drawing.Point(3, 803);
-            this.separatorControl5.Name = "separatorControl5";
-            this.separatorControl5.Size = new System.Drawing.Size(548, 1);
-            this.separatorControl5.TabIndex = 39;
-            // 
             // SBModuleControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 14F);
@@ -756,20 +756,20 @@
             this.tableLayoutPanel5.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.btnAddParameter.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cboSBParameter.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.separatorControl3)).EndInit();
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.separatorControl2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartPreview)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.separatorControl4)).EndInit();
             this.tableLayoutPanel6.ResumeLayout(false);
             this.tableLayoutPanel6.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.separatorControl5)).EndInit();
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnSaveSplittedParameter.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.separatorControl2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.separatorControl3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.separatorControl4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.separatorControl5)).EndInit();
             this.ResumeLayout(false);
 
         }

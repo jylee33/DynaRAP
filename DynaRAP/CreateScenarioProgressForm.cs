@@ -6,6 +6,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -17,9 +18,37 @@ namespace DynaRAP
         string strExtracting = Properties.Resources.ExtractFlightData;
         string strProcessing = Properties.Resources.BasicProcessingFlightData;
 
+        System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
+        int progress = 0;
+        bool isCompleted = false;
+
         public CreateScenarioProgressForm()
         {
             InitializeComponent();
+
+            timer.Interval = 1000;
+            timer.Tick += Timer_Tick;
+        }
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            if (isCompleted)
+            {
+                timer.Stop();
+                this.Close();
+            }
+
+            Random rand = new Random();
+
+            progress += rand.Next(5, 15);
+
+            if(progress > 100)
+            {
+                progress = 100;
+                isCompleted = true;
+            }
+            progressBar.Position = progress;
+
         }
 
         private void CreateScenarioProgressForm_Load(object sender, EventArgs e)
@@ -34,7 +63,9 @@ namespace DynaRAP
             progressBar.Properties.ShowTitle = true;
             //progressBar.Properties.Minimum = 0;
             //progressBar.Properties.Maximum = 100;
-            progressBar.Position = 68;
+
+            isCompleted = false;
+            timer.Start();
 
         }
     }

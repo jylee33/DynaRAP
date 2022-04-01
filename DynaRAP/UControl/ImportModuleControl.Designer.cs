@@ -63,17 +63,17 @@
             this.labelControl19 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl20 = new DevExpress.XtraEditors.LabelControl();
             this.btnAddSplittedInterval = new DevExpress.XtraEditors.ButtonEdit();
+            this.separatorControl2 = new DevExpress.XtraEditors.SeparatorControl();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.labelControl25 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl24 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl22 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl23 = new DevExpress.XtraEditors.LabelControl();
+            this.separatorControl3 = new DevExpress.XtraEditors.SeparatorControl();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.labelControl21 = new DevExpress.XtraEditors.LabelControl();
             this.btnSaveSplittedInterval = new DevExpress.XtraEditors.ButtonEdit();
             this.imageCollection1 = new DevExpress.Utils.ImageCollection(this.components);
-            this.separatorControl2 = new DevExpress.XtraEditors.SeparatorControl();
-            this.separatorControl3 = new DevExpress.XtraEditors.SeparatorControl();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.separatorControl1)).BeginInit();
             this.panelData.SuspendLayout();
@@ -85,12 +85,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.btnViewData.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnAddParameter.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnAddSplittedInterval.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.separatorControl2)).BeginInit();
             this.tableLayoutPanel4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.separatorControl3)).BeginInit();
             this.tableLayoutPanel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnSaveSplittedInterval.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.separatorControl2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.separatorControl3)).BeginInit();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -478,6 +478,15 @@
             this.btnAddSplittedInterval.TabIndex = 31;
             this.btnAddSplittedInterval.Click += new System.EventHandler(this.btnAddSplittedInterval_ButtonClick);
             // 
+            // separatorControl2
+            // 
+            this.separatorControl2.BackColor = System.Drawing.Color.White;
+            this.separatorControl2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.separatorControl2.Location = new System.Drawing.Point(3, 743);
+            this.separatorControl2.Name = "separatorControl2";
+            this.separatorControl2.Size = new System.Drawing.Size(548, 1);
+            this.separatorControl2.TabIndex = 35;
+            // 
             // tableLayoutPanel4
             // 
             this.tableLayoutPanel4.ColumnCount = 4;
@@ -542,6 +551,15 @@
             this.labelControl23.TabIndex = 1;
             this.labelControl23.Text = "시작 시간";
             // 
+            // separatorControl3
+            // 
+            this.separatorControl3.BackColor = System.Drawing.Color.White;
+            this.separatorControl3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.separatorControl3.Location = new System.Drawing.Point(3, 782);
+            this.separatorControl3.Name = "separatorControl3";
+            this.separatorControl3.Size = new System.Drawing.Size(548, 1);
+            this.separatorControl3.TabIndex = 35;
+            // 
             // tableLayoutPanel3
             // 
             this.tableLayoutPanel3.ColumnCount = 2;
@@ -588,24 +606,6 @@
             this.imageCollection1.Images.SetKeyName(0, "none.png");
             this.imageCollection1.Images.SetKeyName(1, "view.png");
             // 
-            // separatorControl2
-            // 
-            this.separatorControl2.BackColor = System.Drawing.Color.White;
-            this.separatorControl2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.separatorControl2.Location = new System.Drawing.Point(3, 743);
-            this.separatorControl2.Name = "separatorControl2";
-            this.separatorControl2.Size = new System.Drawing.Size(548, 1);
-            this.separatorControl2.TabIndex = 35;
-            // 
-            // separatorControl3
-            // 
-            this.separatorControl3.BackColor = System.Drawing.Color.White;
-            this.separatorControl3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.separatorControl3.Location = new System.Drawing.Point(3, 782);
-            this.separatorControl3.Name = "separatorControl3";
-            this.separatorControl3.Size = new System.Drawing.Size(548, 1);
-            this.separatorControl3.TabIndex = 35;
-            // 
             // ImportModuleControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 14F);
@@ -628,14 +628,14 @@
             ((System.ComponentModel.ISupportInitialize)(this.btnViewData.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnAddParameter.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnAddSplittedInterval.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.separatorControl2)).EndInit();
             this.tableLayoutPanel4.ResumeLayout(false);
             this.tableLayoutPanel4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.separatorControl3)).EndInit();
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnSaveSplittedInterval.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.separatorControl2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.separatorControl3)).EndInit();
             this.ResumeLayout(false);
 
         }

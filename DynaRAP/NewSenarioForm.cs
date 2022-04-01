@@ -393,7 +393,14 @@ namespace DynaRAP
         private void btnCreate_Click(object sender, EventArgs e)
         {
             CreateScenarioProgressForm form = new CreateScenarioProgressForm();
+            form.FormClosed += Form_FormClosed;
+
             form.ShowDialog();
+        }
+
+        private void Form_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            this.Close();
         }
     }
 
