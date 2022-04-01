@@ -184,7 +184,7 @@ namespace DynaRAP.UControl
         {
             BandedGridView gridView = sender as BandedGridView;
 
-            string index = gridView.GetRowCellValue(e.RowHandle, "IdxValue").ToString();
+            string index = gridView.GetRowCellValue(e.RowHandle, "AOA").ToString();
             Console.WriteLine("selected " + index);
 
             MainForm mainForm = this.ParentForm as MainForm;
