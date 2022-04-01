@@ -22,7 +22,7 @@ namespace DynaRAP
         {
             if (Login() < 0)
             {
-                //return;
+                return;
             }
 
             mainForm = new MainForm();

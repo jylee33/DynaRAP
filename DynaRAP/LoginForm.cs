@@ -88,6 +88,9 @@ namespace DynaRAP
             }
         }
 
+        private void LoginForm_Load(object sender, EventArgs e)
+        {
+        }
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
@@ -104,11 +107,13 @@ namespace DynaRAP
                 return;
             }
 
+            this.DialogResult = DialogResult.OK;
             this.Close();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
+            this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
 
@@ -136,5 +141,6 @@ namespace DynaRAP
         {
             dragging = false;
         }
+
     }
 }
