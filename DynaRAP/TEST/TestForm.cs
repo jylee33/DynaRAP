@@ -25,6 +25,7 @@ namespace DynaRAP.TEST
             buttonEdit1.Properties.Buttons[0].Visible = false;
             buttonEdit1.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
             buttonEdit1.Text = "Test";
+            buttonEdit1.Properties.AllowFocused = false;
             
         }
     }

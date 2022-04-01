@@ -62,6 +62,9 @@ namespace DynaRAP.UControl
             btnAddParameter.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             btnSaveSplittedParameter.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
 
+            btnAddParameter.Properties.AllowFocused = false;
+            btnSaveSplittedParameter.Properties.AllowFocused = false;
+
             AddSplittedInterval();
             AddSplittedInterval();
             AddSplittedInterval();

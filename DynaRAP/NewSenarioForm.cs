@@ -84,6 +84,7 @@ namespace DynaRAP
             buttonEdit1.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             buttonEdit1.ButtonClick += removeTag_ButtonClick;
             buttonEdit1.Text = "TESTabcdefghijklmnTESTabcdefghijklmnTESTabcdefghijklmn";
+            buttonEdit1.Properties.AllowFocused = false;
             //// for testing ButtonEdit
 
 
@@ -218,6 +219,7 @@ namespace DynaRAP
             //edit.ReadOnly = true;
             edit.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             edit.Properties.Buttons[0].Visible = false;
+            edit.Properties.AllowFocused = false;
             //edit.Properties.AllowFocused = false;
             edit.Text = name;
             edit.Click += Fuselage_Click;
@@ -374,6 +376,7 @@ namespace DynaRAP
             btn.Properties.Appearance.TextOptions.HAlignment = HorzAlignment.Center;
             //btn.ReadOnly = true;
             btn.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            btn.Properties.AllowFocused = false;
             btn.ButtonClick += removeTag_ButtonClick;
             btn.Text = name;
             panelTag.Controls.Add(btn);

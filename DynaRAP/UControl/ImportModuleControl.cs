@@ -43,6 +43,12 @@ namespace DynaRAP.UControl
             btnAddParameter.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             btnAddSplittedInterval.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             btnSaveSplittedInterval.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+
+            btnViewData.Properties.AllowFocused = false;
+            btnAddParameter.Properties.AllowFocused = false;
+            btnAddSplittedInterval.Properties.AllowFocused = false;
+            btnSaveSplittedInterval.Properties.AllowFocused = false;
+
         }
 
         private void InitializeFuselageList()
@@ -70,6 +76,7 @@ namespace DynaRAP.UControl
             edit.Properties.Appearance.TextOptions.HAlignment = HorzAlignment.Center;
             //edit.ReadOnly = true;
             edit.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            edit.Properties.AllowFocused = false;
             edit.Properties.Buttons[0].Visible = false;
             //edit.Properties.AllowFocused = false;
             edit.Text = name;
@@ -222,6 +229,7 @@ namespace DynaRAP.UControl
             btn.Properties.Appearance.TextOptions.HAlignment = HorzAlignment.Center;
             btn.ReadOnly = true;
             btn.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            btn.Properties.AllowFocused = false;
             btn.ButtonClick += removeTag_ButtonClick;
             btn.Text = name;
             panelTag.Controls.Add(btn);

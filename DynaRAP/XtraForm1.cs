@@ -91,6 +91,7 @@ namespace DynaRAP
             edit.Properties.Appearance.TextOptions.HAlignment = HorzAlignment.Center;
             //edit.ReadOnly = true;
             edit.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            edit.Properties.AllowFocused = false;
             edit.Properties.Buttons[0].Visible = false;
             //edit.Properties.AllowFocused = false;
             edit.Text = name;

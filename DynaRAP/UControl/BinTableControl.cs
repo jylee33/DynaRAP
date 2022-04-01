@@ -40,7 +40,7 @@ namespace DynaRAP.UControl
         {
             DataTable dt = new DataTable();
 
-            dt.Columns.Add("IdxValue");
+            dt.Columns.Add("AOA");
             dt.Columns.Add("Column1");
             dt.Columns.Add("Column2");
             dt.Columns.Add("Column3");
@@ -141,7 +141,7 @@ namespace DynaRAP.UControl
             //gridBand1.AppearanceHeader.BackColor = Color.Gray;
             //gridBand1.Columns.Clear();
 
-            BandedGridColumn colIndex = bandedGridView.Columns["IdxValue"];
+            BandedGridColumn colIndex = bandedGridView.Columns["AOA"];
             colIndex.OptionsColumn.FixedWidth = true;
             colIndex.Width = 80;
             //gridBand1.Columns.Add(colIndex);
