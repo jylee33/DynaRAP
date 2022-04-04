@@ -102,10 +102,10 @@
     <Compile Include="Data\SBParameter.cs" />
     <Compile Include="Data\SplittedInterval.cs" />
     <Compile Include="EventData\LoginResultEventArgs.cs" />
-    <Compile Include="Form1.cs">
+    <Compile Include="TEST\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
+    <Compile Include="TEST\Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="GridCheckMarksSelection.cs" />
@@ -140,6 +140,12 @@
     </Compile>
     <Compile Include="TEST\GridGroupingForm.Designer.cs">
       <DependentUpon>GridGroupingForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TEST\TestChartForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TEST\TestChartForm.Designer.cs">
+      <DependentUpon>TestChartForm.cs</DependentUpon>
     </Compile>
     <Compile Include="TEST\TestForm.cs">
       <SubType>Form</SubType>
@@ -291,7 +297,7 @@
     <EmbeddedResource Include="CreateScenarioProgressForm.resx">
       <DependentUpon>CreateScenarioProgressForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form1.resx">
+    <EmbeddedResource Include="TEST\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LoginForm.ko-KR.resx">
@@ -333,6 +339,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="TEST\GridGroupingForm.resx">
       <DependentUpon>GridGroupingForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TEST\TestChartForm.resx">
+      <DependentUpon>TestChartForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TEST\TestForm.resx">
       <DependentUpon>TestForm.cs</DependentUpon>

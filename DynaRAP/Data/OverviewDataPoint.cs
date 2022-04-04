@@ -34,15 +34,17 @@ namespace DynaRAP.Data
                 new OverviewDataPoint(new DateTime(2019, 6, 2, 15, 0, 0), 65.12374),
                 new OverviewDataPoint(new DateTime(2019, 6, 2, 18, 0, 0), 65.6321)};
 
-            Random rand = new Random();
-            int randValue = 0;
+            //List<OverviewDataPoint> data = new List<OverviewDataPoint>();
 
-            for (int i = 1; i < 2022; i++)
-            {
-                randValue = rand.Next();
+            //Random rand = new Random();
+            //int randValue = 0;
 
-                data.Add(new OverviewDataPoint(new DateTime(i, 6, 1, 0, 0, 0), randValue));
-            }
+            //for (int i = 1; i < 2022; i++)
+            //{
+            //    randValue = rand.Next();
+
+            //    data.Add(new OverviewDataPoint(new DateTime(i, 6, 1, 0, 0, 0), randValue));
+            //}
 
             return data;
         }

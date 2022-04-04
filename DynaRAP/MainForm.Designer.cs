@@ -37,9 +37,9 @@ namespace DynaRAP
             this.bar1 = new DevExpress.XtraBars.Bar();
             this.barSubItem1 = new DevExpress.XtraBars.BarSubItem();
             this.btnPythonTest = new DevExpress.XtraBars.BarButtonItem();
-            this.btnLogin = new DevExpress.XtraBars.BarButtonItem();
             this.toolTreeTest = new DevExpress.XtraBars.BarButtonItem();
             this.btnChartTest = new DevExpress.XtraBars.BarButtonItem();
+            this.btnLogin = new DevExpress.XtraBars.BarButtonItem();
             this.btnStart = new DevExpress.XtraBars.BarButtonItem();
             this.btnPanel = new DevExpress.XtraBars.BarButtonItem();
             this.btnShortBlock = new DevExpress.XtraBars.BarButtonItem();
@@ -134,7 +134,7 @@ namespace DynaRAP
             this.bar1.DockStyle = DevExpress.XtraBars.BarDockStyle.Top;
             this.bar1.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
             new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem1),
-            new DevExpress.XtraBars.LinkPersistInfo(this.btnLogin),
+            new DevExpress.XtraBars.LinkPersistInfo(this.btnChartTest),
             new DevExpress.XtraBars.LinkPersistInfo(this.btnStart),
             new DevExpress.XtraBars.LinkPersistInfo(this.btnPanel),
             new DevExpress.XtraBars.LinkPersistInfo(this.btnShortBlock),
@@ -148,7 +148,7 @@ namespace DynaRAP
             this.barSubItem1.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
             new DevExpress.XtraBars.LinkPersistInfo(this.btnPythonTest),
             new DevExpress.XtraBars.LinkPersistInfo(this.toolTreeTest),
-            new DevExpress.XtraBars.LinkPersistInfo(this.btnChartTest)});
+            new DevExpress.XtraBars.LinkPersistInfo(this.btnLogin)});
             this.barSubItem1.Name = "barSubItem1";
             // 
             // btnPythonTest
@@ -157,13 +157,6 @@ namespace DynaRAP
             this.btnPythonTest.Id = 5;
             this.btnPythonTest.Name = "btnPythonTest";
             this.btnPythonTest.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnPythonTest_ItemClick);
-            // 
-            // btnLogin
-            // 
-            resources.ApplyResources(this.btnLogin, "btnLogin");
-            this.btnLogin.Id = 7;
-            this.btnLogin.Name = "btnLogin";
-            this.btnLogin.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnLogin_ItemClick);
             // 
             // toolTreeTest
             // 
@@ -178,8 +171,14 @@ namespace DynaRAP
             resources.ApplyResources(this.btnChartTest, "btnChartTest");
             this.btnChartTest.Id = 6;
             this.btnChartTest.Name = "btnChartTest";
-            this.btnChartTest.Visibility = DevExpress.XtraBars.BarItemVisibility.Never;
             this.btnChartTest.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnChartTest_ItemClick);
+            // 
+            // btnLogin
+            // 
+            resources.ApplyResources(this.btnLogin, "btnLogin");
+            this.btnLogin.Id = 7;
+            this.btnLogin.Name = "btnLogin";
+            this.btnLogin.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnLogin_ItemClick);
             // 
             // btnStart
             // 

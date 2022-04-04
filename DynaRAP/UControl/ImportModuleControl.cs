@@ -290,6 +290,10 @@ namespace DynaRAP.UControl
 
         }
 
+        private void lblFlyingData_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog
+        }
     }
 
     

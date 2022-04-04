@@ -420,6 +420,7 @@
             this.lblFlyingData.Size = new System.Drawing.Size(51, 13);
             this.lblFlyingData.TabIndex = 17;
             this.lblFlyingData.Text = "File Path";
+            this.lblFlyingData.Click += new System.EventHandler(this.lblFlyingData_Click);
             // 
             // labelControl18
             // 

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 
-namespace DynaRAP
+namespace DynaRAP.TEST
 {
     public partial class Form1 : Form
     {
