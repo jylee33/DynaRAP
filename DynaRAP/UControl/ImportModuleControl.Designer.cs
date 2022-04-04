@@ -417,9 +417,9 @@
             this.lblFlyingData.Location = new System.Drawing.Point(3, 595);
             this.lblFlyingData.Name = "lblFlyingData";
             this.lblFlyingData.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
-            this.lblFlyingData.Size = new System.Drawing.Size(51, 13);
+            this.lblFlyingData.Size = new System.Drawing.Size(54, 13);
             this.lblFlyingData.TabIndex = 17;
-            this.lblFlyingData.Text = "File Path";
+            this.lblFlyingData.Text = "File Open";
             this.lblFlyingData.Click += new System.EventHandler(this.lblFlyingData_Click);
             // 
             // labelControl18

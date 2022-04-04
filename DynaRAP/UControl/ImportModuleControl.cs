@@ -1,4 +1,5 @@
 ﻿using DevExpress.Utils;
+using DevExpress.XtraBars.Docking;
 using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Controls;
 using DevExpress.XtraEditors.Repository;
@@ -9,6 +10,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +21,10 @@ namespace DynaRAP.UControl
     public partial class ImportModuleControl : DevExpress.XtraEditors.XtraUserControl
     {
         string selectedFuselage = string.Empty;
+        Dictionary<string, List<string>> dicData = new Dictionary<string, List<string>>();
+
+        DockPanel csvTablePanel = null;
+        string csvFilePath = string.Empty;
 
         public ImportModuleControl()
         {
@@ -244,7 +250,35 @@ namespace DynaRAP.UControl
 
         private void btnViewData_ButtonClick(object sender, EventArgs e)
         {
+            if (File.Exists(csvFilePath) == false)
+            {
+                MessageBox.Show(Properties.Resources.FileNotExist);
+                return;
+            }
 
+            MainForm mainForm = this.ParentForm as MainForm;
+
+            //아래에 panel 추가
+            if (csvTablePanel == null)
+            {
+                csvTablePanel = mainForm.DockManager1.AddPanel(DockingStyle.Bottom);
+                csvTablePanel.Name = "panelCSVTable";
+                csvTablePanel.Text = "CSV TABLE";
+                csvTablePanel.Height = 240;
+                CsvTableControl ctrl = new CsvTableControl(csvFilePath);
+                ctrl.Dock = DockStyle.Fill;
+                csvTablePanel.Controls.Add(ctrl);
+                csvTablePanel.ClosedPanel += CsvTablePanel_ClosedPanel;
+            }
+            else
+            {
+                csvTablePanel.Show();
+            }
+        }
+
+        private void CsvTablePanel_ClosedPanel(object sender, DockPanelEventArgs e)
+        {
+            this.csvTablePanel = null;
         }
 
         private void btnAddParameter_ButtonClick(object sender, EventArgs e)
@@ -258,6 +292,7 @@ namespace DynaRAP.UControl
         {
             ImportParamControl ctrl = new ImportParamControl();
             ctrl.Title = "Parameter " + paramIndex.ToString();
+            ctrl.DicData = dicData;
             panelData.Controls.Add(ctrl);
             panelData.Controls.SetChildIndex(ctrl, paramIndex++);
 
@@ -292,7 +327,66 @@ namespace DynaRAP.UControl
 
         private void lblFlyingData_Click(object sender, EventArgs e)
         {
-            //OpenFileDialog
+            OpenFileDialog dlg = new OpenFileDialog();
+            dlg.InitialDirectory = "C:\\";
+            dlg.Filter = "Excel files (*.xls)|*.xls";
+            //dlg.Filter = "Comma Separated Value files (CSV)|*.csv";
+
+            if (dlg.ShowDialog() == DialogResult.OK)
+            {
+                csvFilePath = dlg.FileName;
+                lblFlyingData.Text = csvFilePath;
+                StreamReader sr = new StreamReader(dlg.FileName);
+
+                int idx = 0;
+
+                // 스트림의 끝까지 읽기
+                while (!sr.EndOfStream)
+                {
+                    string line = sr.ReadLine();
+                    string[] data = line.Split(',');
+
+                    if (string.IsNullOrEmpty(data[0]))
+                        continue;
+
+                    int i = 0;
+                    if (idx == 0)
+                    {
+                        dicData.Clear();
+                        for (i = 0; i < data.Length; i++)
+                        {
+                            if (dicData.ContainsKey(data[i]) == false)
+                            {
+                                if (string.IsNullOrEmpty(data[i]) == false)
+                                    dicData.Add(data[i], new List<string>());
+                            }
+                        }
+                        idx++;
+                        continue;
+                    }
+
+                    i = 0;
+                    foreach (string key in dicData.Keys)
+                    {
+                        if (dicData.ContainsKey(key))
+                        {
+                            if (string.IsNullOrEmpty(data[i]) == false)
+                                dicData[key].Add(data[i++]);
+                        }
+                    }
+                }
+
+                //foreach (KeyValuePair<string, List<string>> kv in dicData)
+                //{
+                //    Console.Write("{0} : ", kv.Key);
+                //    foreach (string val in kv.Value)
+                //    {
+                //        Console.Write("{0} ", val);
+                //    }
+                //    Console.WriteLine();
+                //}
+
+            }
         }
     }
 

@@ -195,6 +195,12 @@
     <Compile Include="UControl\BinTableControl.Designer.cs">
       <DependentUpon>BinTableControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="UControl\CsvTableControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\CsvTableControl.Designer.cs">
+      <DependentUpon>CsvTableControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="UControl\CustomSimpleButton.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -288,6 +294,7 @@
     <Compile Include="UserControl2.Designer.cs">
       <DependentUpon>UserControl2.cs</DependentUpon>
     </Compile>
+    <Compile Include="UTIL\Utils.cs" />
     <Compile Include="XtraForm1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -372,6 +379,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\BinTableControl.resx">
       <DependentUpon>BinTableControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\CsvTableControl.resx">
+      <DependentUpon>CsvTableControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\SBParamControl.resx">
       <DependentUpon>SBParamControl.cs</DependentUpon>

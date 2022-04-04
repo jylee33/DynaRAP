@@ -439,6 +439,7 @@ namespace DynaRAP.TEST
 
 
         }
+
         private void Push_Data(Series series, DateTime dt, int data)
         {
             DataPoint dp = new DataPoint(); //데이타 기록하기 정도

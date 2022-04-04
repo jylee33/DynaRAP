@@ -32,6 +32,8 @@ namespace DynaRAP.TEST
 
             chartControl1.Legend.Visibility = DevExpress.Utils.DefaultBoolean.False;
 
+            chartControl1.MouseClick += ChartControl1_MouseClick;
+
             XYDiagram diagram = chartControl1.Diagram as XYDiagram;
             AxisX axisX = diagram.AxisX;
             AxisY axisY = diagram.AxisY;
@@ -69,6 +71,33 @@ namespace DynaRAP.TEST
             diagram.AxisY.WholeRange.AlwaysShowZeroLevel = false;
 
         }
+
+        private void ChartControl1_MouseClick(object sender, MouseEventArgs e)
+        {
+            ChartControl chart = sender as ChartControl;
+            if(e.Button == MouseButtons.Left)
+            {
+                ChartHitInfo hi = chart.CalcHitInfo(e.X, e.Y);
+                SeriesPoint point = hi.SeriesPoint;
+                if(point != null)
+                {
+                    Console.WriteLine("point is {0}", point.Argument.ToString());
+                }
+            }
+            else if(e.Button== MouseButtons.Right)
+            {
+                Strip sl = new Strip();
+                sl.Color = Color.FromArgb(255, Color.LightSeaGreen);
+                //sl..IntervalOffset = 0;// Math.Min(curRange.Width, curRange.Height);
+                //sl.StripWidth = 10;// Math.Abs(curRange.Height - curRange.Width);
+                XYDiagram diagram = chart.Diagram as XYDiagram;
+                AxisX axisX = diagram.AxisX;
+                AxisY axisY = diagram.AxisY;
+                axisX.Strips.Clear();
+                axisX.Strips.Add(sl);
+            }
+        }
+
 
         private void chartControl1_RegionChanged(object sender, EventArgs e)
         {
