@@ -38,8 +38,8 @@ namespace DynaRAP
             this.barSubItem1 = new DevExpress.XtraBars.BarSubItem();
             this.btnPythonTest = new DevExpress.XtraBars.BarButtonItem();
             this.toolTreeTest = new DevExpress.XtraBars.BarButtonItem();
-            this.btnChartTest = new DevExpress.XtraBars.BarButtonItem();
             this.btnLogin = new DevExpress.XtraBars.BarButtonItem();
+            this.btnChartTest = new DevExpress.XtraBars.BarButtonItem();
             this.btnStart = new DevExpress.XtraBars.BarButtonItem();
             this.btnPanel = new DevExpress.XtraBars.BarButtonItem();
             this.btnShortBlock = new DevExpress.XtraBars.BarButtonItem();
@@ -150,6 +150,7 @@ namespace DynaRAP
             new DevExpress.XtraBars.LinkPersistInfo(this.toolTreeTest),
             new DevExpress.XtraBars.LinkPersistInfo(this.btnLogin)});
             this.barSubItem1.Name = "barSubItem1";
+            this.barSubItem1.Visibility = DevExpress.XtraBars.BarItemVisibility.Never;
             // 
             // btnPythonTest
             // 
@@ -166,19 +167,20 @@ namespace DynaRAP
             this.toolTreeTest.Visibility = DevExpress.XtraBars.BarItemVisibility.Never;
             this.toolTreeTest.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.toolTreeTest_ItemClick);
             // 
-            // btnChartTest
-            // 
-            resources.ApplyResources(this.btnChartTest, "btnChartTest");
-            this.btnChartTest.Id = 6;
-            this.btnChartTest.Name = "btnChartTest";
-            this.btnChartTest.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnChartTest_ItemClick);
-            // 
             // btnLogin
             // 
             resources.ApplyResources(this.btnLogin, "btnLogin");
             this.btnLogin.Id = 7;
             this.btnLogin.Name = "btnLogin";
             this.btnLogin.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnLogin_ItemClick);
+            // 
+            // btnChartTest
+            // 
+            resources.ApplyResources(this.btnChartTest, "btnChartTest");
+            this.btnChartTest.Id = 6;
+            this.btnChartTest.Name = "btnChartTest";
+            this.btnChartTest.Visibility = DevExpress.XtraBars.BarItemVisibility.Never;
+            this.btnChartTest.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnChartTest_ItemClick);
             // 
             // btnStart
             // 
@@ -467,6 +469,7 @@ namespace DynaRAP
             this.Controls.Add(this.barDockControlBottom);
             this.Controls.Add(this.barDockControlTop);
             this.Name = "MainForm";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
             this.Load += new System.EventHandler(this.MainForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.documentManager1)).EndInit();

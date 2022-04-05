@@ -687,16 +687,16 @@
   <data name="&gt;&gt;toolTreeTest.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
-  <data name="&gt;&gt;btnChartTest.Name" xml:space="preserve">
-    <value>btnChartTest</value>
-  </data>
-  <data name="&gt;&gt;btnChartTest.Type" xml:space="preserve">
-    <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
-  </data>
   <data name="&gt;&gt;btnLogin.Name" xml:space="preserve">
     <value>btnLogin</value>
   </data>
   <data name="&gt;&gt;btnLogin.Type" xml:space="preserve">
+    <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  </data>
+  <data name="&gt;&gt;btnChartTest.Name" xml:space="preserve">
+    <value>btnChartTest</value>
+  </data>
+  <data name="&gt;&gt;btnChartTest.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
   <data name="&gt;&gt;btnStart.Name" xml:space="preserve">
