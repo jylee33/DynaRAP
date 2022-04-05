@@ -855,6 +855,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_C1804A92F03B4DABAB87BCF95F563DDE"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_C2E92A3A211920802FBE9607B2D41957"
         "OwnerKey" = "8:_DCB2D4BA05B14BEAA109E1895ED06E4B"
         "MsmSig" = "8:_UNDEFINED"
@@ -2171,6 +2177,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C1804A92F03B4DABAB87BCF95F563DDE"
+            {
+            "SourcePath" = "8:..\\DynaRAP\\Resources\\DynaRAP.ico"
+            "TargetName" = "8:DynaRAP.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_A85D84C9CB1144E8842881DC34B5DBA9"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_C2E92A3A211920802FBE9607B2D41957"
             {
             "AssemblyRegister" = "3:1"
@@ -2599,15 +2625,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:DynaRAP"
-        "ProductCode" = "8:{C3E296F1-70C4-4742-B451-978B402B567E}"
-        "PackageCode" = "8:{24CE2740-4AAD-41F8-949D-51E127131103}"
+        "ProductCode" = "8:{7115C9D1-0584-4438-AC25-220C707F4090}"
+        "PackageCode" = "8:{A88A1B39-44FF-4CB4-9B82-B9BD6896AF5D}"
         "UpgradeCode" = "8:{C2E8B582-A912-4CA2-ABDF-0C2D08B886D2}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
-        "RemovePreviousVersions" = "11:FALSE"
+        "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:1.0.0"
+        "ProductVersion" = "8:1.0.1"
         "Manufacturer" = "8:ServeTech"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -2731,7 +2757,7 @@
             "Target" = "8:_DCB2D4BA05B14BEAA109E1895ED06E4B"
             "Folder" = "8:_BB643E7D61A74A3BA750FB8DCE3E3868"
             "WorkingFolder" = "8:_A85D84C9CB1144E8842881DC34B5DBA9"
-            "Icon" = "8:"
+            "Icon" = "8:_C1804A92F03B4DABAB87BCF95F563DDE"
             "Feature" = "8:"
             }
         }
