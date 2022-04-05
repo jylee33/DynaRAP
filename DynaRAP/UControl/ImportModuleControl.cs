@@ -24,6 +24,7 @@ namespace DynaRAP.UControl
         Dictionary<string, List<string>> dicData = new Dictionary<string, List<string>>();
 
         DockPanel csvTablePanel = null;
+        CsvTableControl csvTableCtrl = null;
         string csvFilePath = string.Empty;
 
         public ImportModuleControl()
@@ -265,13 +266,15 @@ namespace DynaRAP.UControl
                 csvTablePanel.Name = "panelCSVTable";
                 csvTablePanel.Text = "CSV TABLE";
                 csvTablePanel.Height = 240;
-                CsvTableControl ctrl = new CsvTableControl(csvFilePath);
-                ctrl.Dock = DockStyle.Fill;
-                csvTablePanel.Controls.Add(ctrl);
+                csvTableCtrl = new CsvTableControl(csvFilePath);
+                csvTableCtrl.Dock = DockStyle.Fill;
+                csvTablePanel.Controls.Add(csvTableCtrl);
                 csvTablePanel.ClosedPanel += CsvTablePanel_ClosedPanel;
             }
             else
             {
+                csvTableCtrl.CsvFilePath = csvFilePath;
+                csvTableCtrl.FillGrid();
                 csvTablePanel.Show();
             }
         }
@@ -279,6 +282,7 @@ namespace DynaRAP.UControl
         private void CsvTablePanel_ClosedPanel(object sender, DockPanelEventArgs e)
         {
             this.csvTablePanel = null;
+            this.csvTableCtrl = null;
         }
 
         private void btnAddParameter_ButtonClick(object sender, EventArgs e)
@@ -329,7 +333,7 @@ namespace DynaRAP.UControl
         {
             OpenFileDialog dlg = new OpenFileDialog();
             dlg.InitialDirectory = "C:\\";
-            dlg.Filter = "Excel files (*.xls)|*.xls";
+            dlg.Filter = "Excel files (*.xls)|*.xls|Comma Separated Value files (CSV)|*.csv|모든 파일 (*.*)|*.*";
             //dlg.Filter = "Comma Separated Value files (CSV)|*.csv";
 
             if (dlg.ShowDialog() == DialogResult.OK)

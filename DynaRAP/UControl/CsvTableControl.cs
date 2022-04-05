@@ -47,6 +47,10 @@ namespace DynaRAP.UControl
             }
 
             DataTable dt = LoadCSV(this.csvFilePath, true);
+
+            gridView1.Columns.Clear();
+
+            gridControl1.DataSource = null;
             gridControl1.DataSource = dt;
 
             //gridView1.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;

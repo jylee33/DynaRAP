@@ -21,7 +21,7 @@ namespace DynaRAP.UControl
     public partial class BinTableControl : DevExpress.XtraEditors.XtraUserControl
     {
         DockPanel binSBTabPanel = null;
-
+        BinSBTabControl binSBTabCtrl = null;
 
         public BinTableControl()
         {
@@ -197,24 +197,24 @@ namespace DynaRAP.UControl
                 binSBTabPanel.FloatSize = new Size(466, 920);
                 binSBTabPanel.Name = "ShortBlock Panel";
                 binSBTabPanel.Text = "ShortBlock Panel";
-                BinSBTabControl ctrl = new BinSBTabControl();
-                ctrl.IdxValue = index;
-                ctrl.Dock = DockStyle.Fill;
-                binSBTabPanel.Controls.Add(ctrl);
+                binSBTabCtrl = new BinSBTabControl();
+                binSBTabCtrl.IdxValue = index;
+                binSBTabCtrl.Dock = DockStyle.Fill;
+                binSBTabPanel.Controls.Add(binSBTabCtrl);
+                binSBTabPanel.ClosedPanel += BinSBTabPanel_ClosedPanel;
             }
             else
             {
-                foreach(Control ctrl in binSBTabPanel.Controls)
-                {
-                    if(ctrl is BinSBTabControl)
-                    {
-                        BinSBTabControl control = ctrl as BinSBTabControl;
-                        control.IdxValue = index;
-                    }
-                }
+                binSBTabCtrl.IdxValue = index;
                 binSBTabPanel.Show();
             }
 
+        }
+
+        private void BinSBTabPanel_ClosedPanel(object sender, DockPanelEventArgs e)
+        {
+            this.binSBTabPanel = null;
+            this.binSBTabCtrl = null;
         }
 
         private void BandedGridView_RowCellStyle(object sender, RowCellStyleEventArgs e)
