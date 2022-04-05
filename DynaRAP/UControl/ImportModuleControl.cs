@@ -333,7 +333,7 @@ namespace DynaRAP.UControl
         {
             OpenFileDialog dlg = new OpenFileDialog();
             dlg.InitialDirectory = "C:\\";
-            dlg.Filter = "Excel files (*.xls)|*.xls|Comma Separated Value files (CSV)|*.csv|모든 파일 (*.*)|*.*";
+            dlg.Filter = "Excel files (*.xls, *.xlsx)|*.xls; *.xlsx|Comma Separated Value files (CSV)|*.csv|모든 파일 (*.*)|*.*";
             //dlg.Filter = "Comma Separated Value files (CSV)|*.csv";
 
             if (dlg.ShowDialog() == DialogResult.OK)
