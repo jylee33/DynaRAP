@@ -277,7 +277,7 @@
     <value>projectListControl</value>
   </data>
   <data name="&gt;&gt;projectListControl.Type" xml:space="preserve">
-    <value>DynaRAP.UControl.ProjectListControl, DynaRAP, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</value>
+    <value>DynaRAP.UControl.ProjectListControl, DynaRAP, Version=1.0.1.0, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;projectListControl.Parent" xml:space="preserve">
     <value>dockPanel1_Container</value>
@@ -552,6 +552,9 @@
   <data name="btnBin.Caption" xml:space="preserve">
     <value>BIN 구성</value>
   </data>
+  <data name="btnDLLImport.Caption" xml:space="preserve">
+    <value>DLL Import</value>
+  </data>
   <data name="bar1.Text" xml:space="preserve">
     <value>Tools</value>
   </data>
@@ -758,6 +761,12 @@
   </data>
   <data name="&gt;&gt;tabbedView1.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.Docking2010.Views.Tabbed.TabbedView, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  </data>
+  <data name="&gt;&gt;btnDLLImport.Name" xml:space="preserve">
+    <value>btnDLLImport</value>
+  </data>
+  <data name="&gt;&gt;btnDLLImport.Type" xml:space="preserve">
+    <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>MainForm</value>

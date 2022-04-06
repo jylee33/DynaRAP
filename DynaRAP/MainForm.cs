@@ -137,8 +137,8 @@ namespace DynaRAP
             //...
 
             //Load DevExpress controls' layouts from a file
-            //if (workspaceManager1.LoadWorkspace(projectWorkspaceName, projectLayoutFile, true))
-            //    workspaceManager1.ApplyWorkspace(projectWorkspaceName);
+            if (workspaceManager1.LoadWorkspace(projectWorkspaceName, projectLayoutFile, true))
+                workspaceManager1.ApplyWorkspace(projectWorkspaceName);
 
         }
 
@@ -320,6 +320,18 @@ namespace DynaRAP
             if (startControl != null)
             {
                 tabbedView1.RemoveDocument(startControl);
+            }
+        }
+
+        private void btnDLLImport_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            OpenFileDialog dlg = new OpenFileDialog();
+            dlg.InitialDirectory = "C:\\";
+            dlg.Filter = "Excel files (*.xls, *.xlsx)|*.xls; *.xlsx|Comma Separated Value files (CSV)|*.csv|모든 파일 (*.*)|*.*";
+
+            if (dlg.ShowDialog() == DialogResult.OK)
+            {
+                //dlg.FileName;
             }
         }
     }

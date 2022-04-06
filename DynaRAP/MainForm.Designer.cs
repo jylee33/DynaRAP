@@ -73,6 +73,7 @@ namespace DynaRAP
             this.controlContainer1 = new DevExpress.XtraBars.Docking.ControlContainer();
             this.tabbedView1 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.TabbedView(this.components);
             this.panelContainer1 = new DevExpress.XtraBars.Docking.DockPanel();
+            this.btnDLLImport = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.documentManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dockManager1)).BeginInit();
@@ -121,9 +122,10 @@ namespace DynaRAP
             this.toolTreeTest,
             this.btnStart,
             this.btnShortBlock,
-            this.btnBin});
+            this.btnBin,
+            this.btnDLLImport});
             this.barManager1.MainMenu = this.bar2;
-            this.barManager1.MaxItemId = 16;
+            this.barManager1.MaxItemId = 17;
             this.barManager1.StatusBar = this.bar3;
             // 
             // bar1
@@ -138,7 +140,8 @@ namespace DynaRAP
             new DevExpress.XtraBars.LinkPersistInfo(this.btnStart),
             new DevExpress.XtraBars.LinkPersistInfo(this.btnPanel),
             new DevExpress.XtraBars.LinkPersistInfo(this.btnShortBlock),
-            new DevExpress.XtraBars.LinkPersistInfo(this.btnBin)});
+            new DevExpress.XtraBars.LinkPersistInfo(this.btnBin),
+            new DevExpress.XtraBars.LinkPersistInfo(this.btnDLLImport)});
             resources.ApplyResources(this.bar1, "bar1");
             // 
             // barSubItem1
@@ -457,6 +460,13 @@ namespace DynaRAP
             this.panelContainer1.Name = "panelContainer1";
             this.panelContainer1.OriginalSize = new System.Drawing.Size(200, 200);
             // 
+            // btnDLLImport
+            // 
+            resources.ApplyResources(this.btnDLLImport, "btnDLLImport");
+            this.btnDLLImport.Id = 16;
+            this.btnDLLImport.Name = "btnDLLImport";
+            this.btnDLLImport.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnDLLImport_ItemClick);
+            // 
             // MainForm
             // 
             resources.ApplyResources(this, "$this");
@@ -536,5 +546,6 @@ namespace DynaRAP
         private DevExpress.XtraBars.BarButtonItem btnStart;
         private DevExpress.XtraBars.BarButtonItem btnShortBlock;
         private DevExpress.XtraBars.BarButtonItem btnBin;
+        private DevExpress.XtraBars.BarButtonItem btnDLLImport;
     }
 }
