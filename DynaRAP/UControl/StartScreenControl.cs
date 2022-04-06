@@ -69,6 +69,16 @@ namespace DynaRAP.UControl
             NewSenarioForm form = new NewSenarioForm();
             form.ShowDialog();
         }
+
+        private void hyperlinkLabelControl2_Click(object sender, EventArgs e)
+        {
+            MainForm mainForm = this.ParentForm as MainForm;
+            mainForm.PanelScenario.Show();
+            mainForm.TabbedView1.RemoveDocument(mainForm.StartControl);
+            mainForm.TabbedView1.RemoveDocument(mainForm.ImportModuleControl);
+            mainForm.TabbedView1.RemoveDocument(mainForm.SbModuleControl);
+            mainForm.TabbedView1.RemoveDocument(mainForm.BinModuleControl);
+        }
     }
 
     

@@ -35,17 +35,12 @@ namespace DynaRAP.UControl
 
         private void CsvTableControl_Load(object sender, EventArgs e)
         {
-            FillGrid();
+            if(File.Exists(csvFilePath))
+                FillGrid();
         }
 
         public void FillGrid()
         {
-            if (File.Exists(csvFilePath) == false)
-            {
-                MessageBox.Show(Properties.Resources.FileNotExist);
-                return;
-            }
-
             DataTable dt = LoadCSV(this.csvFilePath, true);
 
             gridView1.Columns.Clear();

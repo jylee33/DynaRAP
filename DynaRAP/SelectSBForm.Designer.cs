@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.selectSBControl1 = new DynaRAP.UControl.SelectSBControl();
+            this.selectSBControl1 = new DynaRAP.UControl.BinSelectSBControl();
             this.SuspendLayout();
             // 
             // selectSBControl1
@@ -56,6 +56,6 @@
 
         #endregion
 
-        private UControl.SelectSBControl selectSBControl1;
+        private UControl.BinSelectSBControl selectSBControl1;
     }
 }

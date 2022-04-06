@@ -226,11 +226,11 @@
     <Compile Include="UControl\SBIntervalControl.Designer.cs">
       <DependentUpon>SBIntervalControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="UControl\SelectSBControl.cs">
+    <Compile Include="UControl\BinSelectSBControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UControl\SelectSBControl.Designer.cs">
-      <DependentUpon>SelectSBControl.cs</DependentUpon>
+    <Compile Include="UControl\BinSelectSBControl.Designer.cs">
+      <DependentUpon>BinSelectSBControl.cs</DependentUpon>
     </Compile>
     <Compile Include="UControl\SBModuleControl.cs">
       <SubType>UserControl</SubType>
@@ -393,8 +393,8 @@
     <EmbeddedResource Include="UControl\SBIntervalControl.resx">
       <DependentUpon>SBIntervalControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UControl\SelectSBControl.resx">
-      <DependentUpon>SelectSBControl.cs</DependentUpon>
+    <EmbeddedResource Include="UControl\BinSelectSBControl.resx">
+      <DependentUpon>BinSelectSBControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\SBModuleControl.resx">
       <DependentUpon>SBModuleControl.cs</DependentUpon>

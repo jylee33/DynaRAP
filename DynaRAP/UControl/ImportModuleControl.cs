@@ -23,8 +23,6 @@ namespace DynaRAP.UControl
         string selectedFuselage = string.Empty;
         Dictionary<string, List<string>> dicData = new Dictionary<string, List<string>>();
 
-        DockPanel csvTablePanel = null;
-        CsvTableControl csvTableCtrl = null;
         string csvFilePath = string.Empty;
 
         public ImportModuleControl()
@@ -258,32 +256,11 @@ namespace DynaRAP.UControl
             }
 
             MainForm mainForm = this.ParentForm as MainForm;
-
-            //아래에 panel 추가
-            if (csvTablePanel == null)
-            {
-                csvTablePanel = mainForm.DockManager1.AddPanel(DockingStyle.Bottom);
-                csvTablePanel.Name = "panelCSVTable";
-                csvTablePanel.Text = "CSV TABLE";
-                csvTablePanel.Height = 240;
-                csvTableCtrl = new CsvTableControl(csvFilePath);
-                csvTableCtrl.Dock = DockStyle.Fill;
-                csvTablePanel.Controls.Add(csvTableCtrl);
-                csvTablePanel.ClosedPanel += CsvTablePanel_ClosedPanel;
-            }
-            else
-            {
-                csvTableCtrl.CsvFilePath = csvFilePath;
-                csvTableCtrl.FillGrid();
-                csvTablePanel.Show();
-            }
+            mainForm.PanelImportViewCsv.Show();
+            mainForm.CsvTableControl.CsvFilePath = this.csvFilePath;
+            mainForm.CsvTableControl.FillGrid();
         }
 
-        private void CsvTablePanel_ClosedPanel(object sender, DockPanelEventArgs e)
-        {
-            this.csvTablePanel = null;
-            this.csvTableCtrl = null;
-        }
 
         private void btnAddParameter_ButtonClick(object sender, EventArgs e)
         {

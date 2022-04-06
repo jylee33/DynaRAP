@@ -176,6 +176,7 @@
             this.hyperlinkLabelControl2.Size = new System.Drawing.Size(388, 14);
             this.hyperlinkLabelControl2.TabIndex = 1;
             this.hyperlinkLabelControl2.Text = "Open Scenario...";
+            this.hyperlinkLabelControl2.Click += new System.EventHandler(this.hyperlinkLabelControl2_Click);
             // 
             // labelControl5
             // 

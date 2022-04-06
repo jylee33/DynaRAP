@@ -44,6 +44,48 @@ namespace DynaRAP
         SBModuleControl sbModuleControl = null;
         BinModuleControl binModuleControl = null;
 
+        CsvTableControl csvTableControl = null;
+
+        public DockPanel PanelBinTable
+        {
+            get { return this.panelBinTable; }
+        }
+
+        public DockPanel PanelBinSbList
+        {
+            get { return this.panelBinSbList; }
+        }
+
+        public DockPanel PanelImportViewCsv
+        {
+            get { return this.panelImportViewCsv; }
+        }
+
+        public DockPanel PanelScenario
+        {
+            get { return this.panelScenario; }
+        }
+
+        public DockPanel PanelOther
+        {
+            get { return this.panelOther; }
+        }
+
+        public DockPanel PanelProperties
+        {
+            get { return this.panelProperties; }
+        }
+
+        public CsvTableControl CsvTableControl 
+        { 
+            get => csvTableControl;
+            set => csvTableControl = value; 
+        }
+        public StartScreenControl StartControl { get => startControl; set => startControl = value; }
+        public ImportModuleControl ImportModuleControl { get => importModuleControl; set => importModuleControl = value; }
+        public SBModuleControl SbModuleControl { get => sbModuleControl; set => sbModuleControl = value; }
+        public BinModuleControl BinModuleControl { get => binModuleControl; set => binModuleControl = value; }
+
         public MainForm()
         {
             InitializeComponent();
@@ -111,6 +153,35 @@ namespace DynaRAP
             tabbedView1.RemoveDocument(importModuleControl);
             tabbedView1.RemoveDocument(sbModuleControl);
             tabbedView1.RemoveDocument(binModuleControl);
+
+            //if (panelBinTable == null)
+            //{
+            //    panelBinTable = dockManager1.AddPanel(DockingStyle.Bottom);
+            //}
+            panelBinTable.Name = "panelBinTable";
+            panelBinTable.Text = "BIN TABLE";
+            BinTableControl binTableCtrl = new BinTableControl();
+            binTableCtrl.Dock = DockStyle.Fill;
+            panelBinTable.Controls.Add(binTableCtrl);
+            panelBinTable.Hide();
+
+            panelBinSbList.Name = "panelBinSbList";
+            panelBinSbList.Text = "ImportModuleScenarioName";
+            BinSelectSBControl binSbListCtrl = new BinSelectSBControl();
+            binSbListCtrl.Dock = DockStyle.Fill;
+            panelBinSbList.Controls.Add(binSbListCtrl);
+            panelBinSbList.Hide();
+
+            panelImportViewCsv.Name = "panelImportViewCsv";
+            panelImportViewCsv.Text = "CSV TABLE";
+            csvTableControl = new CsvTableControl();
+            csvTableControl.Dock = DockStyle.Fill;
+            panelImportViewCsv.Controls.Add(csvTableControl);
+            panelImportViewCsv.Hide();
+
+            panelScenario.Hide();
+            panelOther.Hide();
+            panelProperties.Hide();
         }
 
         void LoadWorkspaces()
@@ -187,8 +258,8 @@ namespace DynaRAP
             //...
 
             //Load DevExpress controls' layouts from a file
-            if (workspaceManager1.LoadWorkspace(projectWorkspaceName, projectLayoutFile, true))
-                workspaceManager1.ApplyWorkspace(projectWorkspaceName);
+            //if (workspaceManager1.LoadWorkspace(projectWorkspaceName, projectLayoutFile, true))
+            //    workspaceManager1.ApplyWorkspace(projectWorkspaceName);
 
         }
 
@@ -323,6 +394,7 @@ namespace DynaRAP
                 //dlg.FileName;
             }
         }
+
     }
 
 }
