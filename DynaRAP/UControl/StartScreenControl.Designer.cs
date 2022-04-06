@@ -34,8 +34,8 @@
             this.labelControl3 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl4 = new DevExpress.XtraEditors.LabelControl();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.hyperlinkLabelControl1 = new DevExpress.XtraEditors.HyperlinkLabelControl();
-            this.hyperlinkLabelControl2 = new DevExpress.XtraEditors.HyperlinkLabelControl();
+            this.lblNewScenario = new DevExpress.XtraEditors.HyperlinkLabelControl();
+            this.lblOpenScenario = new DevExpress.XtraEditors.HyperlinkLabelControl();
             this.labelControl5 = new DevExpress.XtraEditors.LabelControl();
             this.scenarioSummaryControl1 = new DynaRAP.UControl.ScenarioSummaryControl();
             this.simpleButton1 = new DevExpress.XtraEditors.SimpleButton();
@@ -141,8 +141,8 @@
             // 
             this.tableLayoutPanel2.ColumnCount = 1;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.Controls.Add(this.hyperlinkLabelControl1, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.hyperlinkLabelControl2, 0, 1);
+            this.tableLayoutPanel2.Controls.Add(this.lblNewScenario, 0, 0);
+            this.tableLayoutPanel2.Controls.Add(this.lblOpenScenario, 0, 1);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(43, 128);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
@@ -152,31 +152,31 @@
             this.tableLayoutPanel2.Size = new System.Drawing.Size(394, 38);
             this.tableLayoutPanel2.TabIndex = 1;
             // 
-            // hyperlinkLabelControl1
+            // lblNewScenario
             // 
-            this.hyperlinkLabelControl1.Appearance.Font = new System.Drawing.Font("Tahoma", 8F);
-            this.hyperlinkLabelControl1.Appearance.Options.UseFont = true;
-            this.hyperlinkLabelControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.hyperlinkLabelControl1.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
-            this.hyperlinkLabelControl1.Location = new System.Drawing.Point(3, 3);
-            this.hyperlinkLabelControl1.Name = "hyperlinkLabelControl1";
-            this.hyperlinkLabelControl1.Size = new System.Drawing.Size(388, 14);
-            this.hyperlinkLabelControl1.TabIndex = 0;
-            this.hyperlinkLabelControl1.Text = "New Scenario...";
-            this.hyperlinkLabelControl1.Click += new System.EventHandler(this.hyperlinkLabelControl1_Click);
+            this.lblNewScenario.Appearance.Font = new System.Drawing.Font("Tahoma", 8F);
+            this.lblNewScenario.Appearance.Options.UseFont = true;
+            this.lblNewScenario.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblNewScenario.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
+            this.lblNewScenario.Location = new System.Drawing.Point(3, 3);
+            this.lblNewScenario.Name = "lblNewScenario";
+            this.lblNewScenario.Size = new System.Drawing.Size(388, 14);
+            this.lblNewScenario.TabIndex = 0;
+            this.lblNewScenario.Text = "New Scenario...";
+            this.lblNewScenario.Click += new System.EventHandler(this.lblNewScenario_Click);
             // 
-            // hyperlinkLabelControl2
+            // lblOpenScenario
             // 
-            this.hyperlinkLabelControl2.Appearance.Font = new System.Drawing.Font("Tahoma", 8F);
-            this.hyperlinkLabelControl2.Appearance.Options.UseFont = true;
-            this.hyperlinkLabelControl2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.hyperlinkLabelControl2.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
-            this.hyperlinkLabelControl2.Location = new System.Drawing.Point(3, 23);
-            this.hyperlinkLabelControl2.Name = "hyperlinkLabelControl2";
-            this.hyperlinkLabelControl2.Size = new System.Drawing.Size(388, 14);
-            this.hyperlinkLabelControl2.TabIndex = 1;
-            this.hyperlinkLabelControl2.Text = "Open Scenario...";
-            this.hyperlinkLabelControl2.Click += new System.EventHandler(this.hyperlinkLabelControl2_Click);
+            this.lblOpenScenario.Appearance.Font = new System.Drawing.Font("Tahoma", 8F);
+            this.lblOpenScenario.Appearance.Options.UseFont = true;
+            this.lblOpenScenario.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblOpenScenario.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
+            this.lblOpenScenario.Location = new System.Drawing.Point(3, 23);
+            this.lblOpenScenario.Name = "lblOpenScenario";
+            this.lblOpenScenario.Size = new System.Drawing.Size(388, 14);
+            this.lblOpenScenario.TabIndex = 1;
+            this.lblOpenScenario.Text = "Open Scenario...";
+            this.lblOpenScenario.Click += new System.EventHandler(this.lblOpenScenario_Click);
             // 
             // labelControl5
             // 
@@ -316,12 +316,12 @@
         private DevExpress.XtraEditors.LabelControl labelControl3;
         private DevExpress.XtraEditors.LabelControl labelControl4;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
-        private DevExpress.XtraEditors.HyperlinkLabelControl hyperlinkLabelControl1;
+        private DevExpress.XtraEditors.HyperlinkLabelControl lblNewScenario;
         private DevExpress.XtraEditors.LabelControl labelControl5;
         private ScenarioSummaryControl scenarioSummaryControl1;
         private DevExpress.XtraEditors.SimpleButton simpleButton1;
         private DevExpress.XtraEditors.SimpleButton simpleButton2;
-        private DevExpress.XtraEditors.HyperlinkLabelControl hyperlinkLabelControl2;
+        private DevExpress.XtraEditors.HyperlinkLabelControl lblOpenScenario;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
         private DevExpress.XtraEditors.HyperlinkLabelControl hyperlinkLabelControl3;
         private DevExpress.XtraEditors.HyperlinkLabelControl hyperlinkLabelControl4;
