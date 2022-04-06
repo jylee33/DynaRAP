@@ -44,41 +44,20 @@ namespace DynaRAP
         SBModuleControl sbModuleControl = null;
         BinModuleControl binModuleControl = null;
 
-
         public MainForm()
         {
             InitializeComponent();
+
             // Handling the QueryControl event that will populate all automatically generated Documents
             this.tabbedView1.QueryControl += tabbedView1_QueryControl;
+            this.tabbedView1.DocumentRemoved += TabbedView1_DocumentRemoved;
 
             LoadWorkspaces();
-        }
-
-        void LoadWorkspaces()
-        {
-            workspaceManager1.LoadWorkspace(defaultWorkspaceName, defaultLayoutFile);
-            workspaceManager1.LoadWorkspace(projectWorkspaceName, projectLayoutFile);
-        }
-
-        void tabbedView1_QueryControl(object sender, DevExpress.XtraBars.Docking2010.Views.QueryControlEventArgs e)
-        {
-            //if (e.Document == startScreenControlDocument)
-            //    e.Control = new DynaRAP.UControl.StartScreenControl();
-            //if (e.Document == projectListControlDocument)
-            //    e.Control = new DynaRAP.UControl.ProjectListControl();
-            //if (e.Document == userControl1Document)
-            //    e.Control = new DynaRAP.UserControl1();
-            //if (e.Document == userControl2Document)
-            //    e.Control = new DynaRAP.UserControl2();
-            if (e.Control == null)
-                e.Control = new System.Windows.Forms.Control();
         }
 
         private void MainForm_Load(object sender, EventArgs e)
         {
             InitializeWorkspace();
-
-            tabbedView1.DocumentRemoved += TabbedView1_DocumentRemoved;
 
             if (startControl == null)
             {
@@ -92,6 +71,76 @@ namespace DynaRAP
                 tabbedView1.ActivateDocument(startControl);
             }
 
+            if (importModuleControl == null)
+            {
+                importModuleControl = new ImportModuleControl();
+                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(importModuleControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
+                doc.Caption = "Import Module";
+                tabbedView1.ActivateDocument(importModuleControl);
+            }
+            else
+            {
+                tabbedView1.ActivateDocument(importModuleControl);
+            }
+
+            if (sbModuleControl == null)
+            {
+                sbModuleControl = new SBModuleControl();
+                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(sbModuleControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
+                doc.Caption = "Short Block";
+                tabbedView1.ActivateDocument(sbModuleControl);
+            }
+            else
+            {
+                tabbedView1.ActivateDocument(sbModuleControl);
+            }
+
+            if (binModuleControl == null)
+            {
+                binModuleControl = new BinModuleControl();
+                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(binModuleControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
+                doc.Caption = "BIN 구성";
+                tabbedView1.ActivateDocument(binModuleControl);
+            }
+            else
+            {
+                tabbedView1.ActivateDocument(binModuleControl);
+            }
+
+            tabbedView1.ActivateDocument(startControl);
+            tabbedView1.RemoveDocument(importModuleControl);
+            tabbedView1.RemoveDocument(sbModuleControl);
+            tabbedView1.RemoveDocument(binModuleControl);
+        }
+
+        void LoadWorkspaces()
+        {
+            workspaceManager1.LoadWorkspace(defaultWorkspaceName, defaultLayoutFile);
+            workspaceManager1.LoadWorkspace(projectWorkspaceName, projectLayoutFile);
+        }
+
+        void tabbedView1_QueryControl(object sender, DevExpress.XtraBars.Docking2010.Views.QueryControlEventArgs e)
+        {
+            //if (e.Document == startScreenControlDocument)
+            //{
+            //    e.Control = startControl;
+            //}
+            //else if (e.Document == importModuleControlDocument)
+            //{
+            //    e.Control = importModuleControl;
+            //}
+            //else if (e.Document == sBModuleControlDocument)
+            //{
+            //    e.Control = sbModuleControl;
+            //}
+            //else if (e.Document == binModuleControlDocument)
+            //{
+            //    e.Control = binModuleControl;
+            //}
+            if (e.Control == null)
+            {
+                e.Control = new System.Windows.Forms.Control();
+            }
         }
 
         private void TabbedView1_DocumentRemoved(object sender, DevExpress.XtraBars.Docking2010.Views.DocumentEventArgs e)
@@ -112,6 +161,7 @@ namespace DynaRAP
             {
                 binModuleControl = null;
             }
+
         }
 
         private void InitializeWorkspace()
@@ -179,75 +229,6 @@ namespace DynaRAP
             form.Show();
         }
 
-        private void btnPanel_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            //DockPanel panel = this.panelContainer1.AddPanel();
-            //panel.Dock = DockingStyle.Fill;
-            //panel.Location = new Point(0, 0);
-            //panel.Name = "newPanel";
-            //panel.Text = "New Panel";
-
-            //DockPanel panel1 = dockManager1.AddPanel(DockingStyle.Bottom);
-            //panel1.Text = "Panel 1";
-            //// Add a new panel to panel1. This forms a split container that owns panel1 and panel2.
-            //DockPanel panel2 = panel1.AddPanel();
-            //panel2.Text = "Panel 2";
-            //// Transform the split container into a tab container.
-            //DockPanel container = panel1.ParentPanel;
-            //container.Tabbed = true;
-
-
-
-            //DockPanel panel = this.panelContainer2.AddPanel();
-            //panel.Dock = DockingStyle.Fill;
-            //panelContainer2.Tabbed = true;
-
-            //DockPanel container = panel.ParentPanel;
-            //if (container == null) return;
-            // Transform the split container to a tab container.
-            //container.Tabbed = true;
-
-            //if(panelBottom == null)
-            //{
-            //    panelBottom = dockManager1.AddPanel(DockingStyle.Bottom);
-            //    panelBottom.ClosedPanel += PanelBottom_ClosedPanel;
-            //}
-            //else
-            //{
-            //    DockPanel panel = panelBottom.AddPanel();
-            //    panel.ClosedPanel += Panel_ClosedPanel;
-            //    //DockPanel container = panel.ParentPanel;
-            //    //if (container == null)
-            //    //    return;
-            //    //container.Tabbed = true;
-            //}
-
-            //아래에 panel 추가
-            //DockPanel panel = panelContainer2.AddPanel();
-            //panel.Name = "panel";
-            //panel.Text = "addedPanel";
-            //panelContainer2.Tabbed = true;
-            //panelContainer2.ActiveChild = panel;
-
-            if (importModuleControl == null)
-            {
-                importModuleControl = new ImportModuleControl();
-                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(importModuleControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
-                doc.Caption = "Import Module";
-                tabbedView1.ActivateDocument(importModuleControl);
-            }
-            else
-            {
-                tabbedView1.ActivateDocument(importModuleControl);
-            }
-
-            if (startControl != null)
-            {
-                tabbedView1.RemoveDocument(startControl);
-            }
-
-        }
-
         private void PanelBottom_ClosedPanel(object sender, DockPanelEventArgs e)
         {
             //panelBottom.ClosedPanel -= PanelBottom_ClosedPanel;
@@ -281,9 +262,26 @@ namespace DynaRAP
             {
                 tabbedView1.ActivateDocument(startControl);
             }
+
         }
 
-        private void btnShortBlock_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        private void btnImportModule_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            if (importModuleControl == null)
+            {
+                importModuleControl = new ImportModuleControl();
+                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(importModuleControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
+                doc.Caption = "Import Module";
+                tabbedView1.ActivateDocument(importModuleControl);
+            }
+            else
+            {
+                tabbedView1.ActivateDocument(importModuleControl);
+            }
+
+        }
+
+        private void btnSBModule_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             if (sbModuleControl == null)
             {
@@ -296,14 +294,9 @@ namespace DynaRAP
             {
                 tabbedView1.ActivateDocument(sbModuleControl);
             }
-
-            if (startControl != null)
-            {
-                tabbedView1.RemoveDocument(startControl);
-            }
         }
 
-        private void btnBin_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        private void btnBinModule_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             if (binModuleControl == null)
             {
@@ -317,10 +310,6 @@ namespace DynaRAP
                 tabbedView1.ActivateDocument(binModuleControl);
             }
 
-            if (startControl != null)
-            {
-                tabbedView1.RemoveDocument(startControl);
-            }
         }
 
         private void btnDLLImport_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)

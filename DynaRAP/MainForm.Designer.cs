@@ -41,9 +41,10 @@ namespace DynaRAP
             this.btnLogin = new DevExpress.XtraBars.BarButtonItem();
             this.btnChartTest = new DevExpress.XtraBars.BarButtonItem();
             this.btnStart = new DevExpress.XtraBars.BarButtonItem();
-            this.btnPanel = new DevExpress.XtraBars.BarButtonItem();
-            this.btnShortBlock = new DevExpress.XtraBars.BarButtonItem();
-            this.btnBin = new DevExpress.XtraBars.BarButtonItem();
+            this.btnImportModule = new DevExpress.XtraBars.BarButtonItem();
+            this.btnSBModule = new DevExpress.XtraBars.BarButtonItem();
+            this.btnBinModule = new DevExpress.XtraBars.BarButtonItem();
+            this.btnDLLImport = new DevExpress.XtraBars.BarButtonItem();
             this.bar2 = new DevExpress.XtraBars.Bar();
             this.Workspace = new DevExpress.XtraBars.BarWorkspaceMenuItem();
             this.workspaceManager1 = new DevExpress.Utils.WorkspaceManager(this.components);
@@ -73,7 +74,6 @@ namespace DynaRAP
             this.controlContainer1 = new DevExpress.XtraBars.Docking.ControlContainer();
             this.tabbedView1 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.TabbedView(this.components);
             this.panelContainer1 = new DevExpress.XtraBars.Docking.DockPanel();
-            this.btnDLLImport = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.documentManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dockManager1)).BeginInit();
@@ -116,13 +116,13 @@ namespace DynaRAP
             this.btnPythonTest,
             this.btnChartTest,
             this.btnLogin,
-            this.btnPanel,
+            this.btnImportModule,
             this.Workspace,
             this.barSubItem1,
             this.toolTreeTest,
             this.btnStart,
-            this.btnShortBlock,
-            this.btnBin,
+            this.btnSBModule,
+            this.btnBinModule,
             this.btnDLLImport});
             this.barManager1.MainMenu = this.bar2;
             this.barManager1.MaxItemId = 17;
@@ -138,9 +138,9 @@ namespace DynaRAP
             new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem1),
             new DevExpress.XtraBars.LinkPersistInfo(this.btnChartTest),
             new DevExpress.XtraBars.LinkPersistInfo(this.btnStart),
-            new DevExpress.XtraBars.LinkPersistInfo(this.btnPanel),
-            new DevExpress.XtraBars.LinkPersistInfo(this.btnShortBlock),
-            new DevExpress.XtraBars.LinkPersistInfo(this.btnBin),
+            new DevExpress.XtraBars.LinkPersistInfo(this.btnImportModule),
+            new DevExpress.XtraBars.LinkPersistInfo(this.btnSBModule),
+            new DevExpress.XtraBars.LinkPersistInfo(this.btnBinModule),
             new DevExpress.XtraBars.LinkPersistInfo(this.btnDLLImport)});
             resources.ApplyResources(this.bar1, "bar1");
             // 
@@ -192,26 +192,33 @@ namespace DynaRAP
             this.btnStart.Name = "btnStart";
             this.btnStart.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnStart_ItemClick);
             // 
-            // btnPanel
+            // btnImportModule
             // 
-            resources.ApplyResources(this.btnPanel, "btnPanel");
-            this.btnPanel.Id = 8;
-            this.btnPanel.Name = "btnPanel";
-            this.btnPanel.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnPanel_ItemClick);
+            resources.ApplyResources(this.btnImportModule, "btnImportModule");
+            this.btnImportModule.Id = 8;
+            this.btnImportModule.Name = "btnImportModule";
+            this.btnImportModule.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnImportModule_ItemClick);
             // 
-            // btnShortBlock
+            // btnSBModule
             // 
-            resources.ApplyResources(this.btnShortBlock, "btnShortBlock");
-            this.btnShortBlock.Id = 14;
-            this.btnShortBlock.Name = "btnShortBlock";
-            this.btnShortBlock.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnShortBlock_ItemClick);
+            resources.ApplyResources(this.btnSBModule, "btnSBModule");
+            this.btnSBModule.Id = 14;
+            this.btnSBModule.Name = "btnSBModule";
+            this.btnSBModule.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnSBModule_ItemClick);
             // 
-            // btnBin
+            // btnBinModule
             // 
-            resources.ApplyResources(this.btnBin, "btnBin");
-            this.btnBin.Id = 15;
-            this.btnBin.Name = "btnBin";
-            this.btnBin.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnBin_ItemClick);
+            resources.ApplyResources(this.btnBinModule, "btnBinModule");
+            this.btnBinModule.Id = 15;
+            this.btnBinModule.Name = "btnBinModule";
+            this.btnBinModule.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnBinModule_ItemClick);
+            // 
+            // btnDLLImport
+            // 
+            resources.ApplyResources(this.btnDLLImport, "btnDLLImport");
+            this.btnDLLImport.Id = 16;
+            this.btnDLLImport.Name = "btnDLLImport";
+            this.btnDLLImport.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnDLLImport_ItemClick);
             // 
             // bar2
             // 
@@ -460,13 +467,6 @@ namespace DynaRAP
             this.panelContainer1.Name = "panelContainer1";
             this.panelContainer1.OriginalSize = new System.Drawing.Size(200, 200);
             // 
-            // btnDLLImport
-            // 
-            resources.ApplyResources(this.btnDLLImport, "btnDLLImport");
-            this.btnDLLImport.Id = 16;
-            this.btnDLLImport.Name = "btnDLLImport";
-            this.btnDLLImport.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnDLLImport_ItemClick);
-            // 
             // MainForm
             // 
             resources.ApplyResources(this, "$this");
@@ -526,7 +526,7 @@ namespace DynaRAP
         private DevExpress.XtraBars.BarButtonItem btnPythonTest;
         private DevExpress.XtraBars.BarButtonItem btnChartTest;
         private DevExpress.XtraBars.BarButtonItem btnLogin;
-        private DevExpress.XtraBars.BarButtonItem btnPanel;
+        private DevExpress.XtraBars.BarButtonItem btnImportModule;
         private DevExpress.XtraBars.Docking.DockPanel panelContainer1;
         private DevExpress.XtraBars.Docking.DockPanel panelLogs;
         private DevExpress.XtraBars.Docking.ControlContainer controlContainer1;
@@ -544,8 +544,8 @@ namespace DynaRAP
         private DevExpress.XtraBars.Docking.AutoHideContainer hideContainerRight;
         private DevExpress.XtraBars.Docking.AutoHideContainer hideContainerBottom;
         private DevExpress.XtraBars.BarButtonItem btnStart;
-        private DevExpress.XtraBars.BarButtonItem btnShortBlock;
-        private DevExpress.XtraBars.BarButtonItem btnBin;
+        private DevExpress.XtraBars.BarButtonItem btnSBModule;
+        private DevExpress.XtraBars.BarButtonItem btnBinModule;
         private DevExpress.XtraBars.BarButtonItem btnDLLImport;
     }
 }

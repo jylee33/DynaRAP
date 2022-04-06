@@ -543,13 +543,13 @@
   <data name="btnStart.Caption" xml:space="preserve">
     <value>Start</value>
   </data>
-  <data name="btnPanel.Caption" xml:space="preserve">
+  <data name="btnImportModule.Caption" xml:space="preserve">
     <value>Import</value>
   </data>
-  <data name="btnShortBlock.Caption" xml:space="preserve">
+  <data name="btnSBModule.Caption" xml:space="preserve">
     <value>ShortBlock</value>
   </data>
-  <data name="btnBin.Caption" xml:space="preserve">
+  <data name="btnBinModule.Caption" xml:space="preserve">
     <value>BIN 구성</value>
   </data>
   <data name="btnDLLImport.Caption" xml:space="preserve">
@@ -708,22 +708,28 @@
   <data name="&gt;&gt;btnStart.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
-  <data name="&gt;&gt;btnPanel.Name" xml:space="preserve">
-    <value>btnPanel</value>
+  <data name="&gt;&gt;btnImportModule.Name" xml:space="preserve">
+    <value>btnImportModule</value>
   </data>
-  <data name="&gt;&gt;btnPanel.Type" xml:space="preserve">
+  <data name="&gt;&gt;btnImportModule.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
-  <data name="&gt;&gt;btnShortBlock.Name" xml:space="preserve">
-    <value>btnShortBlock</value>
+  <data name="&gt;&gt;btnSBModule.Name" xml:space="preserve">
+    <value>btnSBModule</value>
   </data>
-  <data name="&gt;&gt;btnShortBlock.Type" xml:space="preserve">
+  <data name="&gt;&gt;btnSBModule.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
-  <data name="&gt;&gt;btnBin.Name" xml:space="preserve">
-    <value>btnBin</value>
+  <data name="&gt;&gt;btnBinModule.Name" xml:space="preserve">
+    <value>btnBinModule</value>
   </data>
-  <data name="&gt;&gt;btnBin.Type" xml:space="preserve">
+  <data name="&gt;&gt;btnBinModule.Type" xml:space="preserve">
+    <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  </data>
+  <data name="&gt;&gt;btnDLLImport.Name" xml:space="preserve">
+    <value>btnDLLImport</value>
+  </data>
+  <data name="&gt;&gt;btnDLLImport.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
   <data name="&gt;&gt;bar2.Name" xml:space="preserve">
@@ -761,12 +767,6 @@
   </data>
   <data name="&gt;&gt;tabbedView1.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.Docking2010.Views.Tabbed.TabbedView, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
-  </data>
-  <data name="&gt;&gt;btnDLLImport.Name" xml:space="preserve">
-    <value>btnDLLImport</value>
-  </data>
-  <data name="&gt;&gt;btnDLLImport.Type" xml:space="preserve">
-    <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>MainForm</value>
