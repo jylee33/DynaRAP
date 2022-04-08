@@ -1388,6 +1388,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
             }
         }
     }
@@ -2604,7 +2612,7 @@
             }
             "{3C67513D-01DD-4637-8A68-80971EB9504F}:_A85D84C9CB1144E8842881DC34B5DBA9"
             {
-            "DefaultLocation" = "8:C:\\DynaRAP"
+            "DefaultLocation" = "8:C:\\DynaRap-Post"
             "Name" = "8:#1925"
             "AlwaysCreate" = "11:FALSE"
             "Condition" = "8:"
@@ -2640,9 +2648,9 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:DynaRAP"
+        "ProductName" = "8:DynaRap-Post"
         "ProductCode" = "8:{7115C9D1-0584-4438-AC25-220C707F4090}"
-        "PackageCode" = "8:{A88A1B39-44FF-4CB4-9B82-B9BD6896AF5D}"
+        "PackageCode" = "8:{9AC57BAE-D3FF-4E84-8F61-8C3F62E53BA7}"
         "UpgradeCode" = "8:{C2E8B582-A912-4CA2-ABDF-0C2D08B886D2}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
@@ -2764,7 +2772,7 @@
         {
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_E6A2103039134D4EA2A63C0A58CA4C2F"
             {
-            "Name" = "8:DynaRAP"
+            "Name" = "8:DynaRap-Post"
             "Arguments" = "8:"
             "Description" = "8:"
             "ShowCmd" = "3:1"
@@ -3317,7 +3325,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_DCB2D4BA05B14BEAA109E1895ED06E4B"
             {
-            "SourcePath" = "8:..\\DynaRAP\\obj\\Debug\\DynaRAP.exe"
+            "SourcePath" = "8:..\\DynaRAP\\obj\\Release\\DynaRap-Post.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_A85D84C9CB1144E8842881DC34B5DBA9"
