@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32228.430
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynaRAP", "DynaRAP\DynaRAP.csproj", "{C1DAD7DA-48EC-4A98-BD79-02B7D9D591B8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynaRap-Post", "DynaRAP\DynaRap-Post.csproj", "{C1DAD7DA-48EC-4A98-BD79-02B7D9D591B8}"
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "DynaRAPInstaller", "DynaRAPInstaller\DynaRAPInstaller.vdproj", "{B5FFEEED-4C48-4802-A121-036B05A628BE}"
 EndProject

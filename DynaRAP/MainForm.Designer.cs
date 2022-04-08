@@ -56,12 +56,6 @@ namespace DynaRAP
             this.barDockControlLeft = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlRight = new DevExpress.XtraBars.BarDockControl();
             this.dockManager1 = new DevExpress.XtraBars.Docking.DockManager(this.components);
-            this.panelContainer4 = new DevExpress.XtraBars.Docking.DockPanel();
-            this.panelOther = new DevExpress.XtraBars.Docking.DockPanel();
-            this.controlContainer2 = new DevExpress.XtraBars.Docking.ControlContainer();
-            this.panelScenario = new DevExpress.XtraBars.Docking.DockPanel();
-            this.dockPanel1_Container = new DevExpress.XtraBars.Docking.ControlContainer();
-            this.projectListControl = new DynaRAP.UControl.ProjectListControl();
             this.panelContainer2 = new DevExpress.XtraBars.Docking.DockPanel();
             this.panelImportViewCsv = new DevExpress.XtraBars.Docking.DockPanel();
             this.controlContainer1 = new DevExpress.XtraBars.Docking.ControlContainer();
@@ -72,21 +66,27 @@ namespace DynaRAP
             this.dockPanel2_Container = new DevExpress.XtraBars.Docking.ControlContainer();
             this.panelProperties = new DevExpress.XtraBars.Docking.DockPanel();
             this.dockPanel3_Container = new DevExpress.XtraBars.Docking.ControlContainer();
+            this.panelContainer4 = new DevExpress.XtraBars.Docking.DockPanel();
+            this.panelScenario = new DevExpress.XtraBars.Docking.DockPanel();
+            this.dockPanel1_Container = new DevExpress.XtraBars.Docking.ControlContainer();
+            this.projectListControl = new DynaRAP.UControl.ProjectListControl();
+            this.panelOther = new DevExpress.XtraBars.Docking.DockPanel();
+            this.controlContainer2 = new DevExpress.XtraBars.Docking.ControlContainer();
             this.tabbedView1 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.TabbedView(this.components);
             this.panelContainer1 = new DevExpress.XtraBars.Docking.DockPanel();
             ((System.ComponentModel.ISupportInitialize)(this.documentManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dockManager1)).BeginInit();
-            this.panelContainer4.SuspendLayout();
-            this.panelOther.SuspendLayout();
-            this.panelScenario.SuspendLayout();
-            this.dockPanel1_Container.SuspendLayout();
             this.panelContainer2.SuspendLayout();
             this.panelImportViewCsv.SuspendLayout();
             this.panelBinTable.SuspendLayout();
             this.panelContainer3.SuspendLayout();
             this.panelBinSbList.SuspendLayout();
             this.panelProperties.SuspendLayout();
+            this.panelContainer4.SuspendLayout();
+            this.panelScenario.SuspendLayout();
+            this.dockPanel1_Container.SuspendLayout();
+            this.panelOther.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tabbedView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -301,53 +301,6 @@ namespace DynaRAP
             "DevExpress.XtraBars.FluentDesignSystem.FluentDesignFormControl",
             "DevExpress.XtraBars.ToolbarForm.ToolbarFormControl"});
             // 
-            // panelContainer4
-            // 
-            this.panelContainer4.ActiveChild = this.panelScenario;
-            this.panelContainer4.Controls.Add(this.panelScenario);
-            this.panelContainer4.Controls.Add(this.panelOther);
-            this.panelContainer4.Dock = DevExpress.XtraBars.Docking.DockingStyle.Left;
-            this.panelContainer4.ID = new System.Guid("85ae2567-3dea-475c-af9d-da3f4e7f08f9");
-            resources.ApplyResources(this.panelContainer4, "panelContainer4");
-            this.panelContainer4.Name = "panelContainer4";
-            this.panelContainer4.OriginalSize = new System.Drawing.Size(301, 200);
-            this.panelContainer4.Tabbed = true;
-            this.panelContainer4.TabsPosition = DevExpress.XtraBars.Docking.TabsPosition.Left;
-            // 
-            // panelOther
-            // 
-            this.panelOther.Controls.Add(this.controlContainer2);
-            this.panelOther.Dock = DevExpress.XtraBars.Docking.DockingStyle.Fill;
-            this.panelOther.ID = new System.Guid("a0efe638-b924-4a0a-aef0-81a62aa06a39");
-            resources.ApplyResources(this.panelOther, "panelOther");
-            this.panelOther.Name = "panelOther";
-            this.panelOther.OriginalSize = new System.Drawing.Size(294, 607);
-            // 
-            // controlContainer2
-            // 
-            resources.ApplyResources(this.controlContainer2, "controlContainer2");
-            this.controlContainer2.Name = "controlContainer2";
-            // 
-            // panelScenario
-            // 
-            this.panelScenario.Controls.Add(this.dockPanel1_Container);
-            this.panelScenario.Dock = DevExpress.XtraBars.Docking.DockingStyle.Fill;
-            this.panelScenario.ID = new System.Guid("ac197e9b-7668-43be-9d4c-dece8fdffa98");
-            resources.ApplyResources(this.panelScenario, "panelScenario");
-            this.panelScenario.Name = "panelScenario";
-            this.panelScenario.OriginalSize = new System.Drawing.Size(294, 607);
-            // 
-            // dockPanel1_Container
-            // 
-            this.dockPanel1_Container.Controls.Add(this.projectListControl);
-            resources.ApplyResources(this.dockPanel1_Container, "dockPanel1_Container");
-            this.dockPanel1_Container.Name = "dockPanel1_Container";
-            // 
-            // projectListControl
-            // 
-            resources.ApplyResources(this.projectListControl, "projectListControl");
-            this.projectListControl.Name = "projectListControl";
-            // 
             // panelContainer2
             // 
             this.panelContainer2.ActiveChild = this.panelImportViewCsv;
@@ -427,6 +380,53 @@ namespace DynaRAP
             resources.ApplyResources(this.dockPanel3_Container, "dockPanel3_Container");
             this.dockPanel3_Container.Name = "dockPanel3_Container";
             // 
+            // panelContainer4
+            // 
+            this.panelContainer4.ActiveChild = this.panelScenario;
+            this.panelContainer4.Controls.Add(this.panelScenario);
+            this.panelContainer4.Controls.Add(this.panelOther);
+            this.panelContainer4.Dock = DevExpress.XtraBars.Docking.DockingStyle.Left;
+            this.panelContainer4.ID = new System.Guid("85ae2567-3dea-475c-af9d-da3f4e7f08f9");
+            resources.ApplyResources(this.panelContainer4, "panelContainer4");
+            this.panelContainer4.Name = "panelContainer4";
+            this.panelContainer4.OriginalSize = new System.Drawing.Size(301, 200);
+            this.panelContainer4.Tabbed = true;
+            this.panelContainer4.TabsPosition = DevExpress.XtraBars.Docking.TabsPosition.Left;
+            // 
+            // panelScenario
+            // 
+            this.panelScenario.Controls.Add(this.dockPanel1_Container);
+            this.panelScenario.Dock = DevExpress.XtraBars.Docking.DockingStyle.Fill;
+            this.panelScenario.ID = new System.Guid("ac197e9b-7668-43be-9d4c-dece8fdffa98");
+            resources.ApplyResources(this.panelScenario, "panelScenario");
+            this.panelScenario.Name = "panelScenario";
+            this.panelScenario.OriginalSize = new System.Drawing.Size(294, 607);
+            // 
+            // dockPanel1_Container
+            // 
+            this.dockPanel1_Container.Controls.Add(this.projectListControl);
+            resources.ApplyResources(this.dockPanel1_Container, "dockPanel1_Container");
+            this.dockPanel1_Container.Name = "dockPanel1_Container";
+            // 
+            // projectListControl
+            // 
+            resources.ApplyResources(this.projectListControl, "projectListControl");
+            this.projectListControl.Name = "projectListControl";
+            // 
+            // panelOther
+            // 
+            this.panelOther.Controls.Add(this.controlContainer2);
+            this.panelOther.Dock = DevExpress.XtraBars.Docking.DockingStyle.Fill;
+            this.panelOther.ID = new System.Guid("a0efe638-b924-4a0a-aef0-81a62aa06a39");
+            resources.ApplyResources(this.panelOther, "panelOther");
+            this.panelOther.Name = "panelOther";
+            this.panelOther.OriginalSize = new System.Drawing.Size(294, 607);
+            // 
+            // controlContainer2
+            // 
+            resources.ApplyResources(this.controlContainer2, "controlContainer2");
+            this.controlContainer2.Name = "controlContainer2";
+            // 
             // panelContainer1
             // 
             this.panelContainer1.Dock = DevExpress.XtraBars.Docking.DockingStyle.Fill;
@@ -454,16 +454,16 @@ namespace DynaRAP
             ((System.ComponentModel.ISupportInitialize)(this.documentManager1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dockManager1)).EndInit();
-            this.panelContainer4.ResumeLayout(false);
-            this.panelOther.ResumeLayout(false);
-            this.panelScenario.ResumeLayout(false);
-            this.dockPanel1_Container.ResumeLayout(false);
             this.panelContainer2.ResumeLayout(false);
             this.panelImportViewCsv.ResumeLayout(false);
             this.panelBinTable.ResumeLayout(false);
             this.panelContainer3.ResumeLayout(false);
             this.panelBinSbList.ResumeLayout(false);
             this.panelProperties.ResumeLayout(false);
+            this.panelContainer4.ResumeLayout(false);
+            this.panelScenario.ResumeLayout(false);
+            this.dockPanel1_Container.ResumeLayout(false);
+            this.panelOther.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.tabbedView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

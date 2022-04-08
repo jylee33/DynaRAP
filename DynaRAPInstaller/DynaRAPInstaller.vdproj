@@ -532,12 +532,6 @@
         "Entry"
         {
         "MsmKey" = "8:_A9357DC9506286E46086BCA4FDA50AC6"
-        "OwnerKey" = "8:_BA777C68B901A5F8BD061977A3626A58"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_A9357DC9506286E46086BCA4FDA50AC6"
         "OwnerKey" = "8:_C2E92A3A211920802FBE9607B2D41957"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -695,6 +689,12 @@
         {
         "MsmKey" = "8:_A9357DC9506286E46086BCA4FDA50AC6"
         "OwnerKey" = "8:_6D910F6496FFB6BF04E1FB842EC53CC5"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_A9357DC9506286E46086BCA4FDA50AC6"
+        "OwnerKey" = "8:_BA777C68B901A5F8BD061977A3626A58"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -868,7 +868,7 @@
         "Entry"
         {
         "MsmKey" = "8:_C2E92A3A211920802FBE9607B2D41957"
-        "OwnerKey" = "8:_CB5D14E349B44DCF0451B5EC88CE045D"
+        "OwnerKey" = "8:_CC2067D60198B2D54841678A2287CA6F"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -880,7 +880,7 @@
         "Entry"
         {
         "MsmKey" = "8:_C2E92A3A211920802FBE9607B2D41957"
-        "OwnerKey" = "8:_CC2067D60198B2D54841678A2287CA6F"
+        "OwnerKey" = "8:_CB5D14E349B44DCF0451B5EC88CE045D"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -1114,12 +1114,6 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_C2E92A3A211920802FBE9607B2D41957"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_DCB2D4BA05B14BEAA109E1895ED06E4B"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1336,6 +1330,12 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_C2E92A3A211920802FBE9607B2D41957"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_A9357DC9506286E46086BCA4FDA50AC6"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1357,6 +1357,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
         "Release"
         {
@@ -1373,6 +1381,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
     }
     "Deployable"
@@ -2637,7 +2653,7 @@
         "Manufacturer" = "8:ServeTech"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
-        "Title" = "8:DynaRAP"
+        "Title" = "8:DynaRap-Post"
         "Subject" = "8:"
         "ARPCONTACT" = "8:ServeTech"
         "Keywords" = "8:"
@@ -3301,7 +3317,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_DCB2D4BA05B14BEAA109E1895ED06E4B"
             {
-            "SourcePath" = "8:..\\DynaRAP\\obj\\Release\\DynaRAP.exe"
+            "SourcePath" = "8:..\\DynaRAP\\obj\\Debug\\DynaRAP.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_A85D84C9CB1144E8842881DC34B5DBA9"
