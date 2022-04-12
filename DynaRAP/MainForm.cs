@@ -350,7 +350,7 @@ namespace DynaRAP
             {
                 importModuleControl = new ImportModuleControl();
                 DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(importModuleControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
-                doc.Caption = "Import Module";
+                doc.Caption = "비행데이터 Import";
                 tabbedView1.ActivateDocument(importModuleControl);
             }
             else
@@ -393,14 +393,14 @@ namespace DynaRAP
 
         private void btnDLLImport_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            OpenFileDialog dlg = new OpenFileDialog();
-            dlg.InitialDirectory = "C:\\";
-            dlg.Filter = "Excel files (*.xls, *.xlsx)|*.xls; *.xlsx|Comma Separated Value files (CSV)|*.csv|모든 파일 (*.*)|*.*";
+            //OpenFileDialog dlg = new OpenFileDialog();
+            //dlg.InitialDirectory = "C:\\";
+            //dlg.Filter = "Excel files (*.xls, *.xlsx)|*.xls; *.xlsx|Comma Separated Value files (CSV)|*.csv|모든 파일 (*.*)|*.*";
 
-            if (dlg.ShowDialog() == DialogResult.OK)
-            {
-                //dlg.FileName;
-            }
+            //if (dlg.ShowDialog() == DialogResult.OK)
+            //{
+            //    //dlg.FileName;
+            //}
         }
 
         private void btnImportAnalysis_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)

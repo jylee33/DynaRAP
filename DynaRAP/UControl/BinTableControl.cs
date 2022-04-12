@@ -194,7 +194,7 @@ namespace DynaRAP.UControl
             {
                 binSBTabPanel = mainForm.DockManager1.AddPanel(DockingStyle.Float);
                 binSBTabPanel.FloatLocation = new Point(500, 100);
-                binSBTabPanel.FloatSize = new Size(466, 920);
+                binSBTabPanel.FloatSize = new Size(466, 620);
                 binSBTabPanel.Name = "ShortBlock Panel";
                 binSBTabPanel.Text = "ShortBlock Panel";
                 binSBTabCtrl = new BinSBTabControl();

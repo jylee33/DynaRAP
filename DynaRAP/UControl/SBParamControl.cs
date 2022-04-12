@@ -18,7 +18,6 @@ namespace DynaRAP.UControl
         {
             set
             {
-                edtFlying.Text = value;
             }
         }
 

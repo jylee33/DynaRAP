@@ -151,10 +151,11 @@
             this.gridControl4.Location = new System.Drawing.Point(3, 390);
             this.gridControl4.MainView = this.gridView4;
             this.gridControl4.Name = "gridControl4";
-            this.gridControl4.Size = new System.Drawing.Size(505, 375);
+            this.gridControl4.Size = new System.Drawing.Size(505, 151);
             this.gridControl4.TabIndex = 8;
             this.gridControl4.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView4});
+            this.gridControl4.Visible = false;
             // 
             // gridView4
             // 
@@ -188,7 +189,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 5F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(511, 768);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(511, 544);
             this.tableLayoutPanel1.TabIndex = 9;
             // 
             // BinSBInfoControl
@@ -197,7 +198,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "BinSBInfoControl";
-            this.Size = new System.Drawing.Size(511, 768);
+            this.Size = new System.Drawing.Size(511, 544);
             this.Load += new System.EventHandler(this.BinSBInfoControl_Load);
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();

@@ -29,44 +29,17 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SBParamControl));
-            this.edtFlying = new DevExpress.XtraEditors.TextEdit();
-            this.edtStartTime = new DevExpress.XtraEditors.TextEdit();
-            this.edtEndTime = new DevExpress.XtraEditors.TextEdit();
             this.btnDelete = new DevExpress.XtraEditors.SimpleButton();
             this.cboParamType = new DevExpress.XtraEditors.ComboBoxEdit();
             this.cboParamName = new DevExpress.XtraEditors.ComboBoxEdit();
-            ((System.ComponentModel.ISupportInitialize)(this.edtFlying.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.edtStartTime.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.edtEndTime.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cboParamType.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cboParamName.Properties)).BeginInit();
             this.SuspendLayout();
             // 
-            // edtFlying
-            // 
-            this.edtFlying.Location = new System.Drawing.Point(212, 0);
-            this.edtFlying.Name = "edtFlying";
-            this.edtFlying.Size = new System.Drawing.Size(80, 20);
-            this.edtFlying.TabIndex = 0;
-            // 
-            // edtStartTime
-            // 
-            this.edtStartTime.Location = new System.Drawing.Point(298, 0);
-            this.edtStartTime.Name = "edtStartTime";
-            this.edtStartTime.Size = new System.Drawing.Size(80, 20);
-            this.edtStartTime.TabIndex = 0;
-            // 
-            // edtEndTime
-            // 
-            this.edtEndTime.Location = new System.Drawing.Point(384, 0);
-            this.edtEndTime.Name = "edtEndTime";
-            this.edtEndTime.Size = new System.Drawing.Size(80, 20);
-            this.edtEndTime.TabIndex = 0;
-            // 
             // btnDelete
             // 
             this.btnDelete.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.btnDelete.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("simpleButton1.ImageOptions.Image")));
+            this.btnDelete.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btnDelete.ImageOptions.Image")));
             this.btnDelete.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleCenter;
             this.btnDelete.Location = new System.Drawing.Point(498, 1);
             this.btnDelete.Margin = new System.Windows.Forms.Padding(0);
@@ -89,7 +62,7 @@
             this.cboParamName.Name = "cboParamName";
             this.cboParamName.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.cboParamName.Size = new System.Drawing.Size(100, 20);
+            this.cboParamName.Size = new System.Drawing.Size(373, 20);
             this.cboParamName.TabIndex = 3;
             // 
             // SBParamControl
@@ -99,16 +72,10 @@
             this.Controls.Add(this.cboParamName);
             this.Controls.Add(this.cboParamType);
             this.Controls.Add(this.btnDelete);
-            this.Controls.Add(this.edtEndTime);
-            this.Controls.Add(this.edtStartTime);
-            this.Controls.Add(this.edtFlying);
             this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "SBParamControl";
             this.Size = new System.Drawing.Size(527, 21);
             this.Load += new System.EventHandler(this.SBParamControl_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.edtFlying.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.edtStartTime.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.edtEndTime.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cboParamType.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cboParamName.Properties)).EndInit();
             this.ResumeLayout(false);
@@ -116,10 +83,6 @@
         }
 
         #endregion
-
-        private DevExpress.XtraEditors.TextEdit edtFlying;
-        private DevExpress.XtraEditors.TextEdit edtStartTime;
-        private DevExpress.XtraEditors.TextEdit edtEndTime;
         private DevExpress.XtraEditors.SimpleButton btnDelete;
         private DevExpress.XtraEditors.ComboBoxEdit cboParamType;
         private DevExpress.XtraEditors.ComboBoxEdit cboParamName;

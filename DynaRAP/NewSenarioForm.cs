@@ -39,7 +39,6 @@ namespace DynaRAP
         private void NewSenarioForm_Load(object sender, EventArgs e)
         {
             InitializeScenarioTypeList();
-            InitializeFuselageList();
 
             //시나리오 이름, 태그 TextEdit Placeholder 설정
             txtList = new TextEdit[] { edtScenarioName, edtTag };
@@ -151,104 +150,6 @@ namespace DynaRAP
             btnShortBlock.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnShortBlock_ItemClick);
 
 #endif
-        }
-
-        private void InitializeFuselageList()
-        {
-#if null
-            // radio 버튼을 좌에서 우로 순서대로 배열
-            rgFuselage.Properties.ItemsLayout = RadioGroupItemsLayout.Flow;
-            rgFuselage.AutoSizeInLayoutControl = false;
-            //radioGroup1.Properties.EnableFocusRect = false;
-
-            object[] itemValues = new object[] { 10, 11, 12, 13, 14 };
-            string[] itemDescriptions = new string[] { "형상 A/1호기", "형상 A/2호기", "형상 A/3호기", "형상 B/1호기", "형상 C/1호기" };
-            for (int i = 0; i < itemValues.Length; i++)
-            {
-                rgFuselage.Properties.Items.Add(new RadioGroupItem(itemValues[i], itemDescriptions[i]));
-            }
-
-            rgFuselage.Properties.Items.Add(new RadioGroupItem(1, "형상 C/2호기"));
-            rgFuselage.Properties.Items.Add(new RadioGroupItem(1, "형상 C/2호기"));
-            rgFuselage.Properties.Items.Add(new RadioGroupItem(1, "형상 C/2호기"));
-            rgFuselage.Properties.Items.Add(new RadioGroupItem(1, "형상 C/2호기"));
-            rgFuselage.Properties.Items.Add(new RadioGroupItem(1, "형상 C/2호기"));
-            rgFuselage.Properties.Items.Add(new RadioGroupItem(1, "형상 C/2호기"));
-            rgFuselage.Properties.Items.Add(new RadioGroupItem(1, "형상 C/2호기"));
-            rgFuselage.Properties.Items.Add(new RadioGroupItem(1, "형상 C/2호기"));
-            rgFuselage.Properties.Items.Add(new RadioGroupItem(1, "형상 C/2호기"));
-            rgFuselage.Properties.Items.Add(new RadioGroupItem(1, "형상 C/2호기"));
-            rgFuselage.Properties.Items.Add(new RadioGroupItem(1, "형상 C/2호기"));
-            rgFuselage.Properties.Items.Add(new RadioGroupItem(1, "형상 C/2호기"));
-            rgFuselage.Properties.Items.Add(new RadioGroupItem(1, "형상 C/2호기"));
-            rgFuselage.Properties.Items.Add(new RadioGroupItem(1, "형상 C/2호기"));
-            rgFuselage.Properties.Items.Add(new RadioGroupItem(1, "형상 C/2호기"));
-            rgFuselage.Properties.Items.Add(new RadioGroupItem(1, "형상 C/2호기"));
-            rgFuselage.Properties.Items.Add(new RadioGroupItem(1, "형상 C/2호기"));
-            rgFuselage.Properties.Items.Add(new RadioGroupItem(1, "형상 C/2호기"));
-            rgFuselage.Properties.Items.Add(new RadioGroupItem(1, "형상 C/2호기"));
-            rgFuselage.Properties.Items.Add(new RadioGroupItem(1, "형상 C/2호기"));
-            rgFuselage.Properties.Items.Add(new RadioGroupItem(1, "형상 C/2호기"));
-            rgFuselage.Properties.Items.Add(new RadioGroupItem(1, "형상 C/2호기"));
-            rgFuselage.Properties.Items.Add(new RadioGroupItem(1, "형상 Z/2호기"));
-
-            //Select the Rectangle item.
-            rgFuselage.EditValue = -1;
-#endif
-            AddFuselage("형상 A/1호기");
-            AddFuselage("형상 A/2호기");
-            AddFuselage("형상 A/3호기");
-            AddFuselage("형상 B/1호기");
-            AddFuselage("형상 C/1호기");
-            AddFuselage("형상 D/1호기");
-            AddFuselage("형상 E/1호기");
-            AddFuselage("형상 F/1호기");
-            AddFuselage("형상 G/1호기");
-            AddFuselage("형상 H/1호기");
-            AddFuselage("형상 Z/2호기");
-
-        }
-
-        private void AddFuselage(string name)
-        {
-            ButtonEdit edit = new ButtonEdit();
-            edit.BorderStyle = BorderStyles.Simple;
-            edit.ForeColor = Color.Gray;
-            edit.Properties.Appearance.BorderColor = Color.Gray;
-            edit.Properties.Appearance.TextOptions.HAlignment = HorzAlignment.Center;
-            //edit.ReadOnly = true;
-            edit.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
-            edit.Properties.Buttons[0].Visible = false;
-            edit.Properties.AllowFocused = false;
-            //edit.Properties.AllowFocused = false;
-            edit.Text = name;
-            edit.Click += Fuselage_Click;
-            panelFuseLage.Controls.Add(edit);
-        }
-
-        private void Fuselage_Click(object sender, EventArgs e)
-        {
-            TextEdit edit = sender as TextEdit;
-            if (edit != null)
-            {
-                if(selectedFuselage.Equals(edit.Text))
-                {
-                    return;
-                }
-
-                // 하나의 비행기체만 선택되도록 한다.
-                foreach(Control c in panelFuseLage.Controls)
-                {
-                    TextEdit ed = c as TextEdit;
-                    ed.ForeColor = Color.Gray;
-                    ed.Properties.Appearance.BorderColor = Color.Gray;
-                    ed.Font = new Font(ed.Font, FontStyle.Regular);
-                }
-                edit.ForeColor = Color.White;
-                edit.Properties.Appearance.BorderColor = Color.White;
-                edit.Font = new Font(edit.Font, FontStyle.Bold);
-                selectedFuselage = edit.Text;
-            }
         }
 
         private void dropScenarioType_Click(object sender, EventArgs e)
