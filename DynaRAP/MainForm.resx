@@ -151,7 +151,7 @@
     <value>projectListControl</value>
   </data>
   <data name="&gt;&gt;projectListControl.Type" xml:space="preserve">
-    <value>DynaRAP.UControl.ProjectListControl, DynaRAP, Version=1.0.1.0, Culture=neutral, PublicKeyToken=null</value>
+    <value>DynaRAP.UControl.ProjectListControl, DynaRap-Post, Version=1.0.1.0, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;projectListControl.Parent" xml:space="preserve">
     <value>dockPanel1_Container</value>
@@ -483,7 +483,7 @@
   <metadata name="barManager1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>317, 17</value>
   </metadata>
-  <data name="barSubItem1.Caption" xml:space="preserve">
+  <data name="barSubItemTest.Caption" xml:space="preserve">
     <value>TEST</value>
   </data>
   <data name="btnPythonTest.Caption" xml:space="preserve">
@@ -501,17 +501,38 @@
   <data name="btnStart.Caption" xml:space="preserve">
     <value>Start</value>
   </data>
-  <data name="btnImportModule.Caption" xml:space="preserve">
+  <data name="barSubItem2.Caption" xml:space="preserve">
     <value>Import</value>
+  </data>
+  <data name="btnImportDLL.Caption" xml:space="preserve">
+    <value>기준데이터</value>
+  </data>
+  <data name="btnImportFlying.Caption" xml:space="preserve">
+    <value>비행데이터</value>
+  </data>
+  <data name="btnImportAnalysis.Caption" xml:space="preserve">
+    <value>해석데이터</value>
+  </data>
+  <data name="barSubItem3.Caption" xml:space="preserve">
+    <value>Parameter</value>
+  </data>
+  <data name="btnMgmtParameter.Caption" xml:space="preserve">
+    <value>파라미터 관리</value>
+  </data>
+  <data name="btnMgmtPreset.Caption" xml:space="preserve">
+    <value>프리셋 관리</value>
+  </data>
+  <data name="btnMgmtPresetGroup.Caption" xml:space="preserve">
+    <value>프리셋그룹 관리</value>
+  </data>
+  <data name="barSubItem1.Caption" xml:space="preserve">
+    <value>Operation</value>
   </data>
   <data name="btnSBModule.Caption" xml:space="preserve">
     <value>ShortBlock</value>
   </data>
   <data name="btnBinModule.Caption" xml:space="preserve">
     <value>BIN 구성</value>
-  </data>
-  <data name="btnDLLImport.Caption" xml:space="preserve">
-    <value>DLL Import</value>
   </data>
   <data name="bar1.Text" xml:space="preserve">
     <value>Tools</value>
@@ -630,10 +651,10 @@
   <data name="&gt;&gt;bar1.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.Bar, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
-  <data name="&gt;&gt;barSubItem1.Name" xml:space="preserve">
-    <value>barSubItem1</value>
+  <data name="&gt;&gt;barSubItemTest.Name" xml:space="preserve">
+    <value>barSubItemTest</value>
   </data>
-  <data name="&gt;&gt;barSubItem1.Type" xml:space="preserve">
+  <data name="&gt;&gt;barSubItemTest.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.BarSubItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
   <data name="&gt;&gt;btnPythonTest.Name" xml:space="preserve">
@@ -666,10 +687,10 @@
   <data name="&gt;&gt;btnStart.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
-  <data name="&gt;&gt;btnImportModule.Name" xml:space="preserve">
-    <value>btnImportModule</value>
+  <data name="&gt;&gt;btnImportFlying.Name" xml:space="preserve">
+    <value>btnImportFlying</value>
   </data>
-  <data name="&gt;&gt;btnImportModule.Type" xml:space="preserve">
+  <data name="&gt;&gt;btnImportFlying.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
   <data name="&gt;&gt;btnSBModule.Name" xml:space="preserve">
@@ -684,10 +705,10 @@
   <data name="&gt;&gt;btnBinModule.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
-  <data name="&gt;&gt;btnDLLImport.Name" xml:space="preserve">
-    <value>btnDLLImport</value>
+  <data name="&gt;&gt;btnImportDLL.Name" xml:space="preserve">
+    <value>btnImportDLL</value>
   </data>
-  <data name="&gt;&gt;btnDLLImport.Type" xml:space="preserve">
+  <data name="&gt;&gt;btnImportDLL.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
   <data name="&gt;&gt;bar2.Name" xml:space="preserve">
@@ -725,6 +746,48 @@
   </data>
   <data name="&gt;&gt;tabbedView1.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.Docking2010.Views.Tabbed.TabbedView, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  </data>
+  <data name="&gt;&gt;barSubItem2.Name" xml:space="preserve">
+    <value>barSubItem2</value>
+  </data>
+  <data name="&gt;&gt;barSubItem2.Type" xml:space="preserve">
+    <value>DevExpress.XtraBars.BarSubItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  </data>
+  <data name="&gt;&gt;btnImportAnalysis.Name" xml:space="preserve">
+    <value>btnImportAnalysis</value>
+  </data>
+  <data name="&gt;&gt;btnImportAnalysis.Type" xml:space="preserve">
+    <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  </data>
+  <data name="&gt;&gt;barSubItem3.Name" xml:space="preserve">
+    <value>barSubItem3</value>
+  </data>
+  <data name="&gt;&gt;barSubItem3.Type" xml:space="preserve">
+    <value>DevExpress.XtraBars.BarSubItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  </data>
+  <data name="&gt;&gt;btnMgmtParameter.Name" xml:space="preserve">
+    <value>btnMgmtParameter</value>
+  </data>
+  <data name="&gt;&gt;btnMgmtParameter.Type" xml:space="preserve">
+    <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  </data>
+  <data name="&gt;&gt;btnMgmtPreset.Name" xml:space="preserve">
+    <value>btnMgmtPreset</value>
+  </data>
+  <data name="&gt;&gt;btnMgmtPreset.Type" xml:space="preserve">
+    <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  </data>
+  <data name="&gt;&gt;btnMgmtPresetGroup.Name" xml:space="preserve">
+    <value>btnMgmtPresetGroup</value>
+  </data>
+  <data name="&gt;&gt;btnMgmtPresetGroup.Type" xml:space="preserve">
+    <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  </data>
+  <data name="&gt;&gt;barSubItem1.Name" xml:space="preserve">
+    <value>barSubItem1</value>
+  </data>
+  <data name="&gt;&gt;barSubItem1.Type" xml:space="preserve">
+    <value>DevExpress.XtraBars.BarSubItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>MainForm</value>

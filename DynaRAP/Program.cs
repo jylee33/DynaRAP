@@ -18,9 +18,12 @@ namespace DynaRAP
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            //Application.Run(new MainForm());
+#if DEBUG
+            Application.Run(new MainForm());
+#else
             MainStarter main = new MainStarter();
             main.Run();
+#endif
         }
     }
 }

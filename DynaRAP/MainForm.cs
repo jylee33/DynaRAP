@@ -101,6 +101,14 @@ namespace DynaRAP
         {
             InitializeWorkspace();
 
+#if DEBUG
+#else
+            bar2.Visible = false;
+            Workspace.Visibility = DevExpress.XtraBars.BarItemVisibility.Never;
+            barSubItemTest.Visibility = DevExpress.XtraBars.BarItemVisibility.Never;
+            btnStart.Visibility = DevExpress.XtraBars.BarItemVisibility.Never;
+#endif
+
             if (startControl == null)
             {
                 startControl = new StartScreenControl();
@@ -395,6 +403,10 @@ namespace DynaRAP
             }
         }
 
+        private void btnImportAnalysis_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+
+        }
     }
 
 }
