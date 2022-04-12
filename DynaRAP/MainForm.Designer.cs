@@ -167,7 +167,6 @@ namespace DynaRAP
             new DevExpress.XtraBars.LinkPersistInfo(this.btnLogin),
             new DevExpress.XtraBars.LinkPersistInfo(this.btnChartTest)});
             this.barSubItemTest.Name = "barSubItemTest";
-            this.barSubItemTest.Visibility = DevExpress.XtraBars.BarItemVisibility.Never;
             // 
             // btnPythonTest
             // 
@@ -181,7 +180,6 @@ namespace DynaRAP
             resources.ApplyResources(this.toolTreeTest, "toolTreeTest");
             this.toolTreeTest.Id = 12;
             this.toolTreeTest.Name = "toolTreeTest";
-            this.toolTreeTest.Visibility = DevExpress.XtraBars.BarItemVisibility.Never;
             this.toolTreeTest.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.toolTreeTest_ItemClick);
             // 
             // btnLogin
@@ -196,7 +194,6 @@ namespace DynaRAP
             resources.ApplyResources(this.btnChartTest, "btnChartTest");
             this.btnChartTest.Id = 6;
             this.btnChartTest.Name = "btnChartTest";
-            this.btnChartTest.Visibility = DevExpress.XtraBars.BarItemVisibility.Never;
             this.btnChartTest.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnChartTest_ItemClick);
             // 
             // btnStart

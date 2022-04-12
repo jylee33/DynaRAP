@@ -100,7 +100,7 @@ namespace DynaRAP
         {
             cboScenarioType.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
 
-            cboScenarioType.Properties.Items.Add("Import Module Scenario");
+            //cboScenarioType.Properties.Items.Add("Import Module Scenario");
             cboScenarioType.Properties.Items.Add("Buffeting Scenario");
             cboScenarioType.Properties.Items.Add("ShortBlock Scenario");
 
