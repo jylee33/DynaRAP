@@ -7,6 +7,7 @@ using DevExpress.XtraTreeList.StyleFormatConditions;
 using DynaRAP.TEST;
 using DynaRAP.UControl;
 using IronPython.Hosting;
+using log4net.Config;
 using Microsoft.Scripting.Hosting;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Configuration;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,13 +26,7 @@ namespace DynaRAP
 {
     public partial class MainForm : DevExpress.XtraEditors.XtraForm
     {
-        public DevExpress.XtraBars.Docking.DockManager DockManager1
-        {
-            get
-            {
-                return this.dockManager1;
-            }
-        }
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         string defaultLayoutFile = "Default.xml";
         string defaultWorkspaceName = "Default";
@@ -46,6 +42,14 @@ namespace DynaRAP
 
         CsvTableControl csvTableControl = null;
 
+        public DevExpress.XtraBars.Docking.DockManager DockManager1
+        {
+            get
+            {
+                return this.dockManager1;
+            }
+        }
+       
         public DockPanel PanelBinTable
         {
             get { return this.panelBinTable; }
@@ -89,6 +93,8 @@ namespace DynaRAP
         public MainForm()
         {
             InitializeComponent();
+
+            XmlConfigurator.Configure(new FileInfo("log4net.xml"));
 
             // Handling the QueryControl event that will populate all automatically generated Documents
             this.tabbedView1.QueryControl += tabbedView1_QueryControl;
@@ -407,6 +413,13 @@ namespace DynaRAP
         {
 
         }
+
+        private void btnLPF_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            TestFilterForm form = new TestFilterForm();
+            form.Show();
+        }
+
     }
 
 }

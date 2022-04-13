@@ -1,11 +1,13 @@
 ﻿using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Controls;
 using DynaRAP.UTIL;
+using log4net.Config;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,6 +18,8 @@ namespace DynaRAP.UControl
 {
     public partial class ImportParamControl : DevExpress.XtraEditors.XtraUserControl
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+       
         private Dictionary<string, List<string>> dicData;
         string selKey = String.Empty;
         Series series1 = new Series();
@@ -49,6 +53,8 @@ namespace DynaRAP.UControl
         public ImportParamControl()
         {
             InitializeComponent();
+        
+            XmlConfigurator.Configure(new FileInfo("log4net.xml"));
         }
 
         private void ImportParamControl_Load(object sender, EventArgs e)
@@ -167,6 +173,7 @@ namespace DynaRAP.UControl
         private void Push_Data(Series series, DateTime dt, float data)
         {
             Console.WriteLine(string.Format("{0:yyyy-MM-dd hh:mm:ss.ffffff} - {1}", dt, data));
+            //log.Debug(string.Format("{0:yyyy-MM-dd hh:mm:ss.ffffff} - {1}", dt, data));
             DataPoint dp = new DataPoint(); //데이타 기록하기 정도
             dp.SetValueXY(dt, data);
             series.Points.Add(dp);
