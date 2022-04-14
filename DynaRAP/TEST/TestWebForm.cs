@@ -123,17 +123,23 @@ namespace DynaRAP.TEST
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = radioPOST.Checked ? "POST" : "GET";
-            request.ContentType = "application/json";
+
+            if(radioPOST.Checked)
+                request.ContentType = "application/json";
+
             request.Timeout = 30 * 1000;
             //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
 
-            // POST할 데이타를 Request Stream에 쓴다
-            byte[] bytes = Encoding.ASCII.GetBytes(data);
-            request.ContentLength = bytes.Length; // 바이트수 지정
-
-            using (Stream reqStream = request.GetRequestStream())
+            if (radioPOST.Checked)
             {
-                reqStream.Write(bytes, 0, bytes.Length);
+                // POST할 데이타를 Request Stream에 쓴다
+                byte[] bytes = Encoding.ASCII.GetBytes(data);
+                request.ContentLength = bytes.Length; // 바이트수 지정
+
+                using (Stream reqStream = request.GetRequestStream())
+                {
+                    reqStream.Write(bytes, 0, bytes.Length);
+                }
             }
 
             // Response 처리
