@@ -420,6 +420,11 @@ namespace DynaRAP
             form.Show();
         }
 
+        private void btnWebTest_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            TestWebForm form = new TestWebForm();
+            form.Show();
+        }
     }
 
 }

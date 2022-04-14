@@ -125,46 +125,18 @@
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>7, 14</value>
+    <value>7, 15</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>1090, 705</value>
-  </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="projectListControl.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="projectListControl.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="projectListControl.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 4, 3, 4</value>
-  </data>
-  <data name="projectListControl.Size" type="System.Drawing.Size, System.Drawing">
-    <value>268, 396</value>
-  </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="projectListControl.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;projectListControl.Name" xml:space="preserve">
-    <value>projectListControl</value>
-  </data>
-  <data name="&gt;&gt;projectListControl.Type" xml:space="preserve">
-    <value>DynaRAP.UControl.ProjectListControl, DynaRap-Post, Version=1.0.1.0, Culture=neutral, PublicKeyToken=null</value>
-  </data>
-  <data name="&gt;&gt;projectListControl.Parent" xml:space="preserve">
-    <value>dockPanel1_Container</value>
-  </data>
-  <data name="&gt;&gt;projectListControl.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1090, 755</value>
   </data>
   <data name="dockPanel1_Container.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
   </data>
   <data name="dockPanel1_Container.Size" type="System.Drawing.Size, System.Drawing">
-    <value>268, 396</value>
+    <value>267, 444</value>
   </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="dockPanel1_Container.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
   </data>
@@ -181,10 +153,10 @@
     <value>0</value>
   </data>
   <data name="panelScenario.Location" type="System.Drawing.Point, System.Drawing">
-    <value>29, 25</value>
+    <value>30, 25</value>
   </data>
   <data name="panelScenario.Size" type="System.Drawing.Size, System.Drawing">
-    <value>268, 396</value>
+    <value>267, 444</value>
   </data>
   <data name="panelScenario.Text" xml:space="preserve">
     <value>Scenario</value>
@@ -205,7 +177,7 @@
     <value>0, 0</value>
   </data>
   <data name="controlContainer2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>268, 396</value>
+    <value>267, 444</value>
   </data>
   <data name="controlContainer2.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -223,10 +195,10 @@
     <value>0</value>
   </data>
   <data name="panelOther.Location" type="System.Drawing.Point, System.Drawing">
-    <value>29, 25</value>
+    <value>30, 25</value>
   </data>
   <data name="panelOther.Size" type="System.Drawing.Size, System.Drawing">
-    <value>268, 396</value>
+    <value>267, 444</value>
   </data>
   <data name="panelOther.Text" xml:space="preserve">
     <value>Other Tab</value>
@@ -244,10 +216,10 @@
     <value>1</value>
   </data>
   <data name="panelContainer4.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 48</value>
+    <value>0, 50</value>
   </data>
   <data name="panelContainer4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>301, 424</value>
+    <value>301, 472</value>
   </data>
   <data name="panelContainer4.Text" xml:space="preserve">
     <value>panelContainer4</value>
@@ -268,7 +240,7 @@
     <value>4, 25</value>
   </data>
   <data name="dockPanel2_Container.Size" type="System.Drawing.Size, System.Drawing">
-    <value>247, 183</value>
+    <value>247, 208</value>
   </data>
   <data name="dockPanel2_Container.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -289,7 +261,7 @@
     <value>0, 0</value>
   </data>
   <data name="panelBinSbList.Size" type="System.Drawing.Size, System.Drawing">
-    <value>254, 212</value>
+    <value>254, 237</value>
   </data>
   <data name="panelBinSbList.Text" xml:space="preserve">
     <value>ImportModuleScenarioName</value>
@@ -310,7 +282,7 @@
     <value>4, 25</value>
   </data>
   <data name="dockPanel3_Container.Size" type="System.Drawing.Size, System.Drawing">
-    <value>247, 184</value>
+    <value>247, 207</value>
   </data>
   <data name="dockPanel3_Container.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -328,10 +300,10 @@
     <value>0</value>
   </data>
   <data name="panelProperties.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 212</value>
+    <value>0, 237</value>
   </data>
   <data name="panelProperties.Size" type="System.Drawing.Size, System.Drawing">
-    <value>254, 212</value>
+    <value>254, 235</value>
   </data>
   <data name="panelProperties.Text" xml:space="preserve">
     <value>Properties</value>
@@ -349,10 +321,10 @@
     <value>1</value>
   </data>
   <data name="panelContainer3.Location" type="System.Drawing.Point, System.Drawing">
-    <value>836, 48</value>
+    <value>836, 50</value>
   </data>
   <data name="panelContainer3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>254, 424</value>
+    <value>254, 472</value>
   </data>
   <data name="panelContainer3.Text" xml:space="preserve">
     <value>panelContainer3</value>
@@ -373,7 +345,7 @@
     <value>0, 0</value>
   </data>
   <data name="controlContainer1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1084, 156</value>
+    <value>1084, 155</value>
   </data>
   <data name="controlContainer1.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -394,7 +366,7 @@
     <value>3, 26</value>
   </data>
   <data name="panelImportViewCsv.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1084, 156</value>
+    <value>1084, 155</value>
   </data>
   <data name="panelImportViewCsv.Text" xml:space="preserve">
     <value>CSV TABLE</value>
@@ -415,7 +387,7 @@
     <value>0, 0</value>
   </data>
   <data name="dockPanel4_Container.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1084, 156</value>
+    <value>1084, 155</value>
   </data>
   <data name="dockPanel4_Container.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -436,7 +408,7 @@
     <value>3, 26</value>
   </data>
   <data name="panelBinTable.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1084, 156</value>
+    <value>1084, 155</value>
   </data>
   <data name="panelBinTable.Text" xml:space="preserve">
     <value>BIN TABLE</value>
@@ -454,7 +426,7 @@
     <value>1</value>
   </data>
   <data name="panelContainer2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 472</value>
+    <value>0, 522</value>
   </data>
   <data name="panelContainer2.Size" type="System.Drawing.Size, System.Drawing">
     <value>1090, 211</value>
@@ -474,11 +446,12 @@
   <data name="&gt;&gt;panelContainer2.ZOrder" xml:space="preserve">
     <value>3</value>
   </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="barDockControlLeft.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Left</value>
   </data>
   <data name="barDockControlLeft.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 48</value>
+    <value>0, 50</value>
   </data>
   <metadata name="barManager1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>317, 17</value>
@@ -497,6 +470,9 @@
   </data>
   <data name="btnChartTest.Caption" xml:space="preserve">
     <value>Chart</value>
+  </data>
+  <data name="btnWebTest.Caption" xml:space="preserve">
+    <value>WEB</value>
   </data>
   <data name="barSubItemTest2.Caption" xml:space="preserve">
     <value>TEST</value>
@@ -532,7 +508,7 @@
     <value>프리셋그룹 관리</value>
   </data>
   <data name="barSubItem1.Caption" xml:space="preserve">
-    <value>Operation</value>
+    <value>고급후처리 과정</value>
   </data>
   <data name="btnSBModule.Caption" xml:space="preserve">
     <value>ShortBlock</value>
@@ -562,7 +538,7 @@
     <value>0, 0</value>
   </data>
   <data name="barDockControlTop.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1090, 48</value>
+    <value>1090, 50</value>
   </data>
   <data name="&gt;&gt;barDockControlTop.Name" xml:space="preserve">
     <value>barDockControlTop</value>
@@ -580,7 +556,7 @@
     <value>Bottom</value>
   </data>
   <data name="barDockControlBottom.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 683</value>
+    <value>0, 733</value>
   </data>
   <data name="barDockControlBottom.Size" type="System.Drawing.Size, System.Drawing">
     <value>1090, 22</value>
@@ -601,10 +577,10 @@
     <value>Right</value>
   </data>
   <data name="barDockControlRight.Location" type="System.Drawing.Point, System.Drawing">
-    <value>1090, 48</value>
+    <value>1090, 50</value>
   </data>
   <data name="barDockControlRight.Size" type="System.Drawing.Size, System.Drawing">
-    <value>0, 635</value>
+    <value>0, 683</value>
   </data>
   <data name="&gt;&gt;barDockControlRight.Name" xml:space="preserve">
     <value>barDockControlRight</value>
@@ -622,7 +598,7 @@
     <value>182, 17</value>
   </metadata>
   <data name="barDockControlLeft.Size" type="System.Drawing.Size, System.Drawing">
-    <value>0, 635</value>
+    <value>0, 683</value>
   </data>
   <data name="&gt;&gt;barDockControlLeft.Name" xml:space="preserve">
     <value>barDockControlLeft</value>
@@ -685,6 +661,24 @@
     <value>btnChartTest</value>
   </data>
   <data name="&gt;&gt;btnChartTest.Type" xml:space="preserve">
+    <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  </data>
+  <data name="&gt;&gt;barSubItemTest2.Name" xml:space="preserve">
+    <value>barSubItemTest2</value>
+  </data>
+  <data name="&gt;&gt;barSubItemTest2.Type" xml:space="preserve">
+    <value>DevExpress.XtraBars.BarSubItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  </data>
+  <data name="&gt;&gt;btnLPF.Name" xml:space="preserve">
+    <value>btnLPF</value>
+  </data>
+  <data name="&gt;&gt;btnLPF.Type" xml:space="preserve">
+    <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  </data>
+  <data name="&gt;&gt;btnWebTest.Name" xml:space="preserve">
+    <value>btnWebTest</value>
+  </data>
+  <data name="&gt;&gt;btnWebTest.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
   <data name="&gt;&gt;btnStart.Name" xml:space="preserve">
@@ -759,12 +753,6 @@
   <data name="&gt;&gt;btnBinModule.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
-  <data name="&gt;&gt;btnLPF.Name" xml:space="preserve">
-    <value>btnLPF</value>
-  </data>
-  <data name="&gt;&gt;btnLPF.Type" xml:space="preserve">
-    <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
-  </data>
   <data name="&gt;&gt;bar2.Name" xml:space="preserve">
     <value>bar2</value>
   </data>
@@ -800,12 +788,6 @@
   </data>
   <data name="&gt;&gt;tabbedView1.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.Docking2010.Views.Tabbed.TabbedView, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
-  </data>
-  <data name="&gt;&gt;barSubItemTest2.Name" xml:space="preserve">
-    <value>barSubItemTest2</value>
-  </data>
-  <data name="&gt;&gt;barSubItemTest2.Type" xml:space="preserve">
-    <value>DevExpress.XtraBars.BarSubItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>MainForm</value>
