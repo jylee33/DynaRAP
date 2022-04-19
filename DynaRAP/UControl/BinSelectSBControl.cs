@@ -15,9 +15,9 @@ using System.Windows.Forms;
 
 namespace DynaRAP.UControl
 {
-    public partial class SelectSBControl : DevExpress.XtraEditors.XtraUserControl
+    public partial class BinSelectSBControl : DevExpress.XtraEditors.XtraUserControl
     {
-        public SelectSBControl()
+        public BinSelectSBControl()
         {
             InitializeComponent();
         }

@@ -136,11 +136,17 @@
   <data name="labelControl2.Text" xml:space="preserve">
     <value>비밀번호</value>
   </data>
+  <data name="edtId.EditValue" xml:space="preserve">
+    <value />
+  </data>
   <data name="edtId.Location" type="System.Drawing.Point, System.Drawing">
     <value>275, 159</value>
   </data>
   <data name="edtId.Size" type="System.Drawing.Size, System.Drawing">
     <value>210, 20</value>
+  </data>
+  <data name="edtPassword.EditValue" xml:space="preserve">
+    <value />
   </data>
   <data name="edtPassword.Location" type="System.Drawing.Point, System.Drawing">
     <value>275, 185</value>

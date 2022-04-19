@@ -28,25 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DevExpress.XtraCharts.XYDiagram xyDiagram1 = new DevExpress.XtraCharts.XYDiagram();
-            DevExpress.XtraCharts.Series series1 = new DevExpress.XtraCharts.Series();
-            DevExpress.XtraCharts.LineSeriesView lineSeriesView1 = new DevExpress.XtraCharts.LineSeriesView();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.labelControl1 = new DevExpress.XtraEditors.LabelControl();
-            this.labelControl2 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl5 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl6 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl3 = new DevExpress.XtraEditors.LabelControl();
-            this.chartOverview = new DevExpress.XtraCharts.ChartControl();
-            this.gridControl1 = new DevExpress.XtraGrid.GridControl();
-            this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.tableLayoutPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.chartOverview)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(xyDiagram1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(series1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(lineSeriesView1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -56,12 +44,10 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 94F));
             this.tableLayoutPanel1.Controls.Add(this.labelControl1, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.labelControl2, 1, 7);
             this.tableLayoutPanel1.Controls.Add(this.labelControl5, 1, 2);
             this.tableLayoutPanel1.Controls.Add(this.labelControl6, 2, 1);
             this.tableLayoutPanel1.Controls.Add(this.labelControl3, 1, 4);
-            this.tableLayoutPanel1.Controls.Add(this.chartOverview, 1, 5);
-            this.tableLayoutPanel1.Controls.Add(this.gridControl1, 1, 9);
+            this.tableLayoutPanel1.Controls.Add(this.richTextBox1, 1, 5);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -91,16 +77,6 @@
             this.labelControl1.TabIndex = 0;
             this.labelControl1.Text = "Scenario Name";
             // 
-            // labelControl2
-            // 
-            this.labelControl2.Appearance.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold);
-            this.labelControl2.Appearance.Options.UseFont = true;
-            this.labelControl2.Location = new System.Drawing.Point(23, 268);
-            this.labelControl2.Name = "labelControl2";
-            this.labelControl2.Size = new System.Drawing.Size(75, 16);
-            this.labelControl2.TabIndex = 0;
-            this.labelControl2.Text = "Data Slicing";
-            // 
             // labelControl5
             // 
             this.labelControl5.Location = new System.Drawing.Point(23, 48);
@@ -123,44 +99,24 @@
             this.labelControl3.Appearance.Options.UseFont = true;
             this.labelControl3.Location = new System.Drawing.Point(23, 98);
             this.labelControl3.Name = "labelControl3";
-            this.labelControl3.Size = new System.Drawing.Size(96, 16);
+            this.labelControl3.Size = new System.Drawing.Size(73, 16);
             this.labelControl3.TabIndex = 0;
-            this.labelControl3.Text = "Data Overview";
+            this.labelControl3.Text = "Description";
             // 
-            // chartOverview
+            // richTextBox1
             // 
-            this.tableLayoutPanel1.SetColumnSpan(this.chartOverview, 2);
-            xyDiagram1.AxisX.VisibleInPanesSerializable = "-1";
-            xyDiagram1.AxisY.VisibleInPanesSerializable = "-1";
-            this.chartOverview.Diagram = xyDiagram1;
-            this.chartOverview.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chartOverview.Location = new System.Drawing.Point(20, 120);
-            this.chartOverview.Margin = new System.Windows.Forms.Padding(0);
-            this.chartOverview.Name = "chartOverview";
-            series1.Name = "Series 1";
-            series1.View = lineSeriesView1;
-            this.chartOverview.SeriesSerializable = new DevExpress.XtraCharts.Series[] {
-        series1};
-            this.chartOverview.Size = new System.Drawing.Size(738, 120);
-            this.chartOverview.TabIndex = 3;
-            // 
-            // gridControl1
-            // 
-            this.tableLayoutPanel1.SetColumnSpan(this.gridControl1, 2);
-            this.gridControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridControl1.Location = new System.Drawing.Point(20, 295);
-            this.gridControl1.MainView = this.gridView1;
-            this.gridControl1.Margin = new System.Windows.Forms.Padding(0);
-            this.gridControl1.Name = "gridControl1";
-            this.gridControl1.Size = new System.Drawing.Size(738, 225);
-            this.gridControl1.TabIndex = 4;
-            this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
-            this.gridView1});
-            // 
-            // gridView1
-            // 
-            this.gridView1.GridControl = this.gridControl1;
-            this.gridView1.Name = "gridView1";
+            this.richTextBox1.BackColor = System.Drawing.Color.Black;
+            this.richTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.tableLayoutPanel1.SetColumnSpan(this.richTextBox1, 2);
+            this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.richTextBox1.ForeColor = System.Drawing.Color.White;
+            this.richTextBox1.Location = new System.Drawing.Point(23, 123);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.ReadOnly = true;
+            this.tableLayoutPanel1.SetRowSpan(this.richTextBox1, 5);
+            this.richTextBox1.Size = new System.Drawing.Size(732, 394);
+            this.richTextBox1.TabIndex = 3;
+            this.richTextBox1.Text = "해당 시나리오 설명";
             // 
             // ScenarioSummaryControl
             // 
@@ -174,12 +130,6 @@
             this.Load += new System.EventHandler(this.ScenarioSummaryControl_Load);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(xyDiagram1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(lineSeriesView1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(series1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.chartOverview)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -188,12 +138,9 @@
 
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private DevExpress.XtraEditors.LabelControl labelControl1;
-        private DevExpress.XtraEditors.LabelControl labelControl2;
         private DevExpress.XtraEditors.LabelControl labelControl5;
         private DevExpress.XtraEditors.LabelControl labelControl6;
         private DevExpress.XtraEditors.LabelControl labelControl3;
-        private DevExpress.XtraCharts.ChartControl chartOverview;
-        private DevExpress.XtraGrid.GridControl gridControl1;
-        private DevExpress.XtraGrid.Views.Grid.GridView gridView1;
+        private System.Windows.Forms.RichTextBox richTextBox1;
     }
 }

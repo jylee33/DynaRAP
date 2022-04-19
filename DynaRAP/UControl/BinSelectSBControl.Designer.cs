@@ -1,6 +1,6 @@
 ﻿namespace DynaRAP.UControl
 {
-    partial class SelectSBControl
+    partial class BinSelectSBControl
     {
         /// <summary> 
         /// Required designer variable.
@@ -87,12 +87,12 @@
             this.repositoryItemCheckEdit1.AutoHeight = false;
             this.repositoryItemCheckEdit1.Name = "repositoryItemCheckEdit1";
             // 
-            // SelectSBControl
+            // BinSelectSBControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.treeList1);
-            this.Name = "SelectSBControl";
+            this.Name = "BinSelectSBControl";
             this.Size = new System.Drawing.Size(362, 544);
             this.Load += new System.EventHandler(this.SelectSBControl_Load);
             ((System.ComponentModel.ISupportInitialize)(this.treeList1)).EndInit();

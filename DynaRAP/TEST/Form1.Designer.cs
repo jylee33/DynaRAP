@@ -1,5 +1,5 @@
 ﻿
-namespace DynaRAP
+namespace DynaRAP.TEST
 {
     partial class Form1
     {

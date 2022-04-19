@@ -21,7 +21,7 @@ namespace DynaRAP.UControl
     public partial class BinTableControl : DevExpress.XtraEditors.XtraUserControl
     {
         DockPanel binSBTabPanel = null;
-
+        BinSBTabControl binSBTabCtrl = null;
 
         public BinTableControl()
         {
@@ -184,7 +184,7 @@ namespace DynaRAP.UControl
         {
             BandedGridView gridView = sender as BandedGridView;
 
-            string index = gridView.GetRowCellValue(e.RowHandle, "IdxValue").ToString();
+            string index = gridView.GetRowCellValue(e.RowHandle, "AOA").ToString();
             Console.WriteLine("selected " + index);
 
             MainForm mainForm = this.ParentForm as MainForm;
@@ -194,27 +194,27 @@ namespace DynaRAP.UControl
             {
                 binSBTabPanel = mainForm.DockManager1.AddPanel(DockingStyle.Float);
                 binSBTabPanel.FloatLocation = new Point(500, 100);
-                binSBTabPanel.FloatSize = new Size(466, 920);
+                binSBTabPanel.FloatSize = new Size(466, 620);
                 binSBTabPanel.Name = "ShortBlock Panel";
                 binSBTabPanel.Text = "ShortBlock Panel";
-                BinSBTabControl ctrl = new BinSBTabControl();
-                ctrl.IdxValue = index;
-                ctrl.Dock = DockStyle.Fill;
-                binSBTabPanel.Controls.Add(ctrl);
+                binSBTabCtrl = new BinSBTabControl();
+                binSBTabCtrl.IdxValue = index;
+                binSBTabCtrl.Dock = DockStyle.Fill;
+                binSBTabPanel.Controls.Add(binSBTabCtrl);
+                binSBTabPanel.ClosedPanel += BinSBTabPanel_ClosedPanel;
             }
             else
             {
-                foreach(Control ctrl in binSBTabPanel.Controls)
-                {
-                    if(ctrl is BinSBTabControl)
-                    {
-                        BinSBTabControl control = ctrl as BinSBTabControl;
-                        control.IdxValue = index;
-                    }
-                }
+                binSBTabCtrl.IdxValue = index;
                 binSBTabPanel.Show();
             }
 
+        }
+
+        private void BinSBTabPanel_ClosedPanel(object sender, DockPanelEventArgs e)
+        {
+            this.binSBTabPanel = null;
+            this.binSBTabCtrl = null;
         }
 
         private void BandedGridView_RowCellStyle(object sender, RowCellStyleEventArgs e)

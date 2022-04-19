@@ -126,6 +126,9 @@
   <data name="ExtractFlightData" xml:space="preserve">
     <value>Extract flight data and save DB...</value>
   </data>
+  <data name="FileNotExist" xml:space="preserve">
+    <value>The file is not exist.</value>
+  </data>
   <data name="IdPlaceholder" xml:space="preserve">
     <value>ID</value>
   </data>

@@ -31,17 +31,12 @@
             this.buttonEdit1 = new DevExpress.XtraEditors.ButtonEdit();
             this.checkEdit1 = new DevExpress.XtraEditors.CheckEdit();
             this.labelControl1 = new DevExpress.XtraEditors.LabelControl();
-            this.labelControl2 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl3 = new DevExpress.XtraEditors.LabelControl();
-            this.labelControl4 = new DevExpress.XtraEditors.LabelControl();
-            this.labelControl5 = new DevExpress.XtraEditors.LabelControl();
-            this.hyperlinkLabelControl2 = new DevExpress.XtraEditors.HyperlinkLabelControl();
             this.btnCreate = new DevExpress.XtraEditors.SimpleButton();
             this.dropScenarioType = new DevExpress.XtraEditors.DropDownButton();
             this.edtScenarioName = new DevExpress.XtraEditors.ButtonEdit();
             this.dateScenario = new DevExpress.XtraEditors.DateEdit();
             this.edtTag = new DevExpress.XtraEditors.ButtonEdit();
-            this.panelFuseLage = new System.Windows.Forms.FlowLayoutPanel();
             this.textEdit1 = new DevExpress.XtraEditors.TextEdit();
             this.cboScenarioType = new DevExpress.XtraEditors.ComboBoxEdit();
             this.panelTag = new System.Windows.Forms.FlowLayoutPanel();
@@ -84,63 +79,19 @@
             this.labelControl1.TabIndex = 3;
             this.labelControl1.Text = "시나리오";
             // 
-            // labelControl2
-            // 
-            this.labelControl2.Appearance.Font = new System.Drawing.Font("Tahoma", 13F, System.Drawing.FontStyle.Bold);
-            this.labelControl2.Appearance.Options.UseFont = true;
-            this.labelControl2.Location = new System.Drawing.Point(28, 148);
-            this.labelControl2.Name = "labelControl2";
-            this.labelControl2.Size = new System.Drawing.Size(88, 22);
-            this.labelControl2.TabIndex = 3;
-            this.labelControl2.Text = "비행 기체 선택";
-            // 
             // labelControl3
             // 
             this.labelControl3.Appearance.Font = new System.Drawing.Font("Tahoma", 13F, System.Drawing.FontStyle.Bold);
             this.labelControl3.Appearance.Options.UseFont = true;
-            this.labelControl3.Location = new System.Drawing.Point(28, 281);
+            this.labelControl3.Location = new System.Drawing.Point(28, 146);
             this.labelControl3.Name = "labelControl3";
             this.labelControl3.Size = new System.Drawing.Size(26, 22);
             this.labelControl3.TabIndex = 3;
             this.labelControl3.Text = "태그";
             // 
-            // labelControl4
-            // 
-            this.labelControl4.Appearance.Font = new System.Drawing.Font("Tahoma", 13F, System.Drawing.FontStyle.Bold);
-            this.labelControl4.Appearance.Options.UseFont = true;
-            this.labelControl4.Location = new System.Drawing.Point(28, 441);
-            this.labelControl4.Name = "labelControl4";
-            this.labelControl4.Size = new System.Drawing.Size(114, 22);
-            this.labelControl4.TabIndex = 3;
-            this.labelControl4.Text = "비행 데이터 업로드";
-            // 
-            // labelControl5
-            // 
-            this.labelControl5.Appearance.Font = new System.Drawing.Font("Tahoma", 11F, System.Drawing.FontStyle.Bold);
-            this.labelControl5.Appearance.ForeColor = System.Drawing.Color.Red;
-            this.labelControl5.Appearance.Options.UseFont = true;
-            this.labelControl5.Appearance.Options.UseForeColor = true;
-            this.labelControl5.Location = new System.Drawing.Point(162, 443);
-            this.labelControl5.Name = "labelControl5";
-            this.labelControl5.Size = new System.Drawing.Size(156, 18);
-            this.labelControl5.TabIndex = 3;
-            this.labelControl5.Text = "비행 데이터를 선택하세요.";
-            // 
-            // hyperlinkLabelControl2
-            // 
-            this.hyperlinkLabelControl2.Appearance.Font = new System.Drawing.Font("Tahoma", 8F);
-            this.hyperlinkLabelControl2.Appearance.Options.UseFont = true;
-            this.hyperlinkLabelControl2.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
-            this.hyperlinkLabelControl2.Location = new System.Drawing.Point(28, 469);
-            this.hyperlinkLabelControl2.Name = "hyperlinkLabelControl2";
-            this.hyperlinkLabelControl2.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
-            this.hyperlinkLabelControl2.Size = new System.Drawing.Size(74, 13);
-            this.hyperlinkLabelControl2.TabIndex = 6;
-            this.hyperlinkLabelControl2.Text = "Browse Files...";
-            // 
             // btnCreate
             // 
-            this.btnCreate.Location = new System.Drawing.Point(264, 497);
+            this.btnCreate.Location = new System.Drawing.Point(275, 309);
             this.btnCreate.Name = "btnCreate";
             this.btnCreate.Size = new System.Drawing.Size(75, 23);
             this.btnCreate.TabIndex = 7;
@@ -180,7 +131,7 @@
             // 
             // edtTag
             // 
-            this.edtTag.Location = new System.Drawing.Point(28, 309);
+            this.edtTag.Location = new System.Drawing.Point(28, 174);
             this.edtTag.Name = "edtTag";
             this.edtTag.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Plus)});
@@ -188,14 +139,6 @@
             this.edtTag.TabIndex = 4;
             this.edtTag.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.edtTag_ButtonClick);
             this.edtTag.KeyUp += new System.Windows.Forms.KeyEventHandler(this.edtTag_KeyUp);
-            // 
-            // panelFuseLage
-            // 
-            this.panelFuseLage.AutoScroll = true;
-            this.panelFuseLage.Location = new System.Drawing.Point(28, 175);
-            this.panelFuseLage.Name = "panelFuseLage";
-            this.panelFuseLage.Size = new System.Drawing.Size(558, 90);
-            this.panelFuseLage.TabIndex = 3;
             // 
             // textEdit1
             // 
@@ -219,7 +162,7 @@
             // panelTag
             // 
             this.panelTag.AutoScroll = true;
-            this.panelTag.Location = new System.Drawing.Point(29, 336);
+            this.panelTag.Location = new System.Drawing.Point(29, 201);
             this.panelTag.Name = "panelTag";
             this.panelTag.Size = new System.Drawing.Size(557, 90);
             this.panelTag.TabIndex = 5;
@@ -228,9 +171,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(603, 532);
+            this.ClientSize = new System.Drawing.Size(603, 343);
             this.Controls.Add(this.panelTag);
-            this.Controls.Add(this.panelFuseLage);
             this.Controls.Add(this.cboScenarioType);
             this.Controls.Add(this.textEdit1);
             this.Controls.Add(this.dateScenario);
@@ -238,11 +180,7 @@
             this.Controls.Add(this.edtScenarioName);
             this.Controls.Add(this.dropScenarioType);
             this.Controls.Add(this.btnCreate);
-            this.Controls.Add(this.hyperlinkLabelControl2);
-            this.Controls.Add(this.labelControl5);
-            this.Controls.Add(this.labelControl4);
             this.Controls.Add(this.labelControl3);
-            this.Controls.Add(this.labelControl2);
             this.Controls.Add(this.labelControl1);
             this.Controls.Add(this.checkEdit1);
             this.Controls.Add(this.buttonEdit1);
@@ -272,17 +210,12 @@
         private DevExpress.XtraEditors.ButtonEdit buttonEdit1;
         private DevExpress.XtraEditors.CheckEdit checkEdit1;
         private DevExpress.XtraEditors.LabelControl labelControl1;
-        private DevExpress.XtraEditors.LabelControl labelControl2;
         private DevExpress.XtraEditors.LabelControl labelControl3;
-        private DevExpress.XtraEditors.LabelControl labelControl4;
-        private DevExpress.XtraEditors.LabelControl labelControl5;
-        private DevExpress.XtraEditors.HyperlinkLabelControl hyperlinkLabelControl2;
         private DevExpress.XtraEditors.SimpleButton btnCreate;
         private DevExpress.XtraEditors.DropDownButton dropScenarioType;
         private DevExpress.XtraEditors.ButtonEdit edtScenarioName;
         private DevExpress.XtraEditors.DateEdit dateScenario;
         private DevExpress.XtraEditors.ButtonEdit edtTag;
-        private System.Windows.Forms.FlowLayoutPanel panelFuseLage;
         private DevExpress.XtraEditors.TextEdit textEdit1;
         private DevExpress.XtraEditors.ComboBoxEdit cboScenarioType;
         private System.Windows.Forms.FlowLayoutPanel panelTag;

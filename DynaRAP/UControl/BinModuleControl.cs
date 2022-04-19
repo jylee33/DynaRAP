@@ -24,7 +24,6 @@ namespace DynaRAP.UControl
         Series series1 = new Series();
         ChartArea myChartArea = new ChartArea("LineChartArea");
         DockPanel sbListPanel = null;
-        DockPanel binTablePanel = null;
 
         public BinModuleControl()
         {
@@ -87,21 +86,7 @@ namespace DynaRAP.UControl
         {
             MainForm mainForm = this.ParentForm as MainForm;
 
-            //우측에 panel 추가
-            if (sbListPanel == null)
-            {
-                sbListPanel = mainForm.DockManager1.AddPanel(DockingStyle.Right);
-                sbListPanel.Name = "panelShortBlock";
-                sbListPanel.Text = "ImportModuleScenarioName";
-                sbListPanel.Width = 240;
-                SelectSBControl ctrl = new SelectSBControl();
-                ctrl.Dock = DockStyle.Fill;
-                sbListPanel.Controls.Add(ctrl);
-            }
-            else
-            {
-                sbListPanel.Show();
-            }
+            mainForm.PanelBinSbList.Show();
 
         }
 
@@ -109,21 +94,7 @@ namespace DynaRAP.UControl
         {
             MainForm mainForm = this.ParentForm as MainForm;
 
-            //아래에 panel 추가
-            if (binTablePanel == null)
-            {
-                binTablePanel = mainForm.DockManager1.AddPanel(DockingStyle.Bottom);
-                binTablePanel.Name = "panelBinTable";
-                binTablePanel.Text = "BIN TABLE";
-                binTablePanel.Height = 240;
-                BinTableControl ctrl = new BinTableControl();
-                ctrl.Dock = DockStyle.Fill;
-                binTablePanel.Controls.Add(ctrl);
-            }
-            else
-            {
-                binTablePanel.Show();
-            }
+            mainForm.PanelBinTable.Show();
         }
     }
 

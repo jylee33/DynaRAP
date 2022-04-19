@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 
-namespace DynaRAP
+namespace DynaRAP.TEST
 {
     public partial class Form1 : Form
     {
@@ -439,6 +439,7 @@ namespace DynaRAP
 
 
         }
+
         private void Push_Data(Series series, DateTime dt, int data)
         {
             DataPoint dp = new DataPoint(); //데이타 기록하기 정도

@@ -7,13 +7,16 @@ using DevExpress.XtraTreeList.StyleFormatConditions;
 using DynaRAP.TEST;
 using DynaRAP.UControl;
 using IronPython.Hosting;
+using log4net.Config;
 using Microsoft.Scripting.Hosting;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,13 +26,7 @@ namespace DynaRAP
 {
     public partial class MainForm : DevExpress.XtraEditors.XtraForm
     {
-        public DevExpress.XtraBars.Docking.DockManager DockManager1
-        {
-            get
-            {
-                return this.dockManager1;
-            }
-        }
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         string defaultLayoutFile = "Default.xml";
         string defaultWorkspaceName = "Default";
@@ -43,41 +40,80 @@ namespace DynaRAP
         SBModuleControl sbModuleControl = null;
         BinModuleControl binModuleControl = null;
 
+        CsvTableControl csvTableControl = null;
+
+        public DevExpress.XtraBars.Docking.DockManager DockManager1
+        {
+            get
+            {
+                return this.dockManager1;
+            }
+        }
+       
+        public DockPanel PanelBinTable
+        {
+            get { return this.panelBinTable; }
+        }
+
+        public DockPanel PanelBinSbList
+        {
+            get { return this.panelBinSbList; }
+        }
+
+        public DockPanel PanelImportViewCsv
+        {
+            get { return this.panelImportViewCsv; }
+        }
+
+        public DockPanel PanelScenario
+        {
+            get { return this.panelScenario; }
+        }
+
+        public DockPanel PanelOther
+        {
+            get { return this.panelOther; }
+        }
+
+        public DockPanel PanelProperties
+        {
+            get { return this.panelProperties; }
+        }
+
+        public CsvTableControl CsvTableControl 
+        { 
+            get => csvTableControl;
+            set => csvTableControl = value; 
+        }
+        public StartScreenControl StartControl { get => startControl; set => startControl = value; }
+        public ImportModuleControl ImportModuleControl { get => importModuleControl; set => importModuleControl = value; }
+        public SBModuleControl SbModuleControl { get => sbModuleControl; set => sbModuleControl = value; }
+        public BinModuleControl BinModuleControl { get => binModuleControl; set => binModuleControl = value; }
 
         public MainForm()
         {
             InitializeComponent();
+
+            XmlConfigurator.Configure(new FileInfo("log4net.xml"));
+
             // Handling the QueryControl event that will populate all automatically generated Documents
             this.tabbedView1.QueryControl += tabbedView1_QueryControl;
+            this.tabbedView1.DocumentRemoved += TabbedView1_DocumentRemoved;
 
             LoadWorkspaces();
-        }
-
-        void LoadWorkspaces()
-        {
-            workspaceManager1.LoadWorkspace(defaultWorkspaceName, defaultLayoutFile);
-            workspaceManager1.LoadWorkspace(projectWorkspaceName, projectLayoutFile);
-        }
-
-        void tabbedView1_QueryControl(object sender, DevExpress.XtraBars.Docking2010.Views.QueryControlEventArgs e)
-        {
-            //if (e.Document == startScreenControlDocument)
-            //    e.Control = new DynaRAP.UControl.StartScreenControl();
-            //if (e.Document == projectListControlDocument)
-            //    e.Control = new DynaRAP.UControl.ProjectListControl();
-            //if (e.Document == userControl1Document)
-            //    e.Control = new DynaRAP.UserControl1();
-            //if (e.Document == userControl2Document)
-            //    e.Control = new DynaRAP.UserControl2();
-            if (e.Control == null)
-                e.Control = new System.Windows.Forms.Control();
         }
 
         private void MainForm_Load(object sender, EventArgs e)
         {
             InitializeWorkspace();
 
-            tabbedView1.DocumentRemoved += TabbedView1_DocumentRemoved;
+#if DEBUG
+#else
+            bar2.Visible = false;
+            Workspace.Visibility = DevExpress.XtraBars.BarItemVisibility.Never;
+            barSubItemTest.Visibility = DevExpress.XtraBars.BarItemVisibility.Never;
+            btnStart.Visibility = DevExpress.XtraBars.BarItemVisibility.Never;
+#endif
 
             if (startControl == null)
             {
@@ -91,6 +127,105 @@ namespace DynaRAP
                 tabbedView1.ActivateDocument(startControl);
             }
 
+            if (importModuleControl == null)
+            {
+                importModuleControl = new ImportModuleControl();
+                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(importModuleControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
+                doc.Caption = "Import Module";
+                tabbedView1.ActivateDocument(importModuleControl);
+            }
+            else
+            {
+                tabbedView1.ActivateDocument(importModuleControl);
+            }
+
+            if (sbModuleControl == null)
+            {
+                sbModuleControl = new SBModuleControl();
+                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(sbModuleControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
+                doc.Caption = "Short Block";
+                tabbedView1.ActivateDocument(sbModuleControl);
+            }
+            else
+            {
+                tabbedView1.ActivateDocument(sbModuleControl);
+            }
+
+            if (binModuleControl == null)
+            {
+                binModuleControl = new BinModuleControl();
+                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(binModuleControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
+                doc.Caption = "BIN 구성";
+                tabbedView1.ActivateDocument(binModuleControl);
+            }
+            else
+            {
+                tabbedView1.ActivateDocument(binModuleControl);
+            }
+
+            tabbedView1.ActivateDocument(startControl);
+            tabbedView1.RemoveDocument(importModuleControl);
+            tabbedView1.RemoveDocument(sbModuleControl);
+            tabbedView1.RemoveDocument(binModuleControl);
+
+            //if (panelBinTable == null)
+            //{
+            //    panelBinTable = dockManager1.AddPanel(DockingStyle.Bottom);
+            //}
+            panelBinTable.Name = "panelBinTable";
+            panelBinTable.Text = "BIN TABLE";
+            BinTableControl binTableCtrl = new BinTableControl();
+            binTableCtrl.Dock = DockStyle.Fill;
+            panelBinTable.Controls.Add(binTableCtrl);
+            panelBinTable.Hide();
+
+            panelBinSbList.Name = "panelBinSbList";
+            panelBinSbList.Text = "ImportModuleScenarioName";
+            BinSelectSBControl binSbListCtrl = new BinSelectSBControl();
+            binSbListCtrl.Dock = DockStyle.Fill;
+            panelBinSbList.Controls.Add(binSbListCtrl);
+            panelBinSbList.Hide();
+
+            panelImportViewCsv.Name = "panelImportViewCsv";
+            panelImportViewCsv.Text = "CSV TABLE";
+            csvTableControl = new CsvTableControl();
+            csvTableControl.Dock = DockStyle.Fill;
+            panelImportViewCsv.Controls.Add(csvTableControl);
+            panelImportViewCsv.Hide();
+
+            panelScenario.Hide();
+            panelOther.Hide();
+            panelProperties.Hide();
+        }
+
+        void LoadWorkspaces()
+        {
+            workspaceManager1.LoadWorkspace(defaultWorkspaceName, defaultLayoutFile);
+            workspaceManager1.LoadWorkspace(projectWorkspaceName, projectLayoutFile);
+        }
+
+        void tabbedView1_QueryControl(object sender, DevExpress.XtraBars.Docking2010.Views.QueryControlEventArgs e)
+        {
+            //if (e.Document == startScreenControlDocument)
+            //{
+            //    e.Control = startControl;
+            //}
+            //else if (e.Document == importModuleControlDocument)
+            //{
+            //    e.Control = importModuleControl;
+            //}
+            //else if (e.Document == sBModuleControlDocument)
+            //{
+            //    e.Control = sbModuleControl;
+            //}
+            //else if (e.Document == binModuleControlDocument)
+            //{
+            //    e.Control = binModuleControl;
+            //}
+            if (e.Control == null)
+            {
+                e.Control = new System.Windows.Forms.Control();
+            }
         }
 
         private void TabbedView1_DocumentRemoved(object sender, DevExpress.XtraBars.Docking2010.Views.DocumentEventArgs e)
@@ -111,6 +246,7 @@ namespace DynaRAP
             {
                 binModuleControl = null;
             }
+
         }
 
         private void InitializeWorkspace()
@@ -178,75 +314,6 @@ namespace DynaRAP
             form.Show();
         }
 
-        private void btnPanel_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            //DockPanel panel = this.panelContainer1.AddPanel();
-            //panel.Dock = DockingStyle.Fill;
-            //panel.Location = new Point(0, 0);
-            //panel.Name = "newPanel";
-            //panel.Text = "New Panel";
-
-            //DockPanel panel1 = dockManager1.AddPanel(DockingStyle.Bottom);
-            //panel1.Text = "Panel 1";
-            //// Add a new panel to panel1. This forms a split container that owns panel1 and panel2.
-            //DockPanel panel2 = panel1.AddPanel();
-            //panel2.Text = "Panel 2";
-            //// Transform the split container into a tab container.
-            //DockPanel container = panel1.ParentPanel;
-            //container.Tabbed = true;
-
-
-
-            //DockPanel panel = this.panelContainer2.AddPanel();
-            //panel.Dock = DockingStyle.Fill;
-            //panelContainer2.Tabbed = true;
-
-            //DockPanel container = panel.ParentPanel;
-            //if (container == null) return;
-            // Transform the split container to a tab container.
-            //container.Tabbed = true;
-
-            //if(panelBottom == null)
-            //{
-            //    panelBottom = dockManager1.AddPanel(DockingStyle.Bottom);
-            //    panelBottom.ClosedPanel += PanelBottom_ClosedPanel;
-            //}
-            //else
-            //{
-            //    DockPanel panel = panelBottom.AddPanel();
-            //    panel.ClosedPanel += Panel_ClosedPanel;
-            //    //DockPanel container = panel.ParentPanel;
-            //    //if (container == null)
-            //    //    return;
-            //    //container.Tabbed = true;
-            //}
-
-            //아래에 panel 추가
-            //DockPanel panel = panelContainer2.AddPanel();
-            //panel.Name = "panel";
-            //panel.Text = "addedPanel";
-            //panelContainer2.Tabbed = true;
-            //panelContainer2.ActiveChild = panel;
-
-            if (importModuleControl == null)
-            {
-                importModuleControl = new ImportModuleControl();
-                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(importModuleControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
-                doc.Caption = "Import Module";
-                tabbedView1.ActivateDocument(importModuleControl);
-            }
-            else
-            {
-                tabbedView1.ActivateDocument(importModuleControl);
-            }
-
-            if (startControl != null)
-            {
-                tabbedView1.RemoveDocument(startControl);
-            }
-
-        }
-
         private void PanelBottom_ClosedPanel(object sender, DockPanelEventArgs e)
         {
             //panelBottom.ClosedPanel -= PanelBottom_ClosedPanel;
@@ -280,9 +347,26 @@ namespace DynaRAP
             {
                 tabbedView1.ActivateDocument(startControl);
             }
+
         }
 
-        private void btnShortBlock_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        private void btnImportModule_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            if (importModuleControl == null)
+            {
+                importModuleControl = new ImportModuleControl();
+                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(importModuleControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
+                doc.Caption = "비행데이터 Import";
+                tabbedView1.ActivateDocument(importModuleControl);
+            }
+            else
+            {
+                tabbedView1.ActivateDocument(importModuleControl);
+            }
+
+        }
+
+        private void btnSBModule_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             if (sbModuleControl == null)
             {
@@ -295,14 +379,9 @@ namespace DynaRAP
             {
                 tabbedView1.ActivateDocument(sbModuleControl);
             }
-
-            if (startControl != null)
-            {
-                tabbedView1.RemoveDocument(startControl);
-            }
         }
 
-        private void btnBin_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        private void btnBinModule_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             if (binModuleControl == null)
             {
@@ -316,10 +395,35 @@ namespace DynaRAP
                 tabbedView1.ActivateDocument(binModuleControl);
             }
 
-            if (startControl != null)
-            {
-                tabbedView1.RemoveDocument(startControl);
-            }
+        }
+
+        private void btnDLLImport_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            //OpenFileDialog dlg = new OpenFileDialog();
+            //dlg.InitialDirectory = "C:\\";
+            //dlg.Filter = "Excel files (*.xls, *.xlsx)|*.xls; *.xlsx|Comma Separated Value files (CSV)|*.csv|모든 파일 (*.*)|*.*";
+
+            //if (dlg.ShowDialog() == DialogResult.OK)
+            //{
+            //    //dlg.FileName;
+            //}
+        }
+
+        private void btnImportAnalysis_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+
+        }
+
+        private void btnLPF_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            TestFilterForm form = new TestFilterForm();
+            form.Show();
+        }
+
+        private void btnWebTest_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            TestWebForm form = new TestWebForm();
+            form.Show();
         }
     }
 

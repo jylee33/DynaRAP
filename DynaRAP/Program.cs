@@ -17,10 +17,13 @@ namespace DynaRAP
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            //Application.Run(new TestForm());
 
+#if DEBUG
+            Application.Run(new TestWebForm());
+#else
             MainStarter main = new MainStarter();
             main.Run();
+#endif
         }
     }
 }

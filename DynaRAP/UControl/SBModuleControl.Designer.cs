@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea5 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SBModuleControl));
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.separatorControl1 = new DevExpress.XtraEditors.SeparatorControl();
@@ -61,9 +61,6 @@
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.labelControl19 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl20 = new DevExpress.XtraEditors.LabelControl();
-            this.labelControl18 = new DevExpress.XtraEditors.LabelControl();
-            this.labelControl13 = new DevExpress.XtraEditors.LabelControl();
-            this.labelControl32 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl33 = new DevExpress.XtraEditors.LabelControl();
             this.separatorControl2 = new DevExpress.XtraEditors.SeparatorControl();
             this.labelControl15 = new DevExpress.XtraEditors.LabelControl();
@@ -442,19 +439,13 @@
             // 
             // tableLayoutPanel2
             // 
-            this.tableLayoutPanel2.ColumnCount = 6;
+            this.tableLayoutPanel2.ColumnCount = 3;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 85F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 85F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 85F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 360F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 49F));
             this.tableLayoutPanel2.Controls.Add(this.labelControl19, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.labelControl20, 1, 0);
-            this.tableLayoutPanel2.Controls.Add(this.labelControl18, 2, 0);
-            this.tableLayoutPanel2.Controls.Add(this.labelControl13, 3, 0);
-            this.tableLayoutPanel2.Controls.Add(this.labelControl32, 4, 0);
-            this.tableLayoutPanel2.Controls.Add(this.labelControl33, 5, 0);
+            this.tableLayoutPanel2.Controls.Add(this.labelControl33, 2, 0);
             this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 453);
             this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
@@ -481,51 +472,18 @@
             this.labelControl20.Dock = System.Windows.Forms.DockStyle.Fill;
             this.labelControl20.Location = new System.Drawing.Point(103, 3);
             this.labelControl20.Name = "labelControl20";
-            this.labelControl20.Size = new System.Drawing.Size(94, 26);
+            this.labelControl20.Size = new System.Drawing.Size(354, 26);
             this.labelControl20.TabIndex = 1;
             this.labelControl20.Text = "파라미터 이름";
-            // 
-            // labelControl18
-            // 
-            this.labelControl18.Appearance.Options.UseTextOptions = true;
-            this.labelControl18.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
-            this.labelControl18.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelControl18.Location = new System.Drawing.Point(203, 3);
-            this.labelControl18.Name = "labelControl18";
-            this.labelControl18.Size = new System.Drawing.Size(79, 26);
-            this.labelControl18.TabIndex = 2;
-            this.labelControl18.Text = "MIN";
-            // 
-            // labelControl13
-            // 
-            this.labelControl13.Appearance.Options.UseTextOptions = true;
-            this.labelControl13.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
-            this.labelControl13.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelControl13.Location = new System.Drawing.Point(288, 3);
-            this.labelControl13.Name = "labelControl13";
-            this.labelControl13.Size = new System.Drawing.Size(79, 26);
-            this.labelControl13.TabIndex = 3;
-            this.labelControl13.Text = "MAX";
-            // 
-            // labelControl32
-            // 
-            this.labelControl32.Appearance.Options.UseTextOptions = true;
-            this.labelControl32.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
-            this.labelControl32.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelControl32.Location = new System.Drawing.Point(373, 3);
-            this.labelControl32.Name = "labelControl32";
-            this.labelControl32.Size = new System.Drawing.Size(79, 26);
-            this.labelControl32.TabIndex = 3;
-            this.labelControl32.Text = "AVG";
             // 
             // labelControl33
             // 
             this.labelControl33.Appearance.Options.UseTextOptions = true;
             this.labelControl33.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
             this.labelControl33.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelControl33.Location = new System.Drawing.Point(458, 3);
+            this.labelControl33.Location = new System.Drawing.Point(463, 3);
             this.labelControl33.Name = "labelControl33";
-            this.labelControl33.Size = new System.Drawing.Size(93, 26);
+            this.labelControl33.Size = new System.Drawing.Size(88, 26);
             this.labelControl33.TabIndex = 3;
             this.labelControl33.Text = "삭제";
             // 
@@ -558,8 +516,8 @@
             // 
             // chartPreview
             // 
-            chartArea1.Name = "ChartArea1";
-            this.chartPreview.ChartAreas.Add(chartArea1);
+            chartArea5.Name = "ChartArea1";
+            this.chartPreview.ChartAreas.Add(chartArea5);
             this.chartPreview.Dock = System.Windows.Forms.DockStyle.Fill;
             this.chartPreview.Location = new System.Drawing.Point(3, 538);
             this.chartPreview.Name = "chartPreview";
@@ -815,8 +773,6 @@
         private System.Windows.Forms.DataVisualization.Charting.Chart chartPreview;
         private DevExpress.Utils.ImageCollection imageCollection2;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
-        private DevExpress.XtraEditors.LabelControl labelControl13;
-        private DevExpress.XtraEditors.LabelControl labelControl18;
         private DevExpress.XtraEditors.LabelControl labelControl19;
         private DevExpress.XtraEditors.LabelControl labelControl20;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel6;
@@ -824,7 +780,6 @@
         private DevExpress.XtraEditors.LabelControl labelControl29;
         private DevExpress.XtraEditors.LabelControl labelControl30;
         private DevExpress.XtraEditors.LabelControl labelControl31;
-        private DevExpress.XtraEditors.LabelControl labelControl32;
         private DevExpress.XtraEditors.LabelControl labelControl33;
         private DevExpress.XtraEditors.SeparatorControl separatorControl3;
         private DevExpress.XtraEditors.SeparatorControl separatorControl2;
