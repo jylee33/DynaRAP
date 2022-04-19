@@ -35,213 +35,276 @@ insert into dynarap_user(uid, userType, username, password, provider, joinedAt, 
 values (10017546, 0, 'admin@dynarap', 'd19ed59ffded1fc1c664361fd7f89a9ce1ade657d5eba9e21470cac17f0706c3', 'neoulsoft',
         unix_timestamp() * 1000, 0, 'admin@dynarap', 0, '서비스관리자', '01046180526', unix_timestamp() * 1000, unix_timestamp() * 1000, '', 1) $$
 
-
-
--- 시나리오
-drop table if exists `dynarap_scenario` cascade $$
-
-create table `dynarap_scenario`
-(
-    `seq` bigint auto_increment not null,       -- 시나리오 일련번호
-    `scenarioName` varchar(128) not null,       -- 시나리오 이름
-    `scenarioType` varchar(32) not null,        -- 시나리오 타입 (import, parameter, basic, buffet, etc)
-    `createdAt` bigint default 0,               -- 시나리오 생성일자
-    `enabled` tinyint default 1,                -- 시나리오 활성화 여부
-    `scenarioGrade` tinyint default 99,         -- 시나리오 등급, 관리 목적, 낮을 수록 상위권한
-    `ownerUid` bigint default 0,                -- 시나리오 소유자
-    `flightSeq` bigint default 0,               -- 비행 기체 선택
-    `flightDate` bigint default 0,              -- 비행날짜
-    constraint pk_dynarap_scenraio primary key (`seq`)
-) $$
-
--- 시나리오 열람 가능자
-drop table if exists `dynarap_scenario_allowed` cascade $$
-
-create table `dynarap_scenario_allowed`
-(
-    `scenarioSeq` bigint not null,              -- 시나리오 일련번호
-    `allowedUid` bigint not null,               -- 사용자 일련번호
-    `allowedAt` bigint default 0,               -- 허용일자
-    constraint pk_dynarap_scenario_allowed primary key (`scenarioSeq`, `allowedUid`)
-) $$
-
--- 시나리오 열람 불가능자
-drop table if exists `dynarap_scenario_denied` cascade $$
-
-create table `dynarap_scenario_denied`
-(
-    `scenarioSeq` bigint not null,              -- 시나리오 일련번호
-    `deniedUid` bigint not null,                -- 사용자 일련번호
-    `deniedAt` bigint default 0,                -- 블럭일자
-    constraint pk_dynarap_scenario_allowed primary key (`scenarioSeq`, `deniedUid`)
-) $$
-
--- 태그
-drop table if exists `dynarap_tags` cascade $$
-
-create table `dynarap_tags`
-(
-    `seq` bigint auto_increment not null,       -- 태그 일련번호
-    `tagType` varchar(64) not null,             -- 태그 종류 (scenario, flight_data, buffet_sb, buffet_bin)
-    `tagName` varchar(32) not null,             -- 태그 이름
-    `tagRefSeq` bigint not null,                -- 태그 소유 항목 일련번호
-    `tagOrder` tinyint default 0,               -- 태그 순서
-    `taggedAt` bigint default 0,                -- 태깅 날짜
-    constraint pk_dynarap_tags primary key (`seq`)
-) $$
-
--- 프리셋
-drop table if exists `dynarap_preset` cascade $$
-
-create table `dynarap_preset`
-(
-    `seq` bigint auto_increment not null,       -- 프리셋 일련번호
-    `presetGroupSeq` bigint not null,           -- 프리셋 이력그룹 일련번호
-    `presetName` varchar(64) not null,          -- 프리셋 이름
-    `presetType` varchar(32) not null,          -- 프리셋 종류 (flight, parameter, etc)
-    `createdAt` bigint default 0,               -- 생성일자
-    `appliedAt` bigint default 0,               -- 적용일자
-    `appliedEndAt` bigint default 0,            -- 적용종료일자.
-    `creatorUid` bigint default 0,              -- 최초 작성자
-    `lastModifiedBy` bigint default 0,          -- 마지막 수정자
-    constraint pk_dynarap_preset primary key (`seq`)
-) $$
-
--- 프리셋 파라미터 타입의 경우
-drop table if exists `dynarap_preset_parameter` cascade $$
-
-create table `dynarap_preset_parameter`
-(
-    `seq` bigint auto_increment not null,       -- 파라미터 일련번호
-    `presetSeq` bigint not null,                -- 프리셋 일련번호
-    `presetGroupSeq` bigint not null,           -- 프리셋 이력그룹 일련번호
-    `paramName` varchar(64) not null,           -- 파라미터 이름
-    `paramType` varchar(32) not null,           -- 파라미터 타입 (flight, common, etc)
-    `paramDomainFrom` double default 0.0,       -- 파라미터 도메인 시작값 (임계최저)
-    `paramDomainTo` double default 0.0,         -- 파라미터 도메인 종료값 (임계최대)
-    `paramSpecified` double default 0.0,        -- 파라미터 지정 고정 값
-    `paramUnit` varchar(32),                    -- 파라미터 수치의 단위
-    `definedAt` bigint default 0,               -- 생성일자
-    constraint pk_dynarap_preset_parameter primary key (`seq`)
-) $$
-
--- 프리셋 파라미터 타입의 경우
-drop table if exists `dynarap_parameter` cascade $$
-
-create table `dynarap_parameter`
-(
-    `seq` bigint auto_increment not null,       -- 파라미터 일련번호
-    `paramName` varchar(64) not null,           -- 파라미터 이름
-    `paramGroupName` varchar(64) not null,      -- 파라미터 그룹 이름 (MATH, AOS, Q, 등)
-    `paramType` varchar(32) not null,           -- 파라미터 타입 (flight, common, etc)
-    `paramDomainFrom` double default 0.0,       -- 파라미터 도메인 시작값 (임계최저)
-    `paramDomainTo` double default 0.0,         -- 파라미터 도메인 종료값 (임계최대)
-    `paramSpecified` double default 0.0,        -- 파라미터 지정 고정 값
-    `paramUnit` varchar(32),                    -- 파라미터 수치의 단위
-    `definedAt` bigint default 0,               -- 생성일자
-    constraint pk_dynarap_parameter primary key (`seq`)
-) $$
-
--- 비행 개체 정의
+-- 비행기체 관리
 drop table if exists `dynarap_flight` cascade $$
 
 create table `dynarap_flight`
 (
-    `seq` bigint auto_increment not null,       -- 비행기체 일련번호
-    `flightName` varchar(128) not null,         -- 기체 이름
-    `flightType` varchar(32) not null,          -- 기체 종류
-    `flightNo` varchar(32),                     -- 기체 번호
-    `flightDesc` varchar(1024),                 -- 기체 설명
-    `registeredAt` bigint default 0,            -- 등록일자
-    `registerUid` bigint default 0,             -- 등록자
-    -- 기타 flight 정보 추가 입력
+    `seq` bigint auto_increment not null            comment '일련번호',
+    `flightName` varchar(64) not null               comment '비행기체 이름',
+    `flightType` varchar(64)                        comment '비행기체 종류',
+    `createdAt` bigint default 0                    comment '제조일',
+    `registeredAt` bigint default 0                 comment '등록일',
+    `registerUid` bigint default 0                  comment '등록자',
+    `lastFlightAt` bigint default 0                 comment '마지막 비행일시',
     constraint pk_dynarap_flight primary key (`seq`)
 ) $$
 
--- 비행 데이터 raw table 정보
-drop table if exists `dynarap_flight_file` cascade $$
 
-create table `dynarap_flight_file`
+-- 파라미터 관련 먼저 구현
+drop table if exists `dynarap_param` cascade $$
+
+create table `dynarap_param`
 (
-    `seq` bigint auto_increment not null,       -- 데이터 일련번호
-    `scenarioSeq` bigint not null,              -- 시나리오 일련번호
-    `flightSeq` bigint not null,                -- 비행기체 일련번호
-    `flightDate` bigint default 0,              -- 비행기체 비행날짜
-    `fileType` varchar(32) null,                -- 파일 타입 (dll, zaero, test, csv, inline)
-    `fileName` varchar(256) null,               -- 파일 이름
-    `fileExt` varchar(64) null,                 -- 파일 확장자
-    `fileDesc` varchar(1024) null,              -- 파일 설명
-    `fileSize` bigint default 0,                -- 파일 크기
-    `fileRecord` bigint default 0,              -- 파일의 레코드 수
-    `fileRefDate` bigint default 0,             -- 데이터 시작 날짜 값
-    `uploadedAt` bigint default 0,              -- 올린날짜
-    `uploaderUid` bigint default 0,             -- 올린사람 일련번호
-    `presetGroupSeq` bigint default 0,          -- 프리셋 이력 그룹 일련번호
-    `presetSeq` bigint default 0,               -- 프리셋 일련번호
-    constraint pk_dynarap_flight_file primary key (`seq`)
+    `seq` bigint auto_increment not null            comment '일련번호',
+    `paramPack` bigint default 0                    comment '이력일련번호',
+    `paramGroupSeq` bigint default 0                comment '파라미터 그룹',
+    `paramKey` varchar(64) not null                 comment '파라미터 고유키',
+    `paramSpec` varchar(32)                         comment '파라미터 특성',
+    `adamsKey` varchar(64)                          comment 'ADAMS 고유키',
+    `zaeroKey` varchar(64)                          comment 'ZAERO 고유키',
+    `grtKey` varchar(64)                            comment 'GRP 고유키',
+    `fltpKey` varchar(64)                           comment 'FLTP 고유키',
+    `fltsKey` varchar(64)                           comment 'FLTS 고유키',
+    `partInfo` varchar(32)                          comment '파트정보',
+    `partInfoSub` varchar(32)                       comment '파트 부가정보',
+    `lrpX` double default 0.0                       comment 'LRP X',
+    `lrpY` double default 0.0                       comment 'LRP Y',
+    `lrpZ` double default 0.0                       comment 'LRP Z',
+    `paramUnit` varchar(32)                         comment '파라미터 단위',
+    `domainMin` double default 0.0                  comment '파라미터 범위 최저값',
+    `domainMax` double default 0.0                  comment '파라미터 범위 최대값',
+    `specified` double default 0.0                  comment '파라미터 지정 값',
+    `paramVal` varchar(1024)                        comment '파라미터 지정 값 (숫자외)',
+    `registerUid` bigint default 0                  comment '등록자',
+    `appliedAt` bigint default 0                    comment '정보 적용일자',
+    `appliedEndAt` bigint default 0                 comment '정보 만료일자',
+    constraint pk_dynarap_param primary key (`seq`)
 ) $$
 
--- 비행 데이터 raw table
-drop table if exists `dynarap_flight_raw` cascade $$
 
-create table `dynarap_flight_raw`
+-- 파라미터 그룹 정보 (마하, Q, AOS 등등)
+drop table if exists `dynarap_param_group` cascade $$
+
+create table `dynarap_param_group`
 (
-    `seq` bigint auto_increment not null,       -- 데이터 일련번호
-    `scenarioSeq` bigint not null,              -- 시나리오 일련번호
-    `flightFileSeq` bigint default 0,           -- 기준 파일 정보
-    `presetGroupSeq` bigint not null,           -- 데이터 프리셋 이력그룹 일련번호
-    `presetSeq` bigint not null,                -- 데이터 프리셋 일련번호
-    `paramSeq` bigint not null,                 -- 파라미터 메타 데이터 일련번호
-    `timeOffset` bigint default 0,              -- 데이터의 시간 offset (row 데이터는 동일한 시간을 가짐, 파일의 시작 시간에서의 offset 처리)
-    `timestamp` bigint default 0,               -- 절대 기준 시간으로 변환 값 (계산처리)
-    `paramValue` double default 0.0,            -- 파라미터 실제 값. (모든 데이터는 더블값인가?)
-    constraint pk_dynarap_flight_raw primary key (`seq`)
+    `seq` bigint auto_increment not null            comment '일련번호',
+    `groupName` varchar(32) not null                comment '파라미터 그룹 이름',
+    `groupType` varchar(32)                         comment '파라미터 그룹 타입',
+    `registerUid` bigint default 0                  comment '등록자',
+    `createdAt` bigint default 0                    comment '생성일자',
+    constraint pk_dynarap_param_group primary key (`seq`)
 ) $$
 
--- 비행 데이터 raw table (VIEW)
--- TODO : 비행 데이터 view 를 만들거나 redis에 비행 데이터 raw 테이블을 올림.
--- {"timeOffset": 0, "rows": [ {"<sensorName>": <sensorValue>, ... } ]}
--- hashOps.put("dynarap.raw", "<data_row_seq>", "[{"<sensorName>":<sensorValue>, ...}]");
--- zsetOps.rangeByScore("z.dynarap.raw", "<data_row_seq>", <timestamp score>);
 
--- 비행 데이터 분할 저장.
-drop table if exists `dynarap_flight_part` cascade $$
+-- 프리셋 정보
+drop table if exists `dynarap_preset` cascade $$
 
-create table `dynarap_flight_part`
+create table `dynarap_preset`
 (
-    `seq` bigint auto_increment not null,       -- 비행데이터 분할 일련번호
-    `scenarioSeq` bigint not null,              -- 시나리오 일련번호
-    `flightFileSeq` bigint default 0,           -- 기준 파일 정보
-    `partName` varchar(128) not null,           -- 비행 분할 이름
-    `partStartAt` bigint default 0,             -- 비행 데이터 분할 시작시간 (offset)
-    `partEndAt` bigint default 0,               -- 비행 데이터 분할 종료시간 (offset)
-    `createdAt` bigint default 0,               -- 분할 저장 일저
-    constraint pk_dynarap_flight_part primary key (`seq`)
+    `seq` bigint auto_increment not null            comment '일련번호',
+    `presetPack` bigint default 0                   comment '프리셋 관리번호',
+    `presetName` varchar(64) not null               comment '프리셋 이름',
+    `presetPackFrom` bigint default 0               comment '프리셋 구성 복사 원본',
+    `createdAt` bigint default 0                    comment '프리셋 생상일자',
+    `registerUid` bigint default 0                  comment '등록자',
+    `appliedAt` bigint default 0                    comment '프리셋 적용일자',
+    `appliedEndAt` bigint default 0                 comment '프리셋 만료일자',
+    constraint pk_dynarap_preset primary key (`seq`)
 ) $$
 
--- 비행 데이터 raw table
-drop table if exists `dynarap_flight_part_raw` cascade $$
 
-create table `dynarap_flight_part_raw`
+-- 프리셋 구성 파라미터 정보
+drop table if exists `dynarap_preset_param` cascade $$
+
+create table `dynarap_preset_param`
 (
-    `seq` bigint auto_increment not null,       -- 데이터 일련번호
-    `scenarioSeq` bigint not null,              -- 시나리오 일련번호
-    `flightFileSeq` bigint default 0,           -- 기준 파일 정보
-    `partSeq` bigint default 0,                 -- 비행 데이터 분할 일련번호
-    `presetGroupSeq` bigint not null,           -- 데이터 프리셋 이력그룹 일련번호
-    `presetSeq` bigint not null,                -- 데이터 프리셋 일련번호
-    `paramSeq` bigint not null,                 -- 파라미터 메타 데이터 일련번호
-    `timeOffset` bigint default 0,              -- 데이터의 시간 offset (row 데이터는 동일한 시간을 가짐, 파일의 시작 시간에서의 offset 처리)
-    `timestamp` bigint default 0,               -- 절대 기준 시간으로 변환 값 (계산처리)
-    `paramValue` double default 0.0,            -- 파라미터 실제 값. (모든 데이터는 더블값인가?)
-    constraint pk_dynarap_flight_part_raw primary key (`seq`)
+    `seq` bigint auto_increment not null            comment '일련번호',
+    `presetPack` bigint default 0                   comment '프리셋 관리번호',
+    `presetSeq` bigint default 0                    comment '프리셋 일련번호 (구성당시)',
+    `paramPack` bigint default 0                    comment '파라미터 관리번호',
+    `paramSeq` bigint default 0                     comment '파라미터 일련번호 (구성당시)',
+    constraint pk_dynarap_preset_param primary key (`seq`)
 ) $$
 
--- 비행 데이터 part raw table (VIEW)
--- TODO : 비행 분할 데이터 view 를 만들거나 redis에 비행 분할 데이터 raw 테이블을 올림.
--- {"timeOffset": 0, "rows": [ {"<sensorName>": <sensorValue>, ... } ]}
--- hashOps.put("dynarap.raw.part<partSeq>", "<data_row_seq>", "[{"<sensorName>":<sensorValue>, ...}]");
--- zsetOps.rangeByScore("z.dynarap.raw.part<partSeq>", "<data_row_seq>", <timestamp score>);
+
+-- 관련 데이터 업로드 -> 이후 파일 정보로 raw 데이터 구성 후 새로 잘라낼 수 있음
+drop table if exists `dynarap_raw_upload` cascade $$
+
+create table `dynarap_raw_upload`
+(
+    `seq` bigint auto_increment not null            comment '일련번호',
+    `uploadName` varchar(128) not null              comment '데이터 이름',
+    `storePath` varchar(512) not null               comment '저장 경로 (서버상 파일 위치)',
+    `fileSize` bigint default 0                     comment '파일용량',
+    `flightSeq` bigint default 0                    comment '관련 기체, 없으면 0',
+    `presetPack` bigint default 0                   comment '프리셋 관리번호',
+    `presetSeq` bigint default 0                    comment '프리셋 일련번호',
+    `uploadedAt` bigint default 0                   comment '업로드 일시',
+    `flightAt` bigint default 0                     comment '비행시간 (참고용)',
+    `registerUid` bigint default 0                  comment '등록자',
+    constraint pk_dynarap_raw_upload primary key (`seq`)
+) $$
+
+
+-- dll 데이터 수기 입력
+drop table if exists `dynarap_dll` cascade $$
+
+create table `dynarap_dll`
+(
+    `seq` bigint auto_increment not null            comment '일련번호',
+    `dataSetCode` varchar(32) not null              comment '데이터 코드',
+    `dataSetName` varchar(64) not null              comment '데이터 이름',
+    `dataVersion` varchar(16)                       comment '데이터 버전',
+    `registerUid` bigint default 0                  comment '등록자',
+    `createdAt` bigint default 0                    comment '생성일자',
+    constraint pk_dynarap_dll primary key (`seq`)
+) $$
+
+-- dll parameter set
+drop table if exists `dynarap_dll_param` cascade $$
+
+create table `dynarap_dll_param`
+(
+    `seq` bigint auto_increment not null            comment '일련번호',
+    `dllSeq` bigint not null                        comment '데이터 셋 일련번호',
+    `paramName` varchar(64) not null                comment '파라미터 이름',
+    `paramType` varchar(32)                         comment '파라미터 타입',
+    `paramNo` smallint default 0                    comment '파라미터 순서',
+    `registerUid` bigint default 0                  comment '등록자',
+    constraint pk_dynarap_dll_param primary key (`seq`)
+) $$
+
+-- dll parameter table
+drop table if exists `dynarap_dll_raw` cascade $$
+
+create table `dynarap_dll_raw`
+(
+    `seq` bigint auto_increment not null            comment '일련번호',
+    `dllSeq` bigint not null                        comment '데이터 셋 일련번호',
+    `paramSeq` bigint not null                      comment '파라미터 일련번호',
+    `paramVal` double default 0.0                   comment '파라미터 값 (숫자)',
+    `paramValStr` varchar(128) default ''           comment '파라미터 값 (문자)',
+    constraint pk_dynarap_dll_raw primary key (`seq`)
+) $$
+
+
+
+-- import module (dll 은 수동 입력, zaero, adams, 시험비행 데이터 있음)
+-- raw 데이터는 입력후 삭제
+drop table if exists `dynarap_raw` cascade $$
+
+create table `dynarap_raw`
+(
+    `seq` bigint auto_increment not null            comment '일련번호',
+    `presetPack` bigint default 0                   comment '프리셋 관리번호',
+    `presetSeq` bigint default 0                    comment '프리셋 일련번호',
+    `presetParamSeq` bigint default 0               comment '프리셋 구성 파라미터 일련번호',
+    `paramVal` double default 0.0                   comment '파라미터 값 (숫자)',
+    `paramValStr` varchar(128) default ''           comment '파라미터 값 (문자)',
+    constraint pk_dynarap_raw primary key (`seq`)
+) $$
+
+-- 유의미한 분할 데이터를 저장하고 해당 저장 데이터에 대해서 기본 단위로 사용함.
+drop table if exists `dynarap_part` cascade $$
+
+create table `dynarap_part`
+(
+    `seq` bigint auto_increment not null            comment '일련번호',
+    `partName` varchar(128) not null                comment '부분 이름',
+    `presetPack` bigint default 0                   comment '프리셋 관리번호',
+    `presetSeq` bigint default 0                    comment '프리셋 일련번호',
+    `julianStartAt` varchar(32) not null            comment '절대시간값(시작)',
+    `julianEndAt` varchar(32) not null              comment '절대시간값(종료)',
+    `offsetStartAt` double default 0.0              comment '상대시간값(시작)',
+    `offsetEndAt` double default 0.0                comment '상대시간값(종료)',
+    `registerUid` bigint default 0                  comment '등록자',
+    constraint pk_dynarap_part primary key (`seq`)
+) $$
+
+
+--  분할 구간 raw 데이터
+drop table if exists `dynarap_part_raw` cascade $$
+
+create table `dynarap_part_raw`
+(
+    `seq` bigint auto_increment not null            comment '일련번호',
+    `partSeq` bigint not null                       comment '부분 일련번호',
+    `presetParamSeq` bigint default 0               comment '프리셋 파라미터 일련번호',
+    `paramVal` double default 0.0                   comment '파라미터 값 (숫자)',
+    `paramValStr` varchar(128) default ''           comment '파라미터 값 (문자)',
+    `julianTimeAt` varchar(32) not null             comment '절대시간값',
+    `offsetTimeAt` double default 0.0               comment '상대시간값',
+    `lpf` double default 0.0                        comment 'LPF',
+    `hpf` double default 0.0                        comment 'HPF',
+    constraint pk_dynarap_part_raw primary key (`seq`)
+) $$
+
+
+
+-- 숏블록 기본
+drop table if exists `dynarap_sblock_meta` cascade $$
+
+create table `dynarap_sblock_meta`
+(
+    `seq` bigint auto_increment not null            comment '일련번호',
+    `partSeq` bigint not null                       comment '부분 일련번호',
+    `overlap` float default 0.0                     comment '겹침구간 (%)',
+    `sliceTime` float default 0.0                   comment '분할시간',
+    `registerUid` bigint default 0                  comment '등록자',
+    `createdAt` bigint default 0                    comment '생성일시',
+    constraint pk_dynarap_sblock_meta primary key (`seq`)
+) $$
+
+
+-- 숏블록 데이터 분할 구간
+drop table if exists `dynarap_sblock` cascade $$
+
+create table `dynarap_sblock`
+(
+    `seq` bigint auto_increment not null            comment '일련번호',
+    `blockMetaSeq` bigint default 0                 comment '메타 일련번호',
+    `partSeq` bigint default 0                      comment '부분 일련번호',
+    `julianStartAt` varchar(32) not null            comment '절대시간값(시작)',
+    `julianEndAt` varchar(32) not null              comment '절대시간값(종료)',
+    `offsetStartAt` double default 0.0              comment '상대시간값(시작)',
+    `offsetEndAt` double default 0.0                comment '상새시간값(종료)',
+    `blockNo` int default 0                         comment '블록 번호',
+    `registerUid` bigint default 0                  comment '등록자',
+    constraint pk_dynarap_sblock primary key (`seq`)
+) $$
+
+
+-- 숏블록 데이터
+drop table if exists `dynarap_sblock_raw` cascade $$
+
+create table `dynarap_sblock_raw`
+(
+    `seq` bigint auto_increment not null            comment '일련번호',
+    `blockSeq` bigint not null                      comment '숏블록 일련번호',
+    `partSeq` bigint not null                       comment '부분 일련번호',
+    `presetParamSeq` bigint default 0               comment '프리셋 파라미터 일련번호',
+    `paramVal` double default 0.0                   comment '파라미터 값 (숫자)',
+    `paramValStr` varchar(128) default ''           comment '파라미터 값 (문자)',
+    `julianTimeAt` varchar(32) not null             comment '절대시간값',
+    `offsetTimeAt` double default 0.0               comment '상대시간값',
+    `lpf` double default 0.0                        comment 'LPF',
+    `hpf` double default 0.0                        comment 'HPF',
+    constraint pk_dynarap_sblock_raw primary key (`seq`)
+) $$
+
+
+-- 숏블록 파라미터 처리
+drop table if exists `dynarap_sblock_param` cascade $$
+
+create table `dynarap_sblock_param`
+(
+    `seq` bigint auto_increment not null            comment '일련번호',
+    `blockSeq` bigint not null                      comment '숏블록 일련번호',
+    `paramPack` bigint default 0                    comment '설정 파라미터 관리 일련번호',
+    `paramSeq` bigint default 0                     comment '설정 파라미터 일련번호',
+    constraint pk_dynarap_sblock_param primary key (`seq`)
+) $$
 
 
 
