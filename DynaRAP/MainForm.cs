@@ -291,6 +291,13 @@ namespace DynaRAP
         }
         private void btnPythonTest_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
+            //pythonTest1();
+            pythonTest2();
+            
+        }
+
+        private void pythonTest1()
+        {
             ScriptEngine engine = Python.CreateEngine();
             ScriptSource source = engine.CreateScriptSourceFromFile("Python/Calculator.py");
             ScriptScope scope = engine.CreateScope();
@@ -300,6 +307,23 @@ namespace DynaRAP
             dynamic calc = Calculator();
             int result = calc.add(4, 5);
             Console.WriteLine("result = {0}", result);
+        }
+
+        private void pythonTest2()
+        {
+            ScriptEngine engine = Python.CreateEngine();
+            ScriptScope scope = engine.CreateScope();
+            var paths = engine.GetSearchPaths();
+
+            paths.Add(@"C:\Python37");
+            paths.Add(@"C:\Python37\DLLs");
+            paths.Add(@"C:\Python37\Lib");
+            paths.Add(@"C:\Python37\Lib\site-packages");
+
+            engine.SetSearchPaths(paths);
+
+            ScriptSource source = engine.CreateScriptSourceFromFile("Python/filter.py");
+            source.Execute(scope);
         }
 
         private void btnChartTest_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)

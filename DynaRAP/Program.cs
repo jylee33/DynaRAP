@@ -19,7 +19,7 @@ namespace DynaRAP
             Application.SetCompatibleTextRenderingDefault(false);
 
 #if DEBUG
-            Application.Run(new TestWebForm());
+            Application.Run(new MainForm());
 #else
             MainStarter main = new MainStarter();
             main.Run();
