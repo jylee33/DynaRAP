@@ -42,9 +42,9 @@ namespace DynaRAP
             this.toolTreeTest = new DevExpress.XtraBars.BarButtonItem();
             this.btnLogin = new DevExpress.XtraBars.BarButtonItem();
             this.btnChartTest = new DevExpress.XtraBars.BarButtonItem();
+            this.btnWebTest = new DevExpress.XtraBars.BarButtonItem();
             this.barSubItemTest2 = new DevExpress.XtraBars.BarSubItem();
             this.btnLPF = new DevExpress.XtraBars.BarButtonItem();
-            this.btnWebTest = new DevExpress.XtraBars.BarButtonItem();
             this.btnStart = new DevExpress.XtraBars.BarButtonItem();
             this.barSubItem2 = new DevExpress.XtraBars.BarSubItem();
             this.btnImportDLL = new DevExpress.XtraBars.BarButtonItem();
@@ -202,6 +202,13 @@ namespace DynaRAP
             this.btnChartTest.Name = "btnChartTest";
             this.btnChartTest.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnChartTest_ItemClick);
             // 
+            // btnWebTest
+            // 
+            resources.ApplyResources(this.btnWebTest, "btnWebTest");
+            this.btnWebTest.Id = 26;
+            this.btnWebTest.Name = "btnWebTest";
+            this.btnWebTest.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnWebTest_ItemClick);
+            // 
             // barSubItemTest2
             // 
             resources.ApplyResources(this.barSubItemTest2, "barSubItemTest2");
@@ -216,13 +223,6 @@ namespace DynaRAP
             this.btnLPF.Id = 24;
             this.btnLPF.Name = "btnLPF";
             this.btnLPF.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnLPF_ItemClick);
-            // 
-            // btnWebTest
-            // 
-            resources.ApplyResources(this.btnWebTest, "btnWebTest");
-            this.btnWebTest.Id = 26;
-            this.btnWebTest.Name = "btnWebTest";
-            this.btnWebTest.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnWebTest_ItemClick);
             // 
             // btnStart
             // 
@@ -277,18 +277,21 @@ namespace DynaRAP
             resources.ApplyResources(this.btnMgmtParameter, "btnMgmtParameter");
             this.btnMgmtParameter.Id = 20;
             this.btnMgmtParameter.Name = "btnMgmtParameter";
+            this.btnMgmtParameter.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnMgmtParameter_ItemClick);
             // 
             // btnMgmtPreset
             // 
             resources.ApplyResources(this.btnMgmtPreset, "btnMgmtPreset");
             this.btnMgmtPreset.Id = 21;
             this.btnMgmtPreset.Name = "btnMgmtPreset";
+            this.btnMgmtPreset.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnMgmtPreset_ItemClick);
             // 
             // btnMgmtPresetGroup
             // 
             resources.ApplyResources(this.btnMgmtPresetGroup, "btnMgmtPresetGroup");
             this.btnMgmtPresetGroup.Id = 22;
             this.btnMgmtPresetGroup.Name = "btnMgmtPresetGroup";
+            this.btnMgmtPresetGroup.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnMgmtPresetGroup_ItemClick);
             // 
             // barSubItem1
             // 

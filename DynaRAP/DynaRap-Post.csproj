@@ -268,6 +268,24 @@
     <Compile Include="UControl\BinModuleControl.Designer.cs">
       <DependentUpon>BinModuleControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="UControl\MgmtParameterControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\MgmtParameterControl.Designer.cs">
+      <DependentUpon>MgmtParameterControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\MgmtPresetControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\MgmtPresetControl.Designer.cs">
+      <DependentUpon>MgmtPresetControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\MgmtPresetGroupControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\MgmtPresetGroupControl.Designer.cs">
+      <DependentUpon>MgmtPresetGroupControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="UControl\SBParamControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -352,6 +370,7 @@
     <Compile Include="UserControl2.Designer.cs">
       <DependentUpon>UserControl2.cs</DependentUpon>
     </Compile>
+    <Compile Include="UTIL\Prompt.cs" />
     <Compile Include="UTIL\Utils.cs" />
     <Compile Include="XtraForm1.cs">
       <SubType>Form</SubType>
@@ -449,6 +468,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\CsvTableControl.resx">
       <DependentUpon>CsvTableControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\MgmtParameterControl.resx">
+      <DependentUpon>MgmtParameterControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\MgmtPresetControl.resx">
+      <DependentUpon>MgmtPresetControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\MgmtPresetGroupControl.resx">
+      <DependentUpon>MgmtPresetGroupControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\SBParamControl.resx">
       <DependentUpon>SBParamControl.cs</DependentUpon>

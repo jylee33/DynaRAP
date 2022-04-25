@@ -39,6 +39,9 @@ namespace DynaRAP
         ImportModuleControl importModuleControl = null;
         SBModuleControl sbModuleControl = null;
         BinModuleControl binModuleControl = null;
+        MgmtParameterControl mgmtParameterControl = null;
+        MgmtPresetControl mgmtPresetControl = null;
+        MgmtPresetGroupControl mgmtPresetGroupControl = null;
 
         CsvTableControl csvTableControl = null;
 
@@ -89,6 +92,9 @@ namespace DynaRAP
         public ImportModuleControl ImportModuleControl { get => importModuleControl; set => importModuleControl = value; }
         public SBModuleControl SbModuleControl { get => sbModuleControl; set => sbModuleControl = value; }
         public BinModuleControl BinModuleControl { get => binModuleControl; set => binModuleControl = value; }
+        public MgmtParameterControl MgmtParameterControl { get => mgmtParameterControl; set => mgmtParameterControl = value; }
+        public MgmtPresetControl MgmtPresetControl { get => mgmtPresetControl; set => mgmtPresetControl = value; }
+        public MgmtPresetGroupControl MgmtPresetGroupControl { get => mgmtPresetGroupControl; set => mgmtPresetGroupControl = value; }
 
         public MainForm()
         {
@@ -163,10 +169,49 @@ namespace DynaRAP
                 tabbedView1.ActivateDocument(binModuleControl);
             }
 
+            if (mgmtParameterControl == null)
+            {
+                mgmtParameterControl = new MgmtParameterControl();
+                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(mgmtParameterControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
+                doc.Caption = "파라미터 관리";
+                tabbedView1.ActivateDocument(mgmtParameterControl);
+            }
+            else
+            {
+                tabbedView1.ActivateDocument(mgmtParameterControl);
+            }
+
+            if (mgmtPresetControl == null)
+            {
+                mgmtPresetControl = new MgmtPresetControl();
+                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(mgmtPresetControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
+                doc.Caption = "프리셋 관리";
+                tabbedView1.ActivateDocument(mgmtPresetControl);
+            }
+            else
+            {
+                tabbedView1.ActivateDocument(mgmtPresetControl);
+            }
+
+            if (mgmtPresetGroupControl == null)
+            {
+                mgmtPresetGroupControl = new MgmtPresetGroupControl();
+                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(mgmtPresetGroupControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
+                doc.Caption = "프리셋그룹 관리";
+                tabbedView1.ActivateDocument(mgmtPresetGroupControl);
+            }
+            else
+            {
+                tabbedView1.ActivateDocument(mgmtPresetGroupControl);
+            }
+
             tabbedView1.ActivateDocument(startControl);
             tabbedView1.RemoveDocument(importModuleControl);
             tabbedView1.RemoveDocument(sbModuleControl);
             tabbedView1.RemoveDocument(binModuleControl);
+            tabbedView1.RemoveDocument(mgmtParameterControl);
+            tabbedView1.RemoveDocument(mgmtPresetControl);
+            tabbedView1.RemoveDocument(mgmtPresetGroupControl);
 
             //if (panelBinTable == null)
             //{
@@ -222,6 +267,18 @@ namespace DynaRAP
             //{
             //    e.Control = binModuleControl;
             //}
+            //else if (e.Document == mgmtParameterControl)
+            //{
+            //    e.Control = mgmtParameterControl;
+            //}
+            //else if (e.Document == mgmtPresetControl)
+            //{
+            //    e.Control = mgmtPresetControl;
+            //}
+            //else if (e.Document == mgmtPresetGroupControl)
+            //{
+            //    e.Control = mgmtPresetGroupControl;
+            //}
             if (e.Control == null)
             {
                 e.Control = new System.Windows.Forms.Control();
@@ -245,6 +302,18 @@ namespace DynaRAP
             else if (e.Document.Control is BinModuleControl)
             {
                 binModuleControl = null;
+            }
+            else if (e.Document.Control is MgmtParameterControl)
+            {
+                mgmtParameterControl = null;
+            }
+            else if (e.Document.Control is MgmtPresetControl)
+            {
+                mgmtPresetControl = null;
+            }
+            else if (e.Document.Control is MgmtPresetGroupControl)
+            {
+                mgmtPresetGroupControl = null;
             }
 
         }
@@ -448,6 +517,51 @@ namespace DynaRAP
         {
             TestWebForm form = new TestWebForm();
             form.Show();
+        }
+
+        private void btnMgmtParameter_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            if (mgmtParameterControl == null)
+            {
+                mgmtParameterControl = new MgmtParameterControl();
+                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(mgmtParameterControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
+                doc.Caption = "파라미터 관리";
+                tabbedView1.ActivateDocument(mgmtParameterControl);
+            }
+            else
+            {
+                tabbedView1.ActivateDocument(mgmtParameterControl);
+            }
+        }
+
+        private void btnMgmtPreset_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            if (mgmtPresetControl == null)
+            {
+                mgmtPresetControl = new MgmtPresetControl();
+                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(mgmtPresetControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
+                doc.Caption = "프리셋 관리";
+                tabbedView1.ActivateDocument(mgmtPresetControl);
+            }
+            else
+            {
+                tabbedView1.ActivateDocument(mgmtPresetControl);
+            }
+        }
+
+        private void btnMgmtPresetGroup_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            if (mgmtPresetGroupControl == null)
+            {
+                mgmtPresetGroupControl = new MgmtPresetGroupControl();
+                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(mgmtPresetGroupControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
+                doc.Caption = "프리셋그룹 관리";
+                tabbedView1.ActivateDocument(mgmtPresetGroupControl);
+            }
+            else
+            {
+                tabbedView1.ActivateDocument(mgmtPresetGroupControl);
+            }
         }
     }
 

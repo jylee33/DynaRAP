@@ -663,6 +663,12 @@
   <data name="&gt;&gt;btnChartTest.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
+  <data name="&gt;&gt;btnWebTest.Name" xml:space="preserve">
+    <value>btnWebTest</value>
+  </data>
+  <data name="&gt;&gt;btnWebTest.Type" xml:space="preserve">
+    <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  </data>
   <data name="&gt;&gt;barSubItemTest2.Name" xml:space="preserve">
     <value>barSubItemTest2</value>
   </data>
@@ -673,12 +679,6 @@
     <value>btnLPF</value>
   </data>
   <data name="&gt;&gt;btnLPF.Type" xml:space="preserve">
-    <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
-  </data>
-  <data name="&gt;&gt;btnWebTest.Name" xml:space="preserve">
-    <value>btnWebTest</value>
-  </data>
-  <data name="&gt;&gt;btnWebTest.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
   <data name="&gt;&gt;btnStart.Name" xml:space="preserve">

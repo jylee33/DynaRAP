@@ -1,8 +1,10 @@
-﻿using DevExpress.XtraEditors;
+﻿using DevExpress.Utils.Menu;
+using DevExpress.XtraEditors;
 using DevExpress.XtraTreeList;
 using DevExpress.XtraTreeList.Columns;
 using DevExpress.XtraTreeList.Nodes;
 using DynaRAP.Data;
+using DynaRAP.UTIL;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,14 +17,14 @@ using System.Windows.Forms;
 
 namespace DynaRAP.UControl
 {
-    public partial class BinSelectSBControl : DevExpress.XtraEditors.XtraUserControl
+    public partial class MgmtParameterControl : DevExpress.XtraEditors.XtraUserControl
     {
-        public BinSelectSBControl()
+        public MgmtParameterControl()
         {
             InitializeComponent();
         }
 
-        private void SelectSBControl_Load(object sender, EventArgs e)
+        private void MgmtParameterControl_Load(object sender, EventArgs e)
         {
             InitializeFlyingDataList();
         }
@@ -30,7 +32,7 @@ namespace DynaRAP.UControl
         private void InitializeFlyingDataList()
         {
             //TreeList treeList1 = new TreeList();
-            treeList1.Parent = this;
+            treeList1.Parent = this.splitContainer1.Panel1;
             treeList1.Dock = DockStyle.Fill;
             //Specify the fields that arrange underlying data as a hierarchy.
             treeList1.KeyFieldName = "ID";
@@ -57,9 +59,10 @@ namespace DynaRAP.UControl
 
             treeList1.OptionsFilter.AllowFilterEditor = false;
 
+            treeList1.OptionsSelection.MultiSelect = false;
+
             //Access the automatically created columns.
             TreeListColumn colName = treeList1.Columns["FlyingName"];
-            TreeListColumn colCheck = treeList1.Columns["Check"];
 
             //Hide the key columns. An end-user can access them from the Customization Form.
             treeList1.Columns[treeList1.KeyFieldName].Visible = false;
@@ -67,17 +70,13 @@ namespace DynaRAP.UControl
 
             //Make the Project column read-only.
             colName.OptionsColumn.ReadOnly = true;
-            colCheck.OptionsColumn.ReadOnly = false;
-
             colName.OptionsColumn.AllowEdit = false;
 
             //Sort data against the Project column
             colName.SortIndex = -1;// 0;
 
-            repositoryItemCheckEdit1.CheckBoxOptions.Style = DevExpress.XtraEditors.Controls.CheckBoxStyle.CheckBox;
-            repositoryItemCheckEdit1.EditValueChanged += repositoryItemCheckEdit1_EditValueChanged;
             //treeList1.OptionsView.ShowCheckBoxes = true; // 제일 앞에 checkBox 붙이는 옵션
-            treeList1.CellValueChanged += treeList1_CellValueChanged;
+            treeList1.PopupMenuShowing += TreeList1_PopupMenuShowing;
 
             treeList1.ExpandAll();
 
@@ -91,27 +90,53 @@ namespace DynaRAP.UControl
 
         }
 
-        private void treeList1_CellValueChanged(object sender, CellValueChangedEventArgs e)
+        private void TreeList1_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
         {
-            foreach (TreeListNode node in e.Node.Nodes)
-                node[e.Column] = e.Value;
-            TreeListNode parent = e.Node.ParentNode;
-            if (parent != null) // not a root node
+            // Check if a node's indicator cell is clicked.
+            TreeListHitInfo hitInfo = (sender as TreeList).CalcHitInfo(e.Point);
+            TreeListNode node = null;
+            //if (hitInfo.HitInfoType == HitInfoType.RowIndicator)
             {
-                bool checkedValue = false;
-                if (e.Value != null)
-                    checkedValue = (bool)e.Value;
-                foreach (TreeListNode node in parent.Nodes)
-                {
-                    if ((bool)node[e.Column] != checkedValue)
-                    {
-                        parent[e.Column] = null;
-                        break;
-                    }
-                    else
-                        parent[e.Column] = checkedValue;
-                }
+                node = hitInfo.Node;
             }
+            if (node == null) return;
+
+            // Create the Add Node command.
+            DXMenuItem menuItemAdd = new DXMenuItem("Add Node", this.addNodeMenuItemClick);
+            menuItemAdd.Tag = node;
+            e.Menu.Items.Add(menuItemAdd);
+
+            // Create the Delete Node command.
+            DXMenuItem menuItemDelete = new DXMenuItem("Delete Node", this.deleteNodeMenuItemClick);
+            menuItemDelete.Tag = node;
+            e.Menu.Items.Add(menuItemDelete);
+        }
+
+        private void addNodeMenuItemClick(object sender, EventArgs e)
+        {
+            DXMenuItem item = sender as DXMenuItem;
+            if (item == null) return;
+            TreeListNode node = item.Tag as TreeListNode;
+            if (node == null) return;
+
+            string flyingName = Prompt.ShowDialog("Parameter Name", "Add Parameter");
+
+            TreeListNode newNode = treeList1.AppendNode(new object[] { "" }, node);
+            newNode.SetValue("FlyingName", flyingName);
+
+            //treeList1.ExpandAll();
+            node.Expand();
+            //treeList1.Selection.Set(newNode);
+            treeList1.FocusedNode = newNode;
+        }
+
+        private void deleteNodeMenuItemClick(object sender, EventArgs e)
+        {
+            DXMenuItem item = sender as DXMenuItem;
+            if (item == null) return;
+            TreeListNode node = item.Tag as TreeListNode;
+            if (node == null) return;
+            node.TreeList.DeleteNode(node);
         }
 
         private void repositoryItemCheckEdit1_EditValueChanged(object sender, EventArgs e)
@@ -215,8 +240,8 @@ namespace DynaRAP.UControl
             data.Check = false;
             list.Add(data);
 
-
             return list;
         }
+
     }
 }
