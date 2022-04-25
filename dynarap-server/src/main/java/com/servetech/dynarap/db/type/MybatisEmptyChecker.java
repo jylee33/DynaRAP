@@ -19,6 +19,13 @@ public class MybatisEmptyChecker {
             if (((String64) o).originOf().isEmpty()) {
                 return true;
             }
+        } else if (o instanceof CryptoField) {
+            if (((CryptoField) o).originOf() == null)
+                return true;
+
+            if (((CryptoField) o).isEmpty()) {
+                return true;
+            }
         } else if (o instanceof Collection) {
             if (((Collection) o).isEmpty()) {
                 return true;

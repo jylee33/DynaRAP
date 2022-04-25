@@ -51,6 +51,24 @@ create table `dynarap_flight`
 ) $$
 
 
+-- 디렉토리 관리
+drop table if exists `dynarap_dir` cascade $$
+
+create table `dynarap_dir`
+(
+    `seq` bigint auto_increment not null            comment '일련번호',
+    `parentDirSeq` bigint default 0                 comment '상위 디렉토리 일련번호',
+    `uid` bigint not null                           comment '소유자 일련번호',
+    `dirName` varchar(64) not null                  comment '디렉토리 이름',
+    `dirType` varchar(32)                           comment '디렉토리 타입 (folder, file, param, preset, part, shortblock)',
+    `dirIcon` varchar(256)                          comment '디렉토리 아이콘',
+    `createdAt` bigint default 0                    comment '생성일자',
+    `refSeq` bigint default 0                       comment '참조키',
+    `refSubSeq` bigint default 0                    comment '참조키(보조)',
+    constraint pk_dynarap_dir primary key (`seq`)
+) $$
+
+
 -- 파라미터 관련 먼저 구현
 drop table if exists `dynarap_param` cascade $$
 

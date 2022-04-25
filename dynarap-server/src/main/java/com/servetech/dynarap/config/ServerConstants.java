@@ -17,7 +17,7 @@ public class ServerConstants {
     public static final String SERVICE_NAME = "dynarap";
 
     public static final String SERVER_SECRET = "1f1605ff-1adc-43f4-b94f-11ebcdf90b4c";
-    public static final String ENV_SECRET = "e82f8120ede561aa2569af84dd80147e";
+    public static final String ENV_SECRET = "f35d7ac973623f2f1106829079ece74f";
 
     public static final String NAUTH_SECRET = "602dab6f-bdbc-43bb-9708-11341d7adb49";
     public static final String NAUTH_ENV_SECRET = "f2d3fa9e26d9e01376a3af87bf58f748";
