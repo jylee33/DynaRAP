@@ -31,7 +31,7 @@ public interface DirMapper {
             "<script>" +
                     "select * from dynarap_dir " +
                     "where uid = #{uid,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField_NAuth} " +
-                    "and parentDirSeq = #{parentDirSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "and parentDirSeq = #{parentDirSeq} " +
                     "order by dirName asc" +
                     "</script>"
     })
@@ -40,7 +40,7 @@ public interface DirMapper {
     @Select({
             "<script>" +
                     "select * from dynarap_dir " +
-                    "where seq = #{seq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "where seq = #{seq} " +
                     "limit 0, 1" +
                     "</script>"
     })
@@ -51,7 +51,7 @@ public interface DirMapper {
                     "insert into dynarap_dir (" +
                     "parentDirSeq,uid,dirName,dirType,dirIcon,createdAt,refSeq,refSubSeq" +
                     ") values (" +
-                    "#{parentDirSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField}" +
+                    "#{parentDirSeq}" +
                     ",#{uid,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField_NAuth}" +
                     ",#{dirName,javaType=java.lang.String,jdbcType=VARCHAR,typeHandler=String64}" +
                     ",#{dirType}" +
@@ -63,20 +63,20 @@ public interface DirMapper {
                     "</script>"
     })
     @SelectKey(before = false, keyColumn = "seq", keyProperty = "seq",
-            resultType = CryptoField.class,
+            resultType = Long.class,
             statement = "SELECT last_insert_id() FROM dynarap_dir LIMIT 0, 1")
     void insertDir(DirVO dir) throws Exception;
 
     @Update({
             "<script>" +
                     " update dynarap_dir set " +
-                    " parentDirSeq = #{parentDirSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    " parentDirSeq = #{parentDirSeq} " +
                     ",dirName = #{dirName,javaType=java.lang.String,jdbcType=VARCHAR,typeHandler=String64} " +
                     ",dirType = #{dirType} " +
                     ",dirIcon = #{dirIcon} " +
                     ",refSeq = #{refSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
                     ",refSubSeq = #{refSubSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
-                    " where seq = #{seq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField}" +
+                    " where seq = #{seq}" +
                     "</script>"
     })
     void updateDir(DirVO dir) throws Exception;
@@ -84,7 +84,7 @@ public interface DirMapper {
     @Delete({
             "<script>" +
                     "delete from dynarap_dir " +
-                    "where seq = #{seq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField}" +
+                    "where seq = #{seq}" +
                     "</script>"
     })
     void deleteDir(Map<String, Object> params) throws Exception;

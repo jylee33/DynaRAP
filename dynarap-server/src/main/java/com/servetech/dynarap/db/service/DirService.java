@@ -32,23 +32,19 @@ public class DirService {
             List<DirVO> userDirs = dirMapper.selectUserDirList(params);
             if (userDirs == null) userDirs = new ArrayList<>();
 
-            Map<String, DirVO> dirMap = new LinkedHashMap<>();
-            for (DirVO userDir : userDirs)
-                dirMap.put(userDir.getSeq().valueOf(), userDir);
-
             List<DirTreeItem> presentation = new ArrayList<>();
-            List<DirVO> rootDirs = getSubDirList(uid, CryptoField.LZERO);
+            List<DirVO> rootDirs = getSubDirList(uid, 0L);
             if (rootDirs == null) rootDirs = new ArrayList<>();
             for (DirVO rootDir : rootDirs) {
                 DirTreeItem dti = new DirTreeItem();
-                dti.setDirKey(rootDir.getSeq().valueOf());
+                dti.setDirKey(rootDir.getSeq());
                 dti.setSubTree(new ArrayList<>());
                 presentation.add(dti);
                 __genPresentation(uid, getSubDirList(uid, rootDir.getSeq()), dti.getSubTree());
             }
 
             JsonObject dirInfo = new JsonObject();
-            dirInfo.add("pools", ServerConstants.GSON.toJsonTree(dirMap));
+            dirInfo.add("pools", ServerConstants.GSON.toJsonTree(userDirs));
             dirInfo.add("presentation", ServerConstants.GSON.toJsonTree(presentation));
 
             return dirInfo;
@@ -61,7 +57,7 @@ public class DirService {
         if (rootDirs == null || rootDirs.size() == 0) return;
         for (DirVO dir : rootDirs) {
             DirTreeItem dti = new DirTreeItem();
-            dti.setDirKey(dir.getSeq().valueOf());
+            dti.setDirKey(dir.getSeq());
             dti.setSubTree(new ArrayList<>());
             parentList.add(dti);
             __genPresentation(uid, getSubDirList(uid, dir.getSeq()), dti.getSubTree());
@@ -70,12 +66,12 @@ public class DirService {
 
     @Data
     private static class DirTreeItem {
-        private String dirKey;
+        private Long dirKey;
         private List<DirTreeItem> subTree;
     }
 
     // 측정 상위 폴더를 갖는 하위 폴더 전체.
-    public List<DirVO> getSubDirList(CryptoField.NAuth uid, CryptoField parentDirSeq) throws HandledServiceException {
+    public List<DirVO> getSubDirList(CryptoField.NAuth uid, Long parentDirSeq) throws HandledServiceException {
         try {
             Map<String, Object> params = new HashMap<>();
             params.put("uid", uid);
@@ -86,7 +82,7 @@ public class DirService {
         }
     }
 
-    public DirVO getDir(CryptoField dirSeq) throws HandledServiceException {
+    public DirVO getDir(Long dirSeq) throws HandledServiceException {
         try {
             Map<String, Object> params = new HashMap<>();
             params.put("seq", dirSeq);
@@ -120,11 +116,11 @@ public class DirService {
     }
 
     private void __fillParentInfo(DirVO dir) throws  HandledServiceException {
-        if (dir.getParentDirSeq() != null && !dir.getParentDirSeq().isEmpty()) {
+        if (dir.getParentDirSeq() != null && dir.getParentDirSeq() != 0L) {
             dir.setParentDirInfo(getDir(dir.getParentDirSeq()));
             DirVO parentInfo = dir.getParentDirInfo();
             while (parentInfo != null) {
-                if (parentInfo.getParentDirSeq() == null || parentInfo.getParentDirSeq().isEmpty()) {
+                if (parentInfo.getParentDirSeq() == null || parentInfo.getParentDirSeq() == 0L) {
                     parentInfo.setParentDirInfo(null);
                     break;
                 }
@@ -141,7 +137,7 @@ public class DirService {
     public DirVO updateDir(CryptoField.NAuth uid, JsonObject payload) throws HandledServiceException {
         try {
             DirVO dir = ServerConstants.GSON.fromJson(payload, DirVO.class);
-            if (dir == null || dir.getSeq() == null || dir.getSeq().isEmpty())
+            if (dir == null || dir.getSeq() == null || dir.getSeq() == 0L)
                 throw new HandledServiceException(411, "요청 파라미터 오류입니다. [필수 파라미터 누락]");
 
             dirMapper.updateDir(dir);
@@ -157,11 +153,11 @@ public class DirService {
     @Transactional
     public void deleteDir(CryptoField.NAuth uid, JsonObject payload) throws HandledServiceException {
         try {
-            CryptoField dirSeq = CryptoField.LZERO;
+            Long dirSeq = 0L;
             if (!ApiController.checkJsonEmpty(payload, "seq"))
-                dirSeq = CryptoField.decode(payload.get("seq").getAsString(), 0L);
+                dirSeq = payload.get("seq").getAsLong();
 
-            if (dirSeq == null || dirSeq.isEmpty())
+            if (dirSeq == null || dirSeq == 0L)
                 throw new HandledServiceException(411, "요청 파라미터 오류입니다. [필수 파라미터 누락]");
 
             // 재귀 삭제.

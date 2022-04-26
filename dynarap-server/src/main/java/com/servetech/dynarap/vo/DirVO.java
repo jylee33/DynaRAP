@@ -7,8 +7,8 @@ import lombok.Data;
 
 @Data
 public class DirVO {
-    private CryptoField seq;
-    private CryptoField parentDirSeq;
+    private Long seq;
+    private Long parentDirSeq;
     private CryptoField.NAuth uid;
     private String64 dirName;
     private String dirType;
