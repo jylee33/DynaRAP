@@ -132,6 +132,12 @@
   <data name="IdPlaceholder" xml:space="preserve">
     <value>ID</value>
   </data>
+  <data name="InputFolderName" xml:space="preserve">
+    <value>Input Folder Name</value>
+  </data>
+  <data name="InputParameterName" xml:space="preserve">
+    <value>Input Parameter Name</value>
+  </data>
   <data name="InputScenarioName" xml:space="preserve">
     <value>Input Scenario Name</value>
   </data>

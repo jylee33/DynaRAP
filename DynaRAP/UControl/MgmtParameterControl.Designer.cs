@@ -32,7 +32,8 @@
             this.treeList1 = new DevExpress.XtraTreeList.TreeList();
             this.ID = new DevExpress.XtraTreeList.Columns.TreeListColumn();
             this.ParentID = new DevExpress.XtraTreeList.Columns.TreeListColumn();
-            this.FlyingName = new DevExpress.XtraTreeList.Columns.TreeListColumn();
+            this.DirName = new DevExpress.XtraTreeList.Columns.TreeListColumn();
+            this.DirType = new DevExpress.XtraTreeList.Columns.TreeListColumn();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -49,7 +50,7 @@
             // 
             this.splitContainer1.Panel1.Controls.Add(this.treeList1);
             this.splitContainer1.Size = new System.Drawing.Size(855, 620);
-            this.splitContainer1.SplitterDistance = 285;
+            this.splitContainer1.SplitterDistance = 100;
             this.splitContainer1.TabIndex = 0;
             // 
             // treeList1
@@ -57,11 +58,12 @@
             this.treeList1.Columns.AddRange(new DevExpress.XtraTreeList.Columns.TreeListColumn[] {
             this.ID,
             this.ParentID,
-            this.FlyingName});
+            this.DirName,
+            this.DirType});
             this.treeList1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeList1.Location = new System.Drawing.Point(0, 0);
             this.treeList1.Name = "treeList1";
-            this.treeList1.Size = new System.Drawing.Size(285, 620);
+            this.treeList1.Size = new System.Drawing.Size(100, 620);
             this.treeList1.TabIndex = 2;
             // 
             // ID
@@ -69,20 +71,30 @@
             this.ID.Caption = "ID";
             this.ID.FieldName = "ID";
             this.ID.Name = "ID";
+            this.ID.Visible = true;
+            this.ID.VisibleIndex = 1;
             // 
             // ParentID
             // 
             this.ParentID.Caption = "ParentID";
             this.ParentID.FieldName = "ParentID";
             this.ParentID.Name = "ParentID";
+            this.ParentID.Visible = true;
+            this.ParentID.VisibleIndex = 2;
             // 
-            // FlyingName
+            // DirName
             // 
-            this.FlyingName.Caption = "FlyingName";
-            this.FlyingName.FieldName = "FlyingName";
-            this.FlyingName.Name = "FlyingName";
-            this.FlyingName.Visible = true;
-            this.FlyingName.VisibleIndex = 0;
+            this.DirName.Caption = "DirName";
+            this.DirName.FieldName = "DirName";
+            this.DirName.Name = "DirName";
+            this.DirName.Visible = true;
+            this.DirName.VisibleIndex = 0;
+            // 
+            // DirType
+            // 
+            this.DirType.Caption = "DirType";
+            this.DirType.FieldName = "DirType";
+            this.DirType.Name = "DirType";
             // 
             // MgmtParameterControl
             // 
@@ -106,6 +118,7 @@
         private DevExpress.XtraTreeList.TreeList treeList1;
         private DevExpress.XtraTreeList.Columns.TreeListColumn ID;
         private DevExpress.XtraTreeList.Columns.TreeListColumn ParentID;
-        private DevExpress.XtraTreeList.Columns.TreeListColumn FlyingName;
+        private DevExpress.XtraTreeList.Columns.TreeListColumn DirName;
+        private DevExpress.XtraTreeList.Columns.TreeListColumn DirType;
     }
 }

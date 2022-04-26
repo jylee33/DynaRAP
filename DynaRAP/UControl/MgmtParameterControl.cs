@@ -5,12 +5,16 @@ using DevExpress.XtraTreeList.Columns;
 using DevExpress.XtraTreeList.Nodes;
 using DynaRAP.Data;
 using DynaRAP.UTIL;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -26,10 +30,10 @@ namespace DynaRAP.UControl
 
         private void MgmtParameterControl_Load(object sender, EventArgs e)
         {
-            InitializeFlyingDataList();
+            InitializeParameterDataList();
         }
 
-        private void InitializeFlyingDataList()
+        private void InitializeParameterDataList()
         {
             //TreeList treeList1 = new TreeList();
             treeList1.Parent = this.splitContainer1.Panel1;
@@ -42,7 +46,7 @@ namespace DynaRAP.UControl
 
             //Specify the data source.
             //treeList1.DataSource = null;
-            treeList1.DataSource = CreateData();
+            treeList1.DataSource = GetParamList();
             //The treelist automatically creates columns for the public fields found in the data source. 
             //You do not need to call the TreeList.PopulateColumns method unless the treeList1.OptionsBehavior.AutoPopulatefColumns option is disabled.
             treeList1.ForceInitialize();
@@ -62,7 +66,7 @@ namespace DynaRAP.UControl
             treeList1.OptionsSelection.MultiSelect = false;
 
             //Access the automatically created columns.
-            TreeListColumn colName = treeList1.Columns["FlyingName"];
+            TreeListColumn colName = treeList1.Columns["DirName"];
 
             //Hide the key columns. An end-user can access them from the Customization Form.
             treeList1.Columns[treeList1.KeyFieldName].Visible = false;
@@ -99,35 +103,145 @@ namespace DynaRAP.UControl
             {
                 node = hitInfo.Node;
             }
-            if (node == null) return;
+            //if (node == null) return;
 
-            // Create the Add Node command.
-            DXMenuItem menuItemAdd = new DXMenuItem("Add Node", this.addNodeMenuItemClick);
+            // Create the Add Folder command.
+            DXMenuItem menuItemAddFolder = new DXMenuItem("Add Folder", this.addFolderMenuItemClick);
+            menuItemAddFolder.Tag = node;
+            e.Menu.Items.Add(menuItemAddFolder);
+
+            // Create the Add Parameter command.
+            DXMenuItem menuItemAdd = new DXMenuItem("Add Parameter", this.addParamMenuItemClick);
             menuItemAdd.Tag = node;
             e.Menu.Items.Add(menuItemAdd);
 
-            // Create the Delete Node command.
-            DXMenuItem menuItemDelete = new DXMenuItem("Delete Node", this.deleteNodeMenuItemClick);
-            menuItemDelete.Tag = node;
-            e.Menu.Items.Add(menuItemDelete);
+            if (node != null)
+            {
+                // Create Modity Node command.
+                DXMenuItem menuItemModify = new DXMenuItem("Modify Name", this.modifyNodeMenuItemClick);
+                menuItemModify.Tag = node;
+                e.Menu.Items.Add(menuItemModify);
+
+                // Create the Delete Node command.
+                DXMenuItem menuItemDelete = new DXMenuItem("Delete Node", this.deleteNodeMenuItemClick);
+                menuItemDelete.Tag = node;
+                e.Menu.Items.Add(menuItemDelete);
+            }
         }
 
-        private void addNodeMenuItemClick(object sender, EventArgs e)
+        private void addFolderMenuItemClick(object sender, EventArgs e)
+        {
+            DXMenuItem item = sender as DXMenuItem;
+            if (item == null) return;
+            TreeListNode node = item.Tag as TreeListNode;
+            //if (node == null) return;
+
+            string folderName = Prompt.ShowDialog("Folder Name", "Add Folder");
+
+            if (string.IsNullOrEmpty(folderName))
+            {
+                MessageBox.Show(Properties.Resources.InputFolderName, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            //Encoding
+            byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(folderName);
+            string name = Convert.ToBase64String(basebyte);
+
+            bool bResult = false;
+            if(node == null)
+                bResult = CreateParameter("folder", name, "0");
+            else
+                bResult = CreateParameter("folder", name, node.GetValue("ID").ToString());
+
+            if (bResult)
+            {
+                //TreeListNode newNode = treeList1.AppendNode(new object[] { "" }, node);
+                //newNode.SetValue("DirName", folderName);
+
+                ////treeList1.ExpandAll();
+                //node.Expand();
+                ////treeList1.Selection.Set(newNode);
+                //treeList1.FocusedNode = newNode;
+                
+                RefreshTree();
+            }
+        }
+
+        private void addParamMenuItemClick(object sender, EventArgs e)
+        {
+            DXMenuItem item = sender as DXMenuItem;
+            if (item == null) return;
+            TreeListNode node = item.Tag as TreeListNode;
+            //if (node == null) return;
+
+            string paramName = Prompt.ShowDialog("Parameter Name", "Add Parameter");
+
+            if (string.IsNullOrEmpty(paramName))
+            {
+                MessageBox.Show(Properties.Resources.InputParameterName, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            //Encoding
+            byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(paramName);
+            string name = Convert.ToBase64String(basebyte);
+
+            bool bResult = false;
+            if(node == null)
+                bResult = CreateParameter("param", name, "0");
+            else
+                bResult = CreateParameter("param", name, node.GetValue("ID").ToString());
+
+            if (bResult)
+            {
+                //TreeListNode newNode = treeList1.AppendNode(new object[] { "" }, node);
+                //newNode.SetValue("DirName", paramName);
+
+                ////treeList1.ExpandAll();
+                //node.Expand();
+                ////treeList1.Selection.Set(newNode);
+                //treeList1.FocusedNode = newNode;
+
+                RefreshTree();
+            }
+        }
+
+        private void RefreshTree()
+        {
+            treeList1.DataSource = null;
+            treeList1.DataSource = GetParamList();
+            //The treelist automatically creates columns for the public fields found in the data source. 
+            //You do not need to call the TreeList.PopulateColumns method unless the treeList1.OptionsBehavior.AutoPopulatefColumns option is disabled.
+            treeList1.ForceInitialize();
+
+            treeList1.ExpandAll();
+        }
+
+        private void modifyNodeMenuItemClick(object sender, EventArgs e)
         {
             DXMenuItem item = sender as DXMenuItem;
             if (item == null) return;
             TreeListNode node = item.Tag as TreeListNode;
             if (node == null) return;
 
-            string flyingName = Prompt.ShowDialog("Parameter Name", "Add Parameter");
+            string dirName = Prompt.ShowDialog("New Name", "Modify Name");
 
-            TreeListNode newNode = treeList1.AppendNode(new object[] { "" }, node);
-            newNode.SetValue("FlyingName", flyingName);
+            if (string.IsNullOrEmpty(dirName))
+            {
+                MessageBox.Show(Properties.Resources.InputParameterName, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
-            //treeList1.ExpandAll();
-            node.Expand();
-            //treeList1.Selection.Set(newNode);
-            treeList1.FocusedNode = newNode;
+            //Encoding
+            byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(dirName);
+            string name = Convert.ToBase64String(basebyte);
+
+            bool bResult = ModifyParameter(node.GetValue("DirType").ToString(), node.GetValue("ID").ToString(), node.GetValue("ParentID").ToString(), name);
+            if (bResult)
+            {
+                RefreshTree();
+            }
         }
 
         private void deleteNodeMenuItemClick(object sender, EventArgs e)
@@ -136,7 +250,14 @@ namespace DynaRAP.UControl
             if (item == null) return;
             TreeListNode node = item.Tag as TreeListNode;
             if (node == null) return;
-            node.TreeList.DeleteNode(node);
+
+            //node.TreeList.DeleteNode(node);
+
+            bool bResult = DeleteParameter(node.GetValue("ID").ToString());
+            if (bResult)
+            {
+                RefreshTree();
+            }
         }
 
         private void repositoryItemCheckEdit1_EditValueChanged(object sender, EventArgs e)
@@ -144,103 +265,188 @@ namespace DynaRAP.UControl
             treeList1.PostEditor();
         }
 
-        private BindingList<FlyingData> CreateData()
+        private bool CreateParameter(string dirType, string name, string pid)
         {
-            BindingList<FlyingData> list = new BindingList<FlyingData>();
-            //list.Add(new FlyingData(0, -1, "ImportModuleScenarioName", null));
-            list.Add(new FlyingData(1, 0, "비행데이터", null));
-            list.Add(new FlyingData(2, 0, "버펫팅데이터", null));
-            list.Add(new FlyingData(3, 0, "Short Block", null));
+            string url = ConfigurationManager.AppSettings["UrlParameter"];
+            string sendData = string.Format("{{ \"command\":\"add\",\"seq\":\"1\",\"parentDirSeq\":\"{0}\",\"dirName\":\"{1}\",\"dirType\":\"{2}\",\"dirIcon\":\"\",\"refSeq\":\"\",\"refSubSeq\":\"\" }}", pid, name, dirType);
 
-            FlyingData data = new FlyingData();
-            data.ParentID = 1;
-            data.FlyingName = "2022-03-03_형상A_1호기.bin";
-            data.Check = true;
-            list.Add(data);
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Method = "POST";
+            request.ContentType = "application/json";
+            request.Timeout = 30 * 1000;
+            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
 
-            data = new FlyingData();
-            data.ParentID = 1;
-            data.FlyingName = "2022-03-03_형상B_3호기.bin";
-            data.Check = false;
-            list.Add(data);
+            // POST할 데이타를 Request Stream에 쓴다
+            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+            request.ContentLength = bytes.Length; // 바이트수 지정
 
-            data = new FlyingData();
-            data.ParentID = 1;
-            data.FlyingName = "2022-03-03_형상A_2호기.bin";
-            data.Check = false;
-            list.Add(data);
+            using (Stream reqStream = request.GetRequestStream())
+            {
+                reqStream.Write(bytes, 0, bytes.Length);
+            }
 
-            data = new FlyingData();
-            data.ParentID = 2;
-            data.FlyingName = "버펫팅_01.bpt";
-            data.Check = true;
-            list.Add(data);
+            // Response 처리
+            string responseText = string.Empty;
+            using (WebResponse resp = request.GetResponse())
+            {
+                Stream respStream = resp.GetResponseStream();
+                using (StreamReader sr = new StreamReader(respStream))
+                {
+                    responseText = sr.ReadToEnd();
+                }
+            }
 
-            data = new FlyingData();
-            data.ParentID = 2;
-            data.FlyingName = "버펫팅_02.bpt";
-            data.Check = true;
-            list.Add(data);
+            Console.WriteLine(responseText);
+            ParameterJsonData result = JsonConvert.DeserializeObject<ParameterJsonData>(responseText);
 
-            data = new FlyingData();
-            data.ParentID = 2;
-            data.FlyingName = "버펫팅_03.bpt";
-            data.Check = true;
-            list.Add(data);
+            if(result != null)
+            {
+                if(result.code != 200)
+                {
+                    MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+            }
+            return true;
+        }
 
-            data = new FlyingData();
-            data.ParentID = 2;
-            data.FlyingName = "버펫팅_04.bpt";
-            data.Check = false;
-            list.Add(data);
+        private bool ModifyParameter(string dirType, string id, string pid, string name)
+        {
+            string url = ConfigurationManager.AppSettings["UrlParameter"];
+            //string sendData = string.Format("{{ \"command\":\"remove\", \"seq\":\"{0}\" }}", id, name);
+            string sendData = string.Format("{{ \"command\":\"modify\", \"seq\":\"{0}\", \"parentDirSeq\":\"{1}\", \"dirName\":\"{2}\", \"dirType\":\"{3}\", \"dirIcon\":\"\", \"refSeq\":\"\", \"refSubSeq\":\"\" }}", id, pid, name, dirType);
 
-            data = new FlyingData();
-            data.ParentID = 3;
-            data.FlyingName = "ShortBlock_01.sbl";
-            data.Check = true;
-            list.Add(data);
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Method = "POST";
+            request.ContentType = "application/json";
+            request.Timeout = 30 * 1000;
+            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
 
-            data = new FlyingData();
-            data.ParentID = 3;
-            data.FlyingName = "ShortBlock_02.sbl";
-            data.Check = true;
-            list.Add(data);
+            // POST할 데이타를 Request Stream에 쓴다
+            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+            request.ContentLength = bytes.Length; // 바이트수 지정
 
-            data = new FlyingData();
-            data.ParentID = 3;
-            data.FlyingName = "ShortBlock_03.sbl";
-            data.Check = true;
-            list.Add(data);
+            using (Stream reqStream = request.GetRequestStream())
+            {
+                reqStream.Write(bytes, 0, bytes.Length);
+            }
 
-            data = new FlyingData();
-            data.ParentID = 3;
-            data.FlyingName = "ShortBlock_04.sbl";
-            data.Check = true;
-            list.Add(data);
+            // Response 처리
+            string responseText = string.Empty;
+            using (WebResponse resp = request.GetResponse())
+            {
+                Stream respStream = resp.GetResponseStream();
+                using (StreamReader sr = new StreamReader(respStream))
+                {
+                    responseText = sr.ReadToEnd();
+                }
+            }
 
-            data = new FlyingData();
-            data.ParentID = 3;
-            data.FlyingName = "ShortBlock_05.sbl";
-            data.Check = false;
-            list.Add(data);
+            Console.WriteLine(responseText);
+            ParameterJsonData result = JsonConvert.DeserializeObject<ParameterJsonData>(responseText);
 
-            int pid = data.ID;
+            if (result != null)
+            {
+                if (result.code != 200)
+                {
+                    MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+            }
+            return true;
+        }
 
-            data = new FlyingData();
-            data.ParentID = pid;
-            data.FlyingName = "ShortBlock_06.sbl";
-            data.Check = false;
-            list.Add(data);
+        private bool DeleteParameter(string id)
+        {
+            string url = ConfigurationManager.AppSettings["UrlParameter"];
+            string sendData = string.Format("{{ \"command\":\"remove\", \"seq\":\"{0}\" }}", id);
 
-            pid = data.ID;
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Method = "POST";
+            request.ContentType = "application/json";
+            request.Timeout = 30 * 1000;
+            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
 
-            data = new FlyingData();
-            data.ParentID = pid;
-            data.FlyingName = "ShortBlock_07.sbl";
-            data.Check = false;
-            list.Add(data);
+            // POST할 데이타를 Request Stream에 쓴다
+            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+            request.ContentLength = bytes.Length; // 바이트수 지정
+
+            using (Stream reqStream = request.GetRequestStream())
+            {
+                reqStream.Write(bytes, 0, bytes.Length);
+            }
+
+            // Response 처리
+            string responseText = string.Empty;
+            using (WebResponse resp = request.GetResponse())
+            {
+                Stream respStream = resp.GetResponseStream();
+                using (StreamReader sr = new StreamReader(respStream))
+                {
+                    responseText = sr.ReadToEnd();
+                }
+            }
+
+            Console.WriteLine(responseText);
+            ParameterJsonData result = JsonConvert.DeserializeObject<ParameterJsonData>(responseText);
+
+            if (result != null)
+            {
+                if (result.code != 200)
+                {
+                    MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+            }
+            return true;
+        }
+        private BindingList<ParameterData> GetParamList()
+        {
+            BindingList<ParameterData> list = new BindingList<ParameterData>();
+
+            string url = ConfigurationManager.AppSettings["UrlParameter"];
+            string sendData = "{ \"command\": \"list\" }";
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Method = "POST";
+            request.ContentType = "application/json";
+            request.Timeout = 30 * 1000;
+            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+
+            // POST할 데이타를 Request Stream에 쓴다
+            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+            request.ContentLength = bytes.Length; // 바이트수 지정
+
+            using (Stream reqStream = request.GetRequestStream())
+            {
+                reqStream.Write(bytes, 0, bytes.Length);
+            }
+
+            // Response 처리
+            string responseText = string.Empty;
+            using (WebResponse resp = request.GetResponse())
+            {
+                Stream respStream = resp.GetResponseStream();
+                using (StreamReader sr = new StreamReader(respStream))
+                {
+                    responseText = sr.ReadToEnd();
+                }
+            }
+
+            Console.WriteLine(responseText);
+            ParameterJsonData result = JsonConvert.DeserializeObject<ParameterJsonData>(responseText);
+            //object myDeserializedClass = JsonConvert.DeserializeObject(responseText);
+
+            foreach (Pool pool in result.response.pools)
+            {
+                byte[] byte64 = Convert.FromBase64String(pool.dirName);
+                string name = Encoding.UTF8.GetString(byte64);
+
+                list.Add(new ParameterData(pool.seq, pool.parentDirSeq, pool.dirType, name));
+            }
 
             return list;
+
         }
 
     }
