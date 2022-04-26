@@ -34,94 +34,94 @@
             this.ParentID = new DevExpress.XtraTreeList.Columns.TreeListColumn();
             this.DirName = new DevExpress.XtraTreeList.Columns.TreeListColumn();
             this.DirType = new DevExpress.XtraTreeList.Columns.TreeListColumn();
-            this.simpleButton3 = new DevExpress.XtraEditors.SimpleButton();
-            this.simpleButton2 = new DevExpress.XtraEditors.SimpleButton();
-            this.simpleButton1 = new DevExpress.XtraEditors.SimpleButton();
-            this.labelControl27 = new DevExpress.XtraEditors.LabelControl();
-            this.cboProperty = new DevExpress.XtraEditors.ComboBoxEdit();
-            this.labelControl23 = new DevExpress.XtraEditors.LabelControl();
-            this.edtSpecialValue = new DevExpress.XtraEditors.TextEdit();
-            this.edtMinumum = new DevExpress.XtraEditors.TextEdit();
-            this.edtMaximum = new DevExpress.XtraEditors.TextEdit();
-            this.edtLrpX = new DevExpress.XtraEditors.TextEdit();
-            this.edtFlts = new DevExpress.XtraEditors.TextEdit();
-            this.labelControl21 = new DevExpress.XtraEditors.LabelControl();
-            this.edtFltp = new DevExpress.XtraEditors.TextEdit();
-            this.labelControl33 = new DevExpress.XtraEditors.LabelControl();
-            this.labelControl18 = new DevExpress.XtraEditors.LabelControl();
-            this.labelControl31 = new DevExpress.XtraEditors.LabelControl();
-            this.edtGrt = new DevExpress.XtraEditors.TextEdit();
-            this.labelControl29 = new DevExpress.XtraEditors.LabelControl();
-            this.labelControl16 = new DevExpress.XtraEditors.LabelControl();
-            this.labelControl25 = new DevExpress.XtraEditors.LabelControl();
-            this.edtZaero = new DevExpress.XtraEditors.TextEdit();
-            this.labelControl26 = new DevExpress.XtraEditors.LabelControl();
-            this.labelControl14 = new DevExpress.XtraEditors.LabelControl();
-            this.labelControl22 = new DevExpress.XtraEditors.LabelControl();
-            this.edtAdams = new DevExpress.XtraEditors.TextEdit();
-            this.labelControl20 = new DevExpress.XtraEditors.LabelControl();
-            this.labelControl12 = new DevExpress.XtraEditors.LabelControl();
-            this.labelControl32 = new DevExpress.XtraEditors.LabelControl();
-            this.labelControl17 = new DevExpress.XtraEditors.LabelControl();
-            this.labelControl30 = new DevExpress.XtraEditors.LabelControl();
-            this.edtKey = new DevExpress.XtraEditors.TextEdit();
-            this.labelControl28 = new DevExpress.XtraEditors.LabelControl();
-            this.labelControl15 = new DevExpress.XtraEditors.LabelControl();
-            this.labelControl24 = new DevExpress.XtraEditors.LabelControl();
-            this.labelControl10 = new DevExpress.XtraEditors.LabelControl();
-            this.labelControl13 = new DevExpress.XtraEditors.LabelControl();
-            this.separatorControl2 = new DevExpress.XtraEditors.SeparatorControl();
-            this.separatorControl1 = new DevExpress.XtraEditors.SeparatorControl();
-            this.labelControl11 = new DevExpress.XtraEditors.LabelControl();
-            this.labelControl8 = new DevExpress.XtraEditors.LabelControl();
-            this.labelControl9 = new DevExpress.XtraEditors.LabelControl();
-            this.lblDuplicateKey = new DevExpress.XtraEditors.LabelControl();
-            this.labelControl7 = new DevExpress.XtraEditors.LabelControl();
-            this.labelControl6 = new DevExpress.XtraEditors.LabelControl();
-            this.labelControl5 = new DevExpress.XtraEditors.LabelControl();
-            this.labelControl4 = new DevExpress.XtraEditors.LabelControl();
-            this.labelControl3 = new DevExpress.XtraEditors.LabelControl();
-            this.labelControl19 = new DevExpress.XtraEditors.LabelControl();
-            this.labelControl2 = new DevExpress.XtraEditors.LabelControl();
-            this.labelControl1 = new DevExpress.XtraEditors.LabelControl();
             this.panelControl1 = new DevExpress.XtraEditors.PanelControl();
             this.xtraScrollableControl1 = new DevExpress.XtraEditors.XtraScrollableControl();
-            this.labelControl34 = new DevExpress.XtraEditors.LabelControl();
-            this.edtLrpY = new DevExpress.XtraEditors.TextEdit();
-            this.labelControl35 = new DevExpress.XtraEditors.LabelControl();
-            this.edtLrpZ = new DevExpress.XtraEditors.TextEdit();
-            this.labelControl36 = new DevExpress.XtraEditors.LabelControl();
-            this.cboUnit = new DevExpress.XtraEditors.ComboBoxEdit();
-            this.cboPart = new DevExpress.XtraEditors.ComboBoxEdit();
-            this.cboPartLocation = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.labelControl1 = new DevExpress.XtraEditors.LabelControl();
+            this.simpleButton3 = new DevExpress.XtraEditors.SimpleButton();
+            this.labelControl14 = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl2 = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl22 = new DevExpress.XtraEditors.LabelControl();
+            this.simpleButton2 = new DevExpress.XtraEditors.SimpleButton();
+            this.labelControl26 = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl19 = new DevExpress.XtraEditors.LabelControl();
+            this.edtAdams = new DevExpress.XtraEditors.TextEdit();
+            this.simpleButton1 = new DevExpress.XtraEditors.SimpleButton();
+            this.edtZaero = new DevExpress.XtraEditors.TextEdit();
+            this.labelControl3 = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl20 = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl25 = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl4 = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl12 = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl16 = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl5 = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl32 = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl29 = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl6 = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl17 = new DevExpress.XtraEditors.LabelControl();
+            this.edtGrt = new DevExpress.XtraEditors.TextEdit();
+            this.labelControl7 = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl30 = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl27 = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl31 = new DevExpress.XtraEditors.LabelControl();
+            this.lblDuplicateKey = new DevExpress.XtraEditors.LabelControl();
+            this.edtKey = new DevExpress.XtraEditors.TextEdit();
             this.cboAirplane = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.cboPartLocation = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.cboPart = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.cboUnit = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.cboProperty = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.labelControl18 = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl9 = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl28 = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl23 = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl33 = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl8 = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl15 = new DevExpress.XtraEditors.LabelControl();
+            this.edtSpecialValue = new DevExpress.XtraEditors.TextEdit();
+            this.edtFltp = new DevExpress.XtraEditors.TextEdit();
+            this.labelControl11 = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl36 = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl35 = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl34 = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl24 = new DevExpress.XtraEditors.LabelControl();
+            this.edtMinumum = new DevExpress.XtraEditors.TextEdit();
+            this.labelControl21 = new DevExpress.XtraEditors.LabelControl();
+            this.separatorControl1 = new DevExpress.XtraEditors.SeparatorControl();
+            this.labelControl10 = new DevExpress.XtraEditors.LabelControl();
+            this.edtMaximum = new DevExpress.XtraEditors.TextEdit();
+            this.edtFlts = new DevExpress.XtraEditors.TextEdit();
+            this.separatorControl2 = new DevExpress.XtraEditors.SeparatorControl();
+            this.labelControl13 = new DevExpress.XtraEditors.LabelControl();
+            this.edtLrpZ = new DevExpress.XtraEditors.TextEdit();
+            this.edtLrpY = new DevExpress.XtraEditors.TextEdit();
+            this.edtLrpX = new DevExpress.XtraEditors.TextEdit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.treeList1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cboProperty.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.edtSpecialValue.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.edtMinumum.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.edtMaximum.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.edtLrpX.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.edtFlts.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.edtFltp.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.edtGrt.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.edtZaero.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.edtAdams.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.edtKey.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.separatorControl2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.separatorControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.panelControl1)).BeginInit();
             this.panelControl1.SuspendLayout();
             this.xtraScrollableControl1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.edtLrpY.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.edtLrpZ.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cboUnit.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cboPart.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cboPartLocation.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.edtAdams.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.edtZaero.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.edtGrt.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.edtKey.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cboAirplane.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cboPartLocation.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cboPart.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cboUnit.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cboProperty.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.edtSpecialValue.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.edtFltp.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.edtMinumum.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.separatorControl1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.edtMaximum.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.edtFlts.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.separatorControl2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.edtLrpZ.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.edtLrpY.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.edtLrpX.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -183,498 +183,8 @@
             this.DirType.Caption = "DirType";
             this.DirType.FieldName = "DirType";
             this.DirType.Name = "DirType";
-            // 
-            // simpleButton3
-            // 
-            this.simpleButton3.Location = new System.Drawing.Point(388, 814);
-            this.simpleButton3.Name = "simpleButton3";
-            this.simpleButton3.Size = new System.Drawing.Size(110, 23);
-            this.simpleButton3.TabIndex = 19;
-            this.simpleButton3.Text = "새 파라미터로 저장";
-            // 
-            // simpleButton2
-            // 
-            this.simpleButton2.Location = new System.Drawing.Point(267, 814);
-            this.simpleButton2.Name = "simpleButton2";
-            this.simpleButton2.Size = new System.Drawing.Size(110, 23);
-            this.simpleButton2.TabIndex = 18;
-            this.simpleButton2.Text = "파라미터 삭제";
-            // 
-            // simpleButton1
-            // 
-            this.simpleButton1.Location = new System.Drawing.Point(140, 814);
-            this.simpleButton1.Name = "simpleButton1";
-            this.simpleButton1.Size = new System.Drawing.Size(110, 23);
-            this.simpleButton1.TabIndex = 17;
-            this.simpleButton1.Text = "정보저장";
-            // 
-            // labelControl27
-            // 
-            this.labelControl27.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
-            this.labelControl27.Appearance.ForeColor = System.Drawing.Color.Gray;
-            this.labelControl27.Appearance.Options.UseFont = true;
-            this.labelControl27.Appearance.Options.UseForeColor = true;
-            this.labelControl27.Location = new System.Drawing.Point(140, 636);
-            this.labelControl27.Name = "labelControl27";
-            this.labelControl27.Size = new System.Drawing.Size(162, 13);
-            this.labelControl27.TabIndex = 0;
-            this.labelControl27.Text = "파라미터 항공기 정보를 선택합니다.";
-            // 
-            // cboProperty
-            // 
-            this.cboProperty.Location = new System.Drawing.Point(140, 344);
-            this.cboProperty.Name = "cboProperty";
-            this.cboProperty.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.cboProperty.Size = new System.Drawing.Size(100, 22);
-            this.cboProperty.TabIndex = 6;
-            // 
-            // labelControl23
-            // 
-            this.labelControl23.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
-            this.labelControl23.Appearance.ForeColor = System.Drawing.Color.Gray;
-            this.labelControl23.Appearance.Options.UseFont = true;
-            this.labelControl23.Appearance.Options.UseForeColor = true;
-            this.labelControl23.Location = new System.Drawing.Point(140, 542);
-            this.labelControl23.Name = "labelControl23";
-            this.labelControl23.Size = new System.Drawing.Size(109, 13);
-            this.labelControl23.TabIndex = 0;
-            this.labelControl23.Text = "센서 위치를 선택합니다.";
-            // 
-            // edtSpecialValue
-            // 
-            this.edtSpecialValue.Location = new System.Drawing.Point(140, 752);
-            this.edtSpecialValue.Name = "edtSpecialValue";
-            this.edtSpecialValue.Size = new System.Drawing.Size(222, 22);
-            this.edtSpecialValue.TabIndex = 16;
-            // 
-            // edtMinumum
-            // 
-            this.edtMinumum.Location = new System.Drawing.Point(140, 705);
-            this.edtMinumum.Name = "edtMinumum";
-            this.edtMinumum.Size = new System.Drawing.Size(222, 22);
-            this.edtMinumum.TabIndex = 15;
-            // 
-            // edtMaximum
-            // 
-            this.edtMaximum.Location = new System.Drawing.Point(140, 658);
-            this.edtMaximum.Name = "edtMaximum";
-            this.edtMaximum.Size = new System.Drawing.Size(222, 22);
-            this.edtMaximum.TabIndex = 14;
-            // 
-            // edtLrpX
-            // 
-            this.edtLrpX.Location = new System.Drawing.Point(153, 561);
-            this.edtLrpX.Name = "edtLrpX";
-            this.edtLrpX.Size = new System.Drawing.Size(86, 22);
-            this.edtLrpX.TabIndex = 10;
-            // 
-            // edtFlts
-            // 
-            this.edtFlts.Location = new System.Drawing.Point(140, 299);
-            this.edtFlts.Name = "edtFlts";
-            this.edtFlts.Size = new System.Drawing.Size(222, 22);
-            this.edtFlts.TabIndex = 5;
-            // 
-            // labelControl21
-            // 
-            this.labelControl21.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
-            this.labelControl21.Appearance.ForeColor = System.Drawing.Color.Gray;
-            this.labelControl21.Appearance.Options.UseFont = true;
-            this.labelControl21.Appearance.Options.UseForeColor = true;
-            this.labelControl21.Location = new System.Drawing.Point(140, 497);
-            this.labelControl21.Name = "labelControl21";
-            this.labelControl21.Size = new System.Drawing.Size(109, 13);
-            this.labelControl21.TabIndex = 0;
-            this.labelControl21.Text = "센서 부분을 선택합니다.";
-            // 
-            // edtFltp
-            // 
-            this.edtFltp.Location = new System.Drawing.Point(140, 251);
-            this.edtFltp.Name = "edtFltp";
-            this.edtFltp.Size = new System.Drawing.Size(222, 22);
-            this.edtFltp.TabIndex = 4;
-            // 
-            // labelControl33
-            // 
-            this.labelControl33.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
-            this.labelControl33.Appearance.ForeColor = System.Drawing.Color.Gray;
-            this.labelControl33.Appearance.Options.UseFont = true;
-            this.labelControl33.Appearance.Options.UseForeColor = true;
-            this.labelControl33.Location = new System.Drawing.Point(140, 778);
-            this.labelControl33.Name = "labelControl33";
-            this.labelControl33.Size = new System.Drawing.Size(409, 13);
-            this.labelControl33.TabIndex = 0;
-            this.labelControl33.Text = "해당 파라미터의 유의미한 특수 지정값을 설정합니다. 그래프를 그릴 때 사용될 수 있습니다.";
-            // 
-            // labelControl18
-            // 
-            this.labelControl18.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
-            this.labelControl18.Appearance.ForeColor = System.Drawing.Color.Gray;
-            this.labelControl18.Appearance.Options.UseFont = true;
-            this.labelControl18.Appearance.Options.UseForeColor = true;
-            this.labelControl18.Location = new System.Drawing.Point(140, 414);
-            this.labelControl18.Name = "labelControl18";
-            this.labelControl18.Size = new System.Drawing.Size(162, 13);
-            this.labelControl18.TabIndex = 0;
-            this.labelControl18.Text = "파라미터의 단위 정보를 선택합니다.";
-            // 
-            // labelControl31
-            // 
-            this.labelControl31.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
-            this.labelControl31.Appearance.ForeColor = System.Drawing.Color.Gray;
-            this.labelControl31.Appearance.Options.UseFont = true;
-            this.labelControl31.Appearance.Options.UseForeColor = true;
-            this.labelControl31.Location = new System.Drawing.Point(140, 731);
-            this.labelControl31.Name = "labelControl31";
-            this.labelControl31.Size = new System.Drawing.Size(172, 13);
-            this.labelControl31.TabIndex = 0;
-            this.labelControl31.Text = "해당 파라미터의 최소값을 설정합니다.";
-            // 
-            // edtGrt
-            // 
-            this.edtGrt.Location = new System.Drawing.Point(140, 203);
-            this.edtGrt.Name = "edtGrt";
-            this.edtGrt.Size = new System.Drawing.Size(222, 22);
-            this.edtGrt.TabIndex = 3;
-            // 
-            // labelControl29
-            // 
-            this.labelControl29.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
-            this.labelControl29.Appearance.ForeColor = System.Drawing.Color.Gray;
-            this.labelControl29.Appearance.Options.UseFont = true;
-            this.labelControl29.Appearance.Options.UseForeColor = true;
-            this.labelControl29.Location = new System.Drawing.Point(140, 684);
-            this.labelControl29.Name = "labelControl29";
-            this.labelControl29.Size = new System.Drawing.Size(172, 13);
-            this.labelControl29.TabIndex = 0;
-            this.labelControl29.Text = "해당 파라미터의 최대값을 설정합니다.";
-            // 
-            // labelControl16
-            // 
-            this.labelControl16.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
-            this.labelControl16.Appearance.ForeColor = System.Drawing.Color.Gray;
-            this.labelControl16.Appearance.Options.UseFont = true;
-            this.labelControl16.Appearance.Options.UseForeColor = true;
-            this.labelControl16.Location = new System.Drawing.Point(140, 370);
-            this.labelControl16.Name = "labelControl16";
-            this.labelControl16.Size = new System.Drawing.Size(162, 13);
-            this.labelControl16.TabIndex = 0;
-            this.labelControl16.Text = "파라미터의 특성 정보를 선택합니다.";
-            // 
-            // labelControl25
-            // 
-            this.labelControl25.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
-            this.labelControl25.Appearance.ForeColor = System.Drawing.Color.Gray;
-            this.labelControl25.Appearance.Options.UseFont = true;
-            this.labelControl25.Appearance.Options.UseForeColor = true;
-            this.labelControl25.Location = new System.Drawing.Point(140, 589);
-            this.labelControl25.Name = "labelControl25";
-            this.labelControl25.Size = new System.Drawing.Size(171, 13);
-            this.labelControl25.TabIndex = 0;
-            this.labelControl25.Text = "LRP 정보를 X,Y,Z에 맞게 입력합니다.";
-            // 
-            // edtZaero
-            // 
-            this.edtZaero.Location = new System.Drawing.Point(140, 156);
-            this.edtZaero.Name = "edtZaero";
-            this.edtZaero.Size = new System.Drawing.Size(222, 22);
-            this.edtZaero.TabIndex = 2;
-            // 
-            // labelControl26
-            // 
-            this.labelControl26.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.labelControl26.Appearance.Options.UseFont = true;
-            this.labelControl26.Location = new System.Drawing.Point(5, 614);
-            this.labelControl26.Name = "labelControl26";
-            this.labelControl26.Size = new System.Drawing.Size(55, 13);
-            this.labelControl26.TabIndex = 0;
-            this.labelControl26.Text = "항공기정보";
-            // 
-            // labelControl14
-            // 
-            this.labelControl14.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
-            this.labelControl14.Appearance.ForeColor = System.Drawing.Color.Gray;
-            this.labelControl14.Appearance.Options.UseFont = true;
-            this.labelControl14.Appearance.Options.UseForeColor = true;
-            this.labelControl14.Location = new System.Drawing.Point(140, 325);
-            this.labelControl14.Name = "labelControl14";
-            this.labelControl14.Size = new System.Drawing.Size(202, 13);
-            this.labelControl14.TabIndex = 0;
-            this.labelControl14.Text = "FLT Secondary 파라미터 이름을 입력합니다.";
-            // 
-            // labelControl22
-            // 
-            this.labelControl22.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.labelControl22.Appearance.Options.UseFont = true;
-            this.labelControl22.Location = new System.Drawing.Point(5, 520);
-            this.labelControl22.Name = "labelControl22";
-            this.labelControl22.Size = new System.Drawing.Size(50, 13);
-            this.labelControl22.TabIndex = 0;
-            this.labelControl22.Text = "파트(위치)";
-            // 
-            // edtAdams
-            // 
-            this.edtAdams.Location = new System.Drawing.Point(140, 110);
-            this.edtAdams.Name = "edtAdams";
-            this.edtAdams.Size = new System.Drawing.Size(222, 22);
-            this.edtAdams.TabIndex = 1;
-            // 
-            // labelControl20
-            // 
-            this.labelControl20.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.labelControl20.Appearance.Options.UseFont = true;
-            this.labelControl20.Location = new System.Drawing.Point(5, 475);
-            this.labelControl20.Name = "labelControl20";
-            this.labelControl20.Size = new System.Drawing.Size(50, 13);
-            this.labelControl20.TabIndex = 0;
-            this.labelControl20.Text = "파트(부분)";
-            // 
-            // labelControl12
-            // 
-            this.labelControl12.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
-            this.labelControl12.Appearance.ForeColor = System.Drawing.Color.Gray;
-            this.labelControl12.Appearance.Options.UseFont = true;
-            this.labelControl12.Appearance.Options.UseForeColor = true;
-            this.labelControl12.Location = new System.Drawing.Point(140, 277);
-            this.labelControl12.Name = "labelControl12";
-            this.labelControl12.Size = new System.Drawing.Size(186, 13);
-            this.labelControl12.TabIndex = 0;
-            this.labelControl12.Text = "FLT Primary 파라미터 이름을 입력합니다.";
-            // 
-            // labelControl32
-            // 
-            this.labelControl32.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.labelControl32.Appearance.Options.UseFont = true;
-            this.labelControl32.Location = new System.Drawing.Point(5, 752);
-            this.labelControl32.Name = "labelControl32";
-            this.labelControl32.Size = new System.Drawing.Size(55, 13);
-            this.labelControl32.TabIndex = 0;
-            this.labelControl32.Text = "특수설정값";
-            // 
-            // labelControl17
-            // 
-            this.labelControl17.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.labelControl17.Appearance.Options.UseFont = true;
-            this.labelControl17.Location = new System.Drawing.Point(5, 392);
-            this.labelControl17.Name = "labelControl17";
-            this.labelControl17.Size = new System.Drawing.Size(44, 13);
-            this.labelControl17.TabIndex = 0;
-            this.labelControl17.Text = "단위정보";
-            // 
-            // labelControl30
-            // 
-            this.labelControl30.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.labelControl30.Appearance.Options.UseFont = true;
-            this.labelControl30.Location = new System.Drawing.Point(5, 705);
-            this.labelControl30.Name = "labelControl30";
-            this.labelControl30.Size = new System.Drawing.Size(22, 13);
-            this.labelControl30.TabIndex = 0;
-            this.labelControl30.Text = "최소";
-            // 
-            // edtKey
-            // 
-            this.edtKey.Location = new System.Drawing.Point(140, 67);
-            this.edtKey.Name = "edtKey";
-            this.edtKey.Size = new System.Drawing.Size(222, 22);
-            this.edtKey.TabIndex = 0;
-            // 
-            // labelControl28
-            // 
-            this.labelControl28.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.labelControl28.Appearance.Options.UseFont = true;
-            this.labelControl28.Location = new System.Drawing.Point(5, 658);
-            this.labelControl28.Name = "labelControl28";
-            this.labelControl28.Size = new System.Drawing.Size(22, 13);
-            this.labelControl28.TabIndex = 0;
-            this.labelControl28.Text = "최대";
-            // 
-            // labelControl15
-            // 
-            this.labelControl15.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.labelControl15.Appearance.Options.UseFont = true;
-            this.labelControl15.Location = new System.Drawing.Point(5, 344);
-            this.labelControl15.Name = "labelControl15";
-            this.labelControl15.Size = new System.Drawing.Size(44, 13);
-            this.labelControl15.TabIndex = 0;
-            this.labelControl15.Text = "특성정보";
-            // 
-            // labelControl24
-            // 
-            this.labelControl24.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.labelControl24.Appearance.Options.UseFont = true;
-            this.labelControl24.Location = new System.Drawing.Point(5, 563);
-            this.labelControl24.Name = "labelControl24";
-            this.labelControl24.Size = new System.Drawing.Size(43, 13);
-            this.labelControl24.TabIndex = 0;
-            this.labelControl24.Text = "LRP정보";
-            // 
-            // labelControl10
-            // 
-            this.labelControl10.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
-            this.labelControl10.Appearance.ForeColor = System.Drawing.Color.Gray;
-            this.labelControl10.Appearance.Options.UseFont = true;
-            this.labelControl10.Appearance.Options.UseForeColor = true;
-            this.labelControl10.Location = new System.Drawing.Point(140, 229);
-            this.labelControl10.Name = "labelControl10";
-            this.labelControl10.Size = new System.Drawing.Size(175, 13);
-            this.labelControl10.TabIndex = 0;
-            this.labelControl10.Text = "GRT 지상 파라미터 이름을 입력합니다.";
-            // 
-            // labelControl13
-            // 
-            this.labelControl13.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.labelControl13.Appearance.Options.UseFont = true;
-            this.labelControl13.Location = new System.Drawing.Point(5, 299);
-            this.labelControl13.Name = "labelControl13";
-            this.labelControl13.Size = new System.Drawing.Size(87, 13);
-            this.labelControl13.TabIndex = 0;
-            this.labelControl13.Text = "시험데이터(FLTS)";
-            // 
-            // separatorControl2
-            // 
-            this.separatorControl2.BackColor = System.Drawing.Color.White;
-            this.separatorControl2.Location = new System.Drawing.Point(5, 464);
-            this.separatorControl2.Name = "separatorControl2";
-            this.separatorControl2.Size = new System.Drawing.Size(561, 1);
-            this.separatorControl2.TabIndex = 1;
-            // 
-            // separatorControl1
-            // 
-            this.separatorControl1.BackColor = System.Drawing.Color.White;
-            this.separatorControl1.Location = new System.Drawing.Point(5, 61);
-            this.separatorControl1.Name = "separatorControl1";
-            this.separatorControl1.Size = new System.Drawing.Size(561, 1);
-            this.separatorControl1.TabIndex = 1;
-            // 
-            // labelControl11
-            // 
-            this.labelControl11.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.labelControl11.Appearance.Options.UseFont = true;
-            this.labelControl11.Location = new System.Drawing.Point(5, 251);
-            this.labelControl11.Name = "labelControl11";
-            this.labelControl11.Size = new System.Drawing.Size(87, 13);
-            this.labelControl11.TabIndex = 0;
-            this.labelControl11.Text = "시험데이터(FLTP)";
-            // 
-            // labelControl8
-            // 
-            this.labelControl8.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
-            this.labelControl8.Appearance.ForeColor = System.Drawing.Color.Gray;
-            this.labelControl8.Appearance.Options.UseFont = true;
-            this.labelControl8.Appearance.Options.UseForeColor = true;
-            this.labelControl8.Location = new System.Drawing.Point(140, 182);
-            this.labelControl8.Name = "labelControl8";
-            this.labelControl8.Size = new System.Drawing.Size(190, 13);
-            this.labelControl8.TabIndex = 0;
-            this.labelControl8.Text = "ZAERO 에서 매칭되는 이름을 입력합니다.";
-            // 
-            // labelControl9
-            // 
-            this.labelControl9.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.labelControl9.Appearance.Options.UseFont = true;
-            this.labelControl9.Location = new System.Drawing.Point(5, 203);
-            this.labelControl9.Name = "labelControl9";
-            this.labelControl9.Size = new System.Drawing.Size(84, 13);
-            this.labelControl9.TabIndex = 0;
-            this.labelControl9.Text = "시험데이터(GRT)";
-            // 
-            // lblDuplicateKey
-            // 
-            this.lblDuplicateKey.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold);
-            this.lblDuplicateKey.Appearance.ForeColor = System.Drawing.Color.Red;
-            this.lblDuplicateKey.Appearance.Options.UseFont = true;
-            this.lblDuplicateKey.Appearance.Options.UseForeColor = true;
-            this.lblDuplicateKey.Location = new System.Drawing.Point(379, 72);
-            this.lblDuplicateKey.Name = "lblDuplicateKey";
-            this.lblDuplicateKey.Size = new System.Drawing.Size(170, 13);
-            this.lblDuplicateKey.TabIndex = 0;
-            this.lblDuplicateKey.Text = "이미 사용중인 파라미터 키입니다.";
-            this.lblDuplicateKey.Visible = false;
-            // 
-            // labelControl7
-            // 
-            this.labelControl7.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.labelControl7.Appearance.Options.UseFont = true;
-            this.labelControl7.Location = new System.Drawing.Point(5, 156);
-            this.labelControl7.Name = "labelControl7";
-            this.labelControl7.Size = new System.Drawing.Size(98, 13);
-            this.labelControl7.TabIndex = 0;
-            this.labelControl7.Text = "해석데이터(ZAERO)";
-            // 
-            // labelControl6
-            // 
-            this.labelControl6.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
-            this.labelControl6.Appearance.ForeColor = System.Drawing.Color.Gray;
-            this.labelControl6.Appearance.Options.UseFont = true;
-            this.labelControl6.Appearance.Options.UseForeColor = true;
-            this.labelControl6.Location = new System.Drawing.Point(140, 136);
-            this.labelControl6.Name = "labelControl6";
-            this.labelControl6.Size = new System.Drawing.Size(193, 13);
-            this.labelControl6.TabIndex = 0;
-            this.labelControl6.Text = "ADAMS 에서 매칭되는 이름을 입력합니다.";
-            // 
-            // labelControl5
-            // 
-            this.labelControl5.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.labelControl5.Appearance.Options.UseFont = true;
-            this.labelControl5.Location = new System.Drawing.Point(5, 110);
-            this.labelControl5.Name = "labelControl5";
-            this.labelControl5.Size = new System.Drawing.Size(99, 13);
-            this.labelControl5.TabIndex = 0;
-            this.labelControl5.Text = "해석데이터(ADAMS)";
-            // 
-            // labelControl4
-            // 
-            this.labelControl4.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
-            this.labelControl4.Appearance.ForeColor = System.Drawing.Color.Gray;
-            this.labelControl4.Appearance.Options.UseFont = true;
-            this.labelControl4.Appearance.Options.UseForeColor = true;
-            this.labelControl4.Location = new System.Drawing.Point(140, 93);
-            this.labelControl4.Name = "labelControl4";
-            this.labelControl4.Size = new System.Drawing.Size(215, 13);
-            this.labelControl4.TabIndex = 0;
-            this.labelControl4.Text = "파라미터의 키값으로 중복을 허용하지 않습니다.";
-            // 
-            // labelControl3
-            // 
-            this.labelControl3.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.labelControl3.Appearance.Options.UseFont = true;
-            this.labelControl3.Location = new System.Drawing.Point(5, 67);
-            this.labelControl3.Name = "labelControl3";
-            this.labelControl3.Size = new System.Drawing.Size(33, 13);
-            this.labelControl3.TabIndex = 0;
-            this.labelControl3.Text = "키정보";
-            // 
-            // labelControl19
-            // 
-            this.labelControl19.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
-            this.labelControl19.Appearance.Options.UseFont = true;
-            this.labelControl19.Location = new System.Drawing.Point(5, 443);
-            this.labelControl19.Name = "labelControl19";
-            this.labelControl19.Size = new System.Drawing.Size(48, 15);
-            this.labelControl19.TabIndex = 0;
-            this.labelControl19.Text = "부가정보";
-            // 
-            // labelControl2
-            // 
-            this.labelControl2.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
-            this.labelControl2.Appearance.Options.UseFont = true;
-            this.labelControl2.Location = new System.Drawing.Point(5, 40);
-            this.labelControl2.Name = "labelControl2";
-            this.labelControl2.Size = new System.Drawing.Size(80, 15);
-            this.labelControl2.TabIndex = 0;
-            this.labelControl2.Text = "필수 입력 정보";
-            // 
-            // labelControl1
-            // 
-            this.labelControl1.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
-            this.labelControl1.Appearance.Options.UseFont = true;
-            this.labelControl1.Location = new System.Drawing.Point(5, 3);
-            this.labelControl1.Name = "labelControl1";
-            this.labelControl1.Size = new System.Drawing.Size(77, 17);
-            this.labelControl1.TabIndex = 0;
-            this.labelControl1.Text = "파라미터 정보";
+            this.DirType.Visible = true;
+            this.DirType.VisibleIndex = 3;
             // 
             // panelControl1
             // 
@@ -752,39 +262,445 @@
             this.xtraScrollableControl1.Size = new System.Drawing.Size(641, 861);
             this.xtraScrollableControl1.TabIndex = 0;
             // 
-            // labelControl34
+            // labelControl1
             // 
-            this.labelControl34.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.labelControl34.Appearance.Options.UseFont = true;
-            this.labelControl34.Location = new System.Drawing.Point(140, 566);
-            this.labelControl34.Name = "labelControl34";
-            this.labelControl34.Size = new System.Drawing.Size(7, 13);
-            this.labelControl34.TabIndex = 10;
-            this.labelControl34.Text = "X";
+            this.labelControl1.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
+            this.labelControl1.Appearance.Options.UseFont = true;
+            this.labelControl1.Location = new System.Drawing.Point(5, 3);
+            this.labelControl1.Name = "labelControl1";
+            this.labelControl1.Size = new System.Drawing.Size(77, 17);
+            this.labelControl1.TabIndex = 0;
+            this.labelControl1.Text = "파라미터 정보";
             // 
-            // edtLrpY
+            // simpleButton3
             // 
-            this.edtLrpY.Location = new System.Drawing.Point(267, 561);
-            this.edtLrpY.Name = "edtLrpY";
-            this.edtLrpY.Size = new System.Drawing.Size(86, 22);
-            this.edtLrpY.TabIndex = 11;
+            this.simpleButton3.Location = new System.Drawing.Point(388, 814);
+            this.simpleButton3.Name = "simpleButton3";
+            this.simpleButton3.Size = new System.Drawing.Size(110, 23);
+            this.simpleButton3.TabIndex = 19;
+            this.simpleButton3.Text = "새 파라미터로 저장";
             // 
-            // labelControl35
+            // labelControl14
             // 
-            this.labelControl35.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.labelControl35.Appearance.Options.UseFont = true;
-            this.labelControl35.Location = new System.Drawing.Point(254, 566);
-            this.labelControl35.Name = "labelControl35";
-            this.labelControl35.Size = new System.Drawing.Size(7, 13);
-            this.labelControl35.TabIndex = 0;
-            this.labelControl35.Text = "Y";
+            this.labelControl14.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
+            this.labelControl14.Appearance.ForeColor = System.Drawing.Color.Gray;
+            this.labelControl14.Appearance.Options.UseFont = true;
+            this.labelControl14.Appearance.Options.UseForeColor = true;
+            this.labelControl14.Location = new System.Drawing.Point(140, 325);
+            this.labelControl14.Name = "labelControl14";
+            this.labelControl14.Size = new System.Drawing.Size(202, 13);
+            this.labelControl14.TabIndex = 0;
+            this.labelControl14.Text = "FLT Secondary 파라미터 이름을 입력합니다.";
             // 
-            // edtLrpZ
+            // labelControl2
             // 
-            this.edtLrpZ.Location = new System.Drawing.Point(379, 561);
-            this.edtLrpZ.Name = "edtLrpZ";
-            this.edtLrpZ.Size = new System.Drawing.Size(86, 22);
-            this.edtLrpZ.TabIndex = 12;
+            this.labelControl2.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
+            this.labelControl2.Appearance.Options.UseFont = true;
+            this.labelControl2.Location = new System.Drawing.Point(5, 40);
+            this.labelControl2.Name = "labelControl2";
+            this.labelControl2.Size = new System.Drawing.Size(80, 15);
+            this.labelControl2.TabIndex = 0;
+            this.labelControl2.Text = "필수 입력 정보";
+            // 
+            // labelControl22
+            // 
+            this.labelControl22.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            this.labelControl22.Appearance.Options.UseFont = true;
+            this.labelControl22.Location = new System.Drawing.Point(5, 520);
+            this.labelControl22.Name = "labelControl22";
+            this.labelControl22.Size = new System.Drawing.Size(50, 13);
+            this.labelControl22.TabIndex = 0;
+            this.labelControl22.Text = "파트(위치)";
+            // 
+            // simpleButton2
+            // 
+            this.simpleButton2.Location = new System.Drawing.Point(267, 814);
+            this.simpleButton2.Name = "simpleButton2";
+            this.simpleButton2.Size = new System.Drawing.Size(110, 23);
+            this.simpleButton2.TabIndex = 18;
+            this.simpleButton2.Text = "파라미터 삭제";
+            // 
+            // labelControl26
+            // 
+            this.labelControl26.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            this.labelControl26.Appearance.Options.UseFont = true;
+            this.labelControl26.Location = new System.Drawing.Point(5, 614);
+            this.labelControl26.Name = "labelControl26";
+            this.labelControl26.Size = new System.Drawing.Size(55, 13);
+            this.labelControl26.TabIndex = 0;
+            this.labelControl26.Text = "항공기정보";
+            // 
+            // labelControl19
+            // 
+            this.labelControl19.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
+            this.labelControl19.Appearance.Options.UseFont = true;
+            this.labelControl19.Location = new System.Drawing.Point(5, 443);
+            this.labelControl19.Name = "labelControl19";
+            this.labelControl19.Size = new System.Drawing.Size(48, 15);
+            this.labelControl19.TabIndex = 0;
+            this.labelControl19.Text = "부가정보";
+            // 
+            // edtAdams
+            // 
+            this.edtAdams.Location = new System.Drawing.Point(140, 110);
+            this.edtAdams.Name = "edtAdams";
+            this.edtAdams.Size = new System.Drawing.Size(222, 22);
+            this.edtAdams.TabIndex = 1;
+            // 
+            // simpleButton1
+            // 
+            this.simpleButton1.Location = new System.Drawing.Point(140, 814);
+            this.simpleButton1.Name = "simpleButton1";
+            this.simpleButton1.Size = new System.Drawing.Size(110, 23);
+            this.simpleButton1.TabIndex = 17;
+            this.simpleButton1.Text = "정보저장";
+            // 
+            // edtZaero
+            // 
+            this.edtZaero.Location = new System.Drawing.Point(140, 156);
+            this.edtZaero.Name = "edtZaero";
+            this.edtZaero.Size = new System.Drawing.Size(222, 22);
+            this.edtZaero.TabIndex = 2;
+            // 
+            // labelControl3
+            // 
+            this.labelControl3.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            this.labelControl3.Appearance.Options.UseFont = true;
+            this.labelControl3.Location = new System.Drawing.Point(5, 67);
+            this.labelControl3.Name = "labelControl3";
+            this.labelControl3.Size = new System.Drawing.Size(33, 13);
+            this.labelControl3.TabIndex = 0;
+            this.labelControl3.Text = "키정보";
+            // 
+            // labelControl20
+            // 
+            this.labelControl20.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            this.labelControl20.Appearance.Options.UseFont = true;
+            this.labelControl20.Location = new System.Drawing.Point(5, 475);
+            this.labelControl20.Name = "labelControl20";
+            this.labelControl20.Size = new System.Drawing.Size(50, 13);
+            this.labelControl20.TabIndex = 0;
+            this.labelControl20.Text = "파트(부분)";
+            // 
+            // labelControl25
+            // 
+            this.labelControl25.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
+            this.labelControl25.Appearance.ForeColor = System.Drawing.Color.Gray;
+            this.labelControl25.Appearance.Options.UseFont = true;
+            this.labelControl25.Appearance.Options.UseForeColor = true;
+            this.labelControl25.Location = new System.Drawing.Point(140, 589);
+            this.labelControl25.Name = "labelControl25";
+            this.labelControl25.Size = new System.Drawing.Size(171, 13);
+            this.labelControl25.TabIndex = 0;
+            this.labelControl25.Text = "LRP 정보를 X,Y,Z에 맞게 입력합니다.";
+            // 
+            // labelControl4
+            // 
+            this.labelControl4.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
+            this.labelControl4.Appearance.ForeColor = System.Drawing.Color.Gray;
+            this.labelControl4.Appearance.Options.UseFont = true;
+            this.labelControl4.Appearance.Options.UseForeColor = true;
+            this.labelControl4.Location = new System.Drawing.Point(140, 93);
+            this.labelControl4.Name = "labelControl4";
+            this.labelControl4.Size = new System.Drawing.Size(215, 13);
+            this.labelControl4.TabIndex = 0;
+            this.labelControl4.Text = "파라미터의 키값으로 중복을 허용하지 않습니다.";
+            // 
+            // labelControl12
+            // 
+            this.labelControl12.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
+            this.labelControl12.Appearance.ForeColor = System.Drawing.Color.Gray;
+            this.labelControl12.Appearance.Options.UseFont = true;
+            this.labelControl12.Appearance.Options.UseForeColor = true;
+            this.labelControl12.Location = new System.Drawing.Point(140, 277);
+            this.labelControl12.Name = "labelControl12";
+            this.labelControl12.Size = new System.Drawing.Size(186, 13);
+            this.labelControl12.TabIndex = 0;
+            this.labelControl12.Text = "FLT Primary 파라미터 이름을 입력합니다.";
+            // 
+            // labelControl16
+            // 
+            this.labelControl16.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
+            this.labelControl16.Appearance.ForeColor = System.Drawing.Color.Gray;
+            this.labelControl16.Appearance.Options.UseFont = true;
+            this.labelControl16.Appearance.Options.UseForeColor = true;
+            this.labelControl16.Location = new System.Drawing.Point(140, 370);
+            this.labelControl16.Name = "labelControl16";
+            this.labelControl16.Size = new System.Drawing.Size(162, 13);
+            this.labelControl16.TabIndex = 0;
+            this.labelControl16.Text = "파라미터의 특성 정보를 선택합니다.";
+            // 
+            // labelControl5
+            // 
+            this.labelControl5.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            this.labelControl5.Appearance.Options.UseFont = true;
+            this.labelControl5.Location = new System.Drawing.Point(5, 110);
+            this.labelControl5.Name = "labelControl5";
+            this.labelControl5.Size = new System.Drawing.Size(99, 13);
+            this.labelControl5.TabIndex = 0;
+            this.labelControl5.Text = "해석데이터(ADAMS)";
+            // 
+            // labelControl32
+            // 
+            this.labelControl32.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            this.labelControl32.Appearance.Options.UseFont = true;
+            this.labelControl32.Location = new System.Drawing.Point(5, 752);
+            this.labelControl32.Name = "labelControl32";
+            this.labelControl32.Size = new System.Drawing.Size(55, 13);
+            this.labelControl32.TabIndex = 0;
+            this.labelControl32.Text = "특수설정값";
+            // 
+            // labelControl29
+            // 
+            this.labelControl29.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
+            this.labelControl29.Appearance.ForeColor = System.Drawing.Color.Gray;
+            this.labelControl29.Appearance.Options.UseFont = true;
+            this.labelControl29.Appearance.Options.UseForeColor = true;
+            this.labelControl29.Location = new System.Drawing.Point(140, 684);
+            this.labelControl29.Name = "labelControl29";
+            this.labelControl29.Size = new System.Drawing.Size(172, 13);
+            this.labelControl29.TabIndex = 0;
+            this.labelControl29.Text = "해당 파라미터의 최대값을 설정합니다.";
+            // 
+            // labelControl6
+            // 
+            this.labelControl6.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
+            this.labelControl6.Appearance.ForeColor = System.Drawing.Color.Gray;
+            this.labelControl6.Appearance.Options.UseFont = true;
+            this.labelControl6.Appearance.Options.UseForeColor = true;
+            this.labelControl6.Location = new System.Drawing.Point(140, 136);
+            this.labelControl6.Name = "labelControl6";
+            this.labelControl6.Size = new System.Drawing.Size(193, 13);
+            this.labelControl6.TabIndex = 0;
+            this.labelControl6.Text = "ADAMS 에서 매칭되는 이름을 입력합니다.";
+            // 
+            // labelControl17
+            // 
+            this.labelControl17.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            this.labelControl17.Appearance.Options.UseFont = true;
+            this.labelControl17.Location = new System.Drawing.Point(5, 392);
+            this.labelControl17.Name = "labelControl17";
+            this.labelControl17.Size = new System.Drawing.Size(44, 13);
+            this.labelControl17.TabIndex = 0;
+            this.labelControl17.Text = "단위정보";
+            // 
+            // edtGrt
+            // 
+            this.edtGrt.Location = new System.Drawing.Point(140, 203);
+            this.edtGrt.Name = "edtGrt";
+            this.edtGrt.Size = new System.Drawing.Size(222, 22);
+            this.edtGrt.TabIndex = 3;
+            // 
+            // labelControl7
+            // 
+            this.labelControl7.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            this.labelControl7.Appearance.Options.UseFont = true;
+            this.labelControl7.Location = new System.Drawing.Point(5, 156);
+            this.labelControl7.Name = "labelControl7";
+            this.labelControl7.Size = new System.Drawing.Size(98, 13);
+            this.labelControl7.TabIndex = 0;
+            this.labelControl7.Text = "해석데이터(ZAERO)";
+            // 
+            // labelControl30
+            // 
+            this.labelControl30.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            this.labelControl30.Appearance.Options.UseFont = true;
+            this.labelControl30.Location = new System.Drawing.Point(5, 705);
+            this.labelControl30.Name = "labelControl30";
+            this.labelControl30.Size = new System.Drawing.Size(22, 13);
+            this.labelControl30.TabIndex = 0;
+            this.labelControl30.Text = "최소";
+            // 
+            // labelControl27
+            // 
+            this.labelControl27.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
+            this.labelControl27.Appearance.ForeColor = System.Drawing.Color.Gray;
+            this.labelControl27.Appearance.Options.UseFont = true;
+            this.labelControl27.Appearance.Options.UseForeColor = true;
+            this.labelControl27.Location = new System.Drawing.Point(140, 636);
+            this.labelControl27.Name = "labelControl27";
+            this.labelControl27.Size = new System.Drawing.Size(162, 13);
+            this.labelControl27.TabIndex = 0;
+            this.labelControl27.Text = "파라미터 항공기 정보를 선택합니다.";
+            // 
+            // labelControl31
+            // 
+            this.labelControl31.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
+            this.labelControl31.Appearance.ForeColor = System.Drawing.Color.Gray;
+            this.labelControl31.Appearance.Options.UseFont = true;
+            this.labelControl31.Appearance.Options.UseForeColor = true;
+            this.labelControl31.Location = new System.Drawing.Point(140, 731);
+            this.labelControl31.Name = "labelControl31";
+            this.labelControl31.Size = new System.Drawing.Size(172, 13);
+            this.labelControl31.TabIndex = 0;
+            this.labelControl31.Text = "해당 파라미터의 최소값을 설정합니다.";
+            // 
+            // lblDuplicateKey
+            // 
+            this.lblDuplicateKey.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold);
+            this.lblDuplicateKey.Appearance.ForeColor = System.Drawing.Color.Red;
+            this.lblDuplicateKey.Appearance.Options.UseFont = true;
+            this.lblDuplicateKey.Appearance.Options.UseForeColor = true;
+            this.lblDuplicateKey.Location = new System.Drawing.Point(379, 72);
+            this.lblDuplicateKey.Name = "lblDuplicateKey";
+            this.lblDuplicateKey.Size = new System.Drawing.Size(170, 13);
+            this.lblDuplicateKey.TabIndex = 0;
+            this.lblDuplicateKey.Text = "이미 사용중인 파라미터 키입니다.";
+            this.lblDuplicateKey.Visible = false;
+            // 
+            // edtKey
+            // 
+            this.edtKey.Location = new System.Drawing.Point(140, 67);
+            this.edtKey.Name = "edtKey";
+            this.edtKey.Size = new System.Drawing.Size(222, 22);
+            this.edtKey.TabIndex = 0;
+            // 
+            // cboAirplane
+            // 
+            this.cboAirplane.Location = new System.Drawing.Point(140, 609);
+            this.cboAirplane.Name = "cboAirplane";
+            this.cboAirplane.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.cboAirplane.Size = new System.Drawing.Size(222, 22);
+            this.cboAirplane.TabIndex = 13;
+            // 
+            // cboPartLocation
+            // 
+            this.cboPartLocation.Location = new System.Drawing.Point(140, 515);
+            this.cboPartLocation.Name = "cboPartLocation";
+            this.cboPartLocation.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.cboPartLocation.Size = new System.Drawing.Size(100, 22);
+            this.cboPartLocation.TabIndex = 9;
+            // 
+            // cboPart
+            // 
+            this.cboPart.Location = new System.Drawing.Point(140, 470);
+            this.cboPart.Name = "cboPart";
+            this.cboPart.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.cboPart.Size = new System.Drawing.Size(100, 22);
+            this.cboPart.TabIndex = 8;
+            // 
+            // cboUnit
+            // 
+            this.cboUnit.Location = new System.Drawing.Point(140, 387);
+            this.cboUnit.Name = "cboUnit";
+            this.cboUnit.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.cboUnit.Size = new System.Drawing.Size(100, 22);
+            this.cboUnit.TabIndex = 7;
+            // 
+            // cboProperty
+            // 
+            this.cboProperty.Location = new System.Drawing.Point(140, 344);
+            this.cboProperty.Name = "cboProperty";
+            this.cboProperty.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.cboProperty.Size = new System.Drawing.Size(100, 22);
+            this.cboProperty.TabIndex = 6;
+            // 
+            // labelControl18
+            // 
+            this.labelControl18.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
+            this.labelControl18.Appearance.ForeColor = System.Drawing.Color.Gray;
+            this.labelControl18.Appearance.Options.UseFont = true;
+            this.labelControl18.Appearance.Options.UseForeColor = true;
+            this.labelControl18.Location = new System.Drawing.Point(140, 414);
+            this.labelControl18.Name = "labelControl18";
+            this.labelControl18.Size = new System.Drawing.Size(162, 13);
+            this.labelControl18.TabIndex = 0;
+            this.labelControl18.Text = "파라미터의 단위 정보를 선택합니다.";
+            // 
+            // labelControl9
+            // 
+            this.labelControl9.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            this.labelControl9.Appearance.Options.UseFont = true;
+            this.labelControl9.Location = new System.Drawing.Point(5, 203);
+            this.labelControl9.Name = "labelControl9";
+            this.labelControl9.Size = new System.Drawing.Size(84, 13);
+            this.labelControl9.TabIndex = 0;
+            this.labelControl9.Text = "시험데이터(GRT)";
+            // 
+            // labelControl28
+            // 
+            this.labelControl28.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            this.labelControl28.Appearance.Options.UseFont = true;
+            this.labelControl28.Location = new System.Drawing.Point(5, 658);
+            this.labelControl28.Name = "labelControl28";
+            this.labelControl28.Size = new System.Drawing.Size(22, 13);
+            this.labelControl28.TabIndex = 0;
+            this.labelControl28.Text = "최대";
+            // 
+            // labelControl23
+            // 
+            this.labelControl23.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
+            this.labelControl23.Appearance.ForeColor = System.Drawing.Color.Gray;
+            this.labelControl23.Appearance.Options.UseFont = true;
+            this.labelControl23.Appearance.Options.UseForeColor = true;
+            this.labelControl23.Location = new System.Drawing.Point(140, 542);
+            this.labelControl23.Name = "labelControl23";
+            this.labelControl23.Size = new System.Drawing.Size(109, 13);
+            this.labelControl23.TabIndex = 0;
+            this.labelControl23.Text = "센서 위치를 선택합니다.";
+            // 
+            // labelControl33
+            // 
+            this.labelControl33.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
+            this.labelControl33.Appearance.ForeColor = System.Drawing.Color.Gray;
+            this.labelControl33.Appearance.Options.UseFont = true;
+            this.labelControl33.Appearance.Options.UseForeColor = true;
+            this.labelControl33.Location = new System.Drawing.Point(140, 778);
+            this.labelControl33.Name = "labelControl33";
+            this.labelControl33.Size = new System.Drawing.Size(409, 13);
+            this.labelControl33.TabIndex = 0;
+            this.labelControl33.Text = "해당 파라미터의 유의미한 특수 지정값을 설정합니다. 그래프를 그릴 때 사용될 수 있습니다.";
+            // 
+            // labelControl8
+            // 
+            this.labelControl8.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
+            this.labelControl8.Appearance.ForeColor = System.Drawing.Color.Gray;
+            this.labelControl8.Appearance.Options.UseFont = true;
+            this.labelControl8.Appearance.Options.UseForeColor = true;
+            this.labelControl8.Location = new System.Drawing.Point(140, 182);
+            this.labelControl8.Name = "labelControl8";
+            this.labelControl8.Size = new System.Drawing.Size(190, 13);
+            this.labelControl8.TabIndex = 0;
+            this.labelControl8.Text = "ZAERO 에서 매칭되는 이름을 입력합니다.";
+            // 
+            // labelControl15
+            // 
+            this.labelControl15.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            this.labelControl15.Appearance.Options.UseFont = true;
+            this.labelControl15.Location = new System.Drawing.Point(5, 344);
+            this.labelControl15.Name = "labelControl15";
+            this.labelControl15.Size = new System.Drawing.Size(44, 13);
+            this.labelControl15.TabIndex = 0;
+            this.labelControl15.Text = "특성정보";
+            // 
+            // edtSpecialValue
+            // 
+            this.edtSpecialValue.Location = new System.Drawing.Point(140, 752);
+            this.edtSpecialValue.Name = "edtSpecialValue";
+            this.edtSpecialValue.Size = new System.Drawing.Size(222, 22);
+            this.edtSpecialValue.TabIndex = 16;
+            // 
+            // edtFltp
+            // 
+            this.edtFltp.Location = new System.Drawing.Point(140, 251);
+            this.edtFltp.Name = "edtFltp";
+            this.edtFltp.Size = new System.Drawing.Size(222, 22);
+            this.edtFltp.TabIndex = 4;
+            // 
+            // labelControl11
+            // 
+            this.labelControl11.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            this.labelControl11.Appearance.Options.UseFont = true;
+            this.labelControl11.Location = new System.Drawing.Point(5, 251);
+            this.labelControl11.Name = "labelControl11";
+            this.labelControl11.Size = new System.Drawing.Size(87, 13);
+            this.labelControl11.TabIndex = 0;
+            this.labelControl11.Text = "시험데이터(FLTP)";
             // 
             // labelControl36
             // 
@@ -796,41 +712,127 @@
             this.labelControl36.TabIndex = 0;
             this.labelControl36.Text = "Z";
             // 
-            // cboUnit
+            // labelControl35
             // 
-            this.cboUnit.Location = new System.Drawing.Point(140, 387);
-            this.cboUnit.Name = "cboUnit";
-            this.cboUnit.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.cboUnit.Size = new System.Drawing.Size(100, 22);
-            this.cboUnit.TabIndex = 7;
+            this.labelControl35.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            this.labelControl35.Appearance.Options.UseFont = true;
+            this.labelControl35.Location = new System.Drawing.Point(254, 566);
+            this.labelControl35.Name = "labelControl35";
+            this.labelControl35.Size = new System.Drawing.Size(7, 13);
+            this.labelControl35.TabIndex = 0;
+            this.labelControl35.Text = "Y";
             // 
-            // cboPart
+            // labelControl34
             // 
-            this.cboPart.Location = new System.Drawing.Point(140, 470);
-            this.cboPart.Name = "cboPart";
-            this.cboPart.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.cboPart.Size = new System.Drawing.Size(100, 22);
-            this.cboPart.TabIndex = 8;
+            this.labelControl34.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            this.labelControl34.Appearance.Options.UseFont = true;
+            this.labelControl34.Location = new System.Drawing.Point(140, 566);
+            this.labelControl34.Name = "labelControl34";
+            this.labelControl34.Size = new System.Drawing.Size(7, 13);
+            this.labelControl34.TabIndex = 10;
+            this.labelControl34.Text = "X";
             // 
-            // cboPartLocation
+            // labelControl24
             // 
-            this.cboPartLocation.Location = new System.Drawing.Point(140, 515);
-            this.cboPartLocation.Name = "cboPartLocation";
-            this.cboPartLocation.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.cboPartLocation.Size = new System.Drawing.Size(100, 22);
-            this.cboPartLocation.TabIndex = 9;
+            this.labelControl24.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            this.labelControl24.Appearance.Options.UseFont = true;
+            this.labelControl24.Location = new System.Drawing.Point(5, 563);
+            this.labelControl24.Name = "labelControl24";
+            this.labelControl24.Size = new System.Drawing.Size(43, 13);
+            this.labelControl24.TabIndex = 0;
+            this.labelControl24.Text = "LRP정보";
             // 
-            // cboAirplane
+            // edtMinumum
             // 
-            this.cboAirplane.Location = new System.Drawing.Point(140, 609);
-            this.cboAirplane.Name = "cboAirplane";
-            this.cboAirplane.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.cboAirplane.Size = new System.Drawing.Size(222, 22);
-            this.cboAirplane.TabIndex = 13;
+            this.edtMinumum.Location = new System.Drawing.Point(140, 705);
+            this.edtMinumum.Name = "edtMinumum";
+            this.edtMinumum.Size = new System.Drawing.Size(222, 22);
+            this.edtMinumum.TabIndex = 15;
+            // 
+            // labelControl21
+            // 
+            this.labelControl21.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
+            this.labelControl21.Appearance.ForeColor = System.Drawing.Color.Gray;
+            this.labelControl21.Appearance.Options.UseFont = true;
+            this.labelControl21.Appearance.Options.UseForeColor = true;
+            this.labelControl21.Location = new System.Drawing.Point(140, 497);
+            this.labelControl21.Name = "labelControl21";
+            this.labelControl21.Size = new System.Drawing.Size(109, 13);
+            this.labelControl21.TabIndex = 0;
+            this.labelControl21.Text = "센서 부분을 선택합니다.";
+            // 
+            // separatorControl1
+            // 
+            this.separatorControl1.BackColor = System.Drawing.Color.White;
+            this.separatorControl1.Location = new System.Drawing.Point(5, 61);
+            this.separatorControl1.Name = "separatorControl1";
+            this.separatorControl1.Size = new System.Drawing.Size(561, 1);
+            this.separatorControl1.TabIndex = 1;
+            // 
+            // labelControl10
+            // 
+            this.labelControl10.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
+            this.labelControl10.Appearance.ForeColor = System.Drawing.Color.Gray;
+            this.labelControl10.Appearance.Options.UseFont = true;
+            this.labelControl10.Appearance.Options.UseForeColor = true;
+            this.labelControl10.Location = new System.Drawing.Point(140, 229);
+            this.labelControl10.Name = "labelControl10";
+            this.labelControl10.Size = new System.Drawing.Size(175, 13);
+            this.labelControl10.TabIndex = 0;
+            this.labelControl10.Text = "GRT 지상 파라미터 이름을 입력합니다.";
+            // 
+            // edtMaximum
+            // 
+            this.edtMaximum.Location = new System.Drawing.Point(140, 658);
+            this.edtMaximum.Name = "edtMaximum";
+            this.edtMaximum.Size = new System.Drawing.Size(222, 22);
+            this.edtMaximum.TabIndex = 14;
+            // 
+            // edtFlts
+            // 
+            this.edtFlts.Location = new System.Drawing.Point(140, 299);
+            this.edtFlts.Name = "edtFlts";
+            this.edtFlts.Size = new System.Drawing.Size(222, 22);
+            this.edtFlts.TabIndex = 5;
+            // 
+            // separatorControl2
+            // 
+            this.separatorControl2.BackColor = System.Drawing.Color.White;
+            this.separatorControl2.Location = new System.Drawing.Point(5, 464);
+            this.separatorControl2.Name = "separatorControl2";
+            this.separatorControl2.Size = new System.Drawing.Size(561, 1);
+            this.separatorControl2.TabIndex = 1;
+            // 
+            // labelControl13
+            // 
+            this.labelControl13.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            this.labelControl13.Appearance.Options.UseFont = true;
+            this.labelControl13.Location = new System.Drawing.Point(5, 299);
+            this.labelControl13.Name = "labelControl13";
+            this.labelControl13.Size = new System.Drawing.Size(87, 13);
+            this.labelControl13.TabIndex = 0;
+            this.labelControl13.Text = "시험데이터(FLTS)";
+            // 
+            // edtLrpZ
+            // 
+            this.edtLrpZ.Location = new System.Drawing.Point(379, 561);
+            this.edtLrpZ.Name = "edtLrpZ";
+            this.edtLrpZ.Size = new System.Drawing.Size(86, 22);
+            this.edtLrpZ.TabIndex = 12;
+            // 
+            // edtLrpY
+            // 
+            this.edtLrpY.Location = new System.Drawing.Point(267, 561);
+            this.edtLrpY.Name = "edtLrpY";
+            this.edtLrpY.Size = new System.Drawing.Size(86, 22);
+            this.edtLrpY.TabIndex = 11;
+            // 
+            // edtLrpX
+            // 
+            this.edtLrpX.Location = new System.Drawing.Point(153, 561);
+            this.edtLrpX.Name = "edtLrpX";
+            this.edtLrpX.Size = new System.Drawing.Size(86, 22);
+            this.edtLrpX.TabIndex = 10;
             // 
             // MgmtParameterControl
             // 
@@ -845,29 +847,29 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.treeList1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cboProperty.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.edtSpecialValue.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.edtMinumum.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.edtMaximum.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.edtLrpX.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.edtFlts.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.edtFltp.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.edtGrt.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.edtZaero.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.edtAdams.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.edtKey.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.separatorControl2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.separatorControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.panelControl1)).EndInit();
             this.panelControl1.ResumeLayout(false);
             this.xtraScrollableControl1.ResumeLayout(false);
             this.xtraScrollableControl1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.edtLrpY.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.edtLrpZ.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cboUnit.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cboPart.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cboPartLocation.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.edtAdams.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.edtZaero.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.edtGrt.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.edtKey.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cboAirplane.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cboPartLocation.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cboPart.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cboUnit.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cboProperty.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.edtSpecialValue.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.edtFltp.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.edtMinumum.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.separatorControl1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.edtMaximum.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.edtFlts.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.separatorControl2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.edtLrpZ.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.edtLrpY.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.edtLrpX.Properties)).EndInit();
             this.ResumeLayout(false);
 
         }

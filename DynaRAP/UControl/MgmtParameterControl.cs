@@ -1,5 +1,6 @@
 ﻿using DevExpress.Utils.Menu;
 using DevExpress.XtraEditors;
+using DevExpress.XtraEditors.Controls;
 using DevExpress.XtraTreeList;
 using DevExpress.XtraTreeList.Columns;
 using DevExpress.XtraTreeList.Nodes;
@@ -30,8 +31,15 @@ namespace DynaRAP.UControl
 
         private void MgmtParameterControl_Load(object sender, EventArgs e)
         {
-            InitializeParameterDataList();
             this.splitContainer1.SplitterDistance = 250;
+            cboProperty.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+            cboUnit.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+            cboPart.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+            cboPartLocation.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+            cboAirplane.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+
+
+            InitializeParameterDataList();
         }
 
         private void InitializeParameterDataList()
@@ -53,14 +61,14 @@ namespace DynaRAP.UControl
             treeList1.ForceInitialize();
 
             treeList1.RowHeight = 23;
-            //treeList1.OptionsView.ShowColumns = false;
+            treeList1.OptionsView.ShowColumns = false;
             treeList1.OptionsView.ShowHorzLines = false;
             treeList1.OptionsView.ShowVertLines = false;
             treeList1.OptionsView.ShowIndicator = false;
             treeList1.OptionsView.ShowTreeLines = DevExpress.Utils.DefaultBoolean.False;
             treeList1.OptionsView.ShowFilterPanelMode = ShowFilterPanelMode.Never;
             treeList1.OptionsView.ShowSummaryFooter = false;
-            treeList1.OptionsView.AutoWidth = false;
+            treeList1.OptionsView.AutoWidth = true;
             treeList1.OptionsView.ShowAutoFilterRow = true;
 
             treeList1.OptionsFilter.AllowFilterEditor = false;
@@ -70,6 +78,7 @@ namespace DynaRAP.UControl
             //Hide the key columns. An end-user can access them from the Customization Form.
             treeList1.Columns[treeList1.KeyFieldName].Visible = false;
             treeList1.Columns[treeList1.ParentFieldName].Visible = false;
+            treeList1.Columns["DirType"].Visible = false;
 
             //Access the automatically created columns.
             TreeListColumn colName = treeList1.Columns["DirName"];
@@ -272,7 +281,17 @@ namespace DynaRAP.UControl
         private bool CreateParameter(string dirType, string name, string pid)
         {
             string url = ConfigurationManager.AppSettings["UrlParameter"];
-            string sendData = string.Format("{{ \"command\":\"add\",\"seq\":\"1\",\"parentDirSeq\":\"{0}\",\"dirName\":\"{1}\",\"dirType\":\"{2}\",\"dirIcon\":\"\",\"refSeq\":\"\",\"refSubSeq\":\"\" }}", pid, name, dirType);
+            string sendData = string.Format(@"
+            {{ ""command"":""add"",
+            ""seq"":""1"",
+            ""parentDirSeq"":""{0}"",
+            ""dirName"":""{1}"",
+            ""dirType"":""{2}"",
+            ""dirIcon"":"""",
+            ""refSeq"":"""",
+            ""refSubSeq"":""""
+            }}"
+            , pid, name, dirType);
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "POST";
@@ -317,8 +336,17 @@ namespace DynaRAP.UControl
         private bool ModifyParameter(string dirType, string id, string pid, string name)
         {
             string url = ConfigurationManager.AppSettings["UrlParameter"];
-            //string sendData = string.Format("{{ \"command\":\"remove\", \"seq\":\"{0}\" }}", id, name);
-            string sendData = string.Format("{{ \"command\":\"modify\", \"seq\":\"{0}\", \"parentDirSeq\":\"{1}\", \"dirName\":\"{2}\", \"dirType\":\"{3}\", \"dirIcon\":\"\", \"refSeq\":\"\", \"refSubSeq\":\"\" }}", id, pid, name, dirType);
+            string sendData = string.Format(@"
+            {{ ""command"":""modify"",
+            ""seq"":""{0}"",
+            ""parentDirSeq"":""{1}"",
+            ""dirName"":""{2}"",
+            ""dirType"":""{3}"",
+            ""dirIcon"":"""",
+            ""refSeq"":"""",
+            ""refSubSeq"":""""
+            }}"
+            , id, pid, name, dirType);
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "POST";
@@ -363,7 +391,11 @@ namespace DynaRAP.UControl
         private bool DeleteParameter(string id)
         {
             string url = ConfigurationManager.AppSettings["UrlParameter"];
-            string sendData = string.Format("{{ \"command\":\"remove\", \"seq\":\"{0}\" }}", id);
+            string sendData = string.Format(@"
+            {{""command"":""remove"",
+            ""seq"":""{0}""
+            }}
+            ", id);
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "POST";
@@ -439,7 +471,7 @@ namespace DynaRAP.UControl
 
             Console.WriteLine(responseText);
             ParameterJsonData result = JsonConvert.DeserializeObject<ParameterJsonData>(responseText);
-            //object myDeserializedClass = JsonConvert.DeserializeObject(responseText);
+            //object result = JsonConvert.DeserializeObject(responseText);
 
             foreach (Pool pool in result.response.pools)
             {
