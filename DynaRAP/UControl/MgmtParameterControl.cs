@@ -31,6 +31,7 @@ namespace DynaRAP.UControl
         private void MgmtParameterControl_Load(object sender, EventArgs e)
         {
             InitializeParameterDataList();
+            this.splitContainer1.SplitterDistance = 250;
         }
 
         private void InitializeParameterDataList()
@@ -52,7 +53,7 @@ namespace DynaRAP.UControl
             treeList1.ForceInitialize();
 
             treeList1.RowHeight = 23;
-            treeList1.OptionsView.ShowColumns = false;
+            //treeList1.OptionsView.ShowColumns = false;
             treeList1.OptionsView.ShowHorzLines = false;
             treeList1.OptionsView.ShowVertLines = false;
             treeList1.OptionsView.ShowIndicator = false;
@@ -60,17 +61,20 @@ namespace DynaRAP.UControl
             treeList1.OptionsView.ShowFilterPanelMode = ShowFilterPanelMode.Never;
             treeList1.OptionsView.ShowSummaryFooter = false;
             treeList1.OptionsView.AutoWidth = false;
+            treeList1.OptionsView.ShowAutoFilterRow = true;
 
             treeList1.OptionsFilter.AllowFilterEditor = false;
 
             treeList1.OptionsSelection.MultiSelect = false;
 
-            //Access the automatically created columns.
-            TreeListColumn colName = treeList1.Columns["DirName"];
-
             //Hide the key columns. An end-user can access them from the Customization Form.
             treeList1.Columns[treeList1.KeyFieldName].Visible = false;
             treeList1.Columns[treeList1.ParentFieldName].Visible = false;
+
+            //Access the automatically created columns.
+            TreeListColumn colName = treeList1.Columns["DirName"];
+
+            colName.MinWidth = 200;
 
             //Make the Project column read-only.
             colName.OptionsColumn.ReadOnly = true;
@@ -448,6 +452,5 @@ namespace DynaRAP.UControl
             return list;
 
         }
-
     }
 }
