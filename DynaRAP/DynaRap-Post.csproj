@@ -541,6 +541,8 @@
     <Content Include="Python\Calculator.py">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="Resources\file.png" />
+    <EmbeddedResource Include="Resources\folder.png" />
     <EmbeddedResource Include="Resources\change.png" />
     <EmbeddedResource Include="Resources\delete.png" />
     <EmbeddedResource Include="Resources\view.png" />

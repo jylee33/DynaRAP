@@ -484,5 +484,41 @@ namespace DynaRAP.UControl
             return list;
 
         }
+
+        private void treeList1_GetStateImage(object sender, GetStateImageEventArgs e)
+        {
+            //if (e.Node.ParentNode == null)
+            //{
+            //    //   e.Node.SelectImageIndex = 1;
+            //    //   e.Node.ImageIndex = 1;
+            //    e.NodeImageIndex = 1;
+            //}
+            //else
+            //{
+            //    e.NodeImageIndex = 2;
+            //}
+
+            if (e.Node == null || e.Node.GetValue("DirType") == null)
+                return;
+
+            if(e.Node.GetValue("DirType").ToString().Equals("folder"))
+            {
+                e.NodeImageIndex = 0;
+            }
+            else
+            {
+                e.NodeImageIndex = 1;
+            }
+        }
+
+        private void treeList1_GetSelectImage(object sender, GetSelectImageEventArgs e)
+        {
+            if (e.Node.ParentNode != null)
+            {
+                e.Node.SelectImageIndex = 1;
+                e.Node.ImageIndex = 1;
+            }
+        }
+
     }
 }

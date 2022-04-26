@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MgmtParameterControl));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.treeList1 = new DevExpress.XtraTreeList.TreeList();
             this.ID = new DevExpress.XtraTreeList.Columns.TreeListColumn();
@@ -95,6 +97,7 @@
             this.edtLrpZ = new DevExpress.XtraEditors.TextEdit();
             this.edtLrpY = new DevExpress.XtraEditors.TextEdit();
             this.edtLrpX = new DevExpress.XtraEditors.TextEdit();
+            this.sharedImageCollection1 = new DevExpress.Utils.SharedImageCollection(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -122,6 +125,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.edtLrpZ.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtLrpY.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtLrpX.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.sharedImageCollection1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.sharedImageCollection1.ImageSource)).BeginInit();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -149,10 +154,14 @@
             this.DirName,
             this.DirType});
             this.treeList1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeList1.ImageIndexFieldName = "DirName";
             this.treeList1.Location = new System.Drawing.Point(0, 0);
             this.treeList1.Name = "treeList1";
             this.treeList1.Size = new System.Drawing.Size(291, 865);
+            this.treeList1.StateImageList = this.sharedImageCollection1;
             this.treeList1.TabIndex = 2;
+            this.treeList1.GetStateImage += new DevExpress.XtraTreeList.GetStateImageEventHandler(this.treeList1_GetStateImage);
+            this.treeList1.GetSelectImage += new DevExpress.XtraTreeList.GetSelectImageEventHandler(this.treeList1_GetSelectImage);
             // 
             // ID
             // 
@@ -834,6 +843,16 @@
             this.edtLrpX.Size = new System.Drawing.Size(86, 22);
             this.edtLrpX.TabIndex = 10;
             // 
+            // sharedImageCollection1
+            // 
+            // 
+            // 
+            // 
+            this.sharedImageCollection1.ImageSource.ImageStream = ((DevExpress.Utils.ImageCollectionStreamer)(resources.GetObject("sharedImageCollection1.ImageSource.ImageStream")));
+            this.sharedImageCollection1.ImageSource.Images.SetKeyName(0, "folder.png");
+            this.sharedImageCollection1.ImageSource.Images.SetKeyName(1, "file.png");
+            this.sharedImageCollection1.ParentControl = this;
+            // 
             // MgmtParameterControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -870,6 +889,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.edtLrpZ.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtLrpY.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtLrpX.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.sharedImageCollection1.ImageSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.sharedImageCollection1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -943,5 +964,6 @@
         private DevExpress.XtraEditors.ComboBoxEdit cboPartLocation;
         private DevExpress.XtraEditors.ComboBoxEdit cboPart;
         private DevExpress.XtraEditors.ComboBoxEdit cboUnit;
+        private DevExpress.Utils.SharedImageCollection sharedImageCollection1;
     }
 }
