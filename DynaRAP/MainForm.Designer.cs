@@ -43,7 +43,6 @@ namespace DynaRAP
             this.btnLogin = new DevExpress.XtraBars.BarButtonItem();
             this.btnChartTest = new DevExpress.XtraBars.BarButtonItem();
             this.btnWebTest = new DevExpress.XtraBars.BarButtonItem();
-            this.barSubItemTest2 = new DevExpress.XtraBars.BarSubItem();
             this.btnLPF = new DevExpress.XtraBars.BarButtonItem();
             this.btnStart = new DevExpress.XtraBars.BarButtonItem();
             this.barSubItem2 = new DevExpress.XtraBars.BarSubItem();
@@ -140,7 +139,6 @@ namespace DynaRAP
             this.btnMgmtPresetGroup,
             this.barSubItem1,
             this.btnLPF,
-            this.barSubItemTest2,
             this.btnWebTest});
             this.barManager1.MainMenu = this.bar2;
             this.barManager1.MaxItemId = 27;
@@ -155,7 +153,6 @@ namespace DynaRAP
             this.bar1.DockStyle = DevExpress.XtraBars.BarDockStyle.Top;
             this.bar1.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
             new DevExpress.XtraBars.LinkPersistInfo(this.barSubItemTest),
-            new DevExpress.XtraBars.LinkPersistInfo(this.barSubItemTest2),
             new DevExpress.XtraBars.LinkPersistInfo(this.btnStart),
             new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem2),
             new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem3),
@@ -171,7 +168,8 @@ namespace DynaRAP
             new DevExpress.XtraBars.LinkPersistInfo(this.toolTreeTest),
             new DevExpress.XtraBars.LinkPersistInfo(this.btnLogin),
             new DevExpress.XtraBars.LinkPersistInfo(this.btnChartTest),
-            new DevExpress.XtraBars.LinkPersistInfo(this.btnWebTest)});
+            new DevExpress.XtraBars.LinkPersistInfo(this.btnWebTest),
+            new DevExpress.XtraBars.LinkPersistInfo(this.btnLPF)});
             this.barSubItemTest.Name = "barSubItemTest";
             // 
             // btnPythonTest
@@ -208,14 +206,6 @@ namespace DynaRAP
             this.btnWebTest.Id = 26;
             this.btnWebTest.Name = "btnWebTest";
             this.btnWebTest.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnWebTest_ItemClick);
-            // 
-            // barSubItemTest2
-            // 
-            resources.ApplyResources(this.barSubItemTest2, "barSubItemTest2");
-            this.barSubItemTest2.Id = 25;
-            this.barSubItemTest2.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
-            new DevExpress.XtraBars.LinkPersistInfo(this.btnLPF)});
-            this.barSubItemTest2.Name = "barSubItemTest2";
             // 
             // btnLPF
             // 
@@ -613,7 +603,6 @@ namespace DynaRAP
         private DevExpress.XtraBars.BarButtonItem btnMgmtPresetGroup;
         private DevExpress.XtraBars.BarSubItem barSubItem1;
         private DevExpress.XtraBars.BarButtonItem btnLPF;
-        private DevExpress.XtraBars.BarSubItem barSubItemTest2;
         private DevExpress.XtraBars.BarButtonItem btnWebTest;
 
         public TabbedView TabbedView1 { get => tabbedView1; set => tabbedView1 = value; }

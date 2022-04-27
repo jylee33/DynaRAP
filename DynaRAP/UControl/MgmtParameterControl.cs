@@ -24,6 +24,8 @@ namespace DynaRAP.UControl
 {
     public partial class MgmtParameterControl : DevExpress.XtraEditors.XtraUserControl
     {
+        int focusedNodeId = 0;
+
         public MgmtParameterControl()
         {
             InitializeComponent();
@@ -74,6 +76,9 @@ namespace DynaRAP.UControl
             treeList1.OptionsFilter.AllowFilterEditor = false;
 
             treeList1.OptionsSelection.MultiSelect = false;
+
+            treeList1.OptionsNavigation.AutoFocusNewNode = true;
+            treeList1.OptionsNavigation.AutoMoveRowFocus = true;
 
             //Hide the key columns. An end-user can access them from the Customization Form.
             treeList1.Columns[treeList1.KeyFieldName].Visible = false;
@@ -178,6 +183,7 @@ namespace DynaRAP.UControl
                 //treeList1.FocusedNode = newNode;
                 
                 RefreshTree();
+                treeList1.FocusedNode = treeList1.FindNodeByFieldValue("ID", this.focusedNodeId);
             }
         }
 
@@ -217,6 +223,7 @@ namespace DynaRAP.UControl
                 //treeList1.FocusedNode = newNode;
 
                 RefreshTree();
+                treeList1.FocusedNode = treeList1.FindNodeByFieldValue("ID", this.focusedNodeId);
             }
         }
 
@@ -242,7 +249,7 @@ namespace DynaRAP.UControl
 
             if (string.IsNullOrEmpty(dirName))
             {
-                MessageBox.Show(Properties.Resources.InputParameterName, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(Properties.Resources.InputParameterName, Properties.Resources.StringWarning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -254,6 +261,7 @@ namespace DynaRAP.UControl
             if (bResult)
             {
                 RefreshTree();
+                treeList1.FocusedNode = treeList1.FindNodeByFieldValue("ID", this.focusedNodeId);
             }
         }
 
@@ -265,6 +273,11 @@ namespace DynaRAP.UControl
             if (node == null) return;
 
             //node.TreeList.DeleteNode(node);
+
+            if(MessageBox.Show(Properties.Resources.StringDelete, Properties.Resources.StringConfirmation, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+            {
+                return;
+            }
 
             bool bResult = DeleteParameter(node.GetValue("ID").ToString());
             if (bResult)
@@ -319,16 +332,17 @@ namespace DynaRAP.UControl
                 }
             }
 
-            Console.WriteLine(responseText);
+            //Console.WriteLine(responseText);
             ParameterJsonData result = JsonConvert.DeserializeObject<ParameterJsonData>(responseText);
 
-            if(result != null)
+            if (result != null)
             {
-                if(result.code != 200)
+                if (result.code != 200)
                 {
                     MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }
+                this.focusedNodeId = result.response.seq;
             }
             return true;
         }
@@ -374,7 +388,7 @@ namespace DynaRAP.UControl
                 }
             }
 
-            Console.WriteLine(responseText);
+            //Console.WriteLine(responseText);
             ParameterJsonData result = JsonConvert.DeserializeObject<ParameterJsonData>(responseText);
 
             if (result != null)
@@ -384,6 +398,7 @@ namespace DynaRAP.UControl
                     MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }
+                this.focusedNodeId = result.response.seq;
             }
             return true;
         }
@@ -423,7 +438,7 @@ namespace DynaRAP.UControl
                 }
             }
 
-            Console.WriteLine(responseText);
+            //Console.WriteLine(responseText);
             ParameterJsonData result = JsonConvert.DeserializeObject<ParameterJsonData>(responseText);
 
             if (result != null)
@@ -469,7 +484,7 @@ namespace DynaRAP.UControl
                 }
             }
 
-            Console.WriteLine(responseText);
+            //Console.WriteLine(responseText);
             ParameterJsonData result = JsonConvert.DeserializeObject<ParameterJsonData>(responseText);
             //object result = JsonConvert.DeserializeObject(responseText);
 

@@ -58,6 +58,7 @@ namespace DynaRAP.Data
     {
         public List<Pool> pools { get; set; }
         public List<Presentation> presentation { get; set; }
+        public int seq { get; set; }
     }
 
     public class ResponseAt
