@@ -10,11 +10,12 @@ public class ParamVO {
     private CryptoField seq;
     private CryptoField paramPack;
     private CryptoField paramGroupSeq;
+    private String64 paramName;
     private String paramKey;
     private String paramSpec;
     private String adamsKey;
     private String zaeroKey;
-    private String gtrKey;
+    private String grtKey;
     private String fltpKey;
     private String fltsKey;
     private String partInfo;
@@ -38,7 +39,7 @@ public class ParamVO {
         private CryptoField seq;
         private String64 groupName;
         private String groupType;
-        private CryptoField.NAuth registeredUid;
+        private CryptoField.NAuth registerUid;
         private LongDate createdAt;
     }
 }
