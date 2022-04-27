@@ -23,7 +23,7 @@ namespace DynaRAP.TEST
         private void TestWebForm_Load(object sender, EventArgs e)
         {
             //test1();
-            //test2();
+            test2();
             //test3();
         }
 

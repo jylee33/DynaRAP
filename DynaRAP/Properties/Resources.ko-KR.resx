@@ -132,6 +132,12 @@
   <data name="IdPlaceholder" xml:space="preserve">
     <value>아이디 입력 (Email 형식)</value>
   </data>
+  <data name="InputFolderName" xml:space="preserve">
+    <value>폴더 이름 입력</value>
+  </data>
+  <data name="InputParameterName" xml:space="preserve">
+    <value>파라미터 이름 입력</value>
+  </data>
   <data name="InputScenarioName" xml:space="preserve">
     <value>시나리오 이름 입력</value>
   </data>
@@ -147,6 +153,15 @@
   </data>
   <data name="RequestInputPassword" xml:space="preserve">
     <value>비밀번호를 입력해 주세요.</value>
+  </data>
+  <data name="StringConfirmation" xml:space="preserve">
+    <value>확인</value>
+  </data>
+  <data name="StringDelete" xml:space="preserve">
+    <value>삭제하시겠습니까?</value>
+  </data>
+  <data name="StringWarning" xml:space="preserve">
+    <value>경고</value>
   </data>
   <data name="UploadingFlightData" xml:space="preserve">
     <value>비행데이터를 업로드 하고 있습니다...</value>

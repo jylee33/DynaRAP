@@ -106,6 +106,24 @@ namespace DynaRAP.Properties {
         }
         
         /// <summary>
+        ///   Input Folder Name과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string InputFolderName {
+            get {
+                return ResourceManager.GetString("InputFolderName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Input Parameter Name과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string InputParameterName {
+            get {
+                return ResourceManager.GetString("InputParameterName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Input Scenario Name과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string InputScenarioName {
@@ -148,6 +166,33 @@ namespace DynaRAP.Properties {
         internal static string RequestInputPassword {
             get {
                 return ResourceManager.GetString("RequestInputPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Confirm과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string StringConfirmation {
+            get {
+                return ResourceManager.GetString("StringConfirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Delete과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string StringDelete {
+            get {
+                return ResourceManager.GetString("StringDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Warning과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string StringWarning {
+            get {
+                return ResourceManager.GetString("StringWarning", resourceCulture);
             }
         }
         

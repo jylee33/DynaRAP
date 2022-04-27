@@ -132,6 +132,12 @@
   <data name="IdPlaceholder" xml:space="preserve">
     <value>ID</value>
   </data>
+  <data name="InputFolderName" xml:space="preserve">
+    <value>Input Folder Name</value>
+  </data>
+  <data name="InputParameterName" xml:space="preserve">
+    <value>Input Parameter Name</value>
+  </data>
   <data name="InputScenarioName" xml:space="preserve">
     <value>Input Scenario Name</value>
   </data>
@@ -147,6 +153,15 @@
   </data>
   <data name="RequestInputPassword" xml:space="preserve">
     <value>Input the user password.</value>
+  </data>
+  <data name="StringConfirmation" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
+  <data name="StringDelete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="StringWarning" xml:space="preserve">
+    <value>Warning</value>
   </data>
   <data name="UploadingFlightData" xml:space="preserve">
     <value>Uploading flight data...</value>

@@ -474,9 +474,6 @@
   <data name="btnWebTest.Caption" xml:space="preserve">
     <value>WEB</value>
   </data>
-  <data name="barSubItemTest2.Caption" xml:space="preserve">
-    <value>TEST</value>
-  </data>
   <data name="btnLPF.Caption" xml:space="preserve">
     <value>LPF</value>
   </data>
@@ -668,12 +665,6 @@
   </data>
   <data name="&gt;&gt;btnWebTest.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
-  </data>
-  <data name="&gt;&gt;barSubItemTest2.Name" xml:space="preserve">
-    <value>barSubItemTest2</value>
-  </data>
-  <data name="&gt;&gt;barSubItemTest2.Type" xml:space="preserve">
-    <value>DevExpress.XtraBars.BarSubItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
   <data name="&gt;&gt;btnLPF.Name" xml:space="preserve">
     <value>btnLPF</value>
