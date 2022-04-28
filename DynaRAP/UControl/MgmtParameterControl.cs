@@ -31,19 +31,7 @@ namespace DynaRAP.UControl
             InitializeComponent();
         }
 
-        private void MgmtParameterControl_Load(object sender, EventArgs e)
-        {
-            this.splitContainer1.SplitterDistance = 250;
-            cboProperty.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
-            cboUnit.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
-            cboPart.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
-            cboPartLocation.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
-            cboAirplane.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
-
-
-            InitializeParameterDataList();
-        }
-
+    #region Method
         private void InitializeParameterDataList()
         {
             //TreeList treeList1 = new TreeList();
@@ -112,120 +100,6 @@ namespace DynaRAP.UControl
 
         }
 
-        private void TreeList1_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
-        {
-            // Check if a node's indicator cell is clicked.
-            TreeListHitInfo hitInfo = (sender as TreeList).CalcHitInfo(e.Point);
-            TreeListNode node = null;
-            //if (hitInfo.HitInfoType == HitInfoType.RowIndicator)
-            {
-                node = hitInfo.Node;
-            }
-            //if (node == null) return;
-
-            // Create the Add Folder command.
-            DXMenuItem menuItemAddFolder = new DXMenuItem("Add Folder", this.addFolderMenuItemClick);
-            menuItemAddFolder.Tag = node;
-            e.Menu.Items.Add(menuItemAddFolder);
-
-            // Create the Add Parameter command.
-            DXMenuItem menuItemAdd = new DXMenuItem("Add Parameter", this.addParamMenuItemClick);
-            menuItemAdd.Tag = node;
-            e.Menu.Items.Add(menuItemAdd);
-
-            if (node != null)
-            {
-                // Create Modity Node command.
-                DXMenuItem menuItemModify = new DXMenuItem("Modify Name", this.modifyNodeMenuItemClick);
-                menuItemModify.Tag = node;
-                e.Menu.Items.Add(menuItemModify);
-
-                // Create the Delete Node command.
-                DXMenuItem menuItemDelete = new DXMenuItem("Delete Node", this.deleteNodeMenuItemClick);
-                menuItemDelete.Tag = node;
-                e.Menu.Items.Add(menuItemDelete);
-            }
-        }
-
-        private void addFolderMenuItemClick(object sender, EventArgs e)
-        {
-            DXMenuItem item = sender as DXMenuItem;
-            if (item == null) return;
-            TreeListNode node = item.Tag as TreeListNode;
-            //if (node == null) return;
-
-            string folderName = Prompt.ShowDialog("Folder Name", "Add Folder");
-
-            if (string.IsNullOrEmpty(folderName))
-            {
-                MessageBox.Show(Properties.Resources.InputFolderName, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            //Encoding
-            byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(folderName);
-            string name = Convert.ToBase64String(basebyte);
-
-            bool bResult = false;
-            if(node == null)
-                bResult = CreateParameter("folder", name, "0");
-            else
-                bResult = CreateParameter("folder", name, node.GetValue("ID").ToString());
-
-            if (bResult)
-            {
-                //TreeListNode newNode = treeList1.AppendNode(new object[] { "" }, node);
-                //newNode.SetValue("DirName", folderName);
-
-                ////treeList1.ExpandAll();
-                //node.Expand();
-                ////treeList1.Selection.Set(newNode);
-                //treeList1.FocusedNode = newNode;
-                
-                RefreshTree();
-                treeList1.FocusedNode = treeList1.FindNodeByFieldValue("ID", this.focusedNodeId);
-            }
-        }
-
-        private void addParamMenuItemClick(object sender, EventArgs e)
-        {
-            DXMenuItem item = sender as DXMenuItem;
-            if (item == null) return;
-            TreeListNode node = item.Tag as TreeListNode;
-            //if (node == null) return;
-
-            string paramName = Prompt.ShowDialog("Parameter Name", "Add Parameter");
-
-            if (string.IsNullOrEmpty(paramName))
-            {
-                MessageBox.Show(Properties.Resources.InputParameterName, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            //Encoding
-            byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(paramName);
-            string name = Convert.ToBase64String(basebyte);
-
-            bool bResult = false;
-            if(node == null)
-                bResult = CreateParameter("param", name, "0");
-            else
-                bResult = CreateParameter("param", name, node.GetValue("ID").ToString());
-
-            if (bResult)
-            {
-                //TreeListNode newNode = treeList1.AppendNode(new object[] { "" }, node);
-                //newNode.SetValue("DirName", paramName);
-
-                ////treeList1.ExpandAll();
-                //node.Expand();
-                ////treeList1.Selection.Set(newNode);
-                //treeList1.FocusedNode = newNode;
-
-                RefreshTree();
-                treeList1.FocusedNode = treeList1.FindNodeByFieldValue("ID", this.focusedNodeId);
-            }
-        }
 
         private void RefreshTree()
         {
@@ -238,62 +112,9 @@ namespace DynaRAP.UControl
             treeList1.ExpandAll();
         }
 
-        private void modifyNodeMenuItemClick(object sender, EventArgs e)
-        {
-            DXMenuItem item = sender as DXMenuItem;
-            if (item == null) return;
-            TreeListNode node = item.Tag as TreeListNode;
-            if (node == null) return;
-
-            string dirName = Prompt.ShowDialog("New Name", "Modify Name");
-
-            if (string.IsNullOrEmpty(dirName))
-            {
-                MessageBox.Show(Properties.Resources.InputParameterName, Properties.Resources.StringWarning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            //Encoding
-            byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(dirName);
-            string name = Convert.ToBase64String(basebyte);
-
-            bool bResult = ModifyParameter(node.GetValue("DirType").ToString(), node.GetValue("ID").ToString(), node.GetValue("ParentID").ToString(), name);
-            if (bResult)
-            {
-                RefreshTree();
-                treeList1.FocusedNode = treeList1.FindNodeByFieldValue("ID", this.focusedNodeId);
-            }
-        }
-
-        private void deleteNodeMenuItemClick(object sender, EventArgs e)
-        {
-            DXMenuItem item = sender as DXMenuItem;
-            if (item == null) return;
-            TreeListNode node = item.Tag as TreeListNode;
-            if (node == null) return;
-
-            //node.TreeList.DeleteNode(node);
-
-            if(MessageBox.Show(Properties.Resources.StringDelete, Properties.Resources.StringConfirmation, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
-            {
-                return;
-            }
-
-            bool bResult = DeleteParameter(node.GetValue("ID").ToString());
-            if (bResult)
-            {
-                RefreshTree();
-            }
-        }
-
-        private void repositoryItemCheckEdit1_EditValueChanged(object sender, EventArgs e)
-        {
-            treeList1.PostEditor();
-        }
-
         private bool CreateParameter(string dirType, string name, string pid)
         {
-            string url = ConfigurationManager.AppSettings["UrlParameter"];
+            string url = ConfigurationManager.AppSettings["UrlDir"];
             string sendData = string.Format(@"
             {{ ""command"":""add"",
             ""seq"":""1"",
@@ -349,7 +170,7 @@ namespace DynaRAP.UControl
 
         private bool ModifyParameter(string dirType, string id, string pid, string name)
         {
-            string url = ConfigurationManager.AppSettings["UrlParameter"];
+            string url = ConfigurationManager.AppSettings["UrlDir"];
             string sendData = string.Format(@"
             {{ ""command"":""modify"",
             ""seq"":""{0}"",
@@ -405,7 +226,7 @@ namespace DynaRAP.UControl
 
         private bool DeleteParameter(string id)
         {
-            string url = ConfigurationManager.AppSettings["UrlParameter"];
+            string url = ConfigurationManager.AppSettings["UrlDir"];
             string sendData = string.Format(@"
             {{""command"":""remove"",
             ""seq"":""{0}""
@@ -451,11 +272,12 @@ namespace DynaRAP.UControl
             }
             return true;
         }
+        
         private BindingList<ParameterData> GetParamList()
         {
             BindingList<ParameterData> list = new BindingList<ParameterData>();
 
-            string url = ConfigurationManager.AppSettings["UrlParameter"];
+            string url = ConfigurationManager.AppSettings["UrlDir"];
             string sendData = "{ \"command\": \"list\" }";
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
@@ -500,6 +322,193 @@ namespace DynaRAP.UControl
 
         }
 
+#endregion Method
+
+        #region EventHandler
+        private void addFolderMenuItemClick(object sender, EventArgs e)
+        {
+            DXMenuItem item = sender as DXMenuItem;
+            if (item == null) return;
+            TreeListNode node = item.Tag as TreeListNode;
+            //if (node == null) return;
+
+            string folderName = Prompt.ShowDialog("Folder Name", "Add Folder");
+
+            if (string.IsNullOrEmpty(folderName))
+            {
+                MessageBox.Show(Properties.Resources.InputFolderName, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            //Encoding
+            byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(folderName);
+            string name = Convert.ToBase64String(basebyte);
+
+            bool bResult = false;
+            if (node == null)
+                bResult = CreateParameter("folder", name, "0");
+            else
+                bResult = CreateParameter("folder", name, node.GetValue("ID").ToString());
+
+            if (bResult)
+            {
+                //TreeListNode newNode = treeList1.AppendNode(new object[] { "" }, node);
+                //newNode.SetValue("DirName", folderName);
+
+                ////treeList1.ExpandAll();
+                //node.Expand();
+                ////treeList1.Selection.Set(newNode);
+                //treeList1.FocusedNode = newNode;
+
+                RefreshTree();
+                treeList1.FocusedNode = treeList1.FindNodeByFieldValue("ID", this.focusedNodeId);
+            }
+        }
+
+        private void addParamMenuItemClick(object sender, EventArgs e)
+        {
+            DXMenuItem item = sender as DXMenuItem;
+            if (item == null) return;
+            TreeListNode node = item.Tag as TreeListNode;
+            //if (node == null) return;
+
+            string paramName = Prompt.ShowDialog("Parameter Name", "Add Parameter");
+
+            if (string.IsNullOrEmpty(paramName))
+            {
+                MessageBox.Show(Properties.Resources.InputParameterName, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            //Encoding
+            byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(paramName);
+            string name = Convert.ToBase64String(basebyte);
+
+            bool bResult = false;
+            if (node == null)
+                bResult = CreateParameter("param", name, "0");
+            else
+                bResult = CreateParameter("param", name, node.GetValue("ID").ToString());
+
+            if (bResult)
+            {
+                //TreeListNode newNode = treeList1.AppendNode(new object[] { "" }, node);
+                //newNode.SetValue("DirName", paramName);
+
+                ////treeList1.ExpandAll();
+                //node.Expand();
+                ////treeList1.Selection.Set(newNode);
+                //treeList1.FocusedNode = newNode;
+
+                RefreshTree();
+                treeList1.FocusedNode = treeList1.FindNodeByFieldValue("ID", this.focusedNodeId);
+            }
+        }
+
+        private void MgmtParameterControl_Load(object sender, EventArgs e)
+        {
+            this.splitContainer1.SplitterDistance = 250;
+            cboProperty.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+            cboUnit.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+            cboPart.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+            cboPartLocation.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+            cboAirplane.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+
+
+            InitializeParameterDataList();
+        }
+
+        private void TreeList1_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
+        {
+            // Check if a node's indicator cell is clicked.
+            TreeListHitInfo hitInfo = (sender as TreeList).CalcHitInfo(e.Point);
+            TreeListNode node = null;
+            //if (hitInfo.HitInfoType == HitInfoType.RowIndicator)
+            {
+                node = hitInfo.Node;
+            }
+            //if (node == null) return;
+
+            if (node != null)
+                treeList1.FocusedNode = node;
+
+            // Create the Add Folder command.
+            DXMenuItem menuItemAddFolder = new DXMenuItem("Add Folder", this.addFolderMenuItemClick);
+            menuItemAddFolder.Tag = node;
+            e.Menu.Items.Add(menuItemAddFolder);
+
+            // Create the Add Parameter command.
+            DXMenuItem menuItemAdd = new DXMenuItem("Add Parameter", this.addParamMenuItemClick);
+            menuItemAdd.Tag = node;
+            e.Menu.Items.Add(menuItemAdd);
+
+            if (node != null)
+            {
+                // Create Modity Node command.
+                DXMenuItem menuItemModify = new DXMenuItem("Modify Name", this.modifyNodeMenuItemClick);
+                menuItemModify.Tag = node;
+                e.Menu.Items.Add(menuItemModify);
+
+                // Create the Delete Node command.
+                DXMenuItem menuItemDelete = new DXMenuItem("Delete Node", this.deleteNodeMenuItemClick);
+                menuItemDelete.Tag = node;
+                e.Menu.Items.Add(menuItemDelete);
+            }
+        }
+
+        private void modifyNodeMenuItemClick(object sender, EventArgs e)
+        {
+            DXMenuItem item = sender as DXMenuItem;
+            if (item == null) return;
+            TreeListNode node = item.Tag as TreeListNode;
+            if (node == null) return;
+
+            string dirName = Prompt.ShowDialog("New Name", "Modify Name");
+
+            if (string.IsNullOrEmpty(dirName))
+            {
+                MessageBox.Show(Properties.Resources.InputParameterName, Properties.Resources.StringWarning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            //Encoding
+            byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(dirName);
+            string name = Convert.ToBase64String(basebyte);
+
+            bool bResult = ModifyParameter(node.GetValue("DirType").ToString(), node.GetValue("ID").ToString(), node.GetValue("ParentID").ToString(), name);
+            if (bResult)
+            {
+                RefreshTree();
+                treeList1.FocusedNode = treeList1.FindNodeByFieldValue("ID", this.focusedNodeId);
+            }
+        }
+
+        private void deleteNodeMenuItemClick(object sender, EventArgs e)
+        {
+            DXMenuItem item = sender as DXMenuItem;
+            if (item == null) return;
+            TreeListNode node = item.Tag as TreeListNode;
+            if (node == null) return;
+
+            //node.TreeList.DeleteNode(node);
+
+            if (MessageBox.Show(Properties.Resources.StringDelete, Properties.Resources.StringConfirmation, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+            {
+                return;
+            }
+
+            bool bResult = DeleteParameter(node.GetValue("ID").ToString());
+            if (bResult)
+            {
+                RefreshTree();
+            }
+        }
+
+        private void repositoryItemCheckEdit1_EditValueChanged(object sender, EventArgs e)
+        {
+            treeList1.PostEditor();
+        }
+
         private void treeList1_GetStateImage(object sender, GetStateImageEventArgs e)
         {
             //if (e.Node.ParentNode == null)
@@ -516,7 +525,7 @@ namespace DynaRAP.UControl
             if (e.Node == null || e.Node.GetValue("DirType") == null)
                 return;
 
-            if(e.Node.GetValue("DirType").ToString().Equals("folder"))
+            if (e.Node.GetValue("DirType").ToString().Equals("folder"))
             {
                 e.NodeImageIndex = 0;
             }
@@ -534,6 +543,8 @@ namespace DynaRAP.UControl
                 e.Node.ImageIndex = 1;
             }
         }
+
+        #endregion EventHandler
 
     }
 }
