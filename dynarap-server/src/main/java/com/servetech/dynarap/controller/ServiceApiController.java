@@ -3,10 +3,12 @@ package com.servetech.dynarap.controller;
 import com.google.gson.JsonObject;
 import com.servetech.dynarap.db.mapper.DirMapper;
 import com.servetech.dynarap.db.service.DirService;
+import com.servetech.dynarap.db.service.ParamService;
 import com.servetech.dynarap.db.service.UserService;
 import com.servetech.dynarap.ext.HandledServiceException;
 import com.servetech.dynarap.ext.ResponseHelper;
 import com.servetech.dynarap.vo.DirVO;
+import com.servetech.dynarap.vo.ParamVO;
 import com.servetech.dynarap.vo.UserVO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.error.ErrorController;
@@ -21,6 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Controller
 @RequestMapping(value = "/api/{serviceVersion}")
@@ -71,4 +74,70 @@ public class ServiceApiController extends ApiController {
 
         throw new HandledServiceException(411, "명령이 정의되지 않았습니다.");
     }
+
+    @RequestMapping(value = "/param")
+    @ResponseBody
+    public Object apiParam(HttpServletRequest request, @PathVariable String serviceVersion,
+                         @RequestBody JsonObject payload, Authentication authentication) throws HandledServiceException {
+        /*
+        String accessToken = request.getHeader("Authorization");
+        if (accessToken == null || (!accessToken.startsWith("bearer") && !accessToken.startsWith("Bearer")))
+            return ResponseHelper.error(403, "권한이 없습니다.");
+
+        String username = authentication.getPrincipal().toString();
+        */
+        UserVO user = getService(UserService.class).getUser("admin@dynarap@dynarap");
+
+        if (checkJsonEmpty(payload, "command"))
+            throw new HandledServiceException(404, "파라미터를 확인하세요.");
+
+        String command = payload.get("command").getAsString();
+
+        if (command.equals("list")) {
+            Integer pageNo = 1;
+            if (!checkJsonEmpty(payload, "pageNo"))
+                pageNo = payload.get("pageNo").getAsInt();
+
+            Integer pageSize = 15;
+            if (!checkJsonEmpty(payload, "pageSize"))
+                pageSize = payload.get("pageSize").getAsInt();
+
+            List<ParamVO> params = getService(ParamService.class).getParamList(pageNo, pageSize);
+
+            return ResponseHelper.response(200, "Success - Param List", params);
+        }
+
+        if (command.equals("add")) {
+            ParamVO param = getService(ParamService.class).insertParam(user.getUid(), payload);
+            return ResponseHelper.response(200, "Success - Param Added", param);
+        }
+
+        if (command.equals("modify")) {
+            ParamVO param = getService(ParamService.class).updateParam(user.getUid(), payload);
+            return ResponseHelper.response(200, "Success - Param Updated", param);
+        }
+
+        if (command.equals("remove")) {
+            getService(ParamService.class).deleteParam(payload);
+            return ResponseHelper.response(200, "Success - Param Deleted", "");
+        }
+
+        if (command.equals("group-list")) {
+            List<ParamVO.Group> paramGroups = getService(ParamService.class).getParamGroupList();
+            return ResponseHelper.response(200, "Success - Param Group List", paramGroups);
+        }
+
+        if (command.equals("group-add")) {
+            ParamVO.Group paramGroup = getService(ParamService.class).insertParamGroup(user.getUid(), payload);
+            return ResponseHelper.response(200, "Success - Param Group Add", paramGroup);
+        }
+
+        if (command.equals("group-modify")) {
+            ParamVO.Group paramGroup = getService(ParamService.class).updateParamGroup(user.getUid(), payload);
+            return ResponseHelper.response(200, "Success - Param Group Modify", paramGroup);
+        }
+
+        throw new HandledServiceException(411, "명령이 정의되지 않았습니다.");
+    }
+
 }
