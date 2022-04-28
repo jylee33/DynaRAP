@@ -6,24 +6,28 @@ using System.Threading.Tasks;
 
 namespace DynaRAP.Data
 {
-    public class ParameterData
+    public class DirData
     {
         static int UniqueID = 4;
-        public ParameterData()
+        public DirData()
         {
             ID = UniqueID++;
         }
-        public ParameterData(int id, int parentId, string dirType, string dirName)
+        public DirData(int id, int parentId, string dirType, string dirName, string refSeq, string refSubSeq)
         {
             ID = id;
             ParentID = parentId;
             DirType = dirType;
             DirName = dirName;
+            RefSeq = refSeq;
+            RefSubSeq = refSubSeq;
         }
         public int ID { get; set; }
         public int ParentID { get; set; }
         public string DirType { get; set; }
         public string DirName { get; set; }
+        public string RefSeq { get; set; }
+        public string RefSubSeq { get; set; }
     }
 
 }

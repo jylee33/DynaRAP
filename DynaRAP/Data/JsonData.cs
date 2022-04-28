@@ -10,7 +10,6 @@ namespace DynaRAP.Data
     {
         public int code { get; set; }
         public string message { get; set; }
-        public Response response { get; set; }
         public ResponseAt responseAt { get; set; }
         public int resultCount { get; set; }
 
@@ -21,13 +20,27 @@ namespace DynaRAP.Data
         }
     }
 
-    public class ParameterJsonData : JsonData
+    public class DirJsonData : JsonData
     {
-        public ParameterJsonData(int code, string message) : base(code, message) { }
+        public Response response { get; set; }
+
+        public DirJsonData(int code, string message) : base(code, message) { }
     }
 
+    public class AddParamJsonData : JsonData
+    {
+        public ResponseParam response { get; set; }
 
-    // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
+        public AddParamJsonData(int code, string message) : base(code, message) { }
+    }
+
+    public class ListParamJsonData : JsonData
+    {
+        public List<ResponseParam> response { get; set; }
+        
+        public ListParamJsonData(int code, string message) : base(code, message) { }
+    }
+
     public class CreatedAt
     {
         public long timestamp { get; set; }
@@ -59,6 +72,31 @@ namespace DynaRAP.Data
         public List<Pool> pools { get; set; }
         public List<Presentation> presentation { get; set; }
         public int seq { get; set; }
+    }
+
+    public class ResponseParam
+    {
+        public string seq { get; set; }
+        public string paramPack { get; set; }
+        public string paramGroupSeq { get; set; }
+        public string paramName { get; set; }
+        public string paramKey { get; set; }
+        public string paramSpec { get; set; }
+        public string adamsKey { get; set; }
+        public string zaeroKey { get; set; }
+        public string grtKey { get; set; }
+        public string fltpKey { get; set; }
+        public string fltsKey { get; set; }
+        public string partInfo { get; set; }
+        public string partInfoSub { get; set; }
+        public double lrpX { get; set; }
+        public double lrpY { get; set; }
+        public double lrpZ { get; set; }
+        public string paramUnit { get; set; }
+        public double domainMin { get; set; }
+        public double domainMax { get; set; }
+        public double specified { get; set; }
+        public string registerUid { get; set; }
     }
 
     public class ResponseAt

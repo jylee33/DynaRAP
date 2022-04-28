@@ -25,14 +25,16 @@ namespace DynaRAP.UControl
     public partial class MgmtParameterControl : DevExpress.XtraEditors.XtraUserControl
     {
         int focusedNodeId = 0;
+        TreeListNode focusedNode = null;
+        List<ResponseParam> paramList = null;
 
         public MgmtParameterControl()
         {
             InitializeComponent();
         }
 
-    #region Method
-        private void InitializeParameterDataList()
+        #region Method
+        private void InitializeDirDataList()
         {
             //TreeList treeList1 = new TreeList();
             treeList1.Parent = this.splitContainer1.Panel1;
@@ -45,13 +47,13 @@ namespace DynaRAP.UControl
 
             //Specify the data source.
             //treeList1.DataSource = null;
-            treeList1.DataSource = GetParamList();
+            treeList1.DataSource = GetDirList();
             //The treelist automatically creates columns for the public fields found in the data source. 
             //You do not need to call the TreeList.PopulateColumns method unless the treeList1.OptionsBehavior.AutoPopulatefColumns option is disabled.
             treeList1.ForceInitialize();
 
             treeList1.RowHeight = 23;
-            treeList1.OptionsView.ShowColumns = false;
+            //treeList1.OptionsView.ShowColumns = false;
             treeList1.OptionsView.ShowHorzLines = false;
             treeList1.OptionsView.ShowVertLines = false;
             treeList1.OptionsView.ShowIndicator = false;
@@ -69,9 +71,11 @@ namespace DynaRAP.UControl
             treeList1.OptionsNavigation.AutoMoveRowFocus = true;
 
             //Hide the key columns. An end-user can access them from the Customization Form.
-            treeList1.Columns[treeList1.KeyFieldName].Visible = false;
-            treeList1.Columns[treeList1.ParentFieldName].Visible = false;
-            treeList1.Columns["DirType"].Visible = false;
+            //treeList1.Columns[treeList1.KeyFieldName].Visible = false;
+            //treeList1.Columns[treeList1.ParentFieldName].Visible = false;
+            //treeList1.Columns["DirType"].Visible = false;
+            //treeList1.Columns["RefSeq"].Visible = false;
+            //treeList1.Columns["RefSubSeq"].Visible = false;
 
             //Access the automatically created columns.
             TreeListColumn colName = treeList1.Columns["DirName"];
@@ -100,11 +104,27 @@ namespace DynaRAP.UControl
 
         }
 
+        private void InitializeParamList()
+        {
+            cboParamList.Properties.Items.Clear();
+
+            paramList = GetParamList();
+
+            foreach (ResponseParam list in paramList)
+            {
+                byte[] byte64 = Convert.FromBase64String(list.paramName);
+                string name = Encoding.UTF8.GetString(byte64);
+
+                cboParamList.Properties.Items.Add(name);
+            }
+            cboParamList.SelectedIndex = 0;
+
+        }
 
         private void RefreshTree()
         {
             treeList1.DataSource = null;
-            treeList1.DataSource = GetParamList();
+            treeList1.DataSource = GetDirList();
             //The treelist automatically creates columns for the public fields found in the data source. 
             //You do not need to call the TreeList.PopulateColumns method unless the treeList1.OptionsBehavior.AutoPopulatefColumns option is disabled.
             treeList1.ForceInitialize();
@@ -112,7 +132,7 @@ namespace DynaRAP.UControl
             treeList1.ExpandAll();
         }
 
-        private bool CreateParameter(string dirType, string name, string pid)
+        private bool AddDir(string dirType, string name, string pid)
         {
             string url = ConfigurationManager.AppSettings["UrlDir"];
             string sendData = string.Format(@"
@@ -154,7 +174,7 @@ namespace DynaRAP.UControl
             }
 
             //Console.WriteLine(responseText);
-            ParameterJsonData result = JsonConvert.DeserializeObject<ParameterJsonData>(responseText);
+            DirJsonData result = JsonConvert.DeserializeObject<DirJsonData>(responseText);
 
             if (result != null)
             {
@@ -168,7 +188,7 @@ namespace DynaRAP.UControl
             return true;
         }
 
-        private bool ModifyParameter(string dirType, string id, string pid, string name)
+        private bool ModifyDir(string dirType, string id, string pid, string name)
         {
             string url = ConfigurationManager.AppSettings["UrlDir"];
             string sendData = string.Format(@"
@@ -210,7 +230,7 @@ namespace DynaRAP.UControl
             }
 
             //Console.WriteLine(responseText);
-            ParameterJsonData result = JsonConvert.DeserializeObject<ParameterJsonData>(responseText);
+            DirJsonData result = JsonConvert.DeserializeObject<DirJsonData>(responseText);
 
             if (result != null)
             {
@@ -224,7 +244,7 @@ namespace DynaRAP.UControl
             return true;
         }
 
-        private bool DeleteParameter(string id)
+        private bool RemoveDir(string id)
         {
             string url = ConfigurationManager.AppSettings["UrlDir"];
             string sendData = string.Format(@"
@@ -260,7 +280,7 @@ namespace DynaRAP.UControl
             }
 
             //Console.WriteLine(responseText);
-            ParameterJsonData result = JsonConvert.DeserializeObject<ParameterJsonData>(responseText);
+            DirJsonData result = JsonConvert.DeserializeObject<DirJsonData>(responseText);
 
             if (result != null)
             {
@@ -273,9 +293,9 @@ namespace DynaRAP.UControl
             return true;
         }
         
-        private BindingList<ParameterData> GetParamList()
+        private BindingList<DirData> GetDirList()
         {
-            BindingList<ParameterData> list = new BindingList<ParameterData>();
+            BindingList<DirData> list = new BindingList<DirData>();
 
             string url = ConfigurationManager.AppSettings["UrlDir"];
             string sendData = "{ \"command\": \"list\" }";
@@ -307,7 +327,7 @@ namespace DynaRAP.UControl
             }
 
             //Console.WriteLine(responseText);
-            ParameterJsonData result = JsonConvert.DeserializeObject<ParameterJsonData>(responseText);
+            DirJsonData result = JsonConvert.DeserializeObject<DirJsonData>(responseText);
             //object result = JsonConvert.DeserializeObject(responseText);
 
             foreach (Pool pool in result.response.pools)
@@ -315,14 +335,195 @@ namespace DynaRAP.UControl
                 byte[] byte64 = Convert.FromBase64String(pool.dirName);
                 string name = Encoding.UTF8.GetString(byte64);
 
-                list.Add(new ParameterData(pool.seq, pool.parentDirSeq, pool.dirType, name));
+                list.Add(new DirData(pool.seq, pool.parentDirSeq, pool.dirType, name, pool.refSeq, pool.refSubSeq));
             }
 
             return list;
 
         }
 
-#endregion Method
+        private List<ResponseParam> GetParamList()
+        {
+            string url = ConfigurationManager.AppSettings["UrlParam"];
+            string sendData = @"
+            {
+            ""command"":""list"",
+            ""pageNo"":1,
+            ""pageSize"":30
+            }";
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Method = "POST";
+            request.ContentType = "application/json";
+            request.Timeout = 30 * 1000;
+            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+
+            // POST할 데이타를 Request Stream에 쓴다
+            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+            request.ContentLength = bytes.Length; // 바이트수 지정
+
+            using (Stream reqStream = request.GetRequestStream())
+            {
+                reqStream.Write(bytes, 0, bytes.Length);
+            }
+
+            // Response 처리
+            string responseText = string.Empty;
+            using (WebResponse resp = request.GetResponse())
+            {
+                Stream respStream = resp.GetResponseStream();
+                using (StreamReader sr = new StreamReader(respStream))
+                {
+                    responseText = sr.ReadToEnd();
+                }
+            }
+
+            //Console.WriteLine(responseText);
+            ListParamJsonData result = JsonConvert.DeserializeObject<ListParamJsonData>(responseText);
+
+            return result.response;
+
+        }
+
+        private bool AddModParameter(string opType, string paramName, string paramPack = "")
+        {
+            ResponseParam param = paramList.Find(x => x.paramKey.Equals(edtKey.Text));
+            if(param == null)
+            {
+                lblDuplicateKey.Visible = false;
+            }
+            else
+            {
+                lblDuplicateKey.Visible = true;
+                MessageBox.Show("Failed", "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            string url = ConfigurationManager.AppSettings["UrlParam"];
+            string sendData = string.Format(@"
+            {{
+            ""command"":""{0}"",
+            ""seq"":"""",
+            ""paramPack"":""{1}"",
+            ""paramGroupSeq"":"""",
+            ""paramName"":""{2}"",
+            ""paramKey"":""{3}"",
+            ""paramSpec"":""{4}"",
+            ""adamsKey"":""{5}"",
+            ""zaeroKey"":""{6}"",
+            ""grtKey"":""{7}"",
+            ""fltpKey"":""{8}"",
+            ""fltsKey"":""{9}"",
+            ""partInfo"":""{10}"",
+            ""partInfoSub"":""{11}"",
+            ""lrpX"":""{12}"",
+            ""lrpY"":""{13}"",
+            ""lrpZ"":""{14}"",
+            ""paramUnit"":""{15}"",
+            ""domainMin"":""{16}"",
+            ""domainMax"":""{17}"",
+            ""specified"":""{18}"",
+            ""paramVal"":null
+            }}"
+            , opType, paramPack, paramName, edtKey.Text, cboProperty.Text, edtAdams.Text
+            , edtZaero.Text, edtGrt.Text, edtFltp.Text, edtFlts.Text
+            , cboPart.Text, cboPartLocation.Text
+            , edtLrpX.Text, edtLrpY.Text, edtLrpZ.Text
+            , cboUnit.Text, edtMinumum.Text, edtMaximum.Text
+            , edtSpecialValue.Text);
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Method = "POST";
+            request.ContentType = "application/json";
+            request.Timeout = 30 * 1000;
+            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+
+            // POST할 데이타를 Request Stream에 쓴다
+            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+            request.ContentLength = bytes.Length; // 바이트수 지정
+
+            using (Stream reqStream = request.GetRequestStream())
+            {
+                reqStream.Write(bytes, 0, bytes.Length);
+            }
+
+            // Response 처리
+            string responseText = string.Empty;
+            using (WebResponse resp = request.GetResponse())
+            {
+                Stream respStream = resp.GetResponseStream();
+                using (StreamReader sr = new StreamReader(respStream))
+                {
+                    responseText = sr.ReadToEnd();
+                }
+            }
+
+            Console.WriteLine(responseText);
+            AddParamJsonData result = JsonConvert.DeserializeObject<AddParamJsonData>(responseText);
+
+            if (result != null)
+            {
+                if (result.code != 200)
+                {
+                    MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+                //this.focusedNodeId = result.response.seq;
+            }
+            return true;
+        }
+
+        private bool RemoveParam(string paramPack)
+        {
+            string url = ConfigurationManager.AppSettings["UrlParam"];
+            string sendData = string.Format(@"
+            {{
+            ""command"":""remove"",
+            ""paramPack"":""{0}""
+            }}"
+            , paramPack);
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Method = "POST";
+            request.ContentType = "application/json";
+            request.Timeout = 30 * 1000;
+            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+
+            // POST할 데이타를 Request Stream에 쓴다
+            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+            request.ContentLength = bytes.Length; // 바이트수 지정
+
+            using (Stream reqStream = request.GetRequestStream())
+            {
+                reqStream.Write(bytes, 0, bytes.Length);
+            }
+
+            // Response 처리
+            string responseText = string.Empty;
+            using (WebResponse resp = request.GetResponse())
+            {
+                Stream respStream = resp.GetResponseStream();
+                using (StreamReader sr = new StreamReader(respStream))
+                {
+                    responseText = sr.ReadToEnd();
+                }
+            }
+
+            //Console.WriteLine(responseText);
+            DirJsonData result = JsonConvert.DeserializeObject<DirJsonData>(responseText);
+
+            if (result != null)
+            {
+                if (result.code != 200)
+                {
+                    MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        #endregion Method
 
         #region EventHandler
         private void addFolderMenuItemClick(object sender, EventArgs e)
@@ -346,9 +547,9 @@ namespace DynaRAP.UControl
 
             bool bResult = false;
             if (node == null)
-                bResult = CreateParameter("folder", name, "0");
+                bResult = AddDir("folder", name, "0");
             else
-                bResult = CreateParameter("folder", name, node.GetValue("ID").ToString());
+                bResult = AddDir("folder", name, node.GetValue("ID").ToString());
 
             if (bResult)
             {
@@ -386,9 +587,9 @@ namespace DynaRAP.UControl
 
             bool bResult = false;
             if (node == null)
-                bResult = CreateParameter("param", name, "0");
+                bResult = AddDir("param", name, "0");
             else
-                bResult = CreateParameter("param", name, node.GetValue("ID").ToString());
+                bResult = AddDir("param", name, node.GetValue("ID").ToString());
 
             if (bResult)
             {
@@ -401,21 +602,42 @@ namespace DynaRAP.UControl
                 //treeList1.FocusedNode = newNode;
 
                 RefreshTree();
-                treeList1.FocusedNode = treeList1.FindNodeByFieldValue("ID", this.focusedNodeId);
+                focusedNode = treeList1.FindNodeByFieldValue("ID", this.focusedNodeId);
+                if (focusedNode != null)
+                {
+                    treeList1.FocusedNode = focusedNode;
+
+                    //bResult = AddPameter(focusedNode.GetValue("RefSeq").ToString(), focusedNode.GetValue("RefSubSeq").ToString());
+                }
             }
         }
 
         private void MgmtParameterControl_Load(object sender, EventArgs e)
         {
             this.splitContainer1.SplitterDistance = 250;
-            cboProperty.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
-            cboUnit.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
-            cboPart.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
-            cboPartLocation.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
-            cboAirplane.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+            cboParamList.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+            //cboProperty.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+            //cboUnit.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+            //cboPart.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+            //cboPartLocation.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+            //cboAirplane.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
 
+#if DEBUG
+            edtKey.Text = "Bending, LH Wing BL1870";
+            edtAdams.Text = "112102";
+            edtZaero.Text = "112102";
+            edtGrt.Text = "SW921P";
+            edtFltp.Text = "SW921P";
+            edtFlts.Text = "SW921S";
+            cboProperty.Text = "BM";
+            cboUnit.Text = "N-mm";
+            cboPart.Text = "Wing";
+            cboPartLocation.Text = "Left";
+            cboAirplane.Text = "A2/3/6";
+#endif
 
-            InitializeParameterDataList();
+            InitializeDirDataList();
+            InitializeParamList();
         }
 
         private void TreeList1_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
@@ -475,7 +697,7 @@ namespace DynaRAP.UControl
             byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(dirName);
             string name = Convert.ToBase64String(basebyte);
 
-            bool bResult = ModifyParameter(node.GetValue("DirType").ToString(), node.GetValue("ID").ToString(), node.GetValue("ParentID").ToString(), name);
+            bool bResult = ModifyDir(node.GetValue("DirType").ToString(), node.GetValue("ID").ToString(), node.GetValue("ParentID").ToString(), name);
             if (bResult)
             {
                 RefreshTree();
@@ -497,7 +719,7 @@ namespace DynaRAP.UControl
                 return;
             }
 
-            bool bResult = DeleteParameter(node.GetValue("ID").ToString());
+            bool bResult = RemoveDir(node.GetValue("ID").ToString());
             if (bResult)
             {
                 RefreshTree();
@@ -541,6 +763,128 @@ namespace DynaRAP.UControl
             {
                 e.Node.SelectImageIndex = 1;
                 e.Node.ImageIndex = 1;
+            }
+        }
+
+        private void treeList1_FocusedNodeChanged(object sender, FocusedNodeChangedEventArgs e)
+        {
+            TreeListNode node = e.Node;
+
+            if (node != null)
+            {
+                //if(node.GetValue("DirType").ToString().Equals("folder"))
+                //{
+                //    this.panelControl1.Visible = false;
+                //}
+                //else
+                //{
+                //    this.panelControl1.Visible = true;
+                //    node.GetValue("RefSeq");
+                //}
+                focusedNode = node;
+            }
+        }
+
+        private void btnModifyParameter_Click(object sender, EventArgs e)
+        {
+            string paramName = cboParamList.Text;
+            //Encoding
+            byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(paramName);
+            string encName = Convert.ToBase64String(basebyte);
+            ResponseParam param = paramList.Find(x => x.paramName.Equals(encName));
+
+            if (param != null)
+            {
+                bool bResult = AddModParameter("modify", encName, param.paramPack);
+
+                if (bResult)
+                {
+                    MessageBox.Show(Properties.Resources.SuccessModify, Properties.Resources.StringSuccess, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    InitializeParamList();
+                    cboParamList.Text = paramName;
+                }
+            }
+        }
+
+        private void btnDeleteParameter_Click(object sender, EventArgs e)
+        {
+            string msg = string.Format(Properties.Resources.StringDeleteParameter, cboParamList.Text);
+            if (MessageBox.Show(msg, Properties.Resources.StringConfirmation, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+            {
+                return;
+            }
+
+            byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(cboParamList.Text);
+            string encName = Convert.ToBase64String(basebyte);
+            ResponseParam param = paramList.Find(x => x.paramName.Equals(encName));
+
+            if(param != null)
+            {
+                bool bResult = RemoveParam(param.paramPack);
+
+                if (bResult)
+                {
+                    MessageBox.Show(Properties.Resources.SuccessRemove, Properties.Resources.StringSuccess, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    InitializeParamList();
+                }
+            }
+
+        }
+
+        private void btnSaveAsNewParameter_Click(object sender, EventArgs e)
+        {
+            string paramName = Prompt.ShowDialog("Parameter Name", "New Parameter");
+
+            if (string.IsNullOrEmpty(paramName))
+            {
+                MessageBox.Show(Properties.Resources.InputParameterName, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            //Encoding
+            byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(paramName);
+            string encName = Convert.ToBase64String(basebyte);
+            bool bResult = AddModParameter("add", encName);
+
+            if (bResult)
+            {
+                MessageBox.Show(Properties.Resources.SuccessAdd, Properties.Resources.StringSuccess, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                InitializeParamList();
+                cboParamList.Text = paramName;
+            }
+        }
+
+        private void cboParamList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var cbo = sender as ComboBoxEdit;
+            if (cbo.SelectedIndex != -1)
+            {
+                lblDuplicateKey.Visible = false;
+                
+                byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(cbo.Text);
+                string encName = Convert.ToBase64String(basebyte);
+                ResponseParam param = paramList.Find(x => x.paramName.Equals(encName));
+
+                if (param != null)
+                {
+                    edtKey.Text = param.paramKey;
+                    edtAdams.Text = param.adamsKey;
+                    edtZaero.Text = param.zaeroKey;
+                    edtGrt.Text = param.grtKey;
+                    edtFltp.Text = param.fltpKey;
+                    edtFlts.Text = param.fltsKey;
+                    cboProperty.Text = param.paramSpec;
+                    cboUnit.Text = param.paramUnit;
+                    cboPart.Text = param.partInfo;
+                    cboPartLocation.Text = param.partInfoSub;
+                    edtLrpX.Text = param.lrpX.ToString();
+                    edtLrpY.Text = param.lrpY.ToString();
+                    edtLrpZ.Text = param.lrpZ.ToString();
+                    cboAirplane.Text = "";
+                    edtMaximum.Text = param.domainMax.ToString();
+                    edtMinumum.Text = param.domainMin.ToString();
+                    edtSpecialValue.Text = param.specified.ToString();
+                }
             }
         }
 
