@@ -333,7 +333,10 @@ namespace DynaRAP.UControl
                 byte[] byte64 = Convert.FromBase64String(pool.dirName);
                 string name = Encoding.UTF8.GetString(byte64);
 
-                list.Add(new DirData(pool.seq, pool.parentDirSeq, pool.dirType, name, pool.refSeq, pool.refSubSeq));
+                if (pool.dirType.Equals("folder") || pool.dirType.Equals("param"))
+                {
+                    list.Add(new DirData(pool.seq, pool.parentDirSeq, pool.dirType, name, pool.refSeq, pool.refSubSeq));
+                }
             }
 
             return list;
@@ -525,9 +528,37 @@ namespace DynaRAP.UControl
             return true;
         }
 
-#endregion Method
+        #endregion Method
 
-#region EventHandler
+        #region EventHandler
+        private void MgmtParameterControl_Load(object sender, EventArgs e)
+        {
+            this.splitContainer1.SplitterDistance = 250;
+            cboParamList.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+            //cboProperty.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+            //cboUnit.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+            //cboPart.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+            //cboPartLocation.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+            //cboAirplane.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+
+#if DEBUG
+            //edtKey.Text = "Bending, LH Wing BL1870";
+            //edtAdams.Text = "112102";
+            //edtZaero.Text = "112102";
+            //edtGrt.Text = "SW921P";
+            //edtFltp.Text = "SW921P";
+            //edtFlts.Text = "SW921S";
+            //cboProperty.Text = "BM";
+            //cboUnit.Text = "N-mm";
+            //cboPart.Text = "Wing";
+            //cboPartLocation.Text = "Left";
+            //cboAirplane.Text = "A2/3/6";
+#endif
+
+            InitializeParamList();
+            InitializeDirDataList();
+        }
+
         private void addFolderMenuItemClick(object sender, EventArgs e)
         {
             DXMenuItem item = sender as DXMenuItem;
@@ -614,33 +645,6 @@ namespace DynaRAP.UControl
             }
         }
 
-        private void MgmtParameterControl_Load(object sender, EventArgs e)
-        {
-            this.splitContainer1.SplitterDistance = 250;
-            cboParamList.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
-            //cboProperty.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
-            //cboUnit.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
-            //cboPart.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
-            //cboPartLocation.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
-            //cboAirplane.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
-
-#if DEBUG
-            //edtKey.Text = "Bending, LH Wing BL1870";
-            //edtAdams.Text = "112102";
-            //edtZaero.Text = "112102";
-            //edtGrt.Text = "SW921P";
-            //edtFltp.Text = "SW921P";
-            //edtFlts.Text = "SW921S";
-            //cboProperty.Text = "BM";
-            //cboUnit.Text = "N-mm";
-            //cboPart.Text = "Wing";
-            //cboPartLocation.Text = "Left";
-            //cboAirplane.Text = "A2/3/6";
-#endif
-
-            InitializeParamList();
-            InitializeDirDataList();
-        }
 
         private void TreeList1_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
         {

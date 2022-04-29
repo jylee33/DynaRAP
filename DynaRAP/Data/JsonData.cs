@@ -41,6 +41,13 @@ namespace DynaRAP.Data
         public ListParamJsonData(int code, string message) : base(code, message) { }
     }
 
+    public class ListPresetJsonData : JsonData
+    {
+        public List<ResponsePreset> response { get; set; }
+
+        public ListPresetJsonData(int code, string message) : base(code, message) { }
+    }
+
     public class CreatedAt
     {
         public long timestamp { get; set; }
@@ -96,6 +103,16 @@ namespace DynaRAP.Data
         public double domainMin { get; set; }
         public double domainMax { get; set; }
         public double specified { get; set; }
+        public string registerUid { get; set; }
+    }
+
+    public class ResponsePreset
+    {
+        public string seq { get; set; }
+        public string presetPack { get; set; }
+        public string presetName { get; set; }
+        public string presetPackFrom { get; set; }
+        public CreatedAt createdAt { get; set; }
         public string registerUid { get; set; }
     }
 

@@ -35,6 +35,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Name = "MgmtPresetGroupControl";
+            this.Size = new System.Drawing.Size(1035, 865);
             this.Load += new System.EventHandler(this.MgmtPresetGroupControl_Load);
             this.ResumeLayout(false);
 
