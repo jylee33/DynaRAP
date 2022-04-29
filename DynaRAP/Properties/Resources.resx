@@ -135,6 +135,9 @@
   <data name="InputFolderName" xml:space="preserve">
     <value>Input Folder Name</value>
   </data>
+  <data name="InputParameterKey" xml:space="preserve">
+    <value>Input Parameter Key</value>
+  </data>
   <data name="InputParameterName" xml:space="preserve">
     <value>Input Parameter Name</value>
   </data>
@@ -160,8 +163,24 @@
   <data name="StringDelete" xml:space="preserve">
     <value>Delete</value>
   </data>
+  <data name="StringDeleteParameter" xml:space="preserve">
+    <value>Delete parameter - {0} ?</value>
+  </data>
+  <data name="StringSuccess" xml:space="preserve">
+    <value>Success</value>
+    <comment>ㄴ</comment>
+  </data>
   <data name="StringWarning" xml:space="preserve">
     <value>Warning</value>
+  </data>
+  <data name="SuccessAdd" xml:space="preserve">
+    <value>Add successfully</value>
+  </data>
+  <data name="SuccessModify" xml:space="preserve">
+    <value>Modify successfully</value>
+  </data>
+  <data name="SuccessRemove" xml:space="preserve">
+    <value>Remove successfully</value>
   </data>
   <data name="UploadingFlightData" xml:space="preserve">
     <value>Uploading flight data...</value>

@@ -115,6 +115,15 @@ namespace DynaRAP.Properties {
         }
         
         /// <summary>
+        ///   Input Parameter Key과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string InputParameterKey {
+            get {
+                return ResourceManager.GetString("InputParameterKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Input Parameter Name과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string InputParameterName {
@@ -188,11 +197,56 @@ namespace DynaRAP.Properties {
         }
         
         /// <summary>
+        ///   Delete parameter - {0} ?과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string StringDeleteParameter {
+            get {
+                return ResourceManager.GetString("StringDeleteParameter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Success과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string StringSuccess {
+            get {
+                return ResourceManager.GetString("StringSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Warning과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string StringWarning {
             get {
                 return ResourceManager.GetString("StringWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Add successfully과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string SuccessAdd {
+            get {
+                return ResourceManager.GetString("SuccessAdd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Modify successfully과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string SuccessModify {
+            get {
+                return ResourceManager.GetString("SuccessModify", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Remove successfully과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string SuccessRemove {
+            get {
+                return ResourceManager.GetString("SuccessRemove", resourceCulture);
             }
         }
         

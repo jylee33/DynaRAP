@@ -135,6 +135,9 @@
   <data name="InputFolderName" xml:space="preserve">
     <value>폴더 이름 입력</value>
   </data>
+  <data name="InputParameterKey" xml:space="preserve">
+    <value>파라미터 키 입력</value>
+  </data>
   <data name="InputParameterName" xml:space="preserve">
     <value>파라미터 이름 입력</value>
   </data>
@@ -160,8 +163,24 @@
   <data name="StringDelete" xml:space="preserve">
     <value>삭제하시겠습니까?</value>
   </data>
+  <data name="StringDeleteParameter" xml:space="preserve">
+    <value>{0} 파리미터를 삭제하시겠습니까?</value>
+  </data>
+  <data name="StringSuccess" xml:space="preserve">
+    <value>성공</value>
+    <comment>ㄴ</comment>
+  </data>
   <data name="StringWarning" xml:space="preserve">
     <value>경고</value>
+  </data>
+  <data name="SuccessAdd" xml:space="preserve">
+    <value>추가 성공</value>
+  </data>
+  <data name="SuccessModify" xml:space="preserve">
+    <value>수정 성공</value>
+  </data>
+  <data name="SuccessRemove" xml:space="preserve">
+    <value>삭제 성공</value>
   </data>
   <data name="UploadingFlightData" xml:space="preserve">
     <value>비행데이터를 업로드 하고 있습니다...</value>
