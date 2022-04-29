@@ -135,6 +135,9 @@
   <data name="InputFolderName" xml:space="preserve">
     <value>Input Folder Name</value>
   </data>
+  <data name="InputParameterKey" xml:space="preserve">
+    <value>Input Parameter Key</value>
+  </data>
   <data name="InputParameterName" xml:space="preserve">
     <value>Input Parameter Name</value>
   </data>

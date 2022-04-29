@@ -115,6 +115,15 @@ namespace DynaRAP.Properties {
         }
         
         /// <summary>
+        ///   Input Parameter Key과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string InputParameterKey {
+            get {
+                return ResourceManager.GetString("InputParameterKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Input Parameter Name과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string InputParameterName {

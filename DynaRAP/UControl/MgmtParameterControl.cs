@@ -53,7 +53,6 @@ namespace DynaRAP.UControl
             treeList1.ForceInitialize();
 
             treeList1.RowHeight = 23;
-            //treeList1.OptionsView.ShowColumns = false;
             treeList1.OptionsView.ShowHorzLines = false;
             treeList1.OptionsView.ShowVertLines = false;
             treeList1.OptionsView.ShowIndicator = false;
@@ -70,13 +69,15 @@ namespace DynaRAP.UControl
             treeList1.OptionsNavigation.AutoFocusNewNode = true;
             treeList1.OptionsNavigation.AutoMoveRowFocus = true;
 
+#if !DEBUG
+            treeList1.OptionsView.ShowColumns = false;
             //Hide the key columns. An end-user can access them from the Customization Form.
-            //treeList1.Columns[treeList1.KeyFieldName].Visible = false;
-            //treeList1.Columns[treeList1.ParentFieldName].Visible = false;
-            //treeList1.Columns["DirType"].Visible = false;
-            //treeList1.Columns["RefSeq"].Visible = false;
-            //treeList1.Columns["RefSubSeq"].Visible = false;
-
+            treeList1.Columns[treeList1.KeyFieldName].Visible = false;
+            treeList1.Columns[treeList1.ParentFieldName].Visible = false;
+            treeList1.Columns["DirType"].Visible = false;
+            treeList1.Columns["RefSeq"].Visible = false;
+            treeList1.Columns["RefSubSeq"].Visible = false;
+#endif
             //Access the automatically created columns.
             TreeListColumn colName = treeList1.Columns["DirName"];
 
@@ -112,11 +113,7 @@ namespace DynaRAP.UControl
 
             foreach (ResponseParam list in paramList)
             {
-                //Decoding
-                byte[] byte64 = Convert.FromBase64String(list.paramName);
-                string name = Encoding.UTF8.GetString(byte64);
-
-                cboParamList.Properties.Items.Add(name);
+                cboParamList.Properties.Items.Add(list.paramKey);
             }
             cboParamList.SelectedIndex = -1;
 
@@ -386,9 +383,9 @@ namespace DynaRAP.UControl
 
         }
 
-        private bool AddModParameter(string opType, string paramName, string paramPack = "")
+        private bool AddModParameter(string opType, string paramKey, string paramPack = "")
         {
-            ResponseParam param = paramList.Find(x => x.paramKey.Equals(edtKey.Text));
+            ResponseParam param = paramList.Find(x => x.paramKey.Equals(paramKey));
             if(param == null)
             {
                 lblDuplicateKey.Visible = false;
@@ -399,6 +396,10 @@ namespace DynaRAP.UControl
                 MessageBox.Show("Failed", "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
+
+            //Encoding
+            byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(edtParamName.Text);
+            string encName = Convert.ToBase64String(basebyte);
 
             string url = ConfigurationManager.AppSettings["UrlParam"];
             string sendData = string.Format(@"
@@ -426,7 +427,7 @@ namespace DynaRAP.UControl
             ""specified"":""{18}"",
             ""paramVal"":null
             }}"
-            , opType, paramPack, paramName, edtKey.Text, cboProperty.Text, edtAdams.Text
+            , opType, paramPack, encName, paramKey, cboProperty.Text, edtAdams.Text
             , edtZaero.Text, edtGrt.Text, edtFltp.Text, edtFlts.Text
             , cboPart.Text, cboPartLocation.Text
             , edtLrpX.Text, edtLrpY.Text, edtLrpZ.Text
@@ -524,9 +525,9 @@ namespace DynaRAP.UControl
             return true;
         }
 
-        #endregion Method
+#endregion Method
 
-        #region EventHandler
+#region EventHandler
         private void addFolderMenuItemClick(object sender, EventArgs e)
         {
             DXMenuItem item = sender as DXMenuItem;
@@ -788,32 +789,25 @@ namespace DynaRAP.UControl
                     this.cboParamList.SelectedIndex = -1;
                 else
                 {
-                    //Decoding
-                    byte[] byte64 = Convert.FromBase64String(param.paramName);
-                    string name = Encoding.UTF8.GetString(byte64);
-
-                    this.cboParamList.Text = name;
+                    this.cboParamList.Text = param.paramKey;
                 }
             }
         }
 
         private void btnModifyParameter_Click(object sender, EventArgs e)
         {
-            string paramName = cboParamList.Text;
-            //Encoding
-            byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(paramName);
-            string encName = Convert.ToBase64String(basebyte);
-            ResponseParam param = paramList.Find(x => x.paramName.Equals(encName));
+            string paramKey = cboParamList.Text;
+            ResponseParam param = paramList.Find(x => x.paramKey.Equals(paramKey));
 
             if (param != null)
             {
-                bool bResult = AddModParameter("modify", encName, param.paramPack);
+                bool bResult = AddModParameter("modify", paramKey, param.paramPack);
 
                 if (bResult)
                 {
                     MessageBox.Show(Properties.Resources.SuccessModify, Properties.Resources.StringSuccess, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     InitializeParamList();
-                    cboParamList.Text = paramName;
+                    cboParamList.Text = paramKey;
                 }
             }
         }
@@ -826,9 +820,7 @@ namespace DynaRAP.UControl
                 return;
             }
 
-            byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(cboParamList.Text);
-            string encName = Convert.ToBase64String(basebyte);
-            ResponseParam param = paramList.Find(x => x.paramName.Equals(encName));
+            ResponseParam param = paramList.Find(x => x.paramKey.Equals(cboParamList.Text));
 
             if(param != null)
             {
@@ -845,24 +837,20 @@ namespace DynaRAP.UControl
 
         private void btnSaveAsNewParameter_Click(object sender, EventArgs e)
         {
-            string paramName = Prompt.ShowDialog("Parameter Name", "New Parameter");
+            string paramKey = Prompt.ShowDialog("Parameter Key", "New Parameter");
 
-            if (string.IsNullOrEmpty(paramName))
+            if (string.IsNullOrEmpty(paramKey))
             {
-                MessageBox.Show(Properties.Resources.InputParameterName, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(Properties.Resources.InputParameterKey, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-
-            //Encoding
-            byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(paramName);
-            string encName = Convert.ToBase64String(basebyte);
-            bool bResult = AddModParameter("add", encName);
+            bool bResult = AddModParameter("add", paramKey);
 
             if (bResult)
             {
                 MessageBox.Show(Properties.Resources.SuccessAdd, Properties.Resources.StringSuccess, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 InitializeParamList();
-                cboParamList.Text = paramName;
+                cboParamList.Text = paramKey;
             }
         }
 
@@ -875,11 +863,7 @@ namespace DynaRAP.UControl
             string paramPack = string.Empty;
             string seq = string.Empty;
 
-            string paramName = cboParamList.Text;
-            //Encoding
-            byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(paramName);
-            string encName = Convert.ToBase64String(basebyte);
-            ResponseParam param = paramList.Find(x => x.paramName.Equals(encName));
+            ResponseParam param = paramList.Find(x => x.paramKey.Equals(cboParamList.Text));
             if (param != null)
             {
                 paramPack = param.paramPack;
@@ -904,11 +888,9 @@ namespace DynaRAP.UControl
 
             lblDuplicateKey.Visible = false;
                 
-            byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(cbo.Text);
-            string encName = Convert.ToBase64String(basebyte);
-            ResponseParam param = paramList.Find(x => x.paramName.Equals(encName));
+            ResponseParam param = paramList.Find(x => x.paramKey.Equals(cbo.Text));
 
-            string paramKey = String.Empty;
+            string paramName = String.Empty;
             string adamsKey = String.Empty;
             string zaeroKey = String.Empty;
             string grtKey = String.Empty;
@@ -928,7 +910,11 @@ namespace DynaRAP.UControl
 
             if (param != null)
             {
-                paramKey = param.paramKey;
+                //Decoding
+                byte[] byte64 = Convert.FromBase64String(param.paramName);
+                string decName = Encoding.UTF8.GetString(byte64);
+
+                paramName =decName;
                 adamsKey = param.adamsKey;
                 zaeroKey = param.zaeroKey;
                 grtKey = param.grtKey;
@@ -946,7 +932,7 @@ namespace DynaRAP.UControl
                 domainMin = param.domainMin.ToString();
                 specified = param.specified.ToString();
             }
-            edtKey.Text = paramKey;
+            edtParamName.Text = paramName;
             edtAdams.Text = adamsKey;
             edtZaero.Text = zaeroKey;
             edtGrt.Text = grtKey;
@@ -965,7 +951,7 @@ namespace DynaRAP.UControl
             edtSpecialValue.Text = specified;
         }
 
-        #endregion EventHandler
+#endregion EventHandler
 
     }
 }
