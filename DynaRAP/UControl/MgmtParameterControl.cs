@@ -112,12 +112,13 @@ namespace DynaRAP.UControl
 
             foreach (ResponseParam list in paramList)
             {
+                //Decoding
                 byte[] byte64 = Convert.FromBase64String(list.paramName);
                 string name = Encoding.UTF8.GetString(byte64);
 
                 cboParamList.Properties.Items.Add(name);
             }
-            cboParamList.SelectedIndex = 0;
+            cboParamList.SelectedIndex = -1;
 
         }
 
@@ -137,15 +138,15 @@ namespace DynaRAP.UControl
             string url = ConfigurationManager.AppSettings["UrlDir"];
             string sendData = string.Format(@"
             {{ ""command"":""add"",
-            ""seq"":""1"",
-            ""parentDirSeq"":""{0}"",
-            ""dirName"":""{1}"",
-            ""dirType"":""{2}"",
+            ""seq"":""{0}"",
+            ""parentDirSeq"":""{1}"",
+            ""dirName"":""{2}"",
+            ""dirType"":""{3}"",
             ""dirIcon"":"""",
-            ""refSeq"":"""",
-            ""refSubSeq"":""""
+            ""refSeq"":""0"",
+            ""refSubSeq"":""0""
             }}"
-            , pid, name, dirType);
+            , 1, pid, name, dirType);
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "POST";
@@ -188,7 +189,7 @@ namespace DynaRAP.UControl
             return true;
         }
 
-        private bool ModifyDir(string dirType, string id, string pid, string name)
+        private bool ModifyDir(string dirType, string id, string pid, string name, string paramPack, string seq)
         {
             string url = ConfigurationManager.AppSettings["UrlDir"];
             string sendData = string.Format(@"
@@ -198,10 +199,10 @@ namespace DynaRAP.UControl
             ""dirName"":""{2}"",
             ""dirType"":""{3}"",
             ""dirIcon"":"""",
-            ""refSeq"":"""",
-            ""refSubSeq"":""""
+            ""refSeq"":""{4}"",
+            ""refSubSeq"":""{5}""
             }}"
-            , id, pid, name, dirType);
+            , id, pid, name, dirType, paramPack, seq);
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "POST";
@@ -349,7 +350,7 @@ namespace DynaRAP.UControl
             {
             ""command"":""list"",
             ""pageNo"":1,
-            ""pageSize"":30
+            ""pageSize"":3000
             }";
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
@@ -623,21 +624,21 @@ namespace DynaRAP.UControl
             //cboAirplane.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
 
 #if DEBUG
-            edtKey.Text = "Bending, LH Wing BL1870";
-            edtAdams.Text = "112102";
-            edtZaero.Text = "112102";
-            edtGrt.Text = "SW921P";
-            edtFltp.Text = "SW921P";
-            edtFlts.Text = "SW921S";
-            cboProperty.Text = "BM";
-            cboUnit.Text = "N-mm";
-            cboPart.Text = "Wing";
-            cboPartLocation.Text = "Left";
-            cboAirplane.Text = "A2/3/6";
+            //edtKey.Text = "Bending, LH Wing BL1870";
+            //edtAdams.Text = "112102";
+            //edtZaero.Text = "112102";
+            //edtGrt.Text = "SW921P";
+            //edtFltp.Text = "SW921P";
+            //edtFlts.Text = "SW921S";
+            //cboProperty.Text = "BM";
+            //cboUnit.Text = "N-mm";
+            //cboPart.Text = "Wing";
+            //cboPartLocation.Text = "Left";
+            //cboAirplane.Text = "A2/3/6";
 #endif
 
-            InitializeDirDataList();
             InitializeParamList();
+            InitializeDirDataList();
         }
 
         private void TreeList1_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
@@ -667,7 +668,7 @@ namespace DynaRAP.UControl
             if (node != null)
             {
                 // Create Modity Node command.
-                DXMenuItem menuItemModify = new DXMenuItem("Modify Name", this.modifyNodeMenuItemClick);
+                DXMenuItem menuItemModify = new DXMenuItem("Rename", this.modifyNodeMenuItemClick);
                 menuItemModify.Tag = node;
                 e.Menu.Items.Add(menuItemModify);
 
@@ -685,7 +686,7 @@ namespace DynaRAP.UControl
             TreeListNode node = item.Tag as TreeListNode;
             if (node == null) return;
 
-            string dirName = Prompt.ShowDialog("New Name", "Modify Name");
+            string dirName = Prompt.ShowDialog("New Name", "Rename");
 
             if (string.IsNullOrEmpty(dirName))
             {
@@ -697,7 +698,7 @@ namespace DynaRAP.UControl
             byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(dirName);
             string name = Convert.ToBase64String(basebyte);
 
-            bool bResult = ModifyDir(node.GetValue("DirType").ToString(), node.GetValue("ID").ToString(), node.GetValue("ParentID").ToString(), name);
+            bool bResult = ModifyDir(node.GetValue("DirType").ToString(), node.GetValue("ID").ToString(), node.GetValue("ParentID").ToString(), name, "0", "0");
             if (bResult)
             {
                 RefreshTree();
@@ -772,16 +773,27 @@ namespace DynaRAP.UControl
 
             if (node != null)
             {
-                //if(node.GetValue("DirType").ToString().Equals("folder"))
-                //{
-                //    this.panelControl1.Visible = false;
-                //}
-                //else
-                //{
-                //    this.panelControl1.Visible = true;
-                //    node.GetValue("RefSeq");
-                //}
+                if (node.GetValue("DirType").ToString().Equals("folder"))
+                {
+                    this.btnLink.Visible = false;
+                }
+                else
+                {
+                    this.btnLink.Visible = true;
+                }
                 focusedNode = node;
+
+                ResponseParam param = paramList.Find(x => x.paramPack.Equals(node.GetValue("RefSeq").ToString()));
+                if (param == null)
+                    this.cboParamList.SelectedIndex = -1;
+                else
+                {
+                    //Decoding
+                    byte[] byte64 = Convert.FromBase64String(param.paramName);
+                    string name = Encoding.UTF8.GetString(byte64);
+
+                    this.cboParamList.Text = name;
+                }
             }
         }
 
@@ -854,38 +866,103 @@ namespace DynaRAP.UControl
             }
         }
 
+        private void btnLink_Click(object sender, EventArgs e)
+        {
+            string dirName = focusedNode.GetValue("DirName").ToString();
+            string dirType = focusedNode.GetValue("DirType").ToString();
+            string id = focusedNode.GetValue("ID").ToString();
+            string pid = focusedNode.GetValue("ParentID").ToString();
+            string paramPack = string.Empty;
+            string seq = string.Empty;
+
+            string paramName = cboParamList.Text;
+            //Encoding
+            byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(paramName);
+            string encName = Convert.ToBase64String(basebyte);
+            ResponseParam param = paramList.Find(x => x.paramName.Equals(encName));
+            if (param != null)
+            {
+                paramPack = param.paramPack;
+                seq = param.seq;
+            }
+
+            //Encoding
+            byte[] basebyte2 = System.Text.Encoding.UTF8.GetBytes(dirName);
+            string name = Convert.ToBase64String(basebyte2);
+
+            bool bResult = ModifyDir(dirType, id, pid, name, paramPack, seq);
+            if (bResult)
+            {
+                RefreshTree();
+                treeList1.FocusedNode = treeList1.FindNodeByFieldValue("ID", this.focusedNodeId);
+            }
+        }
+
         private void cboParamList_SelectedIndexChanged(object sender, EventArgs e)
         {
             var cbo = sender as ComboBoxEdit;
-            if (cbo.SelectedIndex != -1)
-            {
-                lblDuplicateKey.Visible = false;
-                
-                byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(cbo.Text);
-                string encName = Convert.ToBase64String(basebyte);
-                ResponseParam param = paramList.Find(x => x.paramName.Equals(encName));
 
-                if (param != null)
-                {
-                    edtKey.Text = param.paramKey;
-                    edtAdams.Text = param.adamsKey;
-                    edtZaero.Text = param.zaeroKey;
-                    edtGrt.Text = param.grtKey;
-                    edtFltp.Text = param.fltpKey;
-                    edtFlts.Text = param.fltsKey;
-                    cboProperty.Text = param.paramSpec;
-                    cboUnit.Text = param.paramUnit;
-                    cboPart.Text = param.partInfo;
-                    cboPartLocation.Text = param.partInfoSub;
-                    edtLrpX.Text = param.lrpX.ToString();
-                    edtLrpY.Text = param.lrpY.ToString();
-                    edtLrpZ.Text = param.lrpZ.ToString();
-                    cboAirplane.Text = "";
-                    edtMaximum.Text = param.domainMax.ToString();
-                    edtMinumum.Text = param.domainMin.ToString();
-                    edtSpecialValue.Text = param.specified.ToString();
-                }
+            lblDuplicateKey.Visible = false;
+                
+            byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(cbo.Text);
+            string encName = Convert.ToBase64String(basebyte);
+            ResponseParam param = paramList.Find(x => x.paramName.Equals(encName));
+
+            string paramKey = String.Empty;
+            string adamsKey = String.Empty;
+            string zaeroKey = String.Empty;
+            string grtKey = String.Empty;
+            string fltpKey = String.Empty;
+            string fltsKey = String.Empty;
+            string paramSpec = String.Empty;
+            string paramUnit = String.Empty;
+            string partInfo = String.Empty;
+            string partInfoSub = String.Empty;
+            string lrpX = String.Empty;
+            string lrpY = String.Empty;
+            string lrpZ = String.Empty;
+            string airplane = String.Empty;
+            string domainMax = String.Empty;
+            string domainMin = String.Empty;
+            string specified = String.Empty;
+
+            if (param != null)
+            {
+                paramKey = param.paramKey;
+                adamsKey = param.adamsKey;
+                zaeroKey = param.zaeroKey;
+                grtKey = param.grtKey;
+                fltpKey = param.fltpKey;
+                fltsKey = param.fltsKey;
+                paramSpec = param.paramSpec;
+                paramUnit = param.paramUnit;
+                partInfo = param.partInfo;
+                partInfoSub = param.partInfoSub;
+                lrpX = param.lrpX.ToString();
+                lrpY = param.lrpY.ToString();
+                lrpZ = param.lrpZ.ToString();
+                airplane = "";
+                domainMax = param.domainMax.ToString();
+                domainMin = param.domainMin.ToString();
+                specified = param.specified.ToString();
             }
+            edtKey.Text = paramKey;
+            edtAdams.Text = adamsKey;
+            edtZaero.Text = zaeroKey;
+            edtGrt.Text = grtKey;
+            edtFltp.Text = fltpKey;
+            edtFlts.Text = fltsKey;
+            cboProperty.Text = paramSpec;
+            cboUnit.Text = paramUnit;
+            cboPart.Text = partInfo;
+            cboPartLocation.Text = partInfoSub;
+            edtLrpX.Text = lrpX;
+            edtLrpY.Text = lrpY;
+            edtLrpZ.Text = lrpZ;
+            cboAirplane.Text = airplane;
+            edtMaximum.Text = domainMax;
+            edtMinumum.Text = domainMin;
+            edtSpecialValue.Text = specified;
         }
 
         #endregion EventHandler
