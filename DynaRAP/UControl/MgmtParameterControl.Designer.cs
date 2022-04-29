@@ -56,6 +56,7 @@
             this.labelControl3 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl20 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl25 = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl37 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl4 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl12 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl16 = new DevExpress.XtraEditors.LabelControl();
@@ -102,7 +103,6 @@
             this.edtLrpZ = new DevExpress.XtraEditors.TextEdit();
             this.edtLrpY = new DevExpress.XtraEditors.TextEdit();
             this.edtLrpX = new DevExpress.XtraEditors.TextEdit();
-            this.labelControl37 = new DevExpress.XtraEditors.LabelControl();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -170,6 +170,7 @@
             this.treeList1.TabIndex = 2;
             this.treeList1.GetStateImage += new DevExpress.XtraTreeList.GetStateImageEventHandler(this.treeList1_GetStateImage);
             this.treeList1.GetSelectImage += new DevExpress.XtraTreeList.GetSelectImageEventHandler(this.treeList1_GetSelectImage);
+            this.treeList1.RowClick += new DevExpress.XtraTreeList.RowClickEventHandler(this.treeList1_RowClick);
             this.treeList1.FocusedNodeChanged += new DevExpress.XtraTreeList.FocusedNodeChangedEventHandler(this.treeList1_FocusedNodeChanged);
             // 
             // ID
@@ -454,6 +455,18 @@
             this.labelControl25.Size = new System.Drawing.Size(171, 13);
             this.labelControl25.TabIndex = 0;
             this.labelControl25.Text = "LRP 정보를 X,Y,Z에 맞게 입력합니다.";
+            // 
+            // labelControl37
+            // 
+            this.labelControl37.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
+            this.labelControl37.Appearance.ForeColor = System.Drawing.Color.Gray;
+            this.labelControl37.Appearance.Options.UseFont = true;
+            this.labelControl37.Appearance.Options.UseForeColor = true;
+            this.labelControl37.Location = new System.Drawing.Point(242, 108);
+            this.labelControl37.Name = "labelControl37";
+            this.labelControl37.Size = new System.Drawing.Size(139, 13);
+            this.labelControl37.TabIndex = 0;
+            this.labelControl37.Text = "파라미터의 이름을 입력합니다.";
             // 
             // labelControl4
             // 
@@ -919,18 +932,6 @@
             this.edtLrpX.Name = "edtLrpX";
             this.edtLrpX.Size = new System.Drawing.Size(86, 22);
             this.edtLrpX.TabIndex = 11;
-            // 
-            // labelControl37
-            // 
-            this.labelControl37.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
-            this.labelControl37.Appearance.ForeColor = System.Drawing.Color.Gray;
-            this.labelControl37.Appearance.Options.UseFont = true;
-            this.labelControl37.Appearance.Options.UseForeColor = true;
-            this.labelControl37.Location = new System.Drawing.Point(242, 108);
-            this.labelControl37.Name = "labelControl37";
-            this.labelControl37.Size = new System.Drawing.Size(139, 13);
-            this.labelControl37.TabIndex = 0;
-            this.labelControl37.Text = "파라미터의 이름을 입력합니다.";
             // 
             // MgmtParameterControl
             // 

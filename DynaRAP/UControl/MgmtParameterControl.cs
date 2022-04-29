@@ -386,7 +386,7 @@ namespace DynaRAP.UControl
         private bool AddModParameter(string opType, string paramKey, string paramPack = "")
         {
             ResponseParam param = paramList.Find(x => x.paramKey.Equals(paramKey));
-            if(param == null)
+            if(param == null || opType.Equals("modify"))
             {
                 lblDuplicateKey.Visible = false;
             }
@@ -794,6 +794,32 @@ namespace DynaRAP.UControl
             }
         }
 
+        private void treeList1_RowClick(object sender, RowClickEventArgs e)
+        {
+            TreeListNode node = e.Node;
+
+            if (node != null)
+            {
+                if (node.GetValue("DirType").ToString().Equals("folder"))
+                {
+                    this.btnLink.Visible = false;
+                }
+                else
+                {
+                    this.btnLink.Visible = true;
+                }
+                focusedNode = node;
+
+                ResponseParam param = paramList.Find(x => x.paramPack.Equals(node.GetValue("RefSeq").ToString()));
+                if (param == null)
+                    this.cboParamList.SelectedIndex = -1;
+                else
+                {
+                    this.cboParamList.Text = param.paramKey;
+                }
+            }
+        }
+
         private void btnModifyParameter_Click(object sender, EventArgs e)
         {
             string paramKey = cboParamList.Text;
@@ -951,7 +977,7 @@ namespace DynaRAP.UControl
             edtSpecialValue.Text = specified;
         }
 
-#endregion EventHandler
+        #endregion EventHandler
 
     }
 }

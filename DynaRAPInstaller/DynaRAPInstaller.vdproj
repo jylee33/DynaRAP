@@ -225,6 +225,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_3C04D3BB8C27353CA7288AFAA186B6D3"
+        "OwnerKey" = "8:_DCB2D4BA05B14BEAA109E1895ED06E4B"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_44DAA45BB05EDD55FDC9DD21CCD31AF9"
         "OwnerKey" = "8:_DCB2D4BA05B14BEAA109E1895ED06E4B"
         "MsmSig" = "8:_UNDEFINED"
@@ -1156,6 +1162,12 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_3C04D3BB8C27353CA7288AFAA186B6D3"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_39290A6221B53CED378A8CF04D83E73D"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1849,6 +1861,37 @@
                     }
                 }
             "SourcePath" = "8:DevExpress.XtraTreeList.v21.2.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_A85D84C9CB1144E8842881DC34B5DBA9"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_3C04D3BB8C27353CA7288AFAA186B6D3"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_3C04D3BB8C27353CA7288AFAA186B6D3"
+                    {
+                    "Name" = "8:Newtonsoft.Json.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Newtonsoft.Json.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_A85D84C9CB1144E8842881DC34B5DBA9"
@@ -2841,15 +2884,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:DynaRap-Post"
-        "ProductCode" = "8:{D9FA5DAE-4F6F-4DCF-8F15-47CF7AEA7A72}"
-        "PackageCode" = "8:{6DE00904-A47B-44A4-A3DE-0E913B78C639}"
+        "ProductCode" = "8:{8C0BF76A-1E9B-4BFE-BA82-CDE447938198}"
+        "PackageCode" = "8:{65F3912C-339B-4F0A-9610-47C1AD5D8F82}"
         "UpgradeCode" = "8:{C2E8B582-A912-4CA2-ABDF-0C2D08B886D2}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:1.0.3"
+        "ProductVersion" = "8:1.0.4"
         "Manufacturer" = "8:ServeTech"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
