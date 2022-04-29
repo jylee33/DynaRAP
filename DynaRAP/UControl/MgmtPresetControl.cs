@@ -386,56 +386,35 @@ namespace DynaRAP.UControl
 
         }
 
-        private bool AddModParameter(string opType, string presetKey, string paramPack = "")
+        private bool AddModParameter(string opType, string presetPack = "")
         {
-            ResponsePreset preset = presetList.Find(x => x.presetPack.Equals(presetKey));
-            if (preset == null || opType.Equals("modify"))
+            ResponsePreset preset = presetList.Find(x => x.presetPack.Equals(presetPack));
+            string paramName = edtParamName.Text;
+
+            if (string.IsNullOrEmpty(paramName))
             {
-                //lblDuplicateKey.Visible = false;
-            }
-            else
-            {
-                //lblDuplicateKey.Visible = true;
+                lblMandatoryField.Visible = true;
                 MessageBox.Show("Failed", "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
+            else
+            {
+                lblMandatoryField.Visible = false;
+            }
 
             //Encoding
-            byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(edtParamName.Text);
+            byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(paramName);
             string encName = Convert.ToBase64String(basebyte);
 
             string url = ConfigurationManager.AppSettings["UrlPreset"];
-            string sendData = "";// string.Format(@"
-            //{{
-            //""command"":""{0}"",
-            //""seq"":"""",
-            //""paramPack"":""{1}"",
-            //""paramGroupSeq"":"""",
-            //""presetName"":""{2}"",
-            //""presetKey"":""{3}"",
-            //""paramSpec"":""{4}"",
-            //""adamsKey"":""{5}"",
-            //""zaeroKey"":""{6}"",
-            //""grtKey"":""{7}"",
-            //""fltpKey"":""{8}"",
-            //""fltsKey"":""{9}"",
-            //""partInfo"":""{10}"",
-            //""partInfoSub"":""{11}"",
-            //""lrpX"":""{12}"",
-            //""lrpY"":""{13}"",
-            //""lrpZ"":""{14}"",
-            //""paramUnit"":""{15}"",
-            //""domainMin"":""{16}"",
-            //""domainMax"":""{17}"",
-            //""specified"":""{18}"",
-            //""paramVal"":null
-            //}}"
-            //, opType, paramPack, encName, presetKey, cboProperty.Text, edtAdams.Text
-            //, edtZaero.Text, edtGrt.Text, edtFltp.Text, edtFlts.Text
-            //, cboPart.Text, cboPartLocation.Text
-            //, edtLrpX.Text, edtLrpY.Text, edtLrpZ.Text
-            //, cboUnit.Text, edtMinumum.Text, edtMaximum.Text
-            //, edtSpecialValue.Text);
+            string sendData = string.Format(@"
+            {{""command"":""{0}"",
+            ""seq"":"""",
+            ""presetPack"":""{1}"",
+            ""presetName"":""{2}"",
+            ""presetPackFrom"":""""
+            }}"
+            , opType, presetPack, encName);
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "POST";
@@ -463,8 +442,8 @@ namespace DynaRAP.UControl
                 }
             }
 
-            Console.WriteLine(responseText);
-            AddParamJsonData result = JsonConvert.DeserializeObject<AddParamJsonData>(responseText);
+            //Console.WriteLine(responseText);
+            AddPresetJsonData result = JsonConvert.DeserializeObject<AddPresetJsonData>(responseText);
 
             if (result != null)
             {
@@ -478,15 +457,15 @@ namespace DynaRAP.UControl
             return true;
         }
 
-        private bool RemoveParam(string paramPack)
+        private bool RemoveParam(string presetPack)
         {
             string url = ConfigurationManager.AppSettings["UrlPreset"];
             string sendData = string.Format(@"
             {{
             ""command"":""remove"",
-            ""paramPack"":""{0}""
+            ""presetPack"":""{0}""
             }}"
-            , paramPack);
+            , presetPack);
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "POST";
@@ -827,14 +806,14 @@ namespace DynaRAP.UControl
             }
         }
 
-        private void btnModifyParameter_Click(object sender, EventArgs e)
+        private void btnModifyPreset_Click(object sender, EventArgs e)
         {
             string presetKey = cboPresetList.Text;
             ResponsePreset preset = presetList.Find(x => x.presetPack.Equals(presetKey));
 
             if (preset != null)
             {
-                bool bResult = AddModParameter("modify", presetKey, preset.presetPack);
+                bool bResult = AddModParameter("modify", preset.presetPack);
 
                 if (bResult)
                 {
@@ -845,9 +824,9 @@ namespace DynaRAP.UControl
             }
         }
 
-        private void btnDeleteParameter_Click(object sender, EventArgs e)
+        private void btnDeletePreset_Click(object sender, EventArgs e)
         {
-            string msg = string.Format(Properties.Resources.StringDeleteParameter, cboPresetList.Text);
+            string msg = string.Format(Properties.Resources.StringDeletePreset, cboPresetList.Text);
             if (MessageBox.Show(msg, Properties.Resources.StringConfirmation, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
             {
                 return;
@@ -868,22 +847,23 @@ namespace DynaRAP.UControl
 
         }
 
-        private void btnSaveAsNewParameter_Click(object sender, EventArgs e)
+        private void btnSaveAsNewPreset_Click(object sender, EventArgs e)
         {
-            string presetKey = Prompt.ShowDialog("Preset Key", "New Preset");
+            //string presetKey = Prompt.ShowDialog("Preset Key", "New Preset");
 
-            if (string.IsNullOrEmpty(presetKey))
-            {
-                MessageBox.Show(Properties.Resources.InputParameterKey, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-            bool bResult = AddModParameter("add", presetKey);
+            //if (string.IsNullOrEmpty(presetKey))
+            //{
+            //    MessageBox.Show(Properties.Resources.InputParameterKey, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            //    return;
+            //}
+            bool bResult = AddModParameter("add", "");
 
             if (bResult)
             {
                 MessageBox.Show(Properties.Resources.SuccessAdd, Properties.Resources.StringSuccess, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 InitializePresetList();
-                cboPresetList.Text = presetKey;
+                //cboPresetList.Text = "";
+                cboPresetList.SelectedIndex = -1;
             }
         }
 
@@ -915,31 +895,15 @@ namespace DynaRAP.UControl
             }
         }
 
-        private void cboParamList_SelectedIndexChanged(object sender, EventArgs e)
+        private void cboPresetList_SelectedIndexChanged(object sender, EventArgs e)
         {
             var cbo = sender as ComboBoxEdit;
 
-            //lblDuplicateKey.Visible = false;
+            lblMandatoryField.Visible = false;
 
             ResponsePreset preset = presetList.Find(x => x.presetPack.Equals(cbo.Text));
 
             string presetName = String.Empty;
-            string adamsKey = String.Empty;
-            string zaeroKey = String.Empty;
-            string grtKey = String.Empty;
-            string fltpKey = String.Empty;
-            string fltsKey = String.Empty;
-            string paramSpec = String.Empty;
-            string paramUnit = String.Empty;
-            string partInfo = String.Empty;
-            string partInfoSub = String.Empty;
-            string lrpX = String.Empty;
-            string lrpY = String.Empty;
-            string lrpZ = String.Empty;
-            string airplane = String.Empty;
-            string domainMax = String.Empty;
-            string domainMin = String.Empty;
-            string specified = String.Empty;
 
             if (preset != null)
             {
@@ -948,40 +912,8 @@ namespace DynaRAP.UControl
                 string decName = Encoding.UTF8.GetString(byte64);
 
                 presetName = decName;
-                //adamsKey = preset.adamsKey;
-                //zaeroKey = preset.zaeroKey;
-                //grtKey = preset.grtKey;
-                //fltpKey = preset.fltpKey;
-                //fltsKey = preset.fltsKey;
-                //paramSpec = preset.paramSpec;
-                //paramUnit = preset.paramUnit;
-                //partInfo = preset.partInfo;
-                //partInfoSub = preset.partInfoSub;
-                //lrpX = preset.lrpX.ToString();
-                //lrpY = preset.lrpY.ToString();
-                //lrpZ = preset.lrpZ.ToString();
-                //airplane = "";
-                //domainMax = preset.domainMax.ToString();
-                //domainMin = preset.domainMin.ToString();
-                //specified = preset.specified.ToString();
             }
             edtParamName.Text = presetName;
-            //edtAdams.Text = adamsKey;
-            //edtZaero.Text = zaeroKey;
-            //edtGrt.Text = grtKey;
-            //edtFltp.Text = fltpKey;
-            //edtFlts.Text = fltsKey;
-            //cboProperty.Text = paramSpec;
-            //cboUnit.Text = paramUnit;
-            //cboPart.Text = partInfo;
-            //cboPartLocation.Text = partInfoSub;
-            //edtLrpX.Text = lrpX;
-            //edtLrpY.Text = lrpY;
-            //edtLrpZ.Text = lrpZ;
-            //cboAirplane.Text = airplane;
-            //edtMaximum.Text = domainMax;
-            //edtMinumum.Text = domainMin;
-            //edtSpecialValue.Text = specified;
         }
 
         private void btnAddParameter_Click(object sender, EventArgs e)

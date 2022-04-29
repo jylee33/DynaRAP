@@ -166,6 +166,9 @@
   <data name="StringDeleteParameter" xml:space="preserve">
     <value>Delete parameter - {0} ?</value>
   </data>
+  <data name="StringDeletePreset" xml:space="preserve">
+    <value>Delete preset - {0} ?</value>
+  </data>
   <data name="StringSuccess" xml:space="preserve">
     <value>Success</value>
     <comment>ㄴ</comment>

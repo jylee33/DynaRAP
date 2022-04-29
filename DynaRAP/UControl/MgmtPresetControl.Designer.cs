@@ -40,7 +40,7 @@
             this.labelControl3 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl37 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl17 = new DevExpress.XtraEditors.LabelControl();
-            this.lblDuplicateKey = new DevExpress.XtraEditors.LabelControl();
+            this.lblMandatoryField = new DevExpress.XtraEditors.LabelControl();
             this.edtParamName = new DevExpress.XtraEditors.TextEdit();
             this.cboUnit = new DevExpress.XtraEditors.ComboBoxEdit();
             this.cboPresetList = new DevExpress.XtraEditors.ComboBoxEdit();
@@ -94,7 +94,7 @@
             this.btnSaveAsNewParameter.Size = new System.Drawing.Size(110, 23);
             this.btnSaveAsNewParameter.TabIndex = 20;
             this.btnSaveAsNewParameter.Text = "새 프리셋으로 저장";
-            this.btnSaveAsNewParameter.Click += new System.EventHandler(this.btnSaveAsNewParameter_Click);
+            this.btnSaveAsNewParameter.Click += new System.EventHandler(this.btnSaveAsNewPreset_Click);
             // 
             // labelControl2
             // 
@@ -113,7 +113,7 @@
             this.btnDeleteParameter.Size = new System.Drawing.Size(110, 23);
             this.btnDeleteParameter.TabIndex = 19;
             this.btnDeleteParameter.Text = "프리셋 삭제";
-            this.btnDeleteParameter.Click += new System.EventHandler(this.btnDeleteParameter_Click);
+            this.btnDeleteParameter.Click += new System.EventHandler(this.btnDeletePreset_Click);
             // 
             // labelControl19
             // 
@@ -141,7 +141,7 @@
             this.btnModifyParameter.Size = new System.Drawing.Size(110, 23);
             this.btnModifyParameter.TabIndex = 18;
             this.btnModifyParameter.Text = "프리셋 저장";
-            this.btnModifyParameter.Click += new System.EventHandler(this.btnModifyParameter_Click);
+            this.btnModifyParameter.Click += new System.EventHandler(this.btnModifyPreset_Click);
             // 
             // labelControl3
             // 
@@ -175,17 +175,18 @@
             this.labelControl17.TabIndex = 0;
             this.labelControl17.Text = "프리셋 카테고리";
             // 
-            // lblDuplicateKey
+            // lblMandatoryField
             // 
-            this.lblDuplicateKey.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold);
-            this.lblDuplicateKey.Appearance.ForeColor = System.Drawing.Color.Red;
-            this.lblDuplicateKey.Appearance.Options.UseFont = true;
-            this.lblDuplicateKey.Appearance.Options.UseForeColor = true;
-            this.lblDuplicateKey.Location = new System.Drawing.Point(481, 89);
-            this.lblDuplicateKey.Name = "lblDuplicateKey";
-            this.lblDuplicateKey.Size = new System.Drawing.Size(137, 13);
-            this.lblDuplicateKey.TabIndex = 0;
-            this.lblDuplicateKey.Text = "프리셋 이름은 필수 입니다.";
+            this.lblMandatoryField.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold);
+            this.lblMandatoryField.Appearance.ForeColor = System.Drawing.Color.Red;
+            this.lblMandatoryField.Appearance.Options.UseFont = true;
+            this.lblMandatoryField.Appearance.Options.UseForeColor = true;
+            this.lblMandatoryField.Location = new System.Drawing.Point(481, 89);
+            this.lblMandatoryField.Name = "lblMandatoryField";
+            this.lblMandatoryField.Size = new System.Drawing.Size(137, 13);
+            this.lblMandatoryField.TabIndex = 0;
+            this.lblMandatoryField.Text = "프리셋 이름은 필수 입니다.";
+            this.lblMandatoryField.Visible = false;
             // 
             // edtParamName
             // 
@@ -213,7 +214,7 @@
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.cboPresetList.Size = new System.Drawing.Size(357, 22);
             this.cboPresetList.TabIndex = 0;
-            this.cboPresetList.SelectedIndexChanged += new System.EventHandler(this.cboParamList_SelectedIndexChanged);
+            this.cboPresetList.SelectedIndexChanged += new System.EventHandler(this.cboPresetList_SelectedIndexChanged);
             // 
             // labelControl18
             // 
@@ -265,7 +266,7 @@
             this.xtraScrollableControl1.Controls.Add(this.labelControl3);
             this.xtraScrollableControl1.Controls.Add(this.labelControl37);
             this.xtraScrollableControl1.Controls.Add(this.labelControl17);
-            this.xtraScrollableControl1.Controls.Add(this.lblDuplicateKey);
+            this.xtraScrollableControl1.Controls.Add(this.lblMandatoryField);
             this.xtraScrollableControl1.Controls.Add(this.edtParamName);
             this.xtraScrollableControl1.Controls.Add(this.cboUnit);
             this.xtraScrollableControl1.Controls.Add(this.cboPresetList);
@@ -429,7 +430,7 @@
         private DevExpress.XtraEditors.LabelControl labelControl3;
         private DevExpress.XtraEditors.LabelControl labelControl37;
         private DevExpress.XtraEditors.LabelControl labelControl17;
-        private DevExpress.XtraEditors.LabelControl lblDuplicateKey;
+        private DevExpress.XtraEditors.LabelControl lblMandatoryField;
         private DevExpress.XtraEditors.TextEdit edtParamName;
         private DevExpress.XtraEditors.ComboBoxEdit cboUnit;
         private DevExpress.XtraEditors.ComboBoxEdit cboPresetList;
