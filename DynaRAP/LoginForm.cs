@@ -84,7 +84,9 @@ namespace DynaRAP
                 //사용자 입력값이 하나도 없는 경우에 포커스 잃으면 Placeholder 적용해주기
                 txt.ForeColor = Color.DarkGray; //Placeholder 흐린 글씨
                 if (txt == edtId) txt.Text = strIdPlaceholder;
+#if !DEBUG
                 else if (txt == edtPassword) { txt.Text = strPwPlaceholder; edtPassword.Properties.PasswordChar = default; }
+#endif
             }
         }
 
