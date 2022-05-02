@@ -5,10 +5,12 @@ using DevExpress.XtraEditors.Controls;
 using DevExpress.XtraEditors.Repository;
 using DevExpress.XtraGrid.Columns;
 using DynaRAP.Data;
+using DynaRAP.EventData;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -22,8 +24,12 @@ namespace DynaRAP.UControl
     {
         string selectedFuselage = string.Empty;
         Dictionary<string, List<string>> dicData = new Dictionary<string, List<string>>();
+        List<ImportParamControl> paramList = new List<ImportParamControl>();
+        List<ImportIntervalControl> splitList = new List<ImportIntervalControl>();
 
         string csvFilePath = string.Empty;
+        object minValue = null;
+        object maxValue = null;
 
         public ImportModuleControl()
         {
@@ -52,6 +58,10 @@ namespace DynaRAP.UControl
             btnAddParameter.Properties.AllowFocused = false;
             btnAddSplittedInterval.Properties.AllowFocused = false;
             btnSaveSplittedInterval.Properties.AllowFocused = false;
+
+            btnAddParameter.Enabled = false;
+            
+            lblSplitCount.Text = string.Format(Properties.Resources.StringSplitCount, splitList.Count);
 
         }
 
@@ -82,26 +92,83 @@ namespace DynaRAP.UControl
             ImportParamControl ctrl = new ImportParamControl();
             ctrl.Title = "Parameter " + paramIndex.ToString();
             ctrl.DicData = dicData;
+            ctrl.OnSelectedRange += ChartControl_OnSelectedRange;
+            ctrl.Dock = DockStyle.Fill;
             panelData.Controls.Add(ctrl);
             panelData.Controls.SetChildIndex(ctrl, paramIndex++);
 
+            paramList.Add(ctrl);
+
+        }
+        private void ChartControl_OnSelectedRange(object sender, SelectedRangeEventArgs e)
+        {
+            ImportParamControl me = sender as ImportParamControl;
+            minValue = e.MinValue;
+            maxValue = e.MaxValue;
+
+            Debug.Print(string.Format("-----> MinValue : {0}, MaxValue : {1}", minValue, maxValue));
+
+            foreach(ImportParamControl ctrl in paramList)
+            {
+                if (ctrl == me)
+                    continue;
+
+                ctrl.SelectRegion(minValue, maxValue);
+            }
         }
 
         private void btnAddSplittedInterval_ButtonClick(object sender, EventArgs e)
         {
             AddSplittedInterval();
+
+            lblSplitCount.Text = string.Format(Properties.Resources.StringSplitCount, splitList.Count);
         }
 
         int intervalIndex = 6;
 
         private void AddSplittedInterval()
         {
-            ImportIntervalControl ctrl = new ImportIntervalControl();
+            if(minValue == null || maxValue == null)
+            {
+                if(paramList.Count == 0)
+                {
+                    MessageBox.Show(Properties.Resources.StringAddParameter);
+                    return;
+                }
+                else
+                {
+                    ImportParamControl paramCtrl =  paramList[0] as ImportParamControl;
+                    paramCtrl.Sync();
+                }
+            }
+
+            if (minValue == null || maxValue == null)
+            {
+                MessageBox.Show(Properties.Resources.StringNoSelectedRegion);
+                return;
+            }
+            
+            ImportIntervalControl ctrl = new ImportIntervalControl(minValue, maxValue);
             ctrl.Title = "비행구간#" + (paramIndex + intervalIndex).ToString();
+            ctrl.DeleteBtnClicked += new EventHandler(Interval_DeleteBtnClicked);
             panelData.Controls.Add(ctrl);
             panelData.Controls.SetChildIndex(ctrl, paramIndex + intervalIndex);
+            splitList.Add(ctrl);
+
             intervalIndex++;
 
+        }
+
+        void Interval_DeleteBtnClicked(object sender, EventArgs e)
+        {
+            ImportIntervalControl ctrl = sender as ImportIntervalControl;
+            panelData.Controls.Remove(ctrl);
+            splitList.Remove(ctrl);
+            ctrl.Dispose();
+            
+            intervalIndex--;
+
+            lblSplitCount.Text = string.Format(Properties.Resources.StringSplitCount, splitList.Count);
         }
 
         private void btnSaveSplittedInterval_ButtonClick(object sender, ButtonPressedEventArgs e)
@@ -116,16 +183,26 @@ namespace DynaRAP.UControl
 
         private void lblFlyingData_Click(object sender, EventArgs e)
         {
+            btnAddParameter.Enabled = false;
+            
             OpenFileDialog dlg = new OpenFileDialog();
             dlg.InitialDirectory = "C:\\";
             dlg.Filter = "Excel files (*.xls, *.xlsx)|*.xls; *.xlsx|Comma Separated Value files (CSV)|*.csv|모든 파일 (*.*)|*.*";
             //dlg.Filter = "Comma Separated Value files (CSV)|*.csv";
 
+#if !DEBUG
             if (dlg.ShowDialog() == DialogResult.OK)
+#endif
             {
+#if DEBUG
+                csvFilePath = @"C:\temp\32063_20220314_180351_SL30_02_2nd_ALCM_FT_Full_Sample_1.xls";
+                lblFlyingData.Text = @"C:\temp\32063_20220314_180351_SL30_02_2nd_ALCM_FT_Full_Sample_1.xls";
+                StreamReader sr = new StreamReader(@"C:\temp\32063_20220314_180351_SL30_02_2nd_ALCM_FT_Full_Sample_1.xls");
+#else
                 csvFilePath = dlg.FileName;
                 lblFlyingData.Text = csvFilePath;
                 StreamReader sr = new StreamReader(dlg.FileName);
+#endif
 
                 int idx = 0;
 
@@ -175,6 +252,7 @@ namespace DynaRAP.UControl
                 //    Console.WriteLine();
                 //}
 
+                btnAddParameter.Enabled = true;
             }
         }
     }

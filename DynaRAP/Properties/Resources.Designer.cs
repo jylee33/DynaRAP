@@ -179,6 +179,15 @@ namespace DynaRAP.Properties {
         }
         
         /// <summary>
+        ///   Add parameters in advance.과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string StringAddParameter {
+            get {
+                return ResourceManager.GetString("StringAddParameter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Confirm과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string StringConfirmation {
@@ -211,6 +220,24 @@ namespace DynaRAP.Properties {
         internal static string StringDeletePreset {
             get {
                 return ResourceManager.GetString("StringDeletePreset", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   No selected region, or synchronize in advance.과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string StringNoSelectedRegion {
+            get {
+                return ResourceManager.GetString("StringNoSelectedRegion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Splitted Flying Count : {0}과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string StringSplitCount {
+            get {
+                return ResourceManager.GetString("StringSplitCount", resourceCulture);
             }
         }
         

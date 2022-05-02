@@ -149,6 +149,7 @@
     <Compile Include="Data\SBParameter.cs" />
     <Compile Include="Data\SplittedInterval.cs" />
     <Compile Include="EventData\LoginResultEventArgs.cs" />
+    <Compile Include="EventData\SelectedRangeEventArgs.cs" />
     <Compile Include="TEST\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -280,6 +281,12 @@
     </Compile>
     <Compile Include="UControl\BinModuleControl.Designer.cs">
       <DependentUpon>BinModuleControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\ImportParamControl3.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\ImportParamControl3.Designer.cs">
+      <DependentUpon>ImportParamControl3.cs</DependentUpon>
     </Compile>
     <Compile Include="UControl\ImportParamControl2.cs">
       <SubType>UserControl</SubType>
@@ -502,6 +509,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\CsvTableControl.resx">
       <DependentUpon>CsvTableControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\ImportParamControl3.resx">
+      <DependentUpon>ImportParamControl3.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\ImportParamControl2.resx">
       <DependentUpon>ImportParamControl2.cs</DependentUpon>

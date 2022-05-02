@@ -13,6 +13,8 @@ namespace DynaRAP.UControl
 {
     public partial class ImportIntervalControl : DevExpress.XtraEditors.XtraUserControl
     {
+        public event EventHandler DeleteBtnClicked;
+
         public string Title
         {
             set
@@ -26,9 +28,21 @@ namespace DynaRAP.UControl
             InitializeComponent();
         }
 
+        public ImportIntervalControl(object min, object max) : this()
+        {
+            edtStartTime.Text = min.ToString();
+            edtEndTime.Text = max.ToString();
+        }
+
         private void ImportIntervalControl_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            if (this.DeleteBtnClicked != null)
+                this.DeleteBtnClicked(this, new EventArgs());
         }
     }
 }
