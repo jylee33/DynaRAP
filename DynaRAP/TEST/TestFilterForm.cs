@@ -46,8 +46,7 @@ namespace DynaRAP.TEST
             dlg.Filter = "Excel files (*.xls, *.xlsx)|*.xls; *.xlsx|Comma Separated Value files (CSV)|*.csv|모든 파일 (*.*)|*.*";
             //dlg.Filter = "Comma Separated Value files (CSV)|*.csv";
 
-#if DEBUG
-#else
+#if !DEBUG
             if (dlg.ShowDialog() == DialogResult.OK)
 #endif
             {
@@ -102,6 +101,7 @@ namespace DynaRAP.TEST
         private void InitComboList()
         {
             cboParameter.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+            cboParameter.Properties.DropDownRows = 15;
             cboParameter.SelectedIndexChanged += cboParameter_SelectedIndexChanged;
 
             List<string> paramList = dicData.Keys.ToList();

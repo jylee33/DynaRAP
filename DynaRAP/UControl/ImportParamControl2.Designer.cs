@@ -1,6 +1,6 @@
 ﻿namespace DynaRAP.UControl
 {
-    partial class ImportParamControl
+    partial class ImportParamControl2
     {
         /// <summary> 
         /// Required designer variable.
@@ -28,11 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             this.cboParameter = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.labelControl1 = new DevExpress.XtraEditors.LabelControl();
-            this.chartControl1 = new DevExpress.XtraCharts.ChartControl();
             ((System.ComponentModel.ISupportInitialize)(this.cboParameter.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.chartControl1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.SuspendLayout();
             // 
             // cboParameter
@@ -44,6 +45,16 @@
             this.cboParameter.Size = new System.Drawing.Size(262, 22);
             this.cboParameter.TabIndex = 1;
             // 
+            // chart1
+            // 
+            chartArea1.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea1);
+            this.chart1.Location = new System.Drawing.Point(5, 30);
+            this.chart1.Name = "chart1";
+            this.chart1.Size = new System.Drawing.Size(523, 98);
+            this.chart1.TabIndex = 0;
+            this.chart1.Text = "chart1";
+            // 
             // labelControl1
             // 
             this.labelControl1.Location = new System.Drawing.Point(290, 4);
@@ -52,26 +63,18 @@
             this.labelControl1.TabIndex = 2;
             this.labelControl1.Text = "labelControl1";
             // 
-            // chartControl1
-            // 
-            this.chartControl1.Location = new System.Drawing.Point(5, 30);
-            this.chartControl1.Name = "chartControl1";
-            this.chartControl1.SeriesSerializable = new DevExpress.XtraCharts.Series[0];
-            this.chartControl1.Size = new System.Drawing.Size(523, 98);
-            this.chartControl1.TabIndex = 3;
-            // 
-            // ImportParamControl
+            // ImportParamControl2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.chartControl1);
             this.Controls.Add(this.labelControl1);
+            this.Controls.Add(this.chart1);
             this.Controls.Add(this.cboParameter);
-            this.Name = "ImportParamControl";
+            this.Name = "ImportParamControl2";
             this.Size = new System.Drawing.Size(533, 133);
             this.Load += new System.EventHandler(this.ImportParamControl_Load);
             ((System.ComponentModel.ISupportInitialize)(this.cboParameter.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.chartControl1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -80,7 +83,7 @@
         #endregion
 
         private DevExpress.XtraEditors.ComboBoxEdit cboParameter;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
         private DevExpress.XtraEditors.LabelControl labelControl1;
-        private DevExpress.XtraCharts.ChartControl chartControl1;
     }
 }

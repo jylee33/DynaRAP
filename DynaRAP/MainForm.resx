@@ -475,7 +475,7 @@
     <value>WEB</value>
   </data>
   <data name="btnLPF.Caption" xml:space="preserve">
-    <value>LPF</value>
+    <value>Filter</value>
   </data>
   <data name="btnStart.Caption" xml:space="preserve">
     <value>Start</value>

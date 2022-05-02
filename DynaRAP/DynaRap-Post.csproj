@@ -274,6 +274,12 @@
     <Compile Include="UControl\BinModuleControl.Designer.cs">
       <DependentUpon>BinModuleControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="UControl\ImportParamControl2.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\ImportParamControl2.Designer.cs">
+      <DependentUpon>ImportParamControl2.cs</DependentUpon>
+    </Compile>
     <Compile Include="UControl\MgmtParameterControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -474,6 +480,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\CsvTableControl.resx">
       <DependentUpon>CsvTableControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\ImportParamControl2.resx">
+      <DependentUpon>ImportParamControl2.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\MgmtParameterControl.resx">
       <DependentUpon>MgmtParameterControl.cs</DependentUpon>
