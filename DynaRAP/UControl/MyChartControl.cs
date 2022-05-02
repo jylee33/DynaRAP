@@ -95,7 +95,9 @@ namespace DynaRAP.UControl
             diagram.RangeControlDateTimeGridOptions.GridMode = ChartRangeControlClientGridMode.Manual;
             diagram.RangeControlDateTimeGridOptions.GridOffset = 1;
             diagram.RangeControlDateTimeGridOptions.GridSpacing = 60;
-            diagram.RangeControlDateTimeGridOptions.LabelFormat = "";
+            //diagram.RangeControlDateTimeGridOptions.SnapMode = ChartRangeControlClientSnapMode.Manual;
+            //diagram.RangeControlDateTimeGridOptions.SnapSpacing = 1L;
+            //diagram.RangeControlDateTimeGridOptions.LabelFormat = "{A:HH:mm:ss.ffff}";
             diagram.RangeControlDateTimeGridOptions.SnapAlignment = DateTimeGridAlignment.Millisecond;
 
             this.btnMoveFirst.Enabled = this.btnMoveLeft.Enabled = (this.m_pageIndex > 0);
