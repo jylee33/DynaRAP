@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            DevExpress.XtraEditors.RangeControlRange rangeControlRange2 = new DevExpress.XtraEditors.RangeControlRange();
+            DevExpress.XtraEditors.RangeControlRange rangeControlRange1 = new DevExpress.XtraEditors.RangeControlRange();
             this.rangeControl = new DevExpress.XtraEditors.RangeControl();
             this.label2 = new System.Windows.Forms.Label();
             this.cbSeries = new System.Windows.Forms.ComboBox();
@@ -63,11 +63,12 @@
             this.rangeControl.Location = new System.Drawing.Point(0, 0);
             this.rangeControl.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.rangeControl.Name = "rangeControl";
-            rangeControlRange2.Maximum = 9.6D;
-            rangeControlRange2.Minimum = -0.6D;
-            rangeControlRange2.Owner = this.rangeControl;
-            this.rangeControl.SelectedRange = rangeControlRange2;
-            this.rangeControl.Size = new System.Drawing.Size(767, 91);
+            rangeControlRange1.Maximum = new System.DateTime(2022, 5, 11, 0, 0, 0, 0);
+            rangeControlRange1.Minimum = new System.DateTime(2022, 5, 2, 0, 0, 0, 0);
+            rangeControlRange1.Owner = this.rangeControl;
+            this.rangeControl.SelectedRange = rangeControlRange1;
+            this.rangeControl.ShowLabels = false;
+            this.rangeControl.Size = new System.Drawing.Size(767, 85);
             this.rangeControl.TabIndex = 2;
             this.rangeControl.Text = "rangeControl1";
             // 
@@ -193,7 +194,7 @@
             // 
             this.splitContainer.Panel2.Controls.Add(this.rangeControl);
             this.splitContainer.Size = new System.Drawing.Size(767, 388);
-            this.splitContainer.SplitterDistance = 296;
+            this.splitContainer.SplitterDistance = 302;
             this.splitContainer.SplitterWidth = 1;
             this.splitContainer.TabIndex = 4;
             // 
@@ -206,7 +207,7 @@
             this.chartControl.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.chartControl.Name = "chartControl";
             this.chartControl.SeriesSerializable = new DevExpress.XtraCharts.Series[0];
-            this.chartControl.Size = new System.Drawing.Size(767, 259);
+            this.chartControl.Size = new System.Drawing.Size(767, 265);
             this.chartControl.TabIndex = 3;
             // 
             // contextMenuStrip
@@ -215,19 +216,19 @@
             this.fileOpenToolStripMenuItem,
             this.getXAxisRangeToolStripMenuItem});
             this.contextMenuStrip.Name = "contextMenuStrip";
-            this.contextMenuStrip.Size = new System.Drawing.Size(181, 70);
+            this.contextMenuStrip.Size = new System.Drawing.Size(168, 48);
             // 
             // fileOpenToolStripMenuItem
             // 
             this.fileOpenToolStripMenuItem.Name = "fileOpenToolStripMenuItem";
-            this.fileOpenToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.fileOpenToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
             this.fileOpenToolStripMenuItem.Text = "File Open";
             this.fileOpenToolStripMenuItem.Click += new System.EventHandler(this.fileOpenToolStripMenuItem_Click);
             // 
             // getXAxisRangeToolStripMenuItem
             // 
             this.getXAxisRangeToolStripMenuItem.Name = "getXAxisRangeToolStripMenuItem";
-            this.getXAxisRangeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.getXAxisRangeToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
             this.getXAxisRangeToolStripMenuItem.Text = "Get X-Axis Range";
             this.getXAxisRangeToolStripMenuItem.Click += new System.EventHandler(this.getXAxisRangeToolStripMenuItem_Click);
             // 
@@ -245,7 +246,7 @@
             this.pnPaging.Controls.Add(this.btnMoveRight);
             this.pnPaging.Controls.Add(this.btnMoveLast);
             this.pnPaging.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pnPaging.Location = new System.Drawing.Point(0, 259);
+            this.pnPaging.Location = new System.Drawing.Point(0, 265);
             this.pnPaging.Name = "pnPaging";
             this.pnPaging.Size = new System.Drawing.Size(767, 37);
             this.pnPaging.TabIndex = 1;
