@@ -43,7 +43,6 @@
             this.lblMandatoryField = new DevExpress.XtraEditors.LabelControl();
             this.edtParamName = new DevExpress.XtraEditors.TextEdit();
             this.cboUnit = new DevExpress.XtraEditors.ComboBoxEdit();
-            this.cboPresetList = new DevExpress.XtraEditors.ComboBoxEdit();
             this.labelControl18 = new DevExpress.XtraEditors.LabelControl();
             this.separatorControl1 = new DevExpress.XtraEditors.SeparatorControl();
             this.separatorControl2 = new DevExpress.XtraEditors.SeparatorControl();
@@ -59,9 +58,9 @@
             this.ID = new DevExpress.XtraTreeList.Columns.TreeListColumn();
             this.treeList1 = new DevExpress.XtraTreeList.TreeList();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.luePresetList = new DevExpress.XtraEditors.LookUpEdit();
             ((System.ComponentModel.ISupportInitialize)(this.edtParamName.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cboUnit.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cboPresetList.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.separatorControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.separatorControl2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.panelControl1)).BeginInit();
@@ -75,6 +74,7 @@
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.luePresetList.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // labelControl1
@@ -206,16 +206,6 @@
             this.cboUnit.Size = new System.Drawing.Size(100, 22);
             this.cboUnit.TabIndex = 8;
             // 
-            // cboPresetList
-            // 
-            this.cboPresetList.Location = new System.Drawing.Point(107, 25);
-            this.cboPresetList.Name = "cboPresetList";
-            this.cboPresetList.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.cboPresetList.Size = new System.Drawing.Size(357, 22);
-            this.cboPresetList.TabIndex = 0;
-            this.cboPresetList.SelectedIndexChanged += new System.EventHandler(this.cboPresetList_SelectedIndexChanged);
-            // 
             // labelControl18
             // 
             this.labelControl18.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
@@ -255,6 +245,7 @@
             // 
             // xtraScrollableControl1
             // 
+            this.xtraScrollableControl1.Controls.Add(this.luePresetList);
             this.xtraScrollableControl1.Controls.Add(this.btnAddParameter);
             this.xtraScrollableControl1.Controls.Add(this.labelControl1);
             this.xtraScrollableControl1.Controls.Add(this.btnSaveAsNewParameter);
@@ -269,7 +260,6 @@
             this.xtraScrollableControl1.Controls.Add(this.lblMandatoryField);
             this.xtraScrollableControl1.Controls.Add(this.edtParamName);
             this.xtraScrollableControl1.Controls.Add(this.cboUnit);
-            this.xtraScrollableControl1.Controls.Add(this.cboPresetList);
             this.xtraScrollableControl1.Controls.Add(this.labelControl18);
             this.xtraScrollableControl1.Controls.Add(this.separatorControl1);
             this.xtraScrollableControl1.Controls.Add(this.separatorControl2);
@@ -389,6 +379,16 @@
             this.splitContainer1.SplitterDistance = 320;
             this.splitContainer1.TabIndex = 1;
             // 
+            // luePresetList
+            // 
+            this.luePresetList.Location = new System.Drawing.Point(107, 25);
+            this.luePresetList.Name = "luePresetList";
+            this.luePresetList.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.luePresetList.Size = new System.Drawing.Size(357, 22);
+            this.luePresetList.TabIndex = 24;
+            this.luePresetList.EditValueChanged += new System.EventHandler(this.luePresetList_EditValueChanged);
+            // 
             // MgmtPresetControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -399,7 +399,6 @@
             this.Load += new System.EventHandler(this.MgmtPresetControl_Load);
             ((System.ComponentModel.ISupportInitialize)(this.edtParamName.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cboUnit.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cboPresetList.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.separatorControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.separatorControl2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.panelControl1)).EndInit();
@@ -414,6 +413,7 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.luePresetList.Properties)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -433,7 +433,6 @@
         private DevExpress.XtraEditors.LabelControl lblMandatoryField;
         private DevExpress.XtraEditors.TextEdit edtParamName;
         private DevExpress.XtraEditors.ComboBoxEdit cboUnit;
-        private DevExpress.XtraEditors.ComboBoxEdit cboPresetList;
         private DevExpress.XtraEditors.LabelControl labelControl18;
         private DevExpress.XtraEditors.SeparatorControl separatorControl1;
         private DevExpress.XtraEditors.SeparatorControl separatorControl2;
@@ -449,5 +448,6 @@
         private DevExpress.XtraTreeList.Columns.TreeListColumn RefSeq;
         private DevExpress.XtraTreeList.Columns.TreeListColumn RefSubSeq;
         private DevExpress.XtraEditors.ButtonEdit btnAddParameter;
+        private DevExpress.XtraEditors.LookUpEdit luePresetList;
     }
 }

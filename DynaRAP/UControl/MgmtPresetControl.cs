@@ -107,16 +107,31 @@ namespace DynaRAP.UControl
 
         private void InitializePresetList()
         {
-            cboPresetList.Properties.Items.Clear();
+            luePresetList.Properties.DataSource = null;
 
             presetList = GetPresetList();
+            List<PresetData> pList = new List<PresetData>();
 
             foreach (ResponsePreset list in presetList)
             {
-                cboPresetList.Properties.Items.Add(list.presetPack);
-            }
-            cboPresetList.SelectedIndex = -1;
+                //Decoding
+                byte[] byte64 = Convert.FromBase64String(list.presetName);
+                string decName = Encoding.UTF8.GetString(byte64);
 
+                pList.Add(new PresetData(decName, list.presetPack));
+            }
+            luePresetList.Properties.DataSource = pList;
+#if !DEBUG
+            luePresetList.Properties.PopulateColumns();
+            luePresetList.Properties.ShowHeader = false;
+            luePresetList.Properties.Columns["PresetPack"].Visible = false;
+            luePresetList.Properties.ShowFooter = false;
+#else
+            luePresetList.Properties.PopulateColumns();
+            luePresetList.Properties.Columns["PresetName"].Width = 800;
+#endif
+
+            //luePresetList.EditValue = edtParamName.Text;
         }
 
         private void RefreshTree()
@@ -452,12 +467,16 @@ namespace DynaRAP.UControl
                     MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }
+                else
+                {
+                    edtParamName.Text = string.Empty;
+                }
                 //this.focusedNodeId = result.response.seq;
             }
             return true;
         }
 
-        private bool RemoveParam(string presetPack)
+        private bool RemovePreset(string presetPack)
         {
             string url = ConfigurationManager.AppSettings["UrlPreset"];
             string sendData = string.Format(@"
@@ -503,17 +522,20 @@ namespace DynaRAP.UControl
                     MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }
+                else
+                {
+                    edtParamName.Text = string.Empty;
+                }
             }
             return true;
         }
 
-        #endregion Method
+#endregion Method
 
-        #region EventHandler
+#region EventHandler
         private void MgmtPresetControl_Load(object sender, EventArgs e)
         {
             this.splitContainer1.SplitterDistance = 250;
-            cboPresetList.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
             //cboProperty.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
             //cboUnit.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
             //cboPart.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
@@ -536,6 +558,10 @@ namespace DynaRAP.UControl
             //cboPartLocation.Text = "Left";
             //cboAirplane.Text = "A2/3/6";
 #endif
+
+            luePresetList.Properties.DisplayMember = "PresetName";
+            luePresetList.Properties.ValueMember = "PresetPack";
+            luePresetList.Properties.NullText = "";
 
             InitializePresetList();
             InitializeDirDataList();
@@ -626,7 +652,6 @@ namespace DynaRAP.UControl
                 }
             }
         }
-
 
         private void TreeList1_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
         {
@@ -772,10 +797,10 @@ namespace DynaRAP.UControl
 
                 ResponsePreset preset = presetList.Find(x => x.presetPack.Equals(node.GetValue("RefSeq").ToString()));
                 if (preset == null)
-                    this.cboPresetList.SelectedIndex = -1;
+                    luePresetList.Properties.ValueMember = string.Empty;
                 else
                 {
-                    this.cboPresetList.Text = preset.presetPack;
+                    luePresetList.Properties.ValueMember = preset.presetPack;
                 }
             }
         }
@@ -798,18 +823,18 @@ namespace DynaRAP.UControl
 
                 ResponsePreset preset = presetList.Find(x => x.presetPack.Equals(node.GetValue("RefSeq").ToString()));
                 if (preset == null)
-                    this.cboPresetList.SelectedIndex = -1;
+                    luePresetList.Properties.ValueMember = string.Empty;
                 else
                 {
-                    this.cboPresetList.Text = preset.presetPack;
+                    luePresetList.Properties.ValueMember = preset.presetPack;
                 }
             }
         }
 
         private void btnModifyPreset_Click(object sender, EventArgs e)
         {
-            string presetKey = cboPresetList.Text;
-            ResponsePreset preset = presetList.Find(x => x.presetPack.Equals(presetKey));
+            string presetPack = luePresetList.GetColumnValue("PresetPack").ToString();
+            ResponsePreset preset = presetList.Find(x => x.presetPack.Equals(presetPack));
 
             if (preset != null)
             {
@@ -819,24 +844,26 @@ namespace DynaRAP.UControl
                 {
                     MessageBox.Show(Properties.Resources.SuccessModify, Properties.Resources.StringSuccess, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     InitializePresetList();
-                    cboPresetList.Text = presetKey;
+                    //cboPresetList.Text = presetPack;
+                    //luePresetList.EditValue = luePresetList.Properties.GetKeyValueByDisplayText(presetPack);
+                    //luePresetList.EditValue = edtParamName.Text;
                 }
             }
         }
 
         private void btnDeletePreset_Click(object sender, EventArgs e)
         {
-            string msg = string.Format(Properties.Resources.StringDeletePreset, cboPresetList.Text);
+            string msg = string.Format(Properties.Resources.StringDeletePreset, luePresetList.GetColumnValue("PresetName").ToString());
             if (MessageBox.Show(msg, Properties.Resources.StringConfirmation, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
             {
                 return;
             }
 
-            ResponsePreset preset = presetList.Find(x => x.presetPack.Equals(cboPresetList.Text));
+            ResponsePreset preset = presetList.Find(x => x.presetPack.Equals(luePresetList.GetColumnValue("PresetPack").ToString()));
 
             if (preset != null)
             {
-                bool bResult = RemoveParam(preset.presetPack);
+                bool bResult = RemovePreset(preset.presetPack);
 
                 if (bResult)
                 {
@@ -863,7 +890,7 @@ namespace DynaRAP.UControl
                 MessageBox.Show(Properties.Resources.SuccessAdd, Properties.Resources.StringSuccess, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 InitializePresetList();
                 //cboPresetList.Text = "";
-                cboPresetList.SelectedIndex = -1;
+                //cboPresetList.SelectedIndex = -1;
             }
         }
 
@@ -876,7 +903,7 @@ namespace DynaRAP.UControl
             string paramPack = string.Empty;
             string seq = string.Empty;
 
-            ResponsePreset preset = presetList.Find(x => x.presetPack.Equals(cboPresetList.Text));
+            ResponsePreset preset = null;// presetList.Find(x => x.presetPack.Equals(cboPresetList.Text));
             if (preset != null)
             {
                 paramPack = preset.presetPack;
@@ -895,13 +922,20 @@ namespace DynaRAP.UControl
             }
         }
 
-        private void cboPresetList_SelectedIndexChanged(object sender, EventArgs e)
+        private void btnAddParameter_Click(object sender, EventArgs e)
         {
-            var cbo = sender as ComboBoxEdit;
 
-            lblMandatoryField.Visible = false;
+        }
 
-            ResponsePreset preset = presetList.Find(x => x.presetPack.Equals(cbo.Text));
+        #endregion EventHandler
+
+        private void luePresetList_EditValueChanged(object sender, EventArgs e)
+        {
+            string presetPack = String.Empty;
+            if(luePresetList.GetColumnValue("PresetPack") != null)
+                presetPack = luePresetList.GetColumnValue("PresetPack").ToString();
+
+            ResponsePreset preset = presetList.Find(x => x.presetPack.Equals(presetPack));
 
             string presetName = String.Empty;
 
@@ -915,13 +949,5 @@ namespace DynaRAP.UControl
             }
             edtParamName.Text = presetName;
         }
-
-        private void btnAddParameter_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        #endregion EventHandler
-
     }
 }

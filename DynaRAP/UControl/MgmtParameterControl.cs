@@ -837,7 +837,7 @@ namespace DynaRAP.UControl
                 {
                     MessageBox.Show(Properties.Resources.SuccessModify, Properties.Resources.StringSuccess, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     InitializeParamList();
-                    cboParamList.Text = paramKey;
+                    //cboParamList.Text = paramKey;
                 }
             }
         }
@@ -880,7 +880,7 @@ namespace DynaRAP.UControl
             {
                 MessageBox.Show(Properties.Resources.SuccessAdd, Properties.Resources.StringSuccess, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 InitializeParamList();
-                cboParamList.Text = paramKey;
+                //cboParamList.Text = paramKey;
             }
         }
 
