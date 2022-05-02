@@ -567,6 +567,12 @@ namespace DynaRAP
                 tabbedView1.ActivateDocument(mgmtPresetGroupControl);
             }
         }
+
+        private void btnTestChart_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            TestChart form = new TestChart();
+            form.Show();
+        }
     }
 
 }

@@ -82,6 +82,7 @@ namespace DynaRAP
             this.controlContainer2 = new DevExpress.XtraBars.Docking.ControlContainer();
             this.tabbedView1 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.TabbedView(this.components);
             this.panelContainer1 = new DevExpress.XtraBars.Docking.DockPanel();
+            this.btnTestChart = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.documentManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dockManager1)).BeginInit();
@@ -139,9 +140,10 @@ namespace DynaRAP
             this.btnMgmtPresetGroup,
             this.barSubItem1,
             this.btnLPF,
-            this.btnWebTest});
+            this.btnWebTest,
+            this.btnTestChart});
             this.barManager1.MainMenu = this.bar2;
-            this.barManager1.MaxItemId = 27;
+            this.barManager1.MaxItemId = 28;
             this.barManager1.StatusBar = this.bar3;
             // 
             // bar1
@@ -169,7 +171,8 @@ namespace DynaRAP
             new DevExpress.XtraBars.LinkPersistInfo(this.btnLogin),
             new DevExpress.XtraBars.LinkPersistInfo(this.btnChartTest),
             new DevExpress.XtraBars.LinkPersistInfo(this.btnWebTest),
-            new DevExpress.XtraBars.LinkPersistInfo(this.btnLPF)});
+            new DevExpress.XtraBars.LinkPersistInfo(this.btnLPF),
+            new DevExpress.XtraBars.LinkPersistInfo(this.btnTestChart)});
             this.barSubItemTest.Name = "barSubItemTest";
             // 
             // btnPythonTest
@@ -520,6 +523,13 @@ namespace DynaRAP
             this.panelContainer1.Name = "panelContainer1";
             this.panelContainer1.OriginalSize = new System.Drawing.Size(200, 200);
             // 
+            // btnTestChart
+            // 
+            resources.ApplyResources(this.btnTestChart, "btnTestChart");
+            this.btnTestChart.Id = 27;
+            this.btnTestChart.Name = "btnTestChart";
+            this.btnTestChart.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnTestChart_ItemClick);
+            // 
             // MainForm
             // 
             resources.ApplyResources(this, "$this");
@@ -604,6 +614,7 @@ namespace DynaRAP
         private DevExpress.XtraBars.BarSubItem barSubItem1;
         private DevExpress.XtraBars.BarButtonItem btnLPF;
         private DevExpress.XtraBars.BarButtonItem btnWebTest;
+        private DevExpress.XtraBars.BarButtonItem btnTestChart;
 
         public TabbedView TabbedView1 { get => tabbedView1; set => tabbedView1 = value; }
     }

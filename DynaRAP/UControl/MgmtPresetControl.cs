@@ -851,7 +851,10 @@ namespace DynaRAP.UControl
 
         private void btnModifyPreset_Click(object sender, EventArgs e)
         {
-            string presetPack = luePresetList.GetColumnValue("PresetPack").ToString();
+            string presetPack = String.Empty;
+            if (luePresetList.GetColumnValue("PresetPack") != null)
+                presetPack = luePresetList.GetColumnValue("PresetPack").ToString();
+
             ResponsePreset preset = presetList.Find(x => x.presetPack.Equals(presetPack));
 
             if (preset != null)
@@ -871,13 +874,20 @@ namespace DynaRAP.UControl
 
         private void btnDeletePreset_Click(object sender, EventArgs e)
         {
+            if (luePresetList.GetColumnValue("PresetName") == null)
+                return;
+
             string msg = string.Format(Properties.Resources.StringDeletePreset, luePresetList.GetColumnValue("PresetName").ToString());
             if (MessageBox.Show(msg, Properties.Resources.StringConfirmation, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
             {
                 return;
             }
 
-            ResponsePreset preset = presetList.Find(x => x.presetPack.Equals(luePresetList.GetColumnValue("PresetPack").ToString()));
+            string presetPack = String.Empty;
+            if (luePresetList.GetColumnValue("PresetPack") != null)
+                presetPack = luePresetList.GetColumnValue("PresetPack").ToString();
+
+            ResponsePreset preset = presetList.Find(x => x.presetPack.Equals(presetPack));
 
             if (preset != null)
             {

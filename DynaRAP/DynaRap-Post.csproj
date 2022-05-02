@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>DynaRAP</RootNamespace>
     <AssemblyName>DynaRap-Post</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
@@ -551,9 +551,9 @@
     <EmbeddedResource Include="XtraForm1.resx">
       <DependentUpon>XtraForm1.cs</DependentUpon>
     </EmbeddedResource>
-	<EmbeddedResource Include="UControl\MgmtPresetParameterControl.resx">
-	  <DependentUpon>MgmtPresetParameterControl.cs</DependentUpon>
-	</EmbeddedResource>
+    <EmbeddedResource Include="UControl\MgmtPresetParameterControl.resx">
+      <DependentUpon>MgmtPresetParameterControl.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
