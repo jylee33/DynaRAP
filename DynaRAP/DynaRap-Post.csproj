@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>DynaRAP</RootNamespace>
     <AssemblyName>DynaRap-Post</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
@@ -27,6 +27,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -186,6 +187,12 @@
     </Compile>
     <Compile Include="TEST\GridGroupingForm.Designer.cs">
       <DependentUpon>GridGroupingForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TEST\TestChart.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TEST\TestChart.Designer.cs">
+      <DependentUpon>TestChart.cs</DependentUpon>
     </Compile>
     <Compile Include="TEST\TestFilter2Form.cs">
       <SubType>Form</SubType>
@@ -370,6 +377,12 @@
     <Compile Include="UControl\ScenarioSummaryControl.Designer.cs">
       <DependentUpon>ScenarioSummaryControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="UControl\MyChartControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\MyChartControl.Designer.cs">
+      <DependentUpon>MyChartControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserControl1.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -436,6 +449,9 @@
     <EmbeddedResource Include="TEST\GridGroupingForm.resx">
       <DependentUpon>GridGroupingForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="TEST\TestChart.resx">
+      <DependentUpon>TestChart.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="TEST\TestFilter2Form.resx">
       <DependentUpon>TestFilter2Form.cs</DependentUpon>
     </EmbeddedResource>
@@ -492,6 +508,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\MgmtPresetGroupControl.resx">
       <DependentUpon>MgmtPresetGroupControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\MyChartControl.resx">
+      <DependentUpon>MyChartControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\SBParamControl.resx">
       <DependentUpon>SBParamControl.cs</DependentUpon>
