@@ -31,12 +31,9 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MgmtPresetControl));
             this.labelControl1 = new DevExpress.XtraEditors.LabelControl();
-            this.btnSaveAsNewParameter = new DevExpress.XtraEditors.SimpleButton();
             this.labelControl2 = new DevExpress.XtraEditors.LabelControl();
-            this.btnDeleteParameter = new DevExpress.XtraEditors.SimpleButton();
             this.labelControl19 = new DevExpress.XtraEditors.LabelControl();
             this.btnLink = new DevExpress.XtraEditors.SimpleButton();
-            this.btnModifyParameter = new DevExpress.XtraEditors.SimpleButton();
             this.labelControl3 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl37 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl17 = new DevExpress.XtraEditors.LabelControl();
@@ -48,6 +45,8 @@
             this.separatorControl2 = new DevExpress.XtraEditors.SeparatorControl();
             this.panelControl1 = new DevExpress.XtraEditors.PanelControl();
             this.xtraScrollableControl1 = new DevExpress.XtraEditors.XtraScrollableControl();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.luePresetList = new DevExpress.XtraEditors.LookUpEdit();
             this.btnAddParameter = new DevExpress.XtraEditors.ButtonEdit();
             this.sharedImageCollection1 = new DevExpress.Utils.SharedImageCollection(this.components);
             this.RefSubSeq = new DevExpress.XtraTreeList.Columns.TreeListColumn();
@@ -58,7 +57,9 @@
             this.ID = new DevExpress.XtraTreeList.Columns.TreeListColumn();
             this.treeList1 = new DevExpress.XtraTreeList.TreeList();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.luePresetList = new DevExpress.XtraEditors.LookUpEdit();
+            this.btnSaveAsNewParameter = new DevExpress.XtraEditors.SimpleButton();
+            this.btnDeleteParameter = new DevExpress.XtraEditors.SimpleButton();
+            this.btnModifyParameter = new DevExpress.XtraEditors.SimpleButton();
             ((System.ComponentModel.ISupportInitialize)(this.edtParamName.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cboUnit.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.separatorControl1)).BeginInit();
@@ -66,6 +67,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.panelControl1)).BeginInit();
             this.panelControl1.SuspendLayout();
             this.xtraScrollableControl1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.luePresetList.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnAddParameter.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.sharedImageCollection1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.sharedImageCollection1.ImageSource)).BeginInit();
@@ -74,7 +76,6 @@
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.luePresetList.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // labelControl1
@@ -87,15 +88,6 @@
             this.labelControl1.TabIndex = 0;
             this.labelControl1.Text = "프리셋 구성";
             // 
-            // btnSaveAsNewParameter
-            // 
-            this.btnSaveAsNewParameter.Location = new System.Drawing.Point(490, 574);
-            this.btnSaveAsNewParameter.Name = "btnSaveAsNewParameter";
-            this.btnSaveAsNewParameter.Size = new System.Drawing.Size(110, 23);
-            this.btnSaveAsNewParameter.TabIndex = 20;
-            this.btnSaveAsNewParameter.Text = "새 프리셋으로 저장";
-            this.btnSaveAsNewParameter.Click += new System.EventHandler(this.btnSaveAsNewPreset_Click);
-            // 
             // labelControl2
             // 
             this.labelControl2.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
@@ -105,15 +97,6 @@
             this.labelControl2.Size = new System.Drawing.Size(116, 15);
             this.labelControl2.TabIndex = 0;
             this.labelControl2.Text = "프리셋 구성 파라미터";
-            // 
-            // btnDeleteParameter
-            // 
-            this.btnDeleteParameter.Location = new System.Drawing.Point(369, 574);
-            this.btnDeleteParameter.Name = "btnDeleteParameter";
-            this.btnDeleteParameter.Size = new System.Drawing.Size(110, 23);
-            this.btnDeleteParameter.TabIndex = 19;
-            this.btnDeleteParameter.Text = "프리셋 삭제";
-            this.btnDeleteParameter.Click += new System.EventHandler(this.btnDeletePreset_Click);
             // 
             // labelControl19
             // 
@@ -133,15 +116,6 @@
             this.btnLink.TabIndex = 21;
             this.btnLink.Text = "<= 연결 =>";
             this.btnLink.Click += new System.EventHandler(this.btnLink_Click);
-            // 
-            // btnModifyParameter
-            // 
-            this.btnModifyParameter.Location = new System.Drawing.Point(242, 574);
-            this.btnModifyParameter.Name = "btnModifyParameter";
-            this.btnModifyParameter.Size = new System.Drawing.Size(110, 23);
-            this.btnModifyParameter.TabIndex = 18;
-            this.btnModifyParameter.Text = "프리셋 저장";
-            this.btnModifyParameter.Click += new System.EventHandler(this.btnModifyPreset_Click);
             // 
             // labelControl3
             // 
@@ -245,15 +219,16 @@
             // 
             // xtraScrollableControl1
             // 
+            this.xtraScrollableControl1.Controls.Add(this.btnSaveAsNewParameter);
+            this.xtraScrollableControl1.Controls.Add(this.btnDeleteParameter);
+            this.xtraScrollableControl1.Controls.Add(this.flowLayoutPanel1);
+            this.xtraScrollableControl1.Controls.Add(this.btnModifyParameter);
             this.xtraScrollableControl1.Controls.Add(this.luePresetList);
             this.xtraScrollableControl1.Controls.Add(this.btnAddParameter);
             this.xtraScrollableControl1.Controls.Add(this.labelControl1);
-            this.xtraScrollableControl1.Controls.Add(this.btnSaveAsNewParameter);
             this.xtraScrollableControl1.Controls.Add(this.labelControl2);
-            this.xtraScrollableControl1.Controls.Add(this.btnDeleteParameter);
             this.xtraScrollableControl1.Controls.Add(this.labelControl19);
             this.xtraScrollableControl1.Controls.Add(this.btnLink);
-            this.xtraScrollableControl1.Controls.Add(this.btnModifyParameter);
             this.xtraScrollableControl1.Controls.Add(this.labelControl3);
             this.xtraScrollableControl1.Controls.Add(this.labelControl37);
             this.xtraScrollableControl1.Controls.Add(this.labelControl17);
@@ -268,6 +243,25 @@
             this.xtraScrollableControl1.Name = "xtraScrollableControl1";
             this.xtraScrollableControl1.Size = new System.Drawing.Size(707, 861);
             this.xtraScrollableControl1.TabIndex = 0;
+            // 
+            // flowLayoutPanel1
+            // 
+            this.flowLayoutPanel1.AutoScroll = true;
+            this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(107, 231);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(561, 22);
+            this.flowLayoutPanel1.TabIndex = 25;
+            // 
+            // luePresetList
+            // 
+            this.luePresetList.Location = new System.Drawing.Point(107, 25);
+            this.luePresetList.Name = "luePresetList";
+            this.luePresetList.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.luePresetList.Size = new System.Drawing.Size(357, 22);
+            this.luePresetList.TabIndex = 24;
+            this.luePresetList.EditValueChanged += new System.EventHandler(this.luePresetList_EditValueChanged);
             // 
             // btnAddParameter
             // 
@@ -379,15 +373,32 @@
             this.splitContainer1.SplitterDistance = 320;
             this.splitContainer1.TabIndex = 1;
             // 
-            // luePresetList
+            // btnSaveAsNewParameter
             // 
-            this.luePresetList.Location = new System.Drawing.Point(107, 25);
-            this.luePresetList.Name = "luePresetList";
-            this.luePresetList.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.luePresetList.Size = new System.Drawing.Size(357, 22);
-            this.luePresetList.TabIndex = 24;
-            this.luePresetList.EditValueChanged += new System.EventHandler(this.luePresetList_EditValueChanged);
+            this.btnSaveAsNewParameter.Location = new System.Drawing.Point(388, 259);
+            this.btnSaveAsNewParameter.Name = "btnSaveAsNewParameter";
+            this.btnSaveAsNewParameter.Size = new System.Drawing.Size(110, 23);
+            this.btnSaveAsNewParameter.TabIndex = 26;
+            this.btnSaveAsNewParameter.Text = "새 프리셋으로 저장";
+            this.btnSaveAsNewParameter.Click += new System.EventHandler(this.btnSaveAsNewPreset_Click);
+            // 
+            // btnDeleteParameter
+            // 
+            this.btnDeleteParameter.Location = new System.Drawing.Point(247, 259);
+            this.btnDeleteParameter.Name = "btnDeleteParameter";
+            this.btnDeleteParameter.Size = new System.Drawing.Size(110, 23);
+            this.btnDeleteParameter.TabIndex = 25;
+            this.btnDeleteParameter.Text = "프리셋 삭제";
+            this.btnDeleteParameter.Click += new System.EventHandler(this.btnDeletePreset_Click);
+            // 
+            // btnModifyParameter
+            // 
+            this.btnModifyParameter.Location = new System.Drawing.Point(107, 259);
+            this.btnModifyParameter.Name = "btnModifyParameter";
+            this.btnModifyParameter.Size = new System.Drawing.Size(110, 23);
+            this.btnModifyParameter.TabIndex = 24;
+            this.btnModifyParameter.Text = "프리셋 저장";
+            this.btnModifyParameter.Click += new System.EventHandler(this.btnModifyPreset_Click);
             // 
             // MgmtPresetControl
             // 
@@ -405,6 +416,7 @@
             this.panelControl1.ResumeLayout(false);
             this.xtraScrollableControl1.ResumeLayout(false);
             this.xtraScrollableControl1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.luePresetList.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnAddParameter.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.sharedImageCollection1.ImageSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.sharedImageCollection1)).EndInit();
@@ -413,7 +425,6 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.luePresetList.Properties)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -421,12 +432,9 @@
         #endregion
 
         private DevExpress.XtraEditors.LabelControl labelControl1;
-        private DevExpress.XtraEditors.SimpleButton btnSaveAsNewParameter;
         private DevExpress.XtraEditors.LabelControl labelControl2;
-        private DevExpress.XtraEditors.SimpleButton btnDeleteParameter;
         private DevExpress.XtraEditors.LabelControl labelControl19;
         private DevExpress.XtraEditors.SimpleButton btnLink;
-        private DevExpress.XtraEditors.SimpleButton btnModifyParameter;
         private DevExpress.XtraEditors.LabelControl labelControl3;
         private DevExpress.XtraEditors.LabelControl labelControl37;
         private DevExpress.XtraEditors.LabelControl labelControl17;
@@ -449,5 +457,9 @@
         private DevExpress.XtraTreeList.Columns.TreeListColumn RefSubSeq;
         private DevExpress.XtraEditors.ButtonEdit btnAddParameter;
         private DevExpress.XtraEditors.LookUpEdit luePresetList;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private DevExpress.XtraEditors.SimpleButton btnSaveAsNewParameter;
+        private DevExpress.XtraEditors.SimpleButton btnDeleteParameter;
+        private DevExpress.XtraEditors.SimpleButton btnModifyParameter;
     }
 }

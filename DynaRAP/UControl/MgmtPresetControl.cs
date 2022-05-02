@@ -530,9 +530,26 @@ namespace DynaRAP.UControl
             return true;
         }
 
-#endregion Method
+        int paramIndex = 0;
+        const int paramHeight = 22;
 
-#region EventHandler
+        private void AddParameter()
+        {
+            MgmtPresetParameterControl ctrl = new MgmtPresetParameterControl();
+            ctrl.Title = "Parameter " + paramIndex.ToString();
+            flowLayoutPanel1.Controls.Add(ctrl);
+            flowLayoutPanel1.Controls.SetChildIndex(ctrl, paramIndex++);
+
+            flowLayoutPanel1.Height += paramHeight;
+            btnModifyParameter.Location = new Point(btnModifyParameter.Location.X, btnModifyParameter.Location.Y + paramHeight);
+            btnDeleteParameter.Location = new Point(btnDeleteParameter.Location.X, btnDeleteParameter.Location.Y + paramHeight);
+            btnSaveAsNewParameter.Location = new Point(btnSaveAsNewParameter.Location.X, btnSaveAsNewParameter.Location.Y + paramHeight);
+
+        }
+
+        #endregion Method
+
+        #region EventHandler
         private void MgmtPresetControl_Load(object sender, EventArgs e)
         {
             this.splitContainer1.SplitterDistance = 250;
@@ -565,6 +582,7 @@ namespace DynaRAP.UControl
 
             InitializePresetList();
             InitializeDirDataList();
+
         }
 
         private void addFolderMenuItemClick(object sender, EventArgs e)
@@ -924,15 +942,13 @@ namespace DynaRAP.UControl
 
         private void btnAddParameter_Click(object sender, EventArgs e)
         {
-
+            AddParameter();
         }
-
-        #endregion EventHandler
 
         private void luePresetList_EditValueChanged(object sender, EventArgs e)
         {
             string presetPack = String.Empty;
-            if(luePresetList.GetColumnValue("PresetPack") != null)
+            if (luePresetList.GetColumnValue("PresetPack") != null)
                 presetPack = luePresetList.GetColumnValue("PresetPack").ToString();
 
             ResponsePreset preset = presetList.Find(x => x.presetPack.Equals(presetPack));
@@ -949,5 +965,7 @@ namespace DynaRAP.UControl
             }
             edtParamName.Text = presetName;
         }
+
+        #endregion EventHandler
     }
 }

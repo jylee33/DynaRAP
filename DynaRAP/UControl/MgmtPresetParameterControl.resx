@@ -117,34 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="sharedImageCollection1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <assembly alias="DevExpress.Utils.v21.2" name="DevExpress.Utils.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
-  <data name="sharedImageCollection1.ImageSource.ImageStream" type="DevExpress.Utils.ImageCollectionStreamer, DevExpress.Utils.v21.2" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        AAEAAAD/////AQAAAAAAAAAMAgAAAFpEZXZFeHByZXNzLlV0aWxzLnYyMS4yLCBWZXJzaW9uPTIxLjIu
-        Ni4wLCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI4OGQxNzU0ZDcwMGU0OWEMAwAAAFFT
-        eXN0ZW0uRHJhd2luZywgVmVyc2lvbj00LjAuMC4wLCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRv
-        a2VuPWIwM2Y1ZjdmMTFkNTBhM2EFAQAAAChEZXZFeHByZXNzLlV0aWxzLkltYWdlQ29sbGVjdGlvblN0
-        cmVhbWVyAgAAAAlJbWFnZVNpemUERGF0YQQHE1N5c3RlbS5EcmF3aW5nLlNpemUDAAAAAgIAAAAF/P//
-        /xNTeXN0ZW0uRHJhd2luZy5TaXplAgAAAAV3aWR0aAZoZWlnaHQAAAgIAwAAABAAAAAQAAAACQUAAAAP
-        BQAAALIBAAACuQAAAIlQTkcNChoKAAAADUlIRFIAAAAQAAAAEAgCAAAAkJFoNgAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADrwAAA68AZW8ckkAAABbSURBVDhPYzAgEZCrwcHBIQUGIiMjIYJYAUgDUMWOHTv2
-        IYH+/n6INCYAaWhvb4cqxA3Ky8tJ0wAEI1wDMNZWr14NFcYBgIYiNAABckxjAuS4h2ogHtBag4EBALI9
-        R+5kZlntAAAAAElFTkSuQmCC8QAAAIlQTkcNChoKAAAADUlIRFIAAAAQAAAAEAgCAAAAkJFoNgAAAARn
-        QU1BAACxjwv8YQUAAAAJcEhZcwAADrwAAA68AZW8ckkAAACTSURBVDhPtZG9DYAgEEYdiRFYgAHo2YGS
-        kpKSCaxYgMrZ/MJ9avyJaIyvINxxL3c5BvWSD4K1drwipcSKBgVjTK21lMKqhamRc5YyQME5hwecEq6I
-        ANY+TwV0k8xOuOEHATvgrdERsBatNZbGuCvgT5AMITDuCpgnxsigcRQOA5zx3kslBQAHfS6RCYVNeMhL
-        QakZjVk8b+wU85kAAAAASUVORK5CYIIL
-</value>
-  </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="SharedImageCollection.Timestamp" type="System.DateTime, mscorlib">
-    <value>05/02/2022 17:33:57</value>
-  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="SharedImageCollection.ImageSize" type="System.Drawing.Size, System.Drawing">
-    <value>16, 16</value>
+  <data name="btnDelete.ImageOptions.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABEAAAARCAYAAAA7bUf6AAAABGdBTUEAAK/INwWK6QAAAAlwSFlzAAAO
+        wAAADsABataJCQAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAACfSURBVDhP7ZPB
+        DcMgDEUzEnMwDSMwAQswAAOwBENw5coKtB/h2AGktFIvkfqld/j2txEROd5qP2Ataq1bjPECarvsgE3O
+        uVNrbbNQo74xRi4AbD6VtVYuAGy898s1ZpDZXI0NQndCRs4M2NASOlWSUjp7cmbABgFIKbWA7wD9lzx6
+        SQihB+kfkZRSes85J4eJa4Ee1U548nN+sC1+wdFeV09DstiqaJUAAAAASUVORK5CYII=
+</value>
   </data>
 </root>

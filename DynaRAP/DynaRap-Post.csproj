@@ -298,6 +298,12 @@
     <Compile Include="UControl\MgmtPresetGroupControl.Designer.cs">
       <DependentUpon>MgmtPresetGroupControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="UControl\MgmtPresetParameterControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\MgmtPresetParameterControl.Designer.cs">
+      <DependentUpon>MgmtPresetParameterControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="UControl\SBParamControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -492,6 +498,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\MgmtPresetGroupControl.resx">
       <DependentUpon>MgmtPresetGroupControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\MgmtPresetParameterControl.resx">
+      <DependentUpon>MgmtPresetParameterControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\SBParamControl.resx">
       <DependentUpon>SBParamControl.cs</DependentUpon>
