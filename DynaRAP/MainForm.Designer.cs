@@ -44,6 +44,7 @@ namespace DynaRAP
             this.btnChartTest = new DevExpress.XtraBars.BarButtonItem();
             this.btnWebTest = new DevExpress.XtraBars.BarButtonItem();
             this.btnLPF = new DevExpress.XtraBars.BarButtonItem();
+            this.btnTestChart = new DevExpress.XtraBars.BarButtonItem();
             this.btnStart = new DevExpress.XtraBars.BarButtonItem();
             this.barSubItem2 = new DevExpress.XtraBars.BarSubItem();
             this.btnImportDLL = new DevExpress.XtraBars.BarButtonItem();
@@ -82,7 +83,10 @@ namespace DynaRAP
             this.controlContainer2 = new DevExpress.XtraBars.Docking.ControlContainer();
             this.tabbedView1 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.TabbedView(this.components);
             this.panelContainer1 = new DevExpress.XtraBars.Docking.DockPanel();
-            this.btnTestChart = new DevExpress.XtraBars.BarButtonItem();
+            this.barSubItem4 = new DevExpress.XtraBars.BarSubItem();
+            this.btnChartLine2d = new DevExpress.XtraBars.BarButtonItem();
+            this.btnChartMinMax = new DevExpress.XtraBars.BarButtonItem();
+            this.btnChartPotato = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.documentManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dockManager1)).BeginInit();
@@ -141,9 +145,13 @@ namespace DynaRAP
             this.barSubItem1,
             this.btnLPF,
             this.btnWebTest,
-            this.btnTestChart});
+            this.btnTestChart,
+            this.barSubItem4,
+            this.btnChartLine2d,
+            this.btnChartMinMax,
+            this.btnChartPotato});
             this.barManager1.MainMenu = this.bar2;
-            this.barManager1.MaxItemId = 28;
+            this.barManager1.MaxItemId = 32;
             this.barManager1.StatusBar = this.bar3;
             // 
             // bar1
@@ -158,7 +166,8 @@ namespace DynaRAP
             new DevExpress.XtraBars.LinkPersistInfo(this.btnStart),
             new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem2),
             new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem3),
-            new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem1)});
+            new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem1),
+            new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem4)});
             resources.ApplyResources(this.bar1, "bar1");
             // 
             // barSubItemTest
@@ -216,6 +225,13 @@ namespace DynaRAP
             this.btnLPF.Id = 24;
             this.btnLPF.Name = "btnLPF";
             this.btnLPF.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnLPF_ItemClick);
+            // 
+            // btnTestChart
+            // 
+            resources.ApplyResources(this.btnTestChart, "btnTestChart");
+            this.btnTestChart.Id = 27;
+            this.btnTestChart.Name = "btnTestChart";
+            this.btnTestChart.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnTestChart_ItemClick);
             // 
             // btnStart
             // 
@@ -523,12 +539,36 @@ namespace DynaRAP
             this.panelContainer1.Name = "panelContainer1";
             this.panelContainer1.OriginalSize = new System.Drawing.Size(200, 200);
             // 
-            // btnTestChart
+            // barSubItem4
             // 
-            resources.ApplyResources(this.btnTestChart, "btnTestChart");
-            this.btnTestChart.Id = 27;
-            this.btnTestChart.Name = "btnTestChart";
-            this.btnTestChart.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnTestChart_ItemClick);
+            resources.ApplyResources(this.barSubItem4, "barSubItem4");
+            this.barSubItem4.Id = 28;
+            this.barSubItem4.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+            new DevExpress.XtraBars.LinkPersistInfo(this.btnChartLine2d),
+            new DevExpress.XtraBars.LinkPersistInfo(this.btnChartMinMax),
+            new DevExpress.XtraBars.LinkPersistInfo(this.btnChartPotato)});
+            this.barSubItem4.Name = "barSubItem4";
+            // 
+            // btnChartLine2d
+            // 
+            resources.ApplyResources(this.btnChartLine2d, "btnChartLine2d");
+            this.btnChartLine2d.Id = 29;
+            this.btnChartLine2d.Name = "btnChartLine2d";
+            this.btnChartLine2d.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnChartLine2d_ItemClick);
+            // 
+            // btnChartMinMax
+            // 
+            resources.ApplyResources(this.btnChartMinMax, "btnChartMinMax");
+            this.btnChartMinMax.Id = 30;
+            this.btnChartMinMax.Name = "btnChartMinMax";
+            this.btnChartMinMax.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnChartMinMax_ItemClick);
+            // 
+            // btnChartPotato
+            // 
+            resources.ApplyResources(this.btnChartPotato, "btnChartPotato");
+            this.btnChartPotato.Id = 31;
+            this.btnChartPotato.Name = "btnChartPotato";
+            this.btnChartPotato.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnChartPotato_ItemClick);
             // 
             // MainForm
             // 
@@ -615,6 +655,10 @@ namespace DynaRAP
         private DevExpress.XtraBars.BarButtonItem btnLPF;
         private DevExpress.XtraBars.BarButtonItem btnWebTest;
         private DevExpress.XtraBars.BarButtonItem btnTestChart;
+        private DevExpress.XtraBars.BarSubItem barSubItem4;
+        private DevExpress.XtraBars.BarButtonItem btnChartLine2d;
+        private DevExpress.XtraBars.BarButtonItem btnChartMinMax;
+        private DevExpress.XtraBars.BarButtonItem btnChartPotato;
 
         public TabbedView TabbedView1 { get => tabbedView1; set => tabbedView1 = value; }
     }

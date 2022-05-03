@@ -1,4 +1,5 @@
 ﻿using DevExpress.XtraBars.Docking;
+using DevExpress.XtraCharts;
 using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Repository;
 using DevExpress.XtraTreeList.Columns;
@@ -572,6 +573,186 @@ namespace DynaRAP
         {
             TestChart form = new TestChart();
             form.Show();
+        }
+
+        private void btnChartLine2d_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            ChartControl chartControl = null;
+
+            chartControl = GetLine2DChartControl();
+            if (chartControl != null)
+            {
+                XtraForm chartForm = GetChartForm(chartControl);
+
+                chartForm.Show();
+            }
+        }
+
+        private void btnChartMinMax_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            ChartControl chartControl = null;
+
+            chartControl = GetRangeArea2DChartControl();
+            if (chartControl != null)
+            {
+                XtraForm chartForm = GetChartForm(chartControl);
+
+                chartForm.Show();
+            }
+        }
+
+        private void btnChartPotato_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            ChartControl chartControl = null;
+
+            chartControl = GetPolarArea2DChartControl();
+            if (chartControl != null)
+            {
+                XtraForm chartForm = GetChartForm(chartControl);
+
+                chartForm.Show();
+            }
+        }
+
+        private XtraForm GetChartForm(ChartControl chartControl)
+        {
+            XtraForm form = new XtraForm();
+
+            form.Owner = this;
+            form.Width = 1000;
+            form.Height = 600;
+            form.StartPosition = FormStartPosition.CenterParent;
+            form.Text = chartControl.Titles.Count > 0 ? chartControl.Titles[0].Text : string.Empty;
+            form.Padding = new System.Windows.Forms.Padding(10);
+
+            Splitter splitter = new Splitter();
+
+            splitter.Width = 10;
+            splitter.Dock = DockStyle.Right;
+
+            form.Controls.Add(splitter);
+
+            PropertyGrid propertyGrid = new PropertyGrid();
+
+            propertyGrid.SelectedObject = chartControl;
+            propertyGrid.Dock = DockStyle.Right;
+            propertyGrid.Width = 300;
+
+            form.Controls.Add(propertyGrid);
+
+            chartControl.Dock = DockStyle.Fill;
+
+            form.Controls.Add(chartControl);
+
+            chartControl.BringToFront();
+
+            return form;
+        }
+
+        private ChartControl GetLine2DChartControl()
+        {
+            ChartControl chartControl = new ChartControl();
+
+            Series series = new Series("Series 1", ViewType.Line);
+
+            series.ArgumentScaleType = ScaleType.Numerical;
+
+            ((LineSeriesView)series.View).LineMarkerOptions.Kind = MarkerKind.Triangle;
+            ((LineSeriesView)series.View).LineStyle.DashStyle = DashStyle.Dash;
+
+            series.Points.Add(new SeriesPoint(1, 2));
+            series.Points.Add(new SeriesPoint(2, 12));
+            series.Points.Add(new SeriesPoint(3, 14));
+            series.Points.Add(new SeriesPoint(4, 17));
+            series.Points.Add(new SeriesPoint(5, 2));
+            series.Points.Add(new SeriesPoint(6, 12));
+            series.Points.Add(new SeriesPoint(7, 14));
+            series.Points.Add(new SeriesPoint(8, 17));
+            series.Points.Add(new SeriesPoint(9, 2));
+            series.Points.Add(new SeriesPoint(10, 12));
+            series.Points.Add(new SeriesPoint(11, 14));
+            series.Points.Add(new SeriesPoint(12, 17));
+            series.Points.Add(new SeriesPoint(13, 2));
+            series.Points.Add(new SeriesPoint(14, 12));
+            series.Points.Add(new SeriesPoint(15, 14));
+            series.Points.Add(new SeriesPoint(16, 17));
+
+            chartControl.Series.Add(series);
+
+            ((XYDiagram)chartControl.Diagram).EnableAxisXZooming = true;
+            ((XYDiagram)chartControl.Diagram).EnableAxisYZooming = true;
+            ((XYDiagram)chartControl.Diagram).EnableAxisXScrolling = true;
+            ((XYDiagram)chartControl.Diagram).EnableAxisYScrolling = true;
+
+            chartControl.Titles.Add(new ChartTitle());
+
+            chartControl.Titles[0].Text = "";
+
+            return chartControl;
+        }
+
+        private ChartControl GetRangeArea2DChartControl()
+        {
+            ChartControl chartControl = new ChartControl();
+
+            Series series = new Series("시리즈 1", ViewType.RangeArea);
+
+            series.ArgumentScaleType = ScaleType.Qualitative;
+
+            ((RangeAreaSeriesView)series.View).Transparency = 128;
+
+            series.Points.Add(new SeriesPoint("Jan", 21, 15));
+            series.Points.Add(new SeriesPoint("Feb", 22, 14));
+            series.Points.Add(new SeriesPoint("Mar", 24, 13));
+            series.Points.Add(new SeriesPoint("Apr", 24, 11));
+            series.Points.Add(new SeriesPoint("May", 25, 11));
+            series.Points.Add(new SeriesPoint("Jun", 26, 10));
+            series.Points.Add(new SeriesPoint("Jul", 26, 9));
+            series.Points.Add(new SeriesPoint("Aug", 28, 9));
+            series.Points.Add(new SeriesPoint("Sep", 29, 7));
+            series.Points.Add(new SeriesPoint("Oct", 30, 6));
+            series.Points.Add(new SeriesPoint("Nov", 31, 5));
+            series.Points.Add(new SeriesPoint("Dec", 32, 4));
+
+            chartControl.Series.AddRange(new Series[] { series });
+
+            ((XYDiagram)chartControl.Diagram).EnableAxisXZooming = true;
+            ((XYDiagram)chartControl.Diagram).EnableAxisYZooming = true;
+            ((XYDiagram)chartControl.Diagram).EnableAxisXScrolling = true;
+            ((XYDiagram)chartControl.Diagram).EnableAxisYScrolling = true;
+
+            chartControl.Titles.Add(new ChartTitle());
+
+            chartControl.Titles[0].Text = "";
+
+            return chartControl;
+        }
+
+        private ChartControl GetPolarArea2DChartControl()
+        {
+            ChartControl chartControl = new ChartControl();
+
+            Series series = new Series("시리즈 1", ViewType.PolarArea);
+
+            series.ArgumentScaleType = ScaleType.Numerical;
+
+            ((PolarAreaSeriesView)series.View).Transparency = 128;
+
+            series.Points.Add(new SeriesPoint(0, 90));
+            series.Points.Add(new SeriesPoint(90, 70));
+            series.Points.Add(new SeriesPoint(180, 50));
+            series.Points.Add(new SeriesPoint(270, 100));
+
+            chartControl.Series.Add(series);
+
+            ((PolarDiagram)chartControl.Diagram).StartAngleInDegrees = 180;
+            ((PolarDiagram)chartControl.Diagram).RotationDirection = RadarDiagramRotationDirection.Counterclockwise;
+
+            chartControl.Titles.Add(new ChartTitle());
+
+            chartControl.Titles[0].Text = "";
+
+            return chartControl;
         }
     }
 
