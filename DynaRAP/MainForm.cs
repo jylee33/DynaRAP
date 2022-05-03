@@ -583,6 +583,7 @@ namespace DynaRAP
             if (chartControl != null)
             {
                 XtraForm chartForm = GetChartForm(chartControl);
+                chartForm.Text = "Line 2D";
 
                 chartForm.Show();
             }
@@ -596,6 +597,7 @@ namespace DynaRAP
             if (chartControl != null)
             {
                 XtraForm chartForm = GetChartForm(chartControl);
+                chartForm.Text = "Min Max";
 
                 chartForm.Show();
             }
@@ -609,6 +611,7 @@ namespace DynaRAP
             if (chartControl != null)
             {
                 XtraForm chartForm = GetChartForm(chartControl);
+                chartForm.Text = "Potato";
 
                 chartForm.Show();
             }
@@ -653,29 +656,30 @@ namespace DynaRAP
         {
             ChartControl chartControl = new ChartControl();
 
-            Series series = new Series("Series 1", ViewType.Line);
+            Series series = new Series("SW901P_N", ViewType.Line);
 
             series.ArgumentScaleType = ScaleType.Numerical;
 
             ((LineSeriesView)series.View).LineMarkerOptions.Kind = MarkerKind.Triangle;
             ((LineSeriesView)series.View).LineStyle.DashStyle = DashStyle.Dash;
 
-            series.Points.Add(new SeriesPoint(1, 2));
-            series.Points.Add(new SeriesPoint(2, 12));
-            series.Points.Add(new SeriesPoint(3, 14));
-            series.Points.Add(new SeriesPoint(4, 17));
-            series.Points.Add(new SeriesPoint(5, 2));
-            series.Points.Add(new SeriesPoint(6, 12));
-            series.Points.Add(new SeriesPoint(7, 14));
-            series.Points.Add(new SeriesPoint(8, 17));
-            series.Points.Add(new SeriesPoint(9, 2));
-            series.Points.Add(new SeriesPoint(10, 12));
-            series.Points.Add(new SeriesPoint(11, 14));
-            series.Points.Add(new SeriesPoint(12, 17));
-            series.Points.Add(new SeriesPoint(13, 2));
-            series.Points.Add(new SeriesPoint(14, 12));
-            series.Points.Add(new SeriesPoint(15, 14));
-            series.Points.Add(new SeriesPoint(16, 17));
+            Random rand = new Random();
+            series.Points.Add(new SeriesPoint(1,  rand.Next(5, 15)));
+            series.Points.Add(new SeriesPoint(2,  rand.Next(5, 15)));
+            series.Points.Add(new SeriesPoint(3,  rand.Next(5, 15)));
+            series.Points.Add(new SeriesPoint(4,  rand.Next(5, 15)));
+            series.Points.Add(new SeriesPoint(5,  rand.Next(5, 15)));
+            series.Points.Add(new SeriesPoint(6,  rand.Next(5, 15)));
+            series.Points.Add(new SeriesPoint(7,  rand.Next(5, 15)));
+            series.Points.Add(new SeriesPoint(8,  rand.Next(5, 15)));
+            series.Points.Add(new SeriesPoint(9,  rand.Next(5, 15)));
+            series.Points.Add(new SeriesPoint(10, rand.Next(5, 15)));
+            series.Points.Add(new SeriesPoint(11, rand.Next(5, 15)));
+            series.Points.Add(new SeriesPoint(12, rand.Next(5, 15)));
+            series.Points.Add(new SeriesPoint(13, rand.Next(5, 15)));
+            series.Points.Add(new SeriesPoint(14, rand.Next(5, 15)));
+            series.Points.Add(new SeriesPoint(15, rand.Next(5, 15)));
+            series.Points.Add(new SeriesPoint(16, rand.Next(5, 15)));
 
             chartControl.Series.Add(series);
 
@@ -687,6 +691,7 @@ namespace DynaRAP
             chartControl.Titles.Add(new ChartTitle());
 
             chartControl.Titles[0].Text = "";
+            chartControl.Legend.Visibility = DevExpress.Utils.DefaultBoolean.False;
 
             return chartControl;
         }
@@ -695,7 +700,7 @@ namespace DynaRAP
         {
             ChartControl chartControl = new ChartControl();
 
-            Series series = new Series("시리즈 1", ViewType.RangeArea);
+            Series series = new Series("SW901P_N", ViewType.RangeArea);
 
             series.ArgumentScaleType = ScaleType.Qualitative;
 
@@ -724,6 +729,7 @@ namespace DynaRAP
             chartControl.Titles.Add(new ChartTitle());
 
             chartControl.Titles[0].Text = "";
+            chartControl.Legend.Visibility = DevExpress.Utils.DefaultBoolean.False;
 
             return chartControl;
         }
@@ -732,7 +738,7 @@ namespace DynaRAP
         {
             ChartControl chartControl = new ChartControl();
 
-            Series series = new Series("시리즈 1", ViewType.PolarArea);
+            Series series = new Series("SW901P_N", ViewType.PolarArea);
 
             series.ArgumentScaleType = ScaleType.Numerical;
 
@@ -740,7 +746,7 @@ namespace DynaRAP
 
             series.Points.Add(new SeriesPoint(0, 90));
             series.Points.Add(new SeriesPoint(90, 70));
-            series.Points.Add(new SeriesPoint(180, 50));
+            series.Points.Add(new SeriesPoint(180, 60));
             series.Points.Add(new SeriesPoint(270, 100));
 
             chartControl.Series.Add(series);
@@ -751,6 +757,7 @@ namespace DynaRAP
             chartControl.Titles.Add(new ChartTitle());
 
             chartControl.Titles[0].Text = "";
+            chartControl.Legend.Visibility = DevExpress.Utils.DefaultBoolean.False;
 
             return chartControl;
         }
