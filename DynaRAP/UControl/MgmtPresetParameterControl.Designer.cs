@@ -31,15 +31,15 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MgmtPresetParameterControl));
             this.btnDelete = new DevExpress.XtraEditors.SimpleButton();
             this.cboParamType = new DevExpress.XtraEditors.ComboBoxEdit();
-            this.edtParamKey = new DevExpress.XtraEditors.TextEdit();
             this.edtX = new DevExpress.XtraEditors.TextEdit();
             this.edtY = new DevExpress.XtraEditors.TextEdit();
             this.edtZ = new DevExpress.XtraEditors.TextEdit();
+            this.cboParamKey = new DevExpress.XtraEditors.ComboBoxEdit();
             ((System.ComponentModel.ISupportInitialize)(this.cboParamType.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.edtParamKey.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtX.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtY.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtZ.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cboParamKey.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // btnDelete
@@ -52,6 +52,7 @@
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(17, 18);
             this.btnDelete.TabIndex = 1;
+            this.btnDelete.ToolTip = "삭제";
             // 
             // cboParamType
             // 
@@ -61,13 +62,6 @@
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.cboParamType.Size = new System.Drawing.Size(100, 22);
             this.cboParamType.TabIndex = 2;
-            // 
-            // edtParamKey
-            // 
-            this.edtParamKey.Location = new System.Drawing.Point(107, 0);
-            this.edtParamKey.Name = "edtParamKey";
-            this.edtParamKey.Size = new System.Drawing.Size(211, 22);
-            this.edtParamKey.TabIndex = 3;
             // 
             // edtX
             // 
@@ -90,6 +84,15 @@
             this.edtZ.Size = new System.Drawing.Size(60, 22);
             this.edtZ.TabIndex = 3;
             // 
+            // cboParamKey
+            // 
+            this.cboParamKey.Location = new System.Drawing.Point(107, 0);
+            this.cboParamKey.Name = "cboParamKey";
+            this.cboParamKey.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.cboParamKey.Size = new System.Drawing.Size(211, 22);
+            this.cboParamKey.TabIndex = 2;
+            // 
             // MgmtPresetParameterControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -97,7 +100,7 @@
             this.Controls.Add(this.edtZ);
             this.Controls.Add(this.edtY);
             this.Controls.Add(this.edtX);
-            this.Controls.Add(this.edtParamKey);
+            this.Controls.Add(this.cboParamKey);
             this.Controls.Add(this.cboParamType);
             this.Controls.Add(this.btnDelete);
             this.Margin = new System.Windows.Forms.Padding(0);
@@ -105,10 +108,10 @@
             this.Size = new System.Drawing.Size(560, 22);
             this.Load += new System.EventHandler(this.MgmtPresetParameterControl_Load);
             ((System.ComponentModel.ISupportInitialize)(this.cboParamType.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.edtParamKey.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtX.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtY.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtZ.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cboParamKey.Properties)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -116,9 +119,9 @@
         #endregion
         private DevExpress.XtraEditors.SimpleButton btnDelete;
         private DevExpress.XtraEditors.ComboBoxEdit cboParamType;
-        private DevExpress.XtraEditors.TextEdit edtParamKey;
         private DevExpress.XtraEditors.TextEdit edtX;
         private DevExpress.XtraEditors.TextEdit edtY;
         private DevExpress.XtraEditors.TextEdit edtZ;
+        private DevExpress.XtraEditors.ComboBoxEdit cboParamKey;
     }
 }

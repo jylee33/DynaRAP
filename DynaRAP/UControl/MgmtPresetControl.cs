@@ -27,6 +27,9 @@ namespace DynaRAP.UControl
         int focusedNodeId = 0;
         TreeListNode focusedNode = null;
         List<ResponsePreset> presetList = null;
+        List<ResponseParam> paramList = null;
+        List<ResponseParam> presetParamList = null;
+        List<PresetData> pComboList = null;
 
         public MgmtPresetControl()
         {
@@ -110,7 +113,7 @@ namespace DynaRAP.UControl
             luePresetList.Properties.DataSource = null;
 
             presetList = GetPresetList();
-            List<PresetData> pList = new List<PresetData>();
+            pComboList = new List<PresetData>();
 
             foreach (ResponsePreset list in presetList)
             {
@@ -118,9 +121,9 @@ namespace DynaRAP.UControl
                 byte[] byte64 = Convert.FromBase64String(list.presetName);
                 string decName = Encoding.UTF8.GetString(byte64);
 
-                pList.Add(new PresetData(decName, list.presetPack));
+                pComboList.Add(new PresetData(decName, list.presetPack));
             }
-            luePresetList.Properties.DataSource = pList;
+            luePresetList.Properties.DataSource = pComboList;
 #if !DEBUG
             luePresetList.Properties.PopulateColumns();
             luePresetList.Properties.ShowHeader = false;
@@ -132,6 +135,49 @@ namespace DynaRAP.UControl
 #endif
 
             //luePresetList.EditValue = edtParamName.Text;
+        }
+
+        private List<ResponseParam> GetParamList()
+        {
+            string url = ConfigurationManager.AppSettings["UrlParam"];
+            string sendData = @"
+            {
+            ""command"":""list"",
+            ""pageNo"":1,
+            ""pageSize"":3000
+            }";
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Method = "POST";
+            request.ContentType = "application/json";
+            request.Timeout = 30 * 1000;
+            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+
+            // POST할 데이타를 Request Stream에 쓴다
+            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+            request.ContentLength = bytes.Length; // 바이트수 지정
+
+            using (Stream reqStream = request.GetRequestStream())
+            {
+                reqStream.Write(bytes, 0, bytes.Length);
+            }
+
+            // Response 처리
+            string responseText = string.Empty;
+            using (WebResponse resp = request.GetResponse())
+            {
+                Stream respStream = resp.GetResponseStream();
+                using (StreamReader sr = new StreamReader(respStream))
+                {
+                    responseText = sr.ReadToEnd();
+                }
+            }
+
+            //Console.WriteLine(responseText);
+            ListParamJsonData result = JsonConvert.DeserializeObject<ListParamJsonData>(responseText);
+
+            return result.response;
+
         }
 
         private void RefreshTree()
@@ -530,13 +576,15 @@ namespace DynaRAP.UControl
             return true;
         }
 
-        int paramIndex = 0;
+        const int startParamIndex = 0;
+        int paramIndex = startParamIndex;
         const int paramHeight = 22;
 
-        private void AddParameter()
+        private void AddParameter(ResponseParam param)
         {
-            MgmtPresetParameterControl ctrl = new MgmtPresetParameterControl();
+            MgmtPresetParameterControl ctrl = new MgmtPresetParameterControl(this.presetParamList);
             ctrl.Title = "Parameter " + paramIndex.ToString();
+            ctrl.SelectedParam = param;
             flowLayoutPanel1.Controls.Add(ctrl);
             flowLayoutPanel1.Controls.SetChildIndex(ctrl, paramIndex++);
 
@@ -544,6 +592,54 @@ namespace DynaRAP.UControl
             btnModifyParameter.Location = new Point(btnModifyParameter.Location.X, btnModifyParameter.Location.Y + paramHeight);
             btnDeleteParameter.Location = new Point(btnDeleteParameter.Location.X, btnDeleteParameter.Location.Y + paramHeight);
             btnSaveAsNewParameter.Location = new Point(btnSaveAsNewParameter.Location.X, btnSaveAsNewParameter.Location.Y + paramHeight);
+
+        }
+
+        private List<ResponseParam> GetPresetParamList(string presetPack)
+        {
+            string url = ConfigurationManager.AppSettings["UrlPreset"];
+            string sendData = string.Format(@"
+            {{
+            ""command"":""param-list"",
+            ""presetPack"":""{0}"",
+            ""presetSeq"":"""",
+            ""paramPack"":"""",
+            ""paramSeq"":"""",
+            ""pageNo"":1,
+            ""pageSize"":3000
+            }}"
+            , presetPack);
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Method = "POST";
+            request.ContentType = "application/json";
+            request.Timeout = 30 * 1000;
+            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+
+            // POST할 데이타를 Request Stream에 쓴다
+            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+            request.ContentLength = bytes.Length; // 바이트수 지정
+
+            using (Stream reqStream = request.GetRequestStream())
+            {
+                reqStream.Write(bytes, 0, bytes.Length);
+            }
+
+            // Response 처리
+            string responseText = string.Empty;
+            using (WebResponse resp = request.GetResponse())
+            {
+                Stream respStream = resp.GetResponseStream();
+                using (StreamReader sr = new StreamReader(respStream))
+                {
+                    responseText = sr.ReadToEnd();
+                }
+            }
+
+            //Console.WriteLine(responseText);
+            ListParamJsonData result = JsonConvert.DeserializeObject<ListParamJsonData>(responseText);
+
+            return result.response;
 
         }
 
@@ -582,6 +678,7 @@ namespace DynaRAP.UControl
 
             InitializePresetList();
             InitializeDirDataList();
+            paramList = GetParamList();
 
         }
 
@@ -815,10 +912,21 @@ namespace DynaRAP.UControl
 
                 ResponsePreset preset = presetList.Find(x => x.presetPack.Equals(node.GetValue("RefSeq").ToString()));
                 if (preset == null)
-                    luePresetList.Properties.ValueMember = string.Empty;
+                {
+                    luePresetList.EditValue = null;
+                }
                 else
                 {
-                    luePresetList.Properties.ValueMember = preset.presetPack;
+                    //luePresetList.Properties.PopulateColumns();
+                    //    luePresetList.Properties.ValueMember = preset.presetPack;
+                    //luePresetList.EditValue = preset.ToString();
+
+                    //PresetData p = pComboList.Find(x => x.PresetPack.Equals(preset.presetPack));
+                    //luePresetList.EditValue = p;
+                    //luePresetList.ItemIndex = 1;
+                    //luePresetList.EditValue = luePresetList.Properties.GetDataSourceValue(luePresetList.Properties.KeyMember, decName);
+                    //luePresetList.SelectedText = decName;
+                    luePresetList.ItemIndex = pComboList.FindIndex(x => x.PresetPack.Equals(preset.presetPack));
                 }
             }
         }
@@ -841,10 +949,18 @@ namespace DynaRAP.UControl
 
                 ResponsePreset preset = presetList.Find(x => x.presetPack.Equals(node.GetValue("RefSeq").ToString()));
                 if (preset == null)
-                    luePresetList.Properties.ValueMember = string.Empty;
+                {
+                    luePresetList.EditValue = null;
+                }
                 else
                 {
-                    luePresetList.Properties.ValueMember = preset.presetPack;
+                    //luePresetList.Properties.PopulateColumns();
+                    //    luePresetList.Properties.ValueMember = preset.presetPack;
+                    //luePresetList.EditValue = preset.ToString();
+
+                    //PresetData p = pComboList.Find(x => x.PresetPack.Equals(preset.presetPack));
+                    //luePresetList.EditValue = p;
+                    luePresetList.ItemIndex = pComboList.FindIndex(x => x.PresetPack.Equals(preset.presetPack));
                 }
             }
         }
@@ -931,7 +1047,11 @@ namespace DynaRAP.UControl
             string paramPack = string.Empty;
             string seq = string.Empty;
 
-            ResponsePreset preset = null;// presetList.Find(x => x.presetPack.Equals(cboPresetList.Text));
+            string presetPack = String.Empty;
+            if (luePresetList.GetColumnValue("PresetPack") != null)
+                presetPack = luePresetList.GetColumnValue("PresetPack").ToString();
+
+            ResponsePreset preset = presetList.Find(x => x.presetPack.Equals(presetPack));
             if (preset != null)
             {
                 paramPack = preset.presetPack;
@@ -952,15 +1072,24 @@ namespace DynaRAP.UControl
 
         private void btnAddParameter_Click(object sender, EventArgs e)
         {
-            AddParameter();
+            AddParameter(null);
         }
 
         private void luePresetList_EditValueChanged(object sender, EventArgs e)
         {
+            paramIndex = startParamIndex;
+            int reducedHeight = (paramHeight * flowLayoutPanel1.Controls.Count);
+            flowLayoutPanel1.Height -= reducedHeight;
+            flowLayoutPanel1.Controls.Clear();
+            btnModifyParameter.Location = new Point(btnModifyParameter.Location.X, btnModifyParameter.Location.Y - reducedHeight);
+            btnDeleteParameter.Location = new Point(btnDeleteParameter.Location.X, btnDeleteParameter.Location.Y - reducedHeight);
+            btnSaveAsNewParameter.Location = new Point(btnSaveAsNewParameter.Location.X, btnSaveAsNewParameter.Location.Y - reducedHeight);
+
             string presetPack = String.Empty;
             if (luePresetList.GetColumnValue("PresetPack") != null)
                 presetPack = luePresetList.GetColumnValue("PresetPack").ToString();
 
+            presetParamList = null;
             ResponsePreset preset = presetList.Find(x => x.presetPack.Equals(presetPack));
 
             string presetName = String.Empty;
@@ -972,6 +1101,16 @@ namespace DynaRAP.UControl
                 string decName = Encoding.UTF8.GetString(byte64);
 
                 presetName = decName;
+
+                presetParamList = GetPresetParamList(preset.presetPack);
+            }
+
+            if (presetParamList != null)
+            {
+                foreach (ResponseParam param in presetParamList)
+                {
+                    AddParameter(param);
+                }
             }
             edtParamName.Text = presetName;
         }
