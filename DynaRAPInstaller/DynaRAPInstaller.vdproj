@@ -15,12 +15,6 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_02DA30ECD9D358A7EFD8FC0A3C1A21D9"
-        "OwnerKey" = "8:_DCB2D4BA05B14BEAA109E1895ED06E4B"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_0DCE2A0C81C9DEB870AC7EFA51BD906F"
         "OwnerKey" = "8:_EBF3C2315293278FAD95E7471A58AAF3"
         "MsmSig" = "8:_UNDEFINED"
@@ -317,6 +311,12 @@
         {
         "MsmKey" = "8:_605749C46872CD58FAA89EA022034471"
         "OwnerKey" = "8:_0DCE2A0C81C9DEB870AC7EFA51BD906F"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_6CC3FE89DEDE963C5ADC3D70C4A8EBC7"
+        "OwnerKey" = "8:_DCB2D4BA05B14BEAA109E1895ED06E4B"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -1234,7 +1234,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_02DA30ECD9D358A7EFD8FC0A3C1A21D9"
+        "OwnerKey" = "8:_6CC3FE89DEDE963C5ADC3D70C4A8EBC7"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -1506,37 +1506,6 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_02DA30ECD9D358A7EFD8FC0A3C1A21D9"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:System.Net.Http, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
-                "ScatterAssemblies"
-                {
-                    "_02DA30ECD9D358A7EFD8FC0A3C1A21D9"
-                    {
-                    "Name" = "8:System.Net.Http.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:System.Net.Http.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_A85D84C9CB1144E8842881DC34B5DBA9"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_0DCE2A0C81C9DEB870AC7EFA51BD906F"
             {
             "AssemblyRegister" = "3:1"
@@ -2016,6 +1985,37 @@
                     }
                 }
             "SourcePath" = "8:DevExpress.XtraBars.v21.2.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_A85D84C9CB1144E8842881DC34B5DBA9"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_6CC3FE89DEDE963C5ADC3D70C4A8EBC7"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:System.Net.Http, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
+                "ScatterAssemblies"
+                {
+                    "_6CC3FE89DEDE963C5ADC3D70C4A8EBC7"
+                    {
+                    "Name" = "8:System.Net.Http.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:System.Net.Http.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_A85D84C9CB1144E8842881DC34B5DBA9"
@@ -2884,15 +2884,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:DynaRap-Post"
-        "ProductCode" = "8:{8C0BF76A-1E9B-4BFE-BA82-CDE447938198}"
-        "PackageCode" = "8:{65F3912C-339B-4F0A-9610-47C1AD5D8F82}"
+        "ProductCode" = "8:{B91F8333-319D-43B2-A1A4-E59D77A1606A}"
+        "PackageCode" = "8:{D67C21CD-8672-4629-9898-405EC9C40A4B}"
         "UpgradeCode" = "8:{C2E8B582-A912-4CA2-ABDF-0C2D08B886D2}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:1.0.4"
+        "ProductVersion" = "8:1.0.5"
         "Manufacturer" = "8:ServeTech"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
