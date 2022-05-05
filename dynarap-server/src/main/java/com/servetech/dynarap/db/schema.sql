@@ -152,8 +152,9 @@ drop table if exists `dynarap_raw_upload` cascade $$
 create table `dynarap_raw_upload`
 (
     `seq` bigint auto_increment not null            comment '일련번호',
+    `uploadId` varchar(256) not null                comment '데이터 ID',
     `uploadName` varchar(128) not null              comment '데이터 이름',
-    `storePath` varchar(512) not null               comment '저장 경로 (서버상 파일 위치)',
+    `storePath` varchar(512)                        comment '저장 경로 (서버상 파일 위치)',
     `fileSize` bigint default 0                     comment '파일용량',
     `flightSeq` bigint default 0                    comment '관련 기체, 없으면 0',
     `presetPack` bigint default 0                   comment '프리셋 관리번호',
@@ -201,11 +202,13 @@ create table `dynarap_dll_raw`
     `seq` bigint auto_increment not null            comment '일련번호',
     `dllSeq` bigint not null                        comment '데이터 셋 일련번호',
     `paramSeq` bigint not null                      comment '파라미터 일련번호',
+    `rowNo` int default 0                           comment '데이터 row',
     `paramVal` double default 0.0                   comment '파라미터 값 (숫자)',
     `paramValStr` varchar(128) default ''           comment '파라미터 값 (문자)',
     constraint pk_dynarap_dll_raw primary key (`seq`)
 ) $$
 
+create index idx_dll_raw on `dynarap_dll_raw` (`dllSeq`, `paramSeq`, `rowNo`) $$
 
 
 -- import module (dll 은 수동 입력, zaero, adams, 시험비행 데이터 있음)
@@ -215,13 +218,18 @@ drop table if exists `dynarap_raw` cascade $$
 create table `dynarap_raw`
 (
     `seq` bigint auto_increment not null            comment '일련번호',
+    `uploadSeq` bigint default 0                    comment '업로드 일련번호',
     `presetPack` bigint default 0                   comment '프리셋 관리번호',
     `presetSeq` bigint default 0                    comment '프리셋 일련번호',
     `presetParamSeq` bigint default 0               comment '프리셋 구성 파라미터 일련번호',
+    `rowNo` int default 0                           comment '데이터 row',
+    `julianTimeAt` varchar(32)                      comment '절대 시간 값',
     `paramVal` double default 0.0                   comment '파라미터 값 (숫자)',
     `paramValStr` varchar(128) default ''           comment '파라미터 값 (문자)',
     constraint pk_dynarap_raw primary key (`seq`)
 ) $$
+
+create index idx_raw on `dynarap_raw` (`presetPack`, `presetSeq`, `presetParamSeq`, `rowNo`) $$
 
 -- 유의미한 분할 데이터를 저장하고 해당 저장 데이터에 대해서 기본 단위로 사용함.
 drop table if exists `dynarap_part` cascade $$
@@ -240,6 +248,7 @@ create table `dynarap_part`
     constraint pk_dynarap_part primary key (`seq`)
 ) $$
 
+create index idx_part on `dynarap_part` (`presetPack`, `presetSeq`, `seq`) $$
 
 --  분할 구간 raw 데이터
 drop table if exists `dynarap_part_raw` cascade $$
@@ -249,6 +258,7 @@ create table `dynarap_part_raw`
     `seq` bigint auto_increment not null            comment '일련번호',
     `partSeq` bigint not null                       comment '부분 일련번호',
     `presetParamSeq` bigint default 0               comment '프리셋 파라미터 일련번호',
+    `rowNo` int default 0                           comment '데이터 row',
     `paramVal` double default 0.0                   comment '파라미터 값 (숫자)',
     `paramValStr` varchar(128) default ''           comment '파라미터 값 (문자)',
     `julianTimeAt` varchar(32) not null             comment '절대시간값',
@@ -258,6 +268,7 @@ create table `dynarap_part_raw`
     constraint pk_dynarap_part_raw primary key (`seq`)
 ) $$
 
+create index idx_part_raw on `dynarap_part_raw` (`partSeq`, `presetParamSeq`, `rowNo`) $$
 
 
 -- 숏블록 기본
@@ -292,6 +303,7 @@ create table `dynarap_sblock`
     constraint pk_dynarap_sblock primary key (`seq`)
 ) $$
 
+create index idx_sblock on `dynarap_sblock` (`partSeq`, `blockMetaSeq`, `seq`) $$
 
 -- 숏블록 데이터
 drop table if exists `dynarap_sblock_raw` cascade $$
@@ -302,6 +314,7 @@ create table `dynarap_sblock_raw`
     `blockSeq` bigint not null                      comment '숏블록 일련번호',
     `partSeq` bigint not null                       comment '부분 일련번호',
     `presetParamSeq` bigint default 0               comment '프리셋 파라미터 일련번호',
+    `rowNo` int default 0                           comment '데이터 row',
     `paramVal` double default 0.0                   comment '파라미터 값 (숫자)',
     `paramValStr` varchar(128) default ''           comment '파라미터 값 (문자)',
     `julianTimeAt` varchar(32) not null             comment '절대시간값',
@@ -311,6 +324,7 @@ create table `dynarap_sblock_raw`
     constraint pk_dynarap_sblock_raw primary key (`seq`)
 ) $$
 
+create index idx_sblock_raw on `dynarap_sblock_raw` (`partSeq`, `blockSeq`, `presetParamSeq`, `rowNo`) $$
 
 -- 숏블록 파라미터 처리
 drop table if exists `dynarap_sblock_param` cascade $$
@@ -319,6 +333,7 @@ create table `dynarap_sblock_param`
 (
     `seq` bigint auto_increment not null            comment '일련번호',
     `blockSeq` bigint not null                      comment '숏블록 일련번호',
+    `paramNo` smallint default 0                    comment '설정 파라미터 순서',
     `paramPack` bigint default 0                    comment '설정 파라미터 관리 일련번호',
     `paramSeq` bigint default 0                     comment '설정 파라미터 일련번호',
     constraint pk_dynarap_sblock_param primary key (`seq`)

@@ -22,6 +22,7 @@ public class PartVO {
     public static class Raw implements IFlexibleValue {
         private CryptoField seq;
         private CryptoField presetParamSeq;
+        private Integer rowNo;
         private Double paramVal;
         private String paramValStr;
         private String julianTimeAt;

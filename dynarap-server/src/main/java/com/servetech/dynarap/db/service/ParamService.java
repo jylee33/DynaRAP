@@ -451,6 +451,9 @@ public class ParamService {
             else
                 preset = getPresetBySeq(presetParam.getPresetSeq());
 
+            presetParam.setPresetPack(preset.getPresetPack());
+            presetParam.setPresetSeq(preset.getSeq());
+
             paramMapper.insertPresetParam(presetParam);
         } catch(Exception e) {
             throw new HandledServiceException(410, e.getMessage());

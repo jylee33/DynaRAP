@@ -29,6 +29,7 @@ public class DLLVO {
         private CryptoField seq;
         private CryptoField dllSeq;
         private CryptoField paramSeq;
+        private Integer rowNo;
         private Double paramVal;
         private String paramValStr;
 

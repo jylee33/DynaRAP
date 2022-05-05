@@ -67,6 +67,15 @@ public interface DLLMapper {
     })
     List<DLLVO.Param> selectDLLParamList(Map<String, Object> params) throws Exception;
 
+    @Select({
+            "<script>" +
+                    "select * from dynarap_dll_param " +
+                    "where seq = #{seq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "limit 0, 1" +
+                    "</script>"
+    })
+    DLLVO.Param selectDLLParamBySeq(Map<String, Object> params) throws Exception;
+
     @Insert({
             "<script>" +
                     "insert into dynarap_dll_param (" +
@@ -117,9 +126,14 @@ public interface DLLMapper {
     // 데이터를 로딩하여 메모리에서 정렬하고 반환함.
     @Select({
             "<script>" +
-                    "select * from dynarap_dll_raw " +
-                    "where dllSeq = #{dllSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
-                    "order by paramSeq asc, seq asc" +
+                    "select a.* from dynarap_dll_raw a, dynarap_dll_param b " +
+                    "where a.dllSeq = b.dllSeq " +
+                    "and a.paramSeq = b.seq " +
+                    "and a.dllSeq = #{dllSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "<if test='@com.servetech.dynarap.db.type.MybatisEmptyChecker@isNotEmpty(paramSeq)'>" +
+                    "and a.paramSeq = #{paramSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "</if>" +
+                    "order by b.paramNo asc, a.rowNo asc" +
                     "</script>"
     })
     List<DLLVO.Raw> selectDLLData(Map<String, Object> params) throws Exception;
@@ -127,12 +141,13 @@ public interface DLLMapper {
     @Insert({
             "<script>" +
                     "insert into dynarap_dll_raw (" +
-                    "dllSeq,paramSeq,paramVal,paramValStr" +
+                    "dllSeq,paramSeq,paramVal,paramValStr,rowNo" +
                     ") values (" +
                     "#{dllSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField}" +
                     ",#{paramSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField}" +
                     ",#{paramVal}" +
                     ",#{paramValStr}" +
+                    ",#{rowNo}" +
                     ")" +
                     "</script>"
     })
@@ -146,8 +161,8 @@ public interface DLLMapper {
                     " update dynarap_dll_raw set " +
                     " paramVal=#{paramVal}" +
                     ",paramValStr=#{paramValStr}" +
+                    ",rowNo=#{rowNo}" +
                     " where seq = #{seq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField}" +
-                    ")" +
                     "</script>"
     })
     void updateDLLData(DLLVO.Raw dllRaw) throws Exception;
@@ -155,10 +170,11 @@ public interface DLLMapper {
     @Delete({
             "<script>" +
                     "delete from dynarap_dll_raw " +
-                    "where seq = #{seq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField}" +
+                    "where dllSeq = #{dllSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "and rowNo = #{rowNo} " +
                     "</script>"
     })
-    void deleteDLLData(Map<String, Object> params) throws Exception;
+    void deleteDLLDataByRow(Map<String, Object> params) throws Exception;
 
     @Delete({
             "<script>" +
@@ -169,6 +185,6 @@ public interface DLLMapper {
                     "</if>" +
                     "</script>"
     })
-    void deleteDLLDataByMulti(Map<String, Object> params) throws Exception;
+    void deleteDLLDataByParam(Map<String, Object> params) throws Exception;
 
 }
