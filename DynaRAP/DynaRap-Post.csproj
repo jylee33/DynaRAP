@@ -150,11 +150,11 @@
     <Compile Include="Data\SplittedInterval.cs" />
     <Compile Include="EventData\LoginResultEventArgs.cs" />
     <Compile Include="EventData\SelectedRangeEventArgs.cs" />
-    <Compile Include="TEST\Form1.cs">
+    <Compile Include="TEST\TestMsChartForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="TEST\Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="TEST\TestMsChartForm.Designer.cs">
+      <DependentUpon>TestMsChartForm.cs</DependentUpon>
     </Compile>
     <Compile Include="GridCheckMarksSelection.cs" />
     <Compile Include="LoginForm.cs">
@@ -419,8 +419,8 @@
     <EmbeddedResource Include="CreateScenarioProgressForm.resx">
       <DependentUpon>CreateScenarioProgressForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="TEST\Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="TEST\TestMsChartForm.resx">
+      <DependentUpon>TestMsChartForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LoginForm.ko-KR.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>

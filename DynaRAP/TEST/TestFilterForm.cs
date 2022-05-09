@@ -22,7 +22,7 @@ namespace DynaRAP.TEST
     {
         Dictionary<string, List<string>> dicData = new Dictionary<string, List<string>>();
         string selKey = String.Empty;
-        List<double> listData = new List<double>();
+        List<double> chartData = new List<double>();
         
         double fs = 1000; //sampling rate
         double fc = 10; //cutoff frequency
@@ -51,7 +51,7 @@ namespace DynaRAP.TEST
 #endif
             {
 #if DEBUG
-                StreamReader sr = new StreamReader(@"D:\DOCs\SGSONE\32063_20220314_180351_SL30_02_2nd_ALCM_FT_Full_Sample_1.xls");
+                StreamReader sr = new StreamReader(@"C:\temp\32063_20220314_180351_SL30_02_2nd_ALCM_FT_Full_Sample_1.xls");
 #else
                 StreamReader sr = new StreamReader(dlg.FileName);
 #endif
@@ -190,7 +190,7 @@ namespace DynaRAP.TEST
             double radius = 30.0;
 
             DataRow row = null;
-            listData.Clear();
+            chartData.Clear();
 
             for (int i = 0; i < 3600; ++i)
             {
@@ -202,7 +202,7 @@ namespace DynaRAP.TEST
                 string day = dicData["DATE"][i];
                 DateTime dt = Utils.GetDateFromJulian(day);
                 double data = y;
-                listData.Add(data);
+                chartData.Add(data);
                 row["Argument"] = dt;
                 //row["Argument"] = i;
                 row["Value"] = data;
@@ -222,7 +222,7 @@ namespace DynaRAP.TEST
             double radius = 30.0;
 
             DataRow row = null;
-            listData.Clear();
+            chartData.Clear();
 
             for (int i = 0; i < 3600; ++i)
             {
@@ -234,7 +234,7 @@ namespace DynaRAP.TEST
                 string day = dicData["DATE"][i];
                 DateTime dt = Utils.GetDateFromJulian(day);
                 double data = x;
-                listData.Add(data);
+                chartData.Add(data);
                 row["Argument"] = dt;
                 //row["Argument"] = i;
                 row["Value"] = data;
@@ -256,14 +256,14 @@ namespace DynaRAP.TEST
 
             DataRow row = null;
             int i = 0;
-            listData.Clear();
+            chartData.Clear();
             foreach (string value in dicData[selKey])
             {
                 row = table.NewRow();
                 string day = dicData["DATE"][i];
                 DateTime dt = Utils.GetDateFromJulian(day);
                 double data = double.Parse(value);
-                listData.Add(data);
+                chartData.Add(data);
                 row["Argument"] = dt;
                 //row["Argument"] = i;
                 row["Value"] = data;
@@ -342,9 +342,9 @@ namespace DynaRAP.TEST
             if (radioLPF.Checked)
             {
                 //var lowpass = OnlineFirFilter.CreateLowpass(ImpulseResponse.Finite, fs, fc);
-                //double[] lpf = lowpass.ProcessSamples(listData.ToArray());
+                //double[] lpf = lowpass.ProcessSamples(chartData.ToArray());
                 //AddChart2Data(lpf);
-                double[] dataBefore = listData.ToArray();//{ 1, 2, 3, 4 };
+                double[] dataBefore = chartData.ToArray();//{ 1, 2, 3, 4 };
                 double[] b = { -0.00441777, -0.004058707, 0.000868499, 0.007136834, 0.006908177, -0.001000105, -0.006935471, -0.00161014, 0.009635865, 0.010835507, -0.003032607, -0.015140555, -0.006475334, 0.015473242, 0.02058123, -0.004249586, -0.029864561, -0.016553454, 0.028406273, 0.045635209, -0.004940273, -0.074842484, -0.056990711, 0.097148048, 0.30061199, 0.394830537, 0.30061199, 0.097148048, -0.056990711, -0.074842484, -0.004940273, 0.045635209, 0.028406273, -0.016553454, -0.029864561, -0.004249586, 0.02058123, 0.015473242, -0.006475334, -0.015140555, -0.003032607, 0.010835507, 0.009635865, -0.00161014, -0.006935471, -0.001000105, 0.006908177, 0.007136834, 0.000868499, -0.004058707, -0.00441777 };
                 double[] a = { 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 
@@ -354,7 +354,7 @@ namespace DynaRAP.TEST
             else
             {
                 var highpass = OnlineFirFilter.CreateHighpass(ImpulseResponse.Finite, fs, fc);
-                double[] hpf = highpass.ProcessSamples(listData.ToArray());
+                double[] hpf = highpass.ProcessSamples(chartData.ToArray());
                 AddChart2Data(hpf);
             }
         }
@@ -399,7 +399,7 @@ namespace DynaRAP.TEST
 
             DataRow row = null;
             int i = 0;
-            listData.Clear();
+            chartData.Clear();
             for(i = 0; i< lpf.Length; i++)
             {
                 row = table.NewRow();

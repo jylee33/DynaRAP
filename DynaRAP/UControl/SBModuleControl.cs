@@ -22,6 +22,7 @@ namespace DynaRAP.UControl
         string selectedFuselage = string.Empty;
         Series series1 = new Series();
         ChartArea myChartArea = new ChartArea("LineChartArea");
+        List<SBIntervalControl> sbIntervalList = new List<SBIntervalControl>();
 
         public SBModuleControl()
         {
@@ -66,10 +67,8 @@ namespace DynaRAP.UControl
             btnSaveSplittedParameter.Properties.AllowFocused = false;
 
             AddSplittedInterval();
-            AddSplittedInterval();
-            AddSplittedInterval();
-            AddSplittedInterval();
-            AddSplittedInterval();
+
+            lblValidSBCount.Text = string.Format(Properties.Resources.StringValidSBCount, sbIntervalList.Count);
 
         }
 
@@ -540,10 +539,25 @@ namespace DynaRAP.UControl
         {
             SBIntervalControl ctrl = new SBIntervalControl();
             ctrl.Title = "ShortBlock#" + (paramIndex + intervalIndex).ToString();
+            ctrl.DeleteBtnClicked += new EventHandler(InvalidSB_DeleteBtnClicked);
             panelData.Controls.Add(ctrl);
             panelData.Controls.SetChildIndex(ctrl, paramIndex + intervalIndex);
+            sbIntervalList.Add(ctrl);
+            
             intervalIndex++;
 
+        }
+
+        void InvalidSB_DeleteBtnClicked(object sender, EventArgs e)
+        {
+            SBIntervalControl ctrl = sender as SBIntervalControl;
+            panelData.Controls.Remove(ctrl);
+            sbIntervalList.Remove(ctrl);
+            ctrl.Dispose();
+
+            intervalIndex--;
+
+            lblValidSBCount.Text = string.Format(Properties.Resources.StringValidSBCount, sbIntervalList.Count);
         }
 
         private void btnSaveSplittedParameter_ButtonClick(object sender, ButtonPressedEventArgs e)

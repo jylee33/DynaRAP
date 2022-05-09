@@ -251,6 +251,15 @@ namespace DynaRAP.Properties {
         }
         
         /// <summary>
+        ///   Valid Short Block Count : {0}과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string StringValidSBCount {
+            get {
+                return ResourceManager.GetString("StringValidSBCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Warning과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string StringWarning {

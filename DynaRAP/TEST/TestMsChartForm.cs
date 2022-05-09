@@ -1,8 +1,11 @@
-﻿using System;
+﻿using DevExpress.XtraEditors.Controls;
+using DynaRAP.UTIL;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +14,7 @@ using System.Windows.Forms.DataVisualization.Charting;
 
 namespace DynaRAP.TEST
 {
-    public partial class Form1 : Form
+    public partial class TestMsChartForm : Form
     {
         Series series1 = new Series();
         ChartArea myChartArea = new ChartArea("LineChartArea");
@@ -20,13 +23,20 @@ namespace DynaRAP.TEST
         List<SizeF> ranges = new List<SizeF>();
         List<int> selectedIndices = new List<int>();
 
-        public Form1()
+        Dictionary<string, List<string>> dicData = new Dictionary<string, List<string>>();
+        string selKey = String.Empty;
+        List<double> chartData = new List<double>();
+
+        public TestMsChartForm()
         {
             InitializeComponent();
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            ReadCsvFile();
+            InitComboList();
+
             //myChartArea.AxisX.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Hours;
 
             //myChartArea.AxisX.MajorGrid.Interval = 1D;
@@ -50,12 +60,15 @@ namespace DynaRAP.TEST
             myChartArea.CursorX.IsUserEnabled = true;
             myChartArea.CursorX.IsUserSelectionEnabled = true;
             myChartArea.AxisX.ScaleView.Zoomable = false;
+            myChartArea.BackColor = Color.FromArgb(37, 37, 38);
+            myChartArea.AxisX.LabelStyle.ForeColor = Color.White;
+            myChartArea.AxisY.LabelStyle.ForeColor = Color.White;
             ////
-
 
             chart1.ChartAreas.RemoveAt(0);
             chart1.ChartAreas.Add(myChartArea);
 
+#if null
             series1.ChartType = SeriesChartType.Line;
             series1.Name = "VAS";
             series1.XValueType = ChartValueType.DateTime;
@@ -68,6 +81,198 @@ namespace DynaRAP.TEST
 
             SettingMyData();
             chart1.Series.Add(series1);
+#endif
+        }
+
+        private void ReadCsvFile()
+        {
+            OpenFileDialog dlg = new OpenFileDialog();
+            dlg.InitialDirectory = "C:\\";
+            dlg.Filter = "Excel files (*.xls, *.xlsx)|*.xls; *.xlsx|Comma Separated Value files (CSV)|*.csv|모든 파일 (*.*)|*.*";
+            //dlg.Filter = "Comma Separated Value files (CSV)|*.csv";
+
+#if !DEBUG
+            if (dlg.ShowDialog() == DialogResult.OK)
+#endif
+            {
+#if DEBUG
+                StreamReader sr = new StreamReader(@"C:\temp\32063_20220314_180351_SL30_02_2nd_ALCM_FT_Full_Sample_1.xls");
+#else
+                StreamReader sr = new StreamReader(dlg.FileName);
+#endif
+
+                int idx = 0;
+
+                // 스트림의 끝까지 읽기
+                while (!sr.EndOfStream)
+                {
+                    string line = sr.ReadLine();
+                    string[] data = line.Split(',');
+
+                    if (string.IsNullOrEmpty(data[0]))
+                        continue;
+
+                    int i = 0;
+                    if (idx == 0)
+                    {
+                        dicData.Clear();
+                        for (i = 0; i < data.Length; i++)
+                        {
+                            if (dicData.ContainsKey(data[i]) == false)
+                            {
+                                if (string.IsNullOrEmpty(data[i]) == false)
+                                    dicData.Add(data[i], new List<string>());
+                            }
+                        }
+                        idx++;
+                        continue;
+                    }
+
+                    i = 0;
+                    foreach (string key in dicData.Keys)
+                    {
+                        if (dicData.ContainsKey(key))
+                        {
+                            if (string.IsNullOrEmpty(data[i]) == false)
+                                dicData[key].Add(data[i++]);
+                        }
+                    }
+                }
+
+
+            }
+        }
+
+        private void InitComboList()
+        {
+            cboParameter.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+            cboParameter.Properties.DropDownRows = 15;
+            cboParameter.SelectedIndexChanged += cboParameter_SelectedIndexChanged;
+
+            List<string> paramList = dicData.Keys.ToList();
+            //cboParameter.Properties.Items.Add("SIN");
+            //cboParameter.Properties.Items.Add("COS");
+            cboParameter.Properties.Items.AddRange(paramList);
+            cboParameter.Properties.Items.Remove("DATE");
+
+            cboParameter.SelectedIndex = 9;
+        }
+
+        private void cboParameter_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cboParameter.EditValue != null)
+            {
+                selKey = cboParameter.EditValue.ToString();
+                AddChartData(selKey);
+            }
+        }
+
+        private void AddChartData(string strKey)
+        {
+            chart1.Series.Clear();
+
+            Series series1 = new Series("Series1");
+            series1.ChartType = SeriesChartType.Line;
+            series1.Name = strKey;
+            series1.XValueType = ChartValueType.DateTime;
+            //series1.IsValueShownAsLabel = true;
+            //series1.IsVisibleInLegend = true;
+            series1.LabelForeColor = Color.Red;
+            series1.MarkerStyle = MarkerStyle.Square;
+            series1.MarkerSize = 3;
+            series1.MarkerColor = Color.Red;
+
+            series1.XValueMember = "Argument";
+            series1.YValueMembers = "Value";
+
+            chart1.Series.Add(series1);
+
+            chart1.DataSource = GetChartValues(strKey);
+            chart1.BackColor = Color.FromArgb(37, 37, 38);
+            chart1.DataBind();
+
+            AddStripLines();
+
+        }
+
+        const double sbLen = 0.0001;
+        const double overlap = 0.4;
+        private void AddStripLines()
+        {
+            Axis ax = chart1.ChartAreas[0].AxisX;
+            List<Color> colors = new List<Color>()  {   Color.FromArgb(75, 44, 44), Color.FromArgb(98, 41, 41)
+                                                        , Color.FromArgb(64, Color.LightSeaGreen), Color.FromArgb(64, Color.LightGoldenrodYellow)};
+
+            double hrange = ax.Maximum - ax.Minimum;
+
+            if(double.IsNaN(hrange))
+                return;
+
+            ax.StripLines.Clear();
+
+            // now we create and add four striplines:
+            //for (int i = 0; i < 4; i++)
+            //{
+            //    double stripWidth = hrange / 4f;
+            //    double intervalOffset = stripWidth * i;
+            //    StripLine sl = new StripLine();
+            //    sl.Interval = hrange;                   // no less than the range, so it won't repeat
+            //    sl.StripWidth = stripWidth;            // width, 너비
+            //    sl.IntervalOffset = intervalOffset;  // x-position, 시작점
+            //    sl.BackColor = colors[i];
+            //    sl.ToolTip = String.Format("{0} ~ {1}", DateTime.FromOADate(intervalOffset), DateTime.FromOADate(intervalOffset + stripWidth));
+            //    ax.StripLines.Add(sl);
+            //}
+
+            StripLine sl = new StripLine();
+            sl.Interval = hrange;
+            sl.StripWidth = hrange;            // width, 너비
+            sl.IntervalOffset = 0;  // x-position, 시작점
+            sl.BackColor = colors[0];
+            ax.StripLines.Add(sl);
+
+            double offset = sbLen * (1 - overlap);
+            while (offset < hrange)
+            {
+                StripLine sl2 = new StripLine();
+                sl2.Interval = hrange;
+                sl2.IntervalOffset = offset;
+                sl2.StripWidth = sbLen * overlap;
+                sl2.BackColor = colors[1];
+                ax.StripLines.Add(sl2);
+                offset += sbLen;
+            }
+        }
+
+
+        private DataTable GetChartValues(string strKey)
+        {
+            // Create an empty table.
+            DataTable table = new DataTable("Table1");
+
+            // Add two columns to the table.
+            //table.Columns.Add("Argument", typeof(Int32));
+            table.Columns.Add("Argument", typeof(DateTime));
+            table.Columns.Add("Value", typeof(double));
+
+            DataRow row = null;
+            int i = 0;
+            chartData.Clear();
+            foreach (string value in dicData[selKey])
+            {
+                row = table.NewRow();
+                string day = dicData["DATE"][i];
+                DateTime dt = Utils.GetDateFromJulian(day);
+                double data = double.Parse(value);
+                chartData.Add(data);
+                row["Argument"] = dt;
+                //row["Argument"] = i;
+                row["Value"] = data;
+                table.Rows.Add(row);
+                i++;
+            }
+
+            return table;
         }
 
         private void SettingMyData()
@@ -450,14 +655,19 @@ namespace DynaRAP.TEST
 
         private void chart1_SelectionRangeChanging(object sender, CursorEventArgs e)
         {
+            return;
+
             curRange = new SizeF((float)e.NewSelectionStart, (float)e.NewSelectionEnd);
-            //DateTime dt1 =  DateTime.FromOADate(e.NewSelectionStart);
-            //DateTime dt2 =  DateTime.FromOADate(e.NewSelectionEnd);
+            //DateTime dt1 = DateTime.FromOADate(e.NewSelectionStart);
+            //DateTime dt2 = DateTime.FromOADate(e.NewSelectionEnd);
+            //Console.WriteLine("start : {0}, end : {1}", e.NewSelectionStart, e.NewSelectionEnd);
             //Console.WriteLine("start : {0}, end : {1}", dt1, dt2);
         }
 
         private void chart1_SelectionRangeChanged(object sender, CursorEventArgs e)
         {
+            return;
+
             //Console.WriteLine(curRange.ToString());
 
             selectedIndices.Union(collectDataPoints(chart1.Series[0],
@@ -468,6 +678,7 @@ namespace DynaRAP.TEST
             sl.BackColor = Color.FromArgb(255, Color.LightSeaGreen);
             sl.IntervalOffset = Math.Min(curRange.Width, curRange.Height);
             sl.StripWidth = Math.Abs(curRange.Height - curRange.Width);
+            chart1.ChartAreas[0].AxisX.StripLines.Clear();
             chart1.ChartAreas[0].AxisX.StripLines.Add(sl);
 
             //int x1 = ((int)((PointF)curRange).X);
@@ -494,5 +705,40 @@ namespace DynaRAP.TEST
             return hits;
         }
 
+        Point? prevPosition = null;
+        ToolTip tooltip = new ToolTip();
+        private void chart1_MouseMove(object sender, MouseEventArgs e)
+        {
+            var pos = e.Location;
+            if (prevPosition.HasValue && pos == prevPosition.Value)
+                return;
+            tooltip.RemoveAll();
+            prevPosition = pos;
+            var results = chart1.HitTest(pos.X, pos.Y, false,
+                                            ChartElementType.DataPoint);
+            foreach (var result in results)
+            {
+                if (result.ChartElementType == ChartElementType.DataPoint)
+                {
+                    var prop = result.Object as DataPoint;
+                    if (prop != null)
+                    {
+                        var pointXPixel = result.ChartArea.AxisX.ValueToPixelPosition(prop.XValue);
+                        var pointYPixel = result.ChartArea.AxisY.ValueToPixelPosition(prop.YValues[0]);
+
+                        // check if the cursor is really close to the point (2 pixels around the point)
+                        if (Math.Abs(pos.X - pointXPixel) < 2 &&
+                            Math.Abs(pos.Y - pointYPixel) < 2)
+                        {
+                            DateTime dt1 = DateTime.FromOADate(prop.XValue);
+                            tooltip.Show("X=" + dt1 + ", Y=" + prop.YValues[0], this.chart1,
+                                            pos.X, pos.Y - 15);
+                            //Console.WriteLine(string.Format("X = {0}", prop.XValue));
+                            //Console.WriteLine(string.Format("X-time = {0}", dt1));
+                        }
+                    }
+                }
+            }
+        }
     }
 }

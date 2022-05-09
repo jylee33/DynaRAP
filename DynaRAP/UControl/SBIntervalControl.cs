@@ -13,6 +13,8 @@ namespace DynaRAP.UControl
 {
     public partial class SBIntervalControl : DevExpress.XtraEditors.XtraUserControl
     {
+        public event EventHandler DeleteBtnClicked;
+     
         public string Title
         {
             set
@@ -29,6 +31,12 @@ namespace DynaRAP.UControl
         private void SBIntervalControl_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            if (this.DeleteBtnClicked != null)
+                this.DeleteBtnClicked(this, new EventArgs());
         }
     }
 }

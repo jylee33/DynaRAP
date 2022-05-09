@@ -11,6 +11,17 @@ namespace DynaRAP.UTIL
     {
         public static DateTime GetDateFromJulian(string julianDate)
         {
+            string[] splits = julianDate.Split(':');
+            var arg = string.Format("{0} {1}:{2}:{3}", new DateTime().AddYears(DateTime.Now.Year - 1).AddDays(double.Parse(splits[0])).ToString("yyyy-MM-dd"), splits[1], splits[2], splits[3]);
+
+            DateTime dt = DateTime.ParseExact(arg, "yyyy-MM-dd HH:mm:ss.ffffff", null);
+
+            return dt;
+
+        }
+
+        public static DateTime GetDateFromJulian2(string julianDate)
+        {
             int year = 21;
             int day = Convert.ToInt32(julianDate.Substring(0, 3));
             DateTime dt = new DateTime(1999 + year, 12, 18, new JulianCalendar());

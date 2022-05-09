@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea5 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SBModuleControl));
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.separatorControl1 = new DevExpress.XtraEditors.SeparatorControl();
@@ -78,7 +78,7 @@
             this.labelControl31 = new DevExpress.XtraEditors.LabelControl();
             this.separatorControl5 = new DevExpress.XtraEditors.SeparatorControl();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            this.labelControl21 = new DevExpress.XtraEditors.LabelControl();
+            this.lblValidSBCount = new DevExpress.XtraEditors.LabelControl();
             this.btnSaveSplittedParameter = new DevExpress.XtraEditors.ButtonEdit();
             this.imageCollection1 = new DevExpress.Utils.ImageCollection(this.components);
             this.imageCollection2 = new DevExpress.Utils.ImageCollection(this.components);
@@ -122,12 +122,12 @@
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 5;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 666F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 714F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1151, 1624);
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1151, 1740);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // separatorControl1
@@ -135,10 +135,11 @@
             this.separatorControl1.BackColor = System.Drawing.Color.White;
             this.separatorControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.separatorControl1.LineOrientation = System.Windows.Forms.Orientation.Vertical;
-            this.separatorControl1.Location = new System.Drawing.Point(253, 23);
+            this.separatorControl1.Location = new System.Drawing.Point(253, 24);
             this.separatorControl1.Name = "separatorControl1";
+            this.separatorControl1.Padding = new System.Windows.Forms.Padding(9, 10, 9, 10);
             this.tableLayoutPanel1.SetRowSpan(this.separatorControl1, 3);
-            this.separatorControl1.Size = new System.Drawing.Size(1, 1578);
+            this.separatorControl1.Size = new System.Drawing.Size(1, 1692);
             this.separatorControl1.TabIndex = 0;
             // 
             // labelControl2
@@ -148,7 +149,7 @@
             this.labelControl2.Appearance.Options.UseTextOptions = true;
             this.labelControl2.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
             this.labelControl2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.labelControl2.Location = new System.Drawing.Point(111, 23);
+            this.labelControl2.Location = new System.Drawing.Point(111, 24);
             this.labelControl2.Name = "labelControl2";
             this.labelControl2.Size = new System.Drawing.Size(136, 17);
             this.labelControl2.TabIndex = 1;
@@ -161,7 +162,7 @@
             this.labelControl1.Appearance.Options.UseTextOptions = true;
             this.labelControl1.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Far;
             this.labelControl1.Dock = System.Windows.Forms.DockStyle.Right;
-            this.labelControl1.Location = new System.Drawing.Point(187, 709);
+            this.labelControl1.Location = new System.Drawing.Point(187, 759);
             this.labelControl1.Name = "labelControl1";
             this.labelControl1.Size = new System.Drawing.Size(60, 17);
             this.labelControl1.TabIndex = 1;
@@ -198,10 +199,10 @@
             this.panelData.Controls.Add(this.tableLayoutPanel3);
             this.panelData.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelData.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.panelData.Location = new System.Drawing.Point(277, 23);
+            this.panelData.Location = new System.Drawing.Point(277, 24);
             this.panelData.Name = "panelData";
             this.tableLayoutPanel1.SetRowSpan(this.panelData, 3);
-            this.panelData.Size = new System.Drawing.Size(851, 1578);
+            this.panelData.Size = new System.Drawing.Size(851, 1692);
             this.panelData.TabIndex = 4;
             // 
             // labelControl3
@@ -218,16 +219,16 @@
             // 
             this.labelControl5.Location = new System.Drawing.Point(3, 26);
             this.labelControl5.Name = "labelControl5";
-            this.labelControl5.Size = new System.Drawing.Size(442, 42);
+            this.labelControl5.Size = new System.Drawing.Size(484, 45);
             this.labelControl5.TabIndex = 1;
             this.labelControl5.Text = "유효 데이터를 Short Block 단위로 추가 분할합니다. 유효 데이터를 Short Block 단위로 추가\r\n분할합니다. 유효 데이터를 Shor" +
     "t Block 단위로 추가 분할합니다. 유효 데이터를 Short Block \r\n단위로 추가 분할합니다. ";
             // 
             // labelControl7
             // 
-            this.labelControl7.Location = new System.Drawing.Point(3, 74);
+            this.labelControl7.Location = new System.Drawing.Point(3, 77);
             this.labelControl7.Name = "labelControl7";
-            this.labelControl7.Size = new System.Drawing.Size(204, 14);
+            this.labelControl7.Size = new System.Drawing.Size(153, 15);
             this.labelControl7.TabIndex = 2;
             this.labelControl7.Text = "                                                   ";
             // 
@@ -235,7 +236,7 @@
             // 
             this.labelControl9.Appearance.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold);
             this.labelControl9.Appearance.Options.UseFont = true;
-            this.labelControl9.Location = new System.Drawing.Point(3, 94);
+            this.labelControl9.Location = new System.Drawing.Point(3, 98);
             this.labelControl9.Name = "labelControl9";
             this.labelControl9.Size = new System.Drawing.Size(92, 17);
             this.labelControl9.TabIndex = 3;
@@ -243,26 +244,26 @@
             // 
             // cboFlying
             // 
-            this.cboFlying.Location = new System.Drawing.Point(3, 117);
+            this.cboFlying.Location = new System.Drawing.Point(3, 121);
             this.cboFlying.Name = "cboFlying";
             this.cboFlying.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.cboFlying.Size = new System.Drawing.Size(308, 20);
+            this.cboFlying.Size = new System.Drawing.Size(308, 22);
             this.cboFlying.TabIndex = 34;
             // 
             // labelControl22
             // 
-            this.labelControl22.Location = new System.Drawing.Point(3, 143);
+            this.labelControl22.Location = new System.Drawing.Point(3, 149);
             this.labelControl22.Name = "labelControl22";
-            this.labelControl22.Size = new System.Drawing.Size(290, 14);
+            this.labelControl22.Size = new System.Drawing.Size(323, 15);
             this.labelControl22.TabIndex = 1;
             this.labelControl22.Text = "Short Block 분할에 사용할 버펫팅 유효 데이터를 선택하세요.";
             // 
             // labelControl11
             // 
-            this.labelControl11.Location = new System.Drawing.Point(3, 163);
+            this.labelControl11.Location = new System.Drawing.Point(3, 170);
             this.labelControl11.Name = "labelControl11";
-            this.labelControl11.Size = new System.Drawing.Size(204, 14);
+            this.labelControl11.Size = new System.Drawing.Size(153, 15);
             this.labelControl11.TabIndex = 5;
             this.labelControl11.Text = "                                                   ";
             // 
@@ -270,7 +271,7 @@
             // 
             this.labelControl8.Appearance.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold);
             this.labelControl8.Appearance.Options.UseFont = true;
-            this.labelControl8.Location = new System.Drawing.Point(3, 183);
+            this.labelControl8.Location = new System.Drawing.Point(3, 191);
             this.labelControl8.Name = "labelControl8";
             this.labelControl8.Size = new System.Drawing.Size(48, 17);
             this.labelControl8.TabIndex = 6;
@@ -289,15 +290,15 @@
             this.tableLayoutPanel4.Controls.Add(this.edtSBLength, 1, 0);
             this.tableLayoutPanel4.Controls.Add(this.edtOverlap, 1, 3);
             this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 206);
+            this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 214);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
             this.tableLayoutPanel4.RowCount = 5;
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 36F));
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 14F));
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 36F));
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(548, 128);
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 39F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 15F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 39F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(565, 137);
             this.tableLayoutPanel4.TabIndex = 35;
             // 
             // labelControl23
@@ -307,16 +308,16 @@
             this.labelControl23.Dock = System.Windows.Forms.DockStyle.Fill;
             this.labelControl23.Location = new System.Drawing.Point(3, 3);
             this.labelControl23.Name = "labelControl23";
-            this.labelControl23.Size = new System.Drawing.Size(164, 30);
+            this.labelControl23.Size = new System.Drawing.Size(164, 33);
             this.labelControl23.TabIndex = 6;
             this.labelControl23.Text = "Short Block 길이 (sec)";
             // 
             // labelControl24
             // 
             this.tableLayoutPanel4.SetColumnSpan(this.labelControl24, 2);
-            this.labelControl24.Location = new System.Drawing.Point(173, 39);
+            this.labelControl24.Location = new System.Drawing.Point(173, 42);
             this.labelControl24.Name = "labelControl24";
-            this.labelControl24.Size = new System.Drawing.Size(306, 14);
+            this.labelControl24.Size = new System.Drawing.Size(338, 15);
             this.labelControl24.TabIndex = 1;
             this.labelControl24.Text = "최소 1초 이상, 소수점 2자리까지 입력할 수 있습니다. (단위 sec)";
             // 
@@ -325,18 +326,18 @@
             this.labelControl25.Appearance.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold);
             this.labelControl25.Appearance.Options.UseFont = true;
             this.labelControl25.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelControl25.Location = new System.Drawing.Point(3, 73);
+            this.labelControl25.Location = new System.Drawing.Point(3, 78);
             this.labelControl25.Name = "labelControl25";
-            this.labelControl25.Size = new System.Drawing.Size(164, 30);
+            this.labelControl25.Size = new System.Drawing.Size(164, 33);
             this.labelControl25.TabIndex = 6;
             this.labelControl25.Text = "Overlap (%)";
             // 
             // labelControl26
             // 
             this.tableLayoutPanel4.SetColumnSpan(this.labelControl26, 2);
-            this.labelControl26.Location = new System.Drawing.Point(173, 109);
+            this.labelControl26.Location = new System.Drawing.Point(173, 117);
             this.labelControl26.Name = "labelControl26";
-            this.labelControl26.Size = new System.Drawing.Size(260, 14);
+            this.labelControl26.Size = new System.Drawing.Size(281, 15);
             this.labelControl26.TabIndex = 1;
             this.labelControl26.Text = "0 이상 100 미만의 값을 입력할 수 있습니다. (단위 %)";
             // 
@@ -346,25 +347,25 @@
             this.edtSBLength.Name = "edtSBLength";
             this.edtSBLength.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Close)});
-            this.edtSBLength.Size = new System.Drawing.Size(100, 20);
+            this.edtSBLength.Size = new System.Drawing.Size(100, 22);
             this.edtSBLength.TabIndex = 7;
             this.edtSBLength.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.edtSBLength_ButtonClick);
             // 
             // edtOverlap
             // 
-            this.edtOverlap.Location = new System.Drawing.Point(173, 73);
+            this.edtOverlap.Location = new System.Drawing.Point(173, 78);
             this.edtOverlap.Name = "edtOverlap";
             this.edtOverlap.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Close)});
-            this.edtOverlap.Size = new System.Drawing.Size(100, 20);
+            this.edtOverlap.Size = new System.Drawing.Size(100, 22);
             this.edtOverlap.TabIndex = 7;
             this.edtOverlap.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.edtOverlap_ButtonClick);
             // 
             // labelControl12
             // 
-            this.labelControl12.Location = new System.Drawing.Point(3, 340);
+            this.labelControl12.Location = new System.Drawing.Point(3, 357);
             this.labelControl12.Name = "labelControl12";
-            this.labelControl12.Size = new System.Drawing.Size(204, 14);
+            this.labelControl12.Size = new System.Drawing.Size(153, 15);
             this.labelControl12.TabIndex = 8;
             this.labelControl12.Text = "                                                   ";
             // 
@@ -372,7 +373,7 @@
             // 
             this.labelControl10.Appearance.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold);
             this.labelControl10.Appearance.Options.UseFont = true;
-            this.labelControl10.Location = new System.Drawing.Point(3, 360);
+            this.labelControl10.Location = new System.Drawing.Point(3, 378);
             this.labelControl10.Name = "labelControl10";
             this.labelControl10.Size = new System.Drawing.Size(108, 17);
             this.labelControl10.TabIndex = 9;
@@ -380,9 +381,9 @@
             // 
             // labelControl27
             // 
-            this.labelControl27.Location = new System.Drawing.Point(3, 383);
+            this.labelControl27.Location = new System.Drawing.Point(3, 401);
             this.labelControl27.Name = "labelControl27";
-            this.labelControl27.Size = new System.Drawing.Size(508, 28);
+            this.labelControl27.Size = new System.Drawing.Size(565, 30);
             this.labelControl27.TabIndex = 1;
             this.labelControl27.Text = "Short Block 분할에 조정할 파라미터를 미리 설정합니다. 저장되는 Short Block에서 관심있게 볼 파라미터를\r\n추가 삭제 할 수 있습" +
     "니다. 설정하지 않는 경우 미리 설정된 비행 파라미터가 사용됩니다.";
@@ -395,26 +396,26 @@
             this.tableLayoutPanel5.Controls.Add(this.btnAddParameter, 1, 0);
             this.tableLayoutPanel5.Controls.Add(this.cboSBParameter, 0, 0);
             this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel5.Location = new System.Drawing.Point(3, 417);
+            this.tableLayoutPanel5.Location = new System.Drawing.Point(3, 437);
             this.tableLayoutPanel5.Name = "tableLayoutPanel5";
             this.tableLayoutPanel5.RowCount = 2;
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel5.Size = new System.Drawing.Size(548, 26);
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
+            this.tableLayoutPanel5.Size = new System.Drawing.Size(565, 28);
             this.tableLayoutPanel5.TabIndex = 37;
             // 
             // btnAddParameter
             // 
             this.btnAddParameter.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnAddParameter.EditValue = "파라미터 추가";
-            this.btnAddParameter.Location = new System.Drawing.Point(431, 3);
+            this.btnAddParameter.Location = new System.Drawing.Point(448, 3);
             this.btnAddParameter.Name = "btnAddParameter";
             this.btnAddParameter.Properties.Appearance.Options.UseTextOptions = true;
             this.btnAddParameter.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
             this.btnAddParameter.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Plus)});
             this.btnAddParameter.Properties.ReadOnly = true;
-            this.btnAddParameter.Size = new System.Drawing.Size(114, 20);
+            this.btnAddParameter.Size = new System.Drawing.Size(114, 22);
             this.btnAddParameter.TabIndex = 12;
             this.btnAddParameter.Click += new System.EventHandler(this.btnAddParameter_ButtonClick);
             // 
@@ -425,16 +426,17 @@
             this.cboSBParameter.Name = "cboSBParameter";
             this.cboSBParameter.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.cboSBParameter.Size = new System.Drawing.Size(308, 20);
+            this.cboSBParameter.Size = new System.Drawing.Size(308, 22);
             this.cboSBParameter.TabIndex = 34;
             // 
             // separatorControl3
             // 
             this.separatorControl3.BackColor = System.Drawing.Color.White;
             this.separatorControl3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.separatorControl3.Location = new System.Drawing.Point(3, 449);
+            this.separatorControl3.Location = new System.Drawing.Point(3, 471);
             this.separatorControl3.Name = "separatorControl3";
-            this.separatorControl3.Size = new System.Drawing.Size(548, 1);
+            this.separatorControl3.Padding = new System.Windows.Forms.Padding(9, 10, 9, 10);
+            this.separatorControl3.Size = new System.Drawing.Size(565, 1);
             this.separatorControl3.TabIndex = 39;
             // 
             // tableLayoutPanel2
@@ -442,16 +444,16 @@
             this.tableLayoutPanel2.ColumnCount = 3;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 360F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 49F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 94F));
             this.tableLayoutPanel2.Controls.Add(this.labelControl19, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.labelControl20, 1, 0);
             this.tableLayoutPanel2.Controls.Add(this.labelControl33, 2, 0);
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 453);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 475);
             this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 1;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(554, 32);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(554, 34);
             this.tableLayoutPanel2.TabIndex = 35;
             // 
             // labelControl19
@@ -461,7 +463,7 @@
             this.labelControl19.Dock = System.Windows.Forms.DockStyle.Fill;
             this.labelControl19.Location = new System.Drawing.Point(3, 3);
             this.labelControl19.Name = "labelControl19";
-            this.labelControl19.Size = new System.Drawing.Size(94, 26);
+            this.labelControl19.Size = new System.Drawing.Size(94, 28);
             this.labelControl19.TabIndex = 0;
             this.labelControl19.Text = "파라미터 구분";
             // 
@@ -472,7 +474,7 @@
             this.labelControl20.Dock = System.Windows.Forms.DockStyle.Fill;
             this.labelControl20.Location = new System.Drawing.Point(103, 3);
             this.labelControl20.Name = "labelControl20";
-            this.labelControl20.Size = new System.Drawing.Size(354, 26);
+            this.labelControl20.Size = new System.Drawing.Size(354, 28);
             this.labelControl20.TabIndex = 1;
             this.labelControl20.Text = "파라미터 이름";
             // 
@@ -483,7 +485,7 @@
             this.labelControl33.Dock = System.Windows.Forms.DockStyle.Fill;
             this.labelControl33.Location = new System.Drawing.Point(463, 3);
             this.labelControl33.Name = "labelControl33";
-            this.labelControl33.Size = new System.Drawing.Size(88, 26);
+            this.labelControl33.Size = new System.Drawing.Size(88, 28);
             this.labelControl33.TabIndex = 3;
             this.labelControl33.Text = "삭제";
             // 
@@ -491,16 +493,17 @@
             // 
             this.separatorControl2.BackColor = System.Drawing.Color.White;
             this.separatorControl2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.separatorControl2.Location = new System.Drawing.Point(3, 488);
+            this.separatorControl2.Location = new System.Drawing.Point(3, 512);
             this.separatorControl2.Name = "separatorControl2";
-            this.separatorControl2.Size = new System.Drawing.Size(548, 1);
+            this.separatorControl2.Padding = new System.Windows.Forms.Padding(9, 10, 9, 10);
+            this.separatorControl2.Size = new System.Drawing.Size(565, 1);
             this.separatorControl2.TabIndex = 39;
             // 
             // labelControl15
             // 
-            this.labelControl15.Location = new System.Drawing.Point(3, 495);
+            this.labelControl15.Location = new System.Drawing.Point(3, 519);
             this.labelControl15.Name = "labelControl15";
-            this.labelControl15.Size = new System.Drawing.Size(204, 14);
+            this.labelControl15.Size = new System.Drawing.Size(153, 15);
             this.labelControl15.TabIndex = 10;
             this.labelControl15.Text = "                                                   ";
             // 
@@ -508,7 +511,7 @@
             // 
             this.labelControl16.Appearance.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold);
             this.labelControl16.Appearance.Options.UseFont = true;
-            this.labelControl16.Location = new System.Drawing.Point(3, 515);
+            this.labelControl16.Location = new System.Drawing.Point(3, 540);
             this.labelControl16.Name = "labelControl16";
             this.labelControl16.Size = new System.Drawing.Size(76, 17);
             this.labelControl16.TabIndex = 11;
@@ -516,20 +519,20 @@
             // 
             // chartPreview
             // 
-            chartArea5.Name = "ChartArea1";
-            this.chartPreview.ChartAreas.Add(chartArea5);
+            chartArea1.Name = "ChartArea1";
+            this.chartPreview.ChartAreas.Add(chartArea1);
             this.chartPreview.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chartPreview.Location = new System.Drawing.Point(3, 538);
+            this.chartPreview.Location = new System.Drawing.Point(3, 563);
             this.chartPreview.Name = "chartPreview";
-            this.chartPreview.Size = new System.Drawing.Size(548, 123);
+            this.chartPreview.Size = new System.Drawing.Size(565, 132);
             this.chartPreview.TabIndex = 38;
             this.chartPreview.Text = "chart1";
             // 
             // labelControl4
             // 
-            this.labelControl4.Location = new System.Drawing.Point(3, 667);
+            this.labelControl4.Location = new System.Drawing.Point(3, 701);
             this.labelControl4.Name = "labelControl4";
-            this.labelControl4.Size = new System.Drawing.Size(204, 14);
+            this.labelControl4.Size = new System.Drawing.Size(153, 15);
             this.labelControl4.TabIndex = 10;
             this.labelControl4.Text = "                                                   ";
             // 
@@ -537,7 +540,7 @@
             // 
             this.labelControl6.Appearance.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold);
             this.labelControl6.Appearance.Options.UseFont = true;
-            this.labelControl6.Location = new System.Drawing.Point(3, 687);
+            this.labelControl6.Location = new System.Drawing.Point(3, 722);
             this.labelControl6.Name = "labelControl6";
             this.labelControl6.Size = new System.Drawing.Size(80, 17);
             this.labelControl6.TabIndex = 14;
@@ -545,18 +548,18 @@
             // 
             // labelControl14
             // 
-            this.labelControl14.Location = new System.Drawing.Point(3, 710);
+            this.labelControl14.Location = new System.Drawing.Point(3, 745);
             this.labelControl14.Name = "labelControl14";
-            this.labelControl14.Size = new System.Drawing.Size(502, 28);
+            this.labelControl14.Size = new System.Drawing.Size(563, 30);
             this.labelControl14.TabIndex = 15;
             this.labelControl14.Text = "ShortBlock 설정 정보로 구간 분할 예상 값을 표현합니다. 구간 정보가 이상 없으면 분할 구간을 저장하세요.\r\nShortBlock 은 수동" +
     "으로 구간을 추가할 수 없습니다. 분할 시간과 Overlap 값으로 자동 분할 됩니다.";
             // 
             // labelControl17
             // 
-            this.labelControl17.Location = new System.Drawing.Point(3, 744);
+            this.labelControl17.Location = new System.Drawing.Point(3, 781);
             this.labelControl17.Name = "labelControl17";
-            this.labelControl17.Size = new System.Drawing.Size(204, 14);
+            this.labelControl17.Size = new System.Drawing.Size(153, 15);
             this.labelControl17.TabIndex = 16;
             this.labelControl17.Text = "                                                   ";
             // 
@@ -564,9 +567,10 @@
             // 
             this.separatorControl4.BackColor = System.Drawing.Color.White;
             this.separatorControl4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.separatorControl4.Location = new System.Drawing.Point(3, 764);
+            this.separatorControl4.Location = new System.Drawing.Point(3, 802);
             this.separatorControl4.Name = "separatorControl4";
-            this.separatorControl4.Size = new System.Drawing.Size(548, 1);
+            this.separatorControl4.Padding = new System.Windows.Forms.Padding(9, 10, 9, 10);
+            this.separatorControl4.Size = new System.Drawing.Size(565, 1);
             this.separatorControl4.TabIndex = 39;
             // 
             // tableLayoutPanel6
@@ -580,12 +584,12 @@
             this.tableLayoutPanel6.Controls.Add(this.labelControl29, 2, 0);
             this.tableLayoutPanel6.Controls.Add(this.labelControl30, 0, 0);
             this.tableLayoutPanel6.Controls.Add(this.labelControl31, 1, 0);
-            this.tableLayoutPanel6.Location = new System.Drawing.Point(0, 768);
+            this.tableLayoutPanel6.Location = new System.Drawing.Point(0, 806);
             this.tableLayoutPanel6.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel6.Name = "tableLayoutPanel6";
             this.tableLayoutPanel6.RowCount = 1;
             this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel6.Size = new System.Drawing.Size(554, 32);
+            this.tableLayoutPanel6.Size = new System.Drawing.Size(554, 34);
             this.tableLayoutPanel6.TabIndex = 35;
             // 
             // labelControl28
@@ -595,9 +599,9 @@
             this.labelControl28.Dock = System.Windows.Forms.DockStyle.Fill;
             this.labelControl28.Location = new System.Drawing.Point(463, 3);
             this.labelControl28.Name = "labelControl28";
-            this.labelControl28.Size = new System.Drawing.Size(88, 26);
+            this.labelControl28.Size = new System.Drawing.Size(88, 28);
             this.labelControl28.TabIndex = 3;
-            this.labelControl28.Text = "동작";
+            this.labelControl28.Text = "삭제";
             // 
             // labelControl29
             // 
@@ -606,7 +610,7 @@
             this.labelControl29.Dock = System.Windows.Forms.DockStyle.Fill;
             this.labelControl29.Location = new System.Drawing.Point(353, 3);
             this.labelControl29.Name = "labelControl29";
-            this.labelControl29.Size = new System.Drawing.Size(104, 26);
+            this.labelControl29.Size = new System.Drawing.Size(104, 28);
             this.labelControl29.TabIndex = 2;
             this.labelControl29.Text = "종료 시간";
             // 
@@ -617,7 +621,7 @@
             this.labelControl30.Dock = System.Windows.Forms.DockStyle.Fill;
             this.labelControl30.Location = new System.Drawing.Point(3, 3);
             this.labelControl30.Name = "labelControl30";
-            this.labelControl30.Size = new System.Drawing.Size(234, 26);
+            this.labelControl30.Size = new System.Drawing.Size(234, 28);
             this.labelControl30.TabIndex = 0;
             this.labelControl30.Text = "구간 이름";
             // 
@@ -628,7 +632,7 @@
             this.labelControl31.Dock = System.Windows.Forms.DockStyle.Fill;
             this.labelControl31.Location = new System.Drawing.Point(243, 3);
             this.labelControl31.Name = "labelControl31";
-            this.labelControl31.Size = new System.Drawing.Size(104, 26);
+            this.labelControl31.Size = new System.Drawing.Size(104, 28);
             this.labelControl31.TabIndex = 1;
             this.labelControl31.Text = "시작 시간";
             // 
@@ -636,47 +640,49 @@
             // 
             this.separatorControl5.BackColor = System.Drawing.Color.White;
             this.separatorControl5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.separatorControl5.Location = new System.Drawing.Point(3, 803);
+            this.separatorControl5.Location = new System.Drawing.Point(3, 843);
             this.separatorControl5.Name = "separatorControl5";
-            this.separatorControl5.Size = new System.Drawing.Size(548, 1);
+            this.separatorControl5.Padding = new System.Windows.Forms.Padding(9, 10, 9, 10);
+            this.separatorControl5.Size = new System.Drawing.Size(565, 1);
             this.separatorControl5.TabIndex = 39;
             // 
             // tableLayoutPanel3
             // 
             this.tableLayoutPanel3.ColumnCount = 2;
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
-            this.tableLayoutPanel3.Controls.Add(this.labelControl21, 0, 0);
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 110F));
+            this.tableLayoutPanel3.Controls.Add(this.lblValidSBCount, 0, 0);
             this.tableLayoutPanel3.Controls.Add(this.btnSaveSplittedParameter, 1, 0);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 810);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 850);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 1;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(548, 24);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(565, 26);
             this.tableLayoutPanel3.TabIndex = 33;
             // 
-            // labelControl21
+            // lblValidSBCount
             // 
-            this.labelControl21.Appearance.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold);
-            this.labelControl21.Appearance.Options.UseFont = true;
-            this.labelControl21.Location = new System.Drawing.Point(3, 3);
-            this.labelControl21.Name = "labelControl21";
-            this.labelControl21.Size = new System.Drawing.Size(126, 17);
-            this.labelControl21.TabIndex = 0;
-            this.labelControl21.Text = "유효 분할 블록 : 5블록";
+            this.lblValidSBCount.Appearance.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold);
+            this.lblValidSBCount.Appearance.Options.UseFont = true;
+            this.lblValidSBCount.Location = new System.Drawing.Point(3, 3);
+            this.lblValidSBCount.Name = "lblValidSBCount";
+            this.lblValidSBCount.Size = new System.Drawing.Size(126, 17);
+            this.lblValidSBCount.TabIndex = 0;
+            this.lblValidSBCount.Text = "유효 분할 블록 : 5블록";
             // 
             // btnSaveSplittedParameter
             // 
+            this.btnSaveSplittedParameter.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnSaveSplittedParameter.EditValue = "분할구간 저장";
-            this.btnSaveSplittedParameter.Location = new System.Drawing.Point(451, 3);
+            this.btnSaveSplittedParameter.Location = new System.Drawing.Point(458, 3);
             this.btnSaveSplittedParameter.Name = "btnSaveSplittedParameter";
             this.btnSaveSplittedParameter.Properties.Appearance.Options.UseTextOptions = true;
             this.btnSaveSplittedParameter.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
             this.btnSaveSplittedParameter.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.OK)});
             this.btnSaveSplittedParameter.Properties.ReadOnly = true;
-            this.btnSaveSplittedParameter.Size = new System.Drawing.Size(94, 20);
+            this.btnSaveSplittedParameter.Size = new System.Drawing.Size(104, 22);
             this.btnSaveSplittedParameter.TabIndex = 12;
             this.btnSaveSplittedParameter.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.btnSaveSplittedParameter_ButtonClick);
             this.btnSaveSplittedParameter.Click += new System.EventHandler(this.btnSaveSplittedParameter_ButtonClick);
@@ -695,11 +701,11 @@
             // 
             // SBModuleControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 14F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "SBModuleControl";
-            this.Size = new System.Drawing.Size(1151, 1624);
+            this.Size = new System.Drawing.Size(1151, 1740);
             this.Load += new System.EventHandler(this.SBModuleControl_Load);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
@@ -754,7 +760,7 @@
         private DevExpress.XtraEditors.LabelControl labelControl17;
         private DevExpress.XtraEditors.ButtonEdit btnAddParameter;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
-        private DevExpress.XtraEditors.LabelControl labelControl21;
+        private DevExpress.XtraEditors.LabelControl lblValidSBCount;
         private DevExpress.XtraEditors.ButtonEdit btnSaveSplittedParameter;
         private DevExpress.Utils.ImageCollection imageCollection1;
         private DevExpress.XtraEditors.LabelControl labelControl4;

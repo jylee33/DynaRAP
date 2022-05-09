@@ -1,7 +1,7 @@
 ﻿
 namespace DynaRAP.TEST
 {
-    partial class Form1
+    partial class TestMsChartForm
     {
         /// <summary>
         /// 필수 디자이너 변수입니다.
@@ -31,7 +31,9 @@ namespace DynaRAP.TEST
         {
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.cboParameter = new DevExpress.XtraEditors.ComboBoxEdit();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cboParameter.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // chart1
@@ -39,24 +41,38 @@ namespace DynaRAP.TEST
             chartArea1.Name = "ChartArea1";
             this.chart1.ChartAreas.Add(chartArea1);
             this.chart1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chart1.Location = new System.Drawing.Point(0, 0);
+            this.chart1.Location = new System.Drawing.Point(0, 22);
             this.chart1.Name = "chart1";
-            this.chart1.Size = new System.Drawing.Size(972, 575);
+            this.chart1.Size = new System.Drawing.Size(972, 553);
             this.chart1.TabIndex = 0;
             this.chart1.Text = "chart1";
             this.chart1.SelectionRangeChanging += new System.EventHandler<System.Windows.Forms.DataVisualization.Charting.CursorEventArgs>(this.chart1_SelectionRangeChanging);
             this.chart1.SelectionRangeChanged += new System.EventHandler<System.Windows.Forms.DataVisualization.Charting.CursorEventArgs>(this.chart1_SelectionRangeChanged);
+            this.chart1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
             // 
-            // Form1
+            // cboParameter
+            // 
+            this.cboParameter.Dock = System.Windows.Forms.DockStyle.Top;
+            this.cboParameter.Location = new System.Drawing.Point(0, 0);
+            this.cboParameter.Name = "cboParameter";
+            this.cboParameter.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.cboParameter.Properties.DropDownRows = 15;
+            this.cboParameter.Size = new System.Drawing.Size(972, 22);
+            this.cboParameter.TabIndex = 1;
+            // 
+            // TestMsChartForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(972, 575);
             this.Controls.Add(this.chart1);
-            this.Name = "Form1";
+            this.Controls.Add(this.cboParameter);
+            this.Name = "TestMsChartForm";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cboParameter.Properties)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -64,6 +80,7 @@ namespace DynaRAP.TEST
         #endregion
 
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
+        private DevExpress.XtraEditors.ComboBoxEdit cboParameter;
     }
 }
 

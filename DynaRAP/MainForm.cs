@@ -207,7 +207,7 @@ namespace DynaRAP
             }
 
 #if DEBUG
-            tabbedView1.ActivateDocument(mgmtPresetControl);
+            tabbedView1.ActivateDocument(sbModuleControl);
 #else
             tabbedView1.RemoveDocument(importModuleControl);
             tabbedView1.RemoveDocument(sbModuleControl);
@@ -402,7 +402,7 @@ namespace DynaRAP
 
         private void btnChartTest_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            Form1 form = new Form1();
+            TestMsChartForm form = new TestMsChartForm();
             form.Show();
         }
 
