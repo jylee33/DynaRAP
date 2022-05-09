@@ -35,6 +35,7 @@ public class ShortBlockVO {
     public static class Param {
         private CryptoField seq;
         private CryptoField blockSeq;
+        private Integer paramNo;
         private CryptoField paramPack;
         private CryptoField paramSeq;
 
@@ -47,6 +48,7 @@ public class ShortBlockVO {
         private CryptoField seq;
         private CryptoField blockSeq;
         private CryptoField presetParamSeq;
+        private Integer rowNo;
         private Double paramVal;
         private String paramValStr;
         private String julianTimeAt;

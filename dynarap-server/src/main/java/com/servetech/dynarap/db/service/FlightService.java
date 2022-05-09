@@ -32,7 +32,7 @@ public class FlightService {
     }
 
     @Transactional
-    public void insertFlight(CryptoField.NAuth uid, JsonObject payload) throws HandledServiceException {
+    public FlightVO insertFlight(CryptoField.NAuth uid, JsonObject payload) throws HandledServiceException {
         try {
             FlightVO flight = ServerConstants.GSON.fromJson(payload, FlightVO.class);
             if (flight == null)
@@ -42,26 +42,30 @@ public class FlightService {
             flight.setRegisterUid(uid);
 
             flightMapper.insertFlight(flight);
+
+            return flight;
         } catch(Exception e) {
             throw new HandledServiceException(410, e.getMessage());
         }
     }
 
     @Transactional
-    public void updateFlight(CryptoField.NAuth uid, JsonObject payload) throws HandledServiceException {
+    public FlightVO updateFlight(CryptoField.NAuth uid, JsonObject payload) throws HandledServiceException {
         try {
             FlightVO flight = ServerConstants.GSON.fromJson(payload, FlightVO.class);
             if (flight == null || flight.getSeq() == null || flight.getSeq().isEmpty())
                 throw new HandledServiceException(411, "요청 파라미터 오류입니다. [필수 파라미터 누락]");
 
             flightMapper.updateFlight(flight);
+
+            return flight;
         } catch(Exception e) {
             throw new HandledServiceException(410, e.getMessage());
         }
     }
 
     @Transactional
-    public void deleteFlight(CryptoField.NAuth uid, JsonObject payload) throws HandledServiceException {
+    public void deleteFlight(JsonObject payload) throws HandledServiceException {
         try {
             CryptoField flightSeq = CryptoField.LZERO;
             if (!ApiController.checkJsonEmpty(payload, "seq"))

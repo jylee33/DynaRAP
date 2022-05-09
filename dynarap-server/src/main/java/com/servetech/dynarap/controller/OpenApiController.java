@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.servetech.dynarap.DynaRAPServerApplication;
 import com.servetech.dynarap.config.ServerConstants;
+import com.servetech.dynarap.db.service.RawService;
 import com.servetech.dynarap.db.service.SendMailService;
 import com.servetech.dynarap.db.service.UserService;
 import com.servetech.dynarap.db.type.CryptoField;
@@ -29,14 +30,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -61,6 +62,9 @@ public class OpenApiController extends ApiController {
 
     @Value("${neoulsoft.auth.client-secret}")
     private String authClientSecret;
+
+    @Value(value = "${static.resource.location}")
+    private String staticLocation;
 
     @Autowired
     private Environment envServer;
@@ -497,6 +501,132 @@ public class OpenApiController extends ApiController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseHelper.error(411, e.getMessage());
+        }
+    }
+
+    @RequestMapping(value = "/upload")
+    @ResponseBody
+    public ResponseVO openApiUpload(HttpServletRequest request,
+                                    @RequestParam(name = "attach", required = false) MultipartFile attach) throws Exception
+    {
+        try {
+            UserVO user = getService(UserService.class).getUser("admin@dynarap@dynarap");
+
+            File uploadRoot = new File(staticLocation.replaceAll("file:", ""), "dynarap/raw");
+            if (uploadRoot.exists() == false) uploadRoot.mkdirs();
+            String originalFileName = attach.getOriginalFilename().replaceAll("_", "");
+            String fileExt = originalFileName.substring(originalFileName.lastIndexOf(".") + 1);
+
+            String uploadId = new CryptoField(originalFileName + "_" + attach.getSize()).valueOf();
+
+            RawVO.Upload upload = getService(RawService.class).getUploadById(uploadId);
+            if (upload == null) {
+                upload = new RawVO.Upload();
+                upload.setUploadId(uploadId);
+                upload.setUploadName(new String64(originalFileName));
+                upload.setFileSize(attach.getSize());
+                upload.setRegisterUid(user.getUid());
+                upload.setUploadedAt(LongDate.now());
+                getService(RawService.class).insertRawUpload(upload);
+            }
+
+            File fSave = new File(uploadRoot, upload.getUploadId() + "." + fileExt);
+            if (fSave.exists() == true) fSave.delete();
+            attach.transferTo(fSave);
+
+            upload.setStorePath(fSave.getAbsolutePath());
+            getService(RawService.class).updateRawUpload(upload);
+
+            return ResponseHelper.response(200, "Success - Upload Completed", upload);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return ResponseHelper.error(500, e.getMessage());
+        }
+    }
+
+    @RequestMapping(value = "/res/{uploadId}")
+    public void openApiRes(HttpServletRequest request,
+                           HttpServletResponse response,
+                           @PathVariable("uploadId") String uploadId,
+                           @RequestParam(value = "d", required = false) Boolean download) throws Exception
+    {
+        try {
+            download = (download == null) ? false: download;
+
+            File uploadRoot = new File(staticLocation.replaceAll("file:", ""), "dynarap/raw");
+            if (uploadRoot.exists() == false) uploadRoot.mkdirs();
+
+            CryptoField decUploadId = CryptoField.decode(uploadId, "");
+            if (decUploadId == null || decUploadId.isEmpty())
+                throw new Exception("파일 정보가 올바르지 않습니다.");
+
+            String uploadKey = decUploadId.originOf();
+            String originalFileName = uploadKey.substring(0, uploadKey.lastIndexOf("_"));
+            Long fileSize = Long.parseLong(uploadKey.substring(uploadKey.lastIndexOf("_") + 1));
+            String fileExt = originalFileName.substring(originalFileName.lastIndexOf(".") + 1);
+
+            Map<String, Object> params = new HashMap<>();
+            params.put("uploadName", originalFileName);
+            params.put("fileSize", fileSize);
+
+            RawVO.Upload upload = getService(RawService.class).getUploadByParams(params);
+            if (upload == null)
+                throw new Exception("파일을 찾을 수 없습니다.");
+
+            File fAttach = new File(upload.getStorePath());
+            if (fAttach == null || fAttach.exists() == false)
+                throw new Exception("파일을 찾을 수 없습니다.");
+
+            if (download) {
+                response.setContentType("application/octet-stream");
+            }
+            else {
+                if (fileExt.equalsIgnoreCase("jpg")
+                        || fileExt.equalsIgnoreCase("jpeg"))
+                    response.setContentType("image/jpeg");
+                else if (fileExt.equalsIgnoreCase("png"))
+                    response.setContentType("image/png");
+                else if (fileExt.equalsIgnoreCase("gif"))
+                    response.setContentType("image/gif");
+                else if (fileExt.equalsIgnoreCase("svg"))
+                    response.setContentType("image/svg+xml");
+                else if (fileExt.equalsIgnoreCase("mp4"))
+                    response.setContentType("video/mp4");
+                else
+                    response.setContentType("application/octet-stream");
+            }
+
+            String browserName = getBrowser(request);
+            String downloadFileName = getDownloadFileName(browserName, originalFileName);
+
+            response.addHeader("Content-Disposition",
+                    "attachment; filename=\"" + downloadFileName + "\";");
+            response.addHeader("Content-Transfer-Encoding", "binary");
+
+            FileInputStream fis = new FileInputStream(fAttach);
+            BufferedInputStream bis = new BufferedInputStream(fis);
+            byte[] readBuf = new byte[1024 * 256];
+            OutputStream os = response.getOutputStream();
+            int readLen = 0;
+            while ((readLen = bis.read(readBuf, 0, 1024 * 256)) != -1) {
+                os.write(readBuf, 0, readLen);
+            }
+            os.flush();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+
+            response.setContentType("application/json");
+            try {
+                String errorResponse = ServerConstants.GSON.toJson(ResponseHelper.error(500, e.getMessage()));
+                OutputStream os = response.getOutputStream();
+                os.write(errorResponse.getBytes("UTF-8"));
+                os.flush();
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
     }
 

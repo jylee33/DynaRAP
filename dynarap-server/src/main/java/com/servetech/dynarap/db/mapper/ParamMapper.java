@@ -285,7 +285,7 @@ public interface ParamMapper {
 
     @Select({
             "<script>" +
-                    "select c.* from dynarap_preset_param a, dynarap_preset b, dynarap_param c " +
+                    "select c.*, a.presetPack, a.presetSeq, a.seq as presetParamSeq from dynarap_preset_param a, dynarap_preset b, dynarap_param c " +
                     "where a.presetPack = b.presetPack " +
                     "and b.presetPack = #{presetPack,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
                     "<choose> " +

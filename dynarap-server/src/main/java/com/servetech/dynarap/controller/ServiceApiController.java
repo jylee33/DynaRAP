@@ -1,17 +1,14 @@
 package com.servetech.dynarap.controller;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.servetech.dynarap.db.mapper.DirMapper;
-import com.servetech.dynarap.db.service.DirService;
-import com.servetech.dynarap.db.service.ParamService;
-import com.servetech.dynarap.db.service.UserService;
+import com.servetech.dynarap.db.service.*;
 import com.servetech.dynarap.db.type.CryptoField;
+import com.servetech.dynarap.db.type.String64;
 import com.servetech.dynarap.ext.HandledServiceException;
 import com.servetech.dynarap.ext.ResponseHelper;
-import com.servetech.dynarap.vo.DirVO;
-import com.servetech.dynarap.vo.ParamVO;
-import com.servetech.dynarap.vo.PresetVO;
-import com.servetech.dynarap.vo.UserVO;
+import com.servetech.dynarap.vo.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
@@ -25,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -72,6 +70,47 @@ public class ServiceApiController extends ApiController {
         if (command.equals("remove")) {
             getService(DirService.class).deleteDir(user.getUid(), payload);
             return ResponseHelper.response(200, "Success - Dir Deleted", "");
+        }
+
+        throw new HandledServiceException(411, "명령이 정의되지 않았습니다.");
+    }
+
+    @RequestMapping(value = "/flight")
+    @ResponseBody
+    public Object apiFlight(HttpServletRequest request, @PathVariable String serviceVersion,
+                         @RequestBody JsonObject payload, Authentication authentication) throws HandledServiceException {
+        /*
+        String accessToken = request.getHeader("Authorization");
+        if (accessToken == null || (!accessToken.startsWith("bearer") && !accessToken.startsWith("Bearer")))
+            return ResponseHelper.error(403, "권한이 없습니다.");
+
+        String username = authentication.getPrincipal().toString();
+        */
+        UserVO user = getService(UserService.class).getUser("admin@dynarap@dynarap");
+
+        if (checkJsonEmpty(payload, "command"))
+            throw new HandledServiceException(404, "파라미터를 확인하세요.");
+
+        String command = payload.get("command").getAsString();
+
+        if (command.equals("list")) {
+            List<FlightVO> flights = getService(FlightService.class).getFlightList();
+            return ResponseHelper.response(200, "Success - Flight List", flights);
+        }
+
+        if (command.equals("add")) {
+            FlightVO flight = getService(FlightService.class).insertFlight(user.getUid(), payload);
+            return ResponseHelper.response(200, "Success - Flight Added", flight);
+        }
+
+        if (command.equals("modify")) {
+            FlightVO flight = getService(FlightService.class).updateFlight(user.getUid(), payload);
+            return ResponseHelper.response(200, "Success - Flight Updated", flight);
+        }
+
+        if (command.equals("remove")) {
+            getService(FlightService.class).deleteFlight(payload);
+            return ResponseHelper.response(200, "Success - Flight Deleted", "");
         }
 
         throw new HandledServiceException(411, "명령이 정의되지 않았습니다.");
@@ -134,6 +173,19 @@ public class ServiceApiController extends ApiController {
         if (command.equals("add")) {
             ParamVO param = getService(ParamService.class).insertParam(user.getUid(), payload);
             return ResponseHelper.response(200, "Success - Param Added", param);
+        }
+
+        if (command.equals("add-bulk")) {
+            JsonArray jarrBulk = payload.get("params").getAsJsonArray();
+            List<ParamVO> params = new ArrayList<>();
+            long msec = System.currentTimeMillis();
+            for (int i = 0; i < jarrBulk.size(); i++) {
+                JsonObject jobjParam = jarrBulk.get(i).getAsJsonObject();
+                jobjParam.addProperty("paramName", new String64("param_" + (msec + i)).valueOf());
+                ParamVO param = getService(ParamService.class).insertParam(user.getUid(), jobjParam);
+                params.add(param);
+            }
+            return ResponseHelper.response(200, "Success - Param Added (Bulk) ", params);
         }
 
         if (command.equals("modify")) {
@@ -271,6 +323,16 @@ public class ServiceApiController extends ApiController {
             return ResponseHelper.response(200, "Success - Preset Param Add", "");
         }
 
+        if (command.equals("param-add-bulk")) {
+            JsonArray jarrBulk = payload.get("params").getAsJsonArray();
+
+            for (int i = 0; i < jarrBulk.size(); i++) {
+                JsonObject jobjParam = jarrBulk.get(i).getAsJsonObject();
+                getService(ParamService.class).insertPresetParam(jobjParam);
+            }
+            return ResponseHelper.response(200, "Success - Preset Param Add Bulk", "");
+        }
+
         if (command.equals("param-remove")) {
             getService(ParamService.class).deletePresetParam(payload);
             return ResponseHelper.response(200, "Success - Preset Param Remove", "");
@@ -278,4 +340,188 @@ public class ServiceApiController extends ApiController {
 
         throw new HandledServiceException(411, "명령이 정의되지 않았습니다.");
     }
+
+    @RequestMapping(value = "/dll")
+    @ResponseBody
+    public Object apiDLL(HttpServletRequest request, @PathVariable String serviceVersion,
+                            @RequestBody JsonObject payload, Authentication authentication) throws HandledServiceException {
+        /*
+        String accessToken = request.getHeader("Authorization");
+        if (accessToken == null || (!accessToken.startsWith("bearer") && !accessToken.startsWith("Bearer")))
+            return ResponseHelper.error(403, "권한이 없습니다.");
+
+        String username = authentication.getPrincipal().toString();
+        */
+        UserVO user = getService(UserService.class).getUser("admin@dynarap@dynarap");
+
+        if (checkJsonEmpty(payload, "command"))
+            throw new HandledServiceException(404, "파라미터를 확인하세요.");
+
+        String command = payload.get("command").getAsString();
+
+        if (command.equals("list")) {
+            List<DLLVO> dlls = getService(DLLService.class).getDLLList();
+            return ResponseHelper.response(200, "Success - DLL List", dlls);
+        }
+
+        if (command.equals("add")) {
+            DLLVO dll = getService(DLLService.class).insertDLL(user.getUid(), payload);
+            return ResponseHelper.response(200, "Success - DLL Added", dll);
+        }
+
+        if (command.equals("modify")) {
+            DLLVO dll = getService(DLLService.class).updateDLL(user.getUid(), payload);
+            return ResponseHelper.response(200, "Success - DLL Updated", dll);
+        }
+
+        if (command.equals("remove")) {
+            getService(DLLService.class).deleteDLL(payload);
+            return ResponseHelper.response(200, "Success - DLL Deleted", "");
+        }
+
+        if (command.equals("param-list")) {
+            CryptoField dllSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "dllSeq"))
+                dllSeq = CryptoField.decode(payload.get("dllSeq").getAsString(), 0L);
+
+            if (dllSeq == null || dllSeq.isEmpty())
+                throw new HandledServiceException(411, "요청 파라미터 오류입니다. [필수 파라미터 누락]");
+
+            List<DLLVO.Param> paramList = getService(DLLService.class).getDLLParamList(dllSeq);
+            return ResponseHelper.response(200, "Success - DLL Param List", paramList);
+        }
+
+        if (command.equals("param-add")) {
+            DLLVO.Param dllParam = getService(DLLService.class).insertDLLParam(user.getUid(), payload);
+            return ResponseHelper.response(200, "Success - DLL Param Add", dllParam);
+        }
+
+        if (command.equals("param-modify")) {
+            DLLVO.Param dllParam = getService(DLLService.class).updateDLLParam(user.getUid(), payload);
+            return ResponseHelper.response(200, "Success - DLL Param Modify", dllParam);
+        }
+
+        if (command.equals("param-remove")) {
+            getService(DLLService.class).deleteDLLParam(payload);
+            return ResponseHelper.response(200, "Success - DLL Param Remove", "");
+        }
+
+        if (command.equals("param-remove-multi")) {
+            getService(DLLService.class).deleteDLLParamByMulti(payload);
+            return ResponseHelper.response(200, "Success - DLL Param All Remove", "");
+        }
+
+        if (command.equals("data-list")) {
+            CryptoField dllSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "dllSeq"))
+                dllSeq = CryptoField.decode(payload.get("dllSeq").getAsString(), 0L);
+
+            if (dllSeq == null || dllSeq.isEmpty())
+                throw new HandledServiceException(411, "요청 파라미터 오류입니다. [필수 파라미터 누락]");
+
+            CryptoField dllParamSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "dllParamSeq"))
+                dllParamSeq = CryptoField.decode(payload.get("dllParamSeq").getAsString(), 0L);
+
+            List<DLLVO.Raw> rawData = getService(DLLService.class).getDLLData(dllSeq, dllParamSeq);
+            return ResponseHelper.response(200, "Success - DLL Data List", rawData);
+        }
+
+        if (command.equals("data-add")) {
+            DLLVO.Raw dllRaw = getService(DLLService.class).insertDLLData(user.getUid(), payload);
+            return ResponseHelper.response(200, "Success - DLL Data Add", dllRaw);
+        }
+
+        if (command.equals("data-modify")) {
+            DLLVO.Raw dllRaw = getService(DLLService.class).updateDLLData(user.getUid(), payload);
+            return ResponseHelper.response(200, "Success - DLL Data Modify", dllRaw);
+        }
+
+        if (command.equals("data-remove-row")) {
+            getService(DLLService.class).deleteDLLDataByRow(payload);
+            return ResponseHelper.response(200, "Success - DLL Data Remove By Row", "");
+        }
+
+        if (command.equals("data-remove-param")) {
+            getService(DLLService.class).deleteDLLDataByParam(payload);
+            return ResponseHelper.response(200, "Success - DLL Data Remove By Param or All", "");
+        }
+
+        throw new HandledServiceException(411, "명령이 정의되지 않았습니다.");
+    }
+
+    @RequestMapping(value = "/raw")
+    @ResponseBody
+    public Object apiRaw(HttpServletRequest request, @PathVariable String serviceVersion,
+                         @RequestBody JsonObject payload, Authentication authentication) throws HandledServiceException {
+        /*
+        String accessToken = request.getHeader("Authorization");
+        if (accessToken == null || (!accessToken.startsWith("bearer") && !accessToken.startsWith("Bearer")))
+            return ResponseHelper.error(403, "권한이 없습니다.");
+
+        String username = authentication.getPrincipal().toString();
+        */
+        UserVO user = getService(UserService.class).getUser("admin@dynarap@dynarap");
+
+        if (checkJsonEmpty(payload, "command"))
+            throw new HandledServiceException(404, "파라미터를 확인하세요.");
+
+        String command = payload.get("command").getAsString();
+
+        if (command.equals("import")) {
+            // need - uploadSeq, presetPack, presetSeq, flightSeq, flightAt
+            CryptoField uploadSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "uploadSeq"))
+                uploadSeq = CryptoField.decode(payload.get("uploadSeq").getAsString(), 0L);
+
+            CryptoField presetPack = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "presetPack"))
+                presetPack = CryptoField.decode(payload.get("presetPack").getAsString(), 0L);
+
+            CryptoField presetSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "presetSeq"))
+                presetSeq = CryptoField.decode(payload.get("presetSeq").getAsString(), 0L);
+
+            CryptoField flightSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "flightSeq"))
+                flightSeq = CryptoField.decode(payload.get("flightSeq").getAsString(), 0L);
+
+            String flightAt = "";
+            if (!checkJsonEmpty(payload, "flightAt"))
+                flightAt = payload.get("flightAt").getAsString();
+
+            if (uploadSeq == null || uploadSeq.isEmpty() || presetPack == null || presetPack.isEmpty())
+                throw new HandledServiceException(404, "필요 파라미터가 누락됐습니다.");
+
+            JsonObject jobjResult = getService(RawService.class).runImport(user.getUid(), uploadSeq, presetPack, presetSeq, flightSeq, flightAt);
+
+            return ResponseHelper.response(200, "Success - Import request done", jobjResult);
+        }
+
+        if (command.equals("create-cache")) {
+            // need - uploadSeq, presetPack, presetSeq, flightSeq, flightAt
+            CryptoField uploadSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "uploadSeq"))
+                uploadSeq = CryptoField.decode(payload.get("uploadSeq").getAsString(), 0L);
+
+            if (uploadSeq == null || uploadSeq.isEmpty())
+                throw new HandledServiceException(404, "필요 파라미터가 누락됐습니다.");
+
+            JsonObject jobjResult = getService(RawService.class).createCache(user.getUid(), uploadSeq);
+
+            return ResponseHelper.response(200, "Success - Create cache done", jobjResult);
+        }
+
+        if (command.equals("check-done")) {
+            CryptoField uploadSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "uploadSeq"))
+                uploadSeq = CryptoField.decode(payload.get("uploadSeq").getAsString(), 0L);
+
+            RawVO.Upload rawUpload = getService(RawService.class).getUploadBySeq(uploadSeq);
+            return ResponseHelper.response(200, "Success - Check Import Done", rawUpload.isImportDone());
+        }
+
+        throw new HandledServiceException(411, "명령이 정의되지 않았습니다.");
+    }
+
 }

@@ -32,6 +32,10 @@ public class ParamVO {
     private transient LongDate appliedAt;
     private transient LongDate appliedEndAt;
 
+    private Long presetParamSeq;
+    private CryptoField presetPack;
+    private CryptoField presetSeq;
+
     private Group groupInfo;
 
     @Data
