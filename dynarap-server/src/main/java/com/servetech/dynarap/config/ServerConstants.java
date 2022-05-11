@@ -67,6 +67,7 @@ public class ServerConstants {
     }
 
     public static void main(String[] args) {
+        /*
         try {
             KeyGenerator keygen = KeyGenerator.getInstance("AES");
             keygen.init(128);
@@ -76,5 +77,30 @@ public class ServerConstants {
         } catch (Exception e) {
             e.printStackTrace();
         }
+         */
+        double jd = 31557600000L;
+        double jdms = 3.1688087814029E-8 / 1000;
+        System.out.println(jdms * (1640962800000L + 24 * 60 * 60 * 1000));
+        System.out.println(jdms * (1672495200000L + 59 * 60 * 1000 + 59 * 1000 + 999));
+        System.out.println(System.currentTimeMillis() / jd);
+
+        System.out.println(getJulianTimeOffset("344:10:49:24.429500", "344:10:49:24.431500"));
+    }
+
+    private static double getJulianTimeOffset(String julianFrom, String julianCurrent) {
+        // 년도 값을 뺀 소수 부분을 포메팅 함.
+        // 년도 값을 포함한 msec로 변환후 차이 값을 반환함.
+        double jd = 31557600000L;
+        double jdms = 3.1688087814029E-8 / 1000;
+        String jdStr = Double.toString(System.currentTimeMillis() * jdms);
+        int jdPrefix = Integer.parseInt(jdStr.substring(0, jdStr.lastIndexOf(".")));
+
+        String jdFrom = jdPrefix + "." + julianFrom.replaceAll("[^0-9]", "");
+        double jdFromMillis = (Double.parseDouble(jdFrom) / jdms);
+
+        String jdCurrent = jdPrefix + "." + julianCurrent.replaceAll("[^0-9]", "");
+        double jdCurrentMillis = (Double.parseDouble(jdCurrent) / jdms);
+
+        return jdCurrentMillis - jdFromMillis;
     }
 }

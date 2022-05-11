@@ -237,6 +237,7 @@ drop table if exists `dynarap_part` cascade $$
 create table `dynarap_part`
 (
     `seq` bigint auto_increment not null            comment '일련번호',
+    `uploadSeq` bigint default 0                    comment '업로드 일련번호',
     `partName` varchar(128) not null                comment '부분 이름',
     `presetPack` bigint default 0                   comment '프리셋 관리번호',
     `presetSeq` bigint default 0                    comment '프리셋 일련번호',
@@ -248,7 +249,7 @@ create table `dynarap_part`
     constraint pk_dynarap_part primary key (`seq`)
 ) $$
 
-create index idx_part on `dynarap_part` (`presetPack`, `presetSeq`, `seq`) $$
+create index idx_part on `dynarap_part` (`uploadSeq`, `presetPack`, `presetSeq`, `seq`) $$
 
 --  분할 구간 raw 데이터
 drop table if exists `dynarap_part_raw` cascade $$
@@ -268,7 +269,8 @@ create table `dynarap_part_raw`
     constraint pk_dynarap_part_raw primary key (`seq`)
 ) $$
 
-create index idx_part_raw on `dynarap_part_raw` (`partSeq`, `presetParamSeq`, `rowNo`) $$
+create index idx_part_row on `dynarap_part_raw` (`partSeq`, `rowNo`) $$
+create index idx_part_param on `dynarap_part_raw` (`partSeq`, `presetParamSeq`) $$
 
 
 -- 숏블록 기본
@@ -324,7 +326,7 @@ create table `dynarap_sblock_raw`
     constraint pk_dynarap_sblock_raw primary key (`seq`)
 ) $$
 
-create index idx_sblock_raw on `dynarap_sblock_raw` (`partSeq`, `blockSeq`, `presetParamSeq`, `rowNo`) $$
+create index idx_sblock_raw on `dynarap_sblock_raw` (`partSeq`, `blockSeq`, paramSeq, `rowNo`) $$
 
 -- 숏블록 파라미터 처리
 drop table if exists `dynarap_sblock_param` cascade $$

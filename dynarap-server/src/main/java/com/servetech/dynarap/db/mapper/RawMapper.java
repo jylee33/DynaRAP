@@ -131,9 +131,10 @@ public interface RawMapper {
     @Insert({
             "<script>" +
                     "insert into dynarap_raw_upload (" +
-                    "uploadName,storePath,fileSize,flightSeq,presetPack,presetSeq,uploadedAt,flightAt,registerUid,uploadId,importDone" +
+                    "uploadName,dataType,storePath,fileSize,flightSeq,presetPack,presetSeq,uploadedAt,flightAt,registerUid,uploadId,importDone" +
                     ") values (" +
                     "#{uploadName,javaType=java.lang.String,jdbcType=VARCHAR,typeHandler=String64}" +
+                    ",#{dataType}" +
                     ",#{storePath}" +
                     ",#{fileSize}" +
                     ",#{flightSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField}" +
@@ -156,6 +157,7 @@ public interface RawMapper {
             "<script>" +
                     " update dynarap_raw_upload set " +
                     " storePath = #{storePath} " +
+                    ",dataType = #{dataType} " +
                     ",flightSeq = #{flightSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
                     ",presetPack = #{presetPack,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
                     ",presetSeq = #{presetSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +

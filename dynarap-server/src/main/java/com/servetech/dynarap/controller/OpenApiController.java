@@ -507,34 +507,71 @@ public class OpenApiController extends ApiController {
     @RequestMapping(value = "/upload")
     @ResponseBody
     public ResponseVO openApiUpload(HttpServletRequest request,
-                                    @RequestParam(name = "attach", required = false) MultipartFile attach) throws Exception
+                                    @RequestParam(name = "attach", required = false) MultipartFile attach,
+                                    @RequestParam(name = "importFilePath", required = false) String importFilePath) throws Exception
     {
         try {
             UserVO user = getService(UserService.class).getUser("admin@dynarap@dynarap");
 
             File uploadRoot = new File(staticLocation.replaceAll("file:", ""), "dynarap/raw");
             if (uploadRoot.exists() == false) uploadRoot.mkdirs();
-            String originalFileName = attach.getOriginalFilename().replaceAll("_", "");
-            String fileExt = originalFileName.substring(originalFileName.lastIndexOf(".") + 1);
 
-            String uploadId = new CryptoField(originalFileName + "_" + attach.getSize()).valueOf();
+            RawVO.Upload upload = null;
+            if (attach != null && !attach.isEmpty() && attach.getSize() > 0) {
+                String originalFileName = attach.getOriginalFilename().replaceAll("_", "");
+                String fileExt = originalFileName.substring(originalFileName.lastIndexOf(".") + 1);
 
-            RawVO.Upload upload = getService(RawService.class).getUploadById(uploadId);
-            if (upload == null) {
-                upload = new RawVO.Upload();
-                upload.setUploadId(uploadId);
-                upload.setUploadName(new String64(originalFileName));
-                upload.setFileSize(attach.getSize());
-                upload.setRegisterUid(user.getUid());
-                upload.setUploadedAt(LongDate.now());
-                getService(RawService.class).insertRawUpload(upload);
+                String uploadId = new CryptoField(originalFileName + "_" + attach.getSize()).valueOf();
+
+                upload = getService(RawService.class).getUploadById(uploadId);
+                if (upload == null) {
+                    upload = new RawVO.Upload();
+                    upload.setUploadId(uploadId);
+                    upload.setUploadName(new String64(originalFileName));
+                    upload.setFileSize(attach.getSize());
+                    upload.setRegisterUid(user.getUid());
+                    upload.setUploadedAt(LongDate.now());
+                    getService(RawService.class).insertRawUpload(upload);
+                }
+
+                File fSave = new File(uploadRoot, upload.getUploadId() + "." + fileExt);
+                if (fSave.exists() == true) fSave.delete();
+                attach.transferTo(fSave);
+
+                upload.setStorePath(fSave.getAbsolutePath());
             }
+            else {
+                if (importFilePath == null || importFilePath.isEmpty())
+                    throw new HandledServiceException(404, "파일 정보를 찾을 수 없습니다.");
 
-            File fSave = new File(uploadRoot, upload.getUploadId() + "." + fileExt);
-            if (fSave.exists() == true) fSave.delete();
-            attach.transferTo(fSave);
+                // change to test file path
+                if (importFilePath.contains("C:\\")) {
+                    importFilePath = importFilePath.replaceAll("\\\\", "/");
+                    importFilePath = importFilePath.replaceAll("C:/", "/Users/aloepigeon/");
+                }
 
-            upload.setStorePath(fSave.getAbsolutePath());
+                File fStatic = new File(importFilePath);
+                if (fStatic == null || !fStatic.exists())
+                    throw new HandledServiceException(404, "파일을 찾을 수 없습니다. [" + importFilePath + "]");
+
+                String originalFileName = fStatic.getName().replaceAll("_", "");
+                String fileExt = originalFileName.substring(originalFileName.lastIndexOf(".") + 1);
+
+                String uploadId = new CryptoField(originalFileName + "_" + fStatic.length()).valueOf();
+
+                upload = getService(RawService.class).getUploadById(uploadId);
+                if (upload == null) {
+                    upload = new RawVO.Upload();
+                    upload.setUploadId(uploadId);
+                    upload.setUploadName(new String64(originalFileName));
+                    upload.setFileSize(fStatic.length());
+                    upload.setRegisterUid(user.getUid());
+                    upload.setUploadedAt(LongDate.now());
+                    getService(RawService.class).insertRawUpload(upload);
+                }
+
+                upload.setStorePath(fStatic.getAbsolutePath());
+            }
             getService(RawService.class).updateRawUpload(upload);
 
             return ResponseHelper.response(200, "Success - Upload Completed", upload);

@@ -7,6 +7,7 @@ import lombok.Data;
 @Data
 public class PartVO {
     private CryptoField seq;
+    private CryptoField uploadSeq;
     private String64 partName;
     private CryptoField presetPack;
     private CryptoField presetSeq;

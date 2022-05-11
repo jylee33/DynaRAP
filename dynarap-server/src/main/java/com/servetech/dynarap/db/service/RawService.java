@@ -14,20 +14,30 @@ import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.*;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.sql.DataSource;
 import java.io.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.*;
 
 @Service("rawService")
 @EnableScheduling
 @RequiredArgsConstructor
 public class RawService {
+    private static final Logger logger = LoggerFactory.getLogger(RawService.class);
+
     @Resource(name = "redisTemplate")
     private ValueOperations<String, String> valueOps;
 
@@ -44,12 +54,13 @@ public class RawService {
     private ZSetOperations<String, String> zsetOps;
 
     @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @Autowired
     private RawMapper rawMapper;
 
     @Autowired
     private ParamService paramService;
-
-    private final SqlSessionFactory sqlSessionFactory;
 
     public List<RawVO> getRawData(CryptoField uploadSeq) throws HandledServiceException {
         try {
@@ -275,7 +286,9 @@ public class RawService {
     @Transactional
     public JsonObject runImport(CryptoField.NAuth uid, CryptoField uploadSeq,
                           CryptoField presetPack, CryptoField presetSeq,
-                          CryptoField flightSeq, String flightAt) throws HandledServiceException {
+                          CryptoField flightSeq, String flightAt, String dataType) throws HandledServiceException {
+        Connection conn = null;
+
         try {
             JsonObject jobjResult = new JsonObject();
 
@@ -292,12 +305,36 @@ public class RawService {
             rawUpload.setFlightSeq(flightSeq == null ? CryptoField.LZERO : flightSeq);
             if (flightAt != null && !flightAt.isEmpty())
                 rawUpload.setFlightAt(LongDate.parse(flightAt, "yyyy-MM-dd"));
-            updateRawUpload(rawUpload);
+            rawUpload.setDataType(dataType);
+
+            DataSource ds = jdbcTemplate.getDataSource();
+            conn = ds.getConnection();
+            conn.setAutoCommit(false);
+
+            String tempTableName = rawUpload.getUploadId().substring(0, 8)
+                    + rawUpload.getUploadId().substring(rawUpload.getUploadId().length() - 8);
 
             // 기존 raw 테이블 삭제.
-            Map<String, Object> params = new HashMap<>();
-            params.put("uploadSeq", uploadSeq);
-            rawMapper.deleteRawDataByParam(params);
+            Statement stmt = conn.createStatement();
+            stmt.executeUpdate("drop table if exists `dynarap_" + tempTableName + "` cascade");
+            stmt.executeUpdate("create table `dynarap_" + tempTableName + "`\n" +
+                    "(\n" +
+                    "    `seq` bigint auto_increment not null            comment '일련번호',\n" +
+                    "    `uploadSeq` bigint default 0                    comment '업로드 일련번호',\n" +
+                    "    `presetPack` bigint default 0                   comment '프리셋 관리번호',\n" +
+                    "    `presetSeq` bigint default 0                    comment '프리셋 일련번호',\n" +
+                    "    `presetParamSeq` bigint default 0               comment '프리셋 구성 파라미터 일련번호',\n" +
+                    "    `rowNo` int default 0                           comment '데이터 row',\n" +
+                    "    `julianTimeAt` varchar(32)                      comment '절대 시간 값',\n" +
+                    "    `paramVal` double default 0.0                   comment '파라미터 값 (숫자)',\n" +
+                    "    `paramValStr` varchar(128) default ''           comment '파라미터 값 (문자)',\n" +
+                    "    constraint pk_dynarap_raw primary key (`seq`)\n" +
+                    ")");
+            stmt.executeUpdate("create index `idx_dynarap_" + tempTableName + "_param` on `dynarap_" + tempTableName + "` (`presetPack`, `presetSeq`, `presetParamSeq`)");
+            stmt.executeUpdate("create index `idx_dynarap_" + tempTableName + "_row` on `dynarap_" + tempTableName + "` (`rowNo`, `presetPack`, `presetSeq`)");
+            stmt.executeUpdate("create index `idx_dynarap_" + tempTableName + "_julian` on `dynarap_" + tempTableName + "` (`julianTimeAt`)");
+            stmt.executeUpdate("create index `idx_dynarap_" + tempTableName + "_row2` on `dynarap_" + tempTableName + "` (`rowNo`)");
+            conn.commit(); // drop 이후 커밋 처리.
 
             // 파라미터 맵 구성
             PresetVO preset = null;
@@ -370,7 +407,15 @@ public class RawService {
 
             // real data insert
             int rowNo = 1;
-            List<Map<String, Object>> bulkList = new ArrayList<>();
+            long snapTime = System.currentTimeMillis();
+
+            PreparedStatement pstmt = conn.prepareStatement("insert into dynarap_" + tempTableName + " (" +
+                    "presetPack,presetSeq,presetParamSeq,paramVal,paramValStr,rowNo,uploadSeq,julianTimeAt" +
+                    ") values (?,?,?,?,?,?,?,?)");
+            pstmt.setFetchSize(1000);
+
+            int stmtCount = 1;
+            long startTime = System.currentTimeMillis();
 
             while ((line = br.readLine()) != null) {
                 String[] splitData = line.trim().split(",");
@@ -380,60 +425,71 @@ public class RawService {
                     ParamVO pi = mappedParams.get(i);
                     int spi = mappedIndexes.get(i);
 
-                    Map<String, Object> param = new HashMap<>();
-                    param.put("presetPack", pi.getPresetPack());
-                    param.put("presetSeq", pi.getPresetSeq());
-                    param.put("presetParamSeq", pi.getPresetParamSeq());
-                    param.put("julianTimeAt", julianTimeAt);
+                    pstmt.setLong(1, pi.getPresetPack().originOf());
+                    pstmt.setLong(2, pi.getPresetSeq().originOf());
+                    pstmt.setLong(3, pi.getPresetParamSeq());
 
                     String paramValStr = splitData[spi];
                     try {
-                        param.put("paramVal", Double.parseDouble(paramValStr));
+                        pstmt.setDouble(4, Double.parseDouble(paramValStr));
+                        pstmt.setString(5, null);
                     } catch(NumberFormatException nfe) {
-                        param.put("paramValStr", paramValStr);
+                        pstmt.setDouble(4, 0);
+                        pstmt.setString(5, paramValStr);
                     }
 
-                    param.put("rowNo", rowNo);
-                    param.put("uploadSeq", uploadSeq);
-                    bulkList.add(param);
-                }
+                    pstmt.setInt(6, rowNo);
+                    pstmt.setLong(7, uploadSeq.originOf());
+                    pstmt.setString(8, julianTimeAt);
+                    pstmt.addBatch();
 
-                // bulk insert
-                if ((rowNo % 1000) == 0) {
-                    // execute bulk insert
+                    pstmt.clearParameters();
 
-                    SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH);
-                    try {
-                        sqlSession.insert("com.servetech.dynarap.db.mapper.RawMapper.insertRawDataBulk", bulkList);
-                    } finally {
-                        sqlSession.flushStatements();
-                        sqlSession.close();
-                        sqlSession.clearCache();
-
-                        bulkList.clear();
+                    if ((stmtCount % 1000) == 0) {
+                        pstmt.executeBatch();
+                        pstmt.clearBatch();
                     }
+
+                    stmtCount++;
                 }
 
                 rowNo++;
             }
 
-            if (bulkList.size() > 0) {
-                SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH);
-                try {
-                    sqlSession.insert("com.servetech.dynarap.db.mapper.RawMapper.insertRawDataBulk", bulkList);
-                } finally {
-                    sqlSession.flushStatements();
-                    sqlSession.close();
-                    sqlSession.clearCache();
-                    bulkList.clear();
-                }
-            }
-
             br.close();
             fis.close();
 
+            if ((stmtCount % 1000) > 0) {
+                pstmt.executeBatch();
+                pstmt.clearBatch();
+            }
+
+            pstmt.close();
+
+            rawUpload.setImportDone(true);
+            updateRawUpload(rawUpload);
+
+            logger.info("[[[[[ batch completed " + (System.currentTimeMillis() - startTime) + "msec");
+
+            try {
+                conn.commit();
+                conn.setAutoCommit(true);
+                conn.close();
+            } catch (Exception ex) {
+                logger.debug("Batch Connection Close Error : " + ex.getMessage());
+            }
+
             return jobjResult;
         } catch(Exception e) {
+            try {
+                if (conn != null && !conn.isClosed()) {
+                    conn.rollback();
+                    conn.close();
+                }
+            } catch(Exception ex) {
+                // nothing to log
+            }
+
             throw new HandledServiceException(410, e.getMessage());
         }
     }

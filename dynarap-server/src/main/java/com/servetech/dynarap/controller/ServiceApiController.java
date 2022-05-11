@@ -490,10 +490,14 @@ public class ServiceApiController extends ApiController {
             if (!checkJsonEmpty(payload, "flightAt"))
                 flightAt = payload.get("flightAt").getAsString();
 
-            if (uploadSeq == null || uploadSeq.isEmpty() || presetPack == null || presetPack.isEmpty())
+            String dataType = "";
+            if (!checkJsonEmpty(payload, "dataType"))
+                dataType = payload.get("dataType").getAsString();
+
+            if (uploadSeq == null || uploadSeq.isEmpty() || presetPack == null || presetPack.isEmpty() || dataType == null || dataType.isEmpty())
                 throw new HandledServiceException(404, "필요 파라미터가 누락됐습니다.");
 
-            JsonObject jobjResult = getService(RawService.class).runImport(user.getUid(), uploadSeq, presetPack, presetSeq, flightSeq, flightAt);
+            JsonObject jobjResult = getService(RawService.class).runImport(user.getUid(), uploadSeq, presetPack, presetSeq, flightSeq, flightAt, dataType);
 
             return ResponseHelper.response(200, "Success - Import request done", jobjResult);
         }
@@ -519,6 +523,18 @@ public class ServiceApiController extends ApiController {
 
             RawVO.Upload rawUpload = getService(RawService.class).getUploadBySeq(uploadSeq);
             return ResponseHelper.response(200, "Success - Check Import Done", rawUpload.isImportDone());
+        }
+
+        // 업로드 리스트 가져가기
+        if (command.equals("upload-list")) {
+            List<RawVO.Upload> rawUploadList = getService(RawService.class).getUploadList();
+            return ResponseHelper.response(200, "Success - Upload list", rawUploadList);
+        }
+
+        // 파트 쪼개는 작업 진행해야함.
+        if (command.equals("create-part")) {
+            List<PartVO> partList = getService(PartService.class).createPartList(user.getUid(), payload);
+            return ResponseHelper.response(200, "Success - Create raw data part", partList);
         }
 
         throw new HandledServiceException(411, "명령이 정의되지 않았습니다.");

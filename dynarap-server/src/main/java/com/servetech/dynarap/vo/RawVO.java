@@ -40,6 +40,7 @@ public class RawVO implements IFlexibleValue {
     public static class Upload {
         private CryptoField seq;
         private String uploadId;
+        private String dataType;
         private String64 uploadName;
         private String storePath;
         private Long fileSize;

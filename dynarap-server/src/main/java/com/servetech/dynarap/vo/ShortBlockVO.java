@@ -2,6 +2,7 @@ package com.servetech.dynarap.vo;
 
 import com.servetech.dynarap.db.type.CryptoField;
 import com.servetech.dynarap.db.type.LongDate;
+import com.servetech.dynarap.db.type.String64;
 import lombok.Data;
 
 @Data
@@ -9,11 +10,12 @@ public class ShortBlockVO {
     private CryptoField seq;
     private CryptoField blockMetaSeq;
     private CryptoField partSeq;
+    private Integer blockNo;
+    private String64 blockName;
     private String julianStartAt;
     private String julianEndAt;
     private Double offsetStartAt;
     private Double offsetEndAt;
-    private Integer blockNo;
     private CryptoField.NAuth registerUid;
 
     private Meta blockMetaInfo;
@@ -23,6 +25,8 @@ public class ShortBlockVO {
     public static class Meta {
         private CryptoField seq;
         private CryptoField partSeq;
+        private CryptoField selectedPresetPack; /* 선택된 preset 정보 노출 */
+        private CryptoField selectedPresetSeq; /* 선택된 preset 정보 노출 */
         private Float overlap;
         private Float sliceTime;
         private CryptoField.NAuth registerUid;
@@ -31,6 +35,7 @@ public class ShortBlockVO {
         private PartVO partInfo;
     }
 
+    /* preset에 담긴 param을 개별로 저장함. 임의 파라미터 추가때문 */
     @Data
     public static class Param {
         private CryptoField seq;
@@ -39,7 +44,7 @@ public class ShortBlockVO {
         private CryptoField paramPack;
         private CryptoField paramSeq;
 
-        private ShortBlockVO shortBlockInfo;
+        //private ShortBlockVO shortBlockInfo;
         private ParamVO paramInfo;
     }
 
@@ -47,7 +52,8 @@ public class ShortBlockVO {
     public static class Raw implements IFlexibleValue {
         private CryptoField seq;
         private CryptoField blockSeq;
-        private CryptoField presetParamSeq;
+        private CryptoField paramPack;
+        private CryptoField paramSeq;
         private Integer rowNo;
         private Double paramVal;
         private String paramValStr;
@@ -57,7 +63,7 @@ public class ShortBlockVO {
         private Double hpf;
 
         private ShortBlockVO shortBlockInfo;
-        private PresetVO.Param presetParamInfo;
+        private ParamVO paramInfo;
 
         @Override
         public <T> T getValue() {
