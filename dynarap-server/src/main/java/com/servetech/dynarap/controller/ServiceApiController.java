@@ -526,6 +526,17 @@ public class ServiceApiController extends ApiController {
         }
 
         // 업로드 리스트 가져가기
+        if (command.equals("upload")) {
+            RawVO.Upload rawUpload = getService(RawService.class).doUpload(user.getUid(), payload);
+            return ResponseHelper.response(200, "Success - Upload Raw Data", rawUpload);
+        }
+
+        if (command.equals("progress")) {
+            RawVO.Upload rawUpload = getService(RawService.class).getProgress(user.getUid(), payload);
+            return ResponseHelper.response(200, "Success - Get Upload Progress", rawUpload);
+        }
+
+        // 업로드 리스트 가져가기
         if (command.equals("upload-list")) {
             List<RawVO.Upload> rawUploadList = getService(RawService.class).getUploadList();
             return ResponseHelper.response(200, "Success - Upload list", rawUploadList);

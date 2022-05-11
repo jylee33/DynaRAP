@@ -1,13 +1,17 @@
 package com.servetech.dynarap.db.service;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.servetech.dynarap.config.ServerConstants;
 import com.servetech.dynarap.controller.ApiController;
 import com.servetech.dynarap.db.mapper.RawMapper;
+import com.servetech.dynarap.db.service.task.ImportTask;
 import com.servetech.dynarap.db.type.CryptoField;
 import com.servetech.dynarap.db.type.LongDate;
+import com.servetech.dynarap.db.type.String64;
 import com.servetech.dynarap.ext.HandledServiceException;
 import com.servetech.dynarap.vo.ParamVO;
+import com.servetech.dynarap.vo.PartVO;
 import com.servetech.dynarap.vo.PresetVO;
 import com.servetech.dynarap.vo.RawVO;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +23,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.*;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,11 +32,14 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.io.*;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Future;
+
+import static com.servetech.dynarap.controller.ApiController.checkJsonEmpty;
 
 @Service("rawService")
 @EnableScheduling
@@ -61,6 +70,11 @@ public class RawService {
 
     @Autowired
     private ParamService paramService;
+
+    @Autowired
+    private Executor texecutor;
+
+    private volatile Map<String, RawVO.Upload> uploadStat = new ConcurrentHashMap<>();
 
     public List<RawVO> getRawData(CryptoField uploadSeq) throws HandledServiceException {
         try {
@@ -284,6 +298,106 @@ public class RawService {
     }
 
     @Transactional
+    public RawVO.Upload doUpload(CryptoField.NAuth uid, JsonObject payload) throws HandledServiceException {
+        try {
+            RawVO.UploadRequest uploadReq = ServerConstants.GSON.fromJson(payload, RawVO.UploadRequest.class);
+            if (uploadReq == null)
+                throw new Exception("요청 형식이 올바르지 않습니다. 파라미터를 확인하세요.");
+
+            if (uploadReq.getSourcePath().contains("C:\\")) {
+                uploadReq.setSourcePath(uploadReq.getSourcePath().replaceAll("\\\\", "/"));
+                //uploadReq.setSourcePath(uploadReq.getSourcePath().replaceAll("C:/", "/Users/aloepigeon/"));
+                uploadReq.setSourcePath(uploadReq.getSourcePath().replaceAll("C:/", "/home/ubuntu/"));
+            }
+
+            File fStatic = new File(uploadReq.getSourcePath());
+            if (fStatic == null || !fStatic.exists())
+                throw new HandledServiceException(404, "파일을 찾을 수 없습니다. [" + uploadReq.getSourcePath() + "]");
+
+            long lineCount = getLineCount(fStatic.getAbsolutePath());
+            String originalFileName = fStatic.getName().replaceAll("_", "");
+            String fileExt = originalFileName.substring(originalFileName.lastIndexOf(".") + 1);
+
+            String uploadId = new CryptoField(originalFileName + "_" + fStatic.length()).valueOf();
+
+            RawVO.Upload rawUpload = getUploadById(uploadId);
+            if (rawUpload == null) {
+                rawUpload = new RawVO.Upload();
+                rawUpload.setUploadId(uploadId);
+                rawUpload.setUploadName(new String64(originalFileName));
+                rawUpload.setFileSize(fStatic.length());
+                rawUpload.setRegisterUid(uid);
+                rawUpload.setUploadedAt(LongDate.now());
+                rawUpload.setStorePath(fStatic.getAbsolutePath());
+                rawUpload.setImportDone(false);
+                rawUpload.setPresetPack(uploadReq.getPresetPack());
+                if (uploadReq.getPresetSeq() == null || uploadReq.getPresetSeq().isEmpty()) {
+                    PresetVO preset = paramService.getActivePreset(uploadReq.getPresetPack());
+                    rawUpload.setPresetSeq(preset.getSeq());
+                }
+                else {
+                    rawUpload.setPresetSeq(uploadReq.getPresetSeq());
+                }
+                rawUpload.setFlightSeq(uploadReq.getFlightSeq() == null ? CryptoField.LZERO : uploadReq.getFlightSeq());
+                if (uploadReq.getFlightAt() != null && !uploadReq.getFlightAt().isEmpty())
+                    rawUpload.setFlightAt(LongDate.parse(uploadReq.getFlightAt(), "yyyy-MM-dd"));
+                rawUpload.setDataType(uploadReq.getDataType());
+                rawUpload.setUploadRequest(uploadReq);
+                insertRawUpload(rawUpload);
+                uploadStat.put(rawUpload.getSeq().valueOf(), rawUpload);
+
+                rawUpload.setStatus("import");
+                rawUpload.setStatusMessage("요청 파일을 데이터베이스에 저장하고 있습니다.");
+                rawUpload.setTotalFetchCount(lineCount);
+                rawUpload.setFetchCount(0);
+            }
+            else {
+                if (!uploadStat.containsKey(rawUpload.getSeq().valueOf())) {
+                    uploadStat.put(rawUpload.getSeq().valueOf(), rawUpload);
+
+                    rawUpload.setStatus("import");
+                    rawUpload.setStatusMessage("요청 파일을 데이터베이스에 저장하고 있습니다.");
+                    rawUpload.setTotalFetchCount(lineCount);
+                    rawUpload.setFetchCount(0);
+                }
+                else
+                    rawUpload = uploadStat.get(rawUpload.getSeq().valueOf());
+                rawUpload.setUploadRequest(uploadReq);
+            }
+
+            // create thread worker start
+            if (rawUpload.getStatus().equals("import")) {
+                ImportTask importTask = new ImportTask();
+                CompletableFuture.runAsync(importTask.asyncRunImport(jdbcTemplate, paramService, RawService.this, rawUpload), texecutor);
+            }
+
+            return rawUpload;
+
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    public RawVO.Upload getProgress(CryptoField.NAuth uid, JsonObject payload) throws HandledServiceException {
+        try {
+            CryptoField uploadSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "uploadSeq"))
+                uploadSeq = CryptoField.decode(payload.get("uploadSeq").getAsString(), 0L);
+
+            if (uploadSeq == null || uploadSeq.isEmpty())
+                throw new HandledServiceException(411, "요청 파라미터 오류입니다. [필수 파라미터 누락]");
+
+            RawVO.Upload rawUpload = uploadStat.get(uploadSeq.valueOf());
+            if (rawUpload == null)
+                throw new HandledServiceException(411, "진행중인 업로드 요청이 없습니다.");
+
+            return rawUpload;
+        } catch(Exception e) {
+            throw new HandledServiceException(411, e.getMessage());
+        }
+    }
+
+    @Transactional
     public JsonObject runImport(CryptoField.NAuth uid, CryptoField uploadSeq,
                           CryptoField presetPack, CryptoField presetSeq,
                           CryptoField flightSeq, String flightAt, String dataType) throws HandledServiceException {
@@ -492,5 +606,29 @@ public class RawService {
 
             throw new HandledServiceException(410, e.getMessage());
         }
+    }
+
+    public static long getLineCount(String absPath) {
+        long lines = 0;
+        try (InputStream is = new BufferedInputStream(new FileInputStream(absPath))) {
+            byte[] c = new byte[1024];
+            int count = 0;
+            int readChars = 0;
+            boolean endsWithoutNewLine = false;
+            while ((readChars = is.read(c)) != -1) {
+                for (int i = 0; i < readChars; ++i) {
+                    if (c[i] == '\n')
+                        ++count;
+                }
+                endsWithoutNewLine = (c[readChars - 1] != '\n');
+            }
+            if (endsWithoutNewLine) {
+                ++count;
+            }
+            lines = count;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return lines;
     }
 }

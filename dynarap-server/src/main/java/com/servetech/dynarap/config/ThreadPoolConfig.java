@@ -8,11 +8,10 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import java.util.concurrent.Executor;
 
 @Configuration
-@EnableAsync
 public class ThreadPoolConfig {
 
     @Bean(name="texecutor")
-    public Executor setThreadExecutor() {
+    public Executor threadExecutor() {
         ThreadPoolTaskExecutor tpte = new ThreadPoolTaskExecutor();
         tpte.setCorePoolSize(16);
         tpte.setMaxPoolSize(256);
@@ -22,7 +21,7 @@ public class ThreadPoolConfig {
     }
 
     @Bean(name="tsingle")
-    public Executor setSingleThreadExecutor() {
+    public Executor singleThreadExecutor() {
         ThreadPoolTaskExecutor tpte = new ThreadPoolTaskExecutor();
         tpte.setCorePoolSize(1);
         tpte.setMaxPoolSize(1);

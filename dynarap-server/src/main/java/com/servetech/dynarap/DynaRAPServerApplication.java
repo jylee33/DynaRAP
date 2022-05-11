@@ -51,11 +51,11 @@ import java.util.concurrent.Executor;
 import static org.springframework.http.HttpStatus.Series.CLIENT_ERROR;
 import static org.springframework.http.HttpStatus.Series.SERVER_ERROR;
 
-@EnableAsync
 @EnableCaching
 @Component("application")
 @PropertySource("classpath:application.properties")
 @SpringBootApplication
+@EnableAsync
 @EnableScheduling
 public class DynaRAPServerApplication {
     private static final Logger logger = LoggerFactory.getLogger(DynaRAPServerApplication.class);

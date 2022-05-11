@@ -319,7 +319,7 @@ public class PartService {
         }
     }
 
-    private double getJulianTimeOffset(String julianFrom, String julianCurrent) {
+    public static double getJulianTimeOffset(String julianFrom, String julianCurrent) {
         // 년도 값을 뺀 소수 부분을 포메팅 함.
         // 년도 값을 포함한 msec로 변환후 차이 값을 반환함.
         double jd = 31557600000L;

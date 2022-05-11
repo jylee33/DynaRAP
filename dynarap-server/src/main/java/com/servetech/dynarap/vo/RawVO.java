@@ -53,6 +53,33 @@ public class RawVO implements IFlexibleValue {
         private boolean importDone;
 
         private PresetVO presetInfo;
+        private UploadRequest uploadRequest;
+
+        private String status;
+        private String statusMessage;
+        private long fetchCount;
+        private long totalFetchCount;
+        private List<String> notMappedParams;
+        private List<ParamVO> mappedParams;
+        private List<PartVO> partList;
+    }
+
+    @Data
+    public static class UploadRequest {
+        private String sourcePath;
+        private CryptoField presetPack;
+        private CryptoField presetSeq;
+        private CryptoField flightSeq;
+        private String flightAt;
+        private String dataType;
+        private List<UploadPart> parts;
+
+        @Data
+        public static class UploadPart {
+            private String64 partName;
+            private String julianStartAt;
+            private String julianEndAt;
+        }
     }
 
     @Data
