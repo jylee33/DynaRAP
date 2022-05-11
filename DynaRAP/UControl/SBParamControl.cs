@@ -1,5 +1,6 @@
 ﻿using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Controls;
+using DynaRAP.Data;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,10 +15,18 @@ namespace DynaRAP.UControl
 {
     public partial class SBParamControl : DevExpress.XtraEditors.XtraUserControl
     {
+        ResponseParam param = null;
+        string title = string.Empty;
+      
         public string Title
         {
+            get
+            {
+                return this.title;
+            }
             set
             {
+                this.title = value;
             }
         }
 
@@ -26,10 +35,27 @@ namespace DynaRAP.UControl
             InitializeComponent();
         }
 
+        public SBParamControl(ResponseParam param) : this()
+        {
+            this.param = param;
+        }
+
         private void SBParamControl_Load(object sender, EventArgs e)
         {
             InitializeParamTypeCombo();
             InitializeParamNameCombo();
+
+            string paramType = string.Empty;
+            string paramName = string.Empty;
+
+            if(param!= null)
+            {
+                paramType = this.title;// param.paramKey;
+                paramName = param.paramKey;
+            }
+
+            cboParamType.Text = paramType;
+            cboParamName.Text = paramName;
         }
 
         private void InitializeParamNameCombo()

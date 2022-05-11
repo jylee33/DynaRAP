@@ -180,7 +180,7 @@ namespace DynaRAP.TEST
             series1.LabelForeColor = Color.Red;
             series1.MarkerStyle = MarkerStyle.Square;
             series1.MarkerSize = 3;
-            series1.MarkerColor = Color.Red;
+            series1.MarkerColor = Color.Black;
 
             series1.XValueMember = "Argument";
             series1.YValueMembers = "Value";
