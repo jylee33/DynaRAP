@@ -571,7 +571,7 @@ namespace DynaRAP
 
         private void btnTestChart_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            TestChart form = new TestChart();
+            TestChartLine form = new TestChartLine();
             form.Show();
         }
 

@@ -150,6 +150,12 @@
     <Compile Include="Data\SplittedInterval.cs" />
     <Compile Include="EventData\LoginResultEventArgs.cs" />
     <Compile Include="EventData\SelectedRangeEventArgs.cs" />
+    <Compile Include="TEST\TestChartPotato.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TEST\TestChartPotato.Designer.cs">
+      <DependentUpon>TestChartPotato.cs</DependentUpon>
+    </Compile>
     <Compile Include="TEST\TestMsChartForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -189,11 +195,11 @@
     <Compile Include="TEST\GridGroupingForm.Designer.cs">
       <DependentUpon>GridGroupingForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="TEST\TestChart.cs">
+    <Compile Include="TEST\TestChartLine.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="TEST\TestChart.Designer.cs">
-      <DependentUpon>TestChart.cs</DependentUpon>
+    <Compile Include="TEST\TestChartLine.Designer.cs">
+      <DependentUpon>TestChartLine.cs</DependentUpon>
     </Compile>
     <Compile Include="TEST\TestFilter2Form.cs">
       <SubType>Form</SubType>
@@ -318,6 +324,18 @@
     <Compile Include="UControl\MgmtPresetParameterControl.Designer.cs">
       <DependentUpon>MgmtPresetParameterControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="UControl\MyLineChart.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\MyLineChart.Designer.cs">
+      <DependentUpon>MyLineChart.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\MyPotatoChart.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\MyPotatoChart.Designer.cs">
+      <DependentUpon>MyPotatoChart.cs</DependentUpon>
+    </Compile>
     <Compile Include="UControl\SBParamControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -419,6 +437,9 @@
     <EmbeddedResource Include="CreateScenarioProgressForm.resx">
       <DependentUpon>CreateScenarioProgressForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="TEST\TestChartPotato.resx">
+      <DependentUpon>TestChartPotato.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="TEST\TestMsChartForm.resx">
       <DependentUpon>TestMsChartForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -462,8 +483,8 @@
     <EmbeddedResource Include="TEST\GridGroupingForm.resx">
       <DependentUpon>GridGroupingForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="TEST\TestChart.resx">
-      <DependentUpon>TestChart.cs</DependentUpon>
+    <EmbeddedResource Include="TEST\TestChartLine.resx">
+      <DependentUpon>TestChartLine.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TEST\TestFilter2Form.resx">
       <DependentUpon>TestFilter2Form.cs</DependentUpon>
@@ -524,6 +545,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\MgmtPresetGroupControl.resx">
       <DependentUpon>MgmtPresetGroupControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\MyLineChart.resx">
+      <DependentUpon>MyLineChart.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\MyPotatoChart.resx">
+      <DependentUpon>MyPotatoChart.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\SBParamControl.resx">
       <DependentUpon>SBParamControl.cs</DependentUpon>
