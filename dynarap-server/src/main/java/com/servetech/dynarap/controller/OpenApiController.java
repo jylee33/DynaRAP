@@ -547,7 +547,8 @@ public class OpenApiController extends ApiController {
                 // change to test file path
                 if (importFilePath.contains("C:\\")) {
                     importFilePath = importFilePath.replaceAll("\\\\", "/");
-                    importFilePath = importFilePath.replaceAll("C:/", "/Users/aloepigeon/");
+                    //importFilePath = importFilePath.replaceAll("C:/", "/Users/aloepigeon/");
+                    importFilePath = importFilePath.replaceAll("C:/", "/home/ubuntu/");
                 }
 
                 File fStatic = new File(importFilePath);
