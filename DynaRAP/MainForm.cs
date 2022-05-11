@@ -577,6 +577,10 @@ namespace DynaRAP
 
         private void btnChartLine2d_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
+            TestChartLine form = new TestChartLine();
+            form.Show();
+            return;
+
             ChartControl chartControl = null;
 
             chartControl = GetLine2DChartControl();
@@ -591,6 +595,10 @@ namespace DynaRAP
 
         private void btnChartMinMax_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
+            TestChartLine form = new TestChartLine();
+            form.Show();
+            return;
+
             ChartControl chartControl = null;
 
             chartControl = GetRangeArea2DChartControl();
@@ -605,6 +613,10 @@ namespace DynaRAP
 
         private void btnChartPotato_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
+            TestChartPotato form = new TestChartPotato();
+            form.Show();
+            return;
+
             ChartControl chartControl = null;
 
             chartControl = GetPolarArea2DChartControl();

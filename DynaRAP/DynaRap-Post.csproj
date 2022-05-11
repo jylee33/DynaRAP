@@ -135,6 +135,8 @@
       <DependentUpon>CreateScenarioProgressForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Data\DirData.cs" />
+    <Compile Include="Data\ImportRequest.cs" />
+    <Compile Include="Data\ImportResponse.cs" />
     <Compile Include="Data\JsonData.cs" />
     <Compile Include="Data\OverviewDataPoint.cs" />
     <Compile Include="Data\DataSlicing.cs" />

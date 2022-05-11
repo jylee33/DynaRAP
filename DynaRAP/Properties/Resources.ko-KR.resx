@@ -183,6 +183,9 @@
     <value>성공</value>
     <comment>ㄴ</comment>
   </data>
+  <data name="StringSuccessImport" xml:space="preserve">
+    <value>Import 성공</value>
+  </data>
   <data name="StringValidSBCount" xml:space="preserve">
     <value>유효 분할 블록 : {0} 블록</value>
   </data>

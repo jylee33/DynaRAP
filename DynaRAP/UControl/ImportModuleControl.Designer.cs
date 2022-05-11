@@ -403,7 +403,6 @@
             this.btnSaveSplittedInterval.Properties.ReadOnly = true;
             this.btnSaveSplittedInterval.Size = new System.Drawing.Size(104, 22);
             this.btnSaveSplittedInterval.TabIndex = 12;
-            this.btnSaveSplittedInterval.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.btnSaveSplittedInterval_ButtonClick);
             this.btnSaveSplittedInterval.Click += new System.EventHandler(this.btnSaveSplittedInterval_ButtonClick);
             // 
             // imageCollection1

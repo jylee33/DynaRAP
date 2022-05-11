@@ -251,6 +251,15 @@ namespace DynaRAP.Properties {
         }
         
         /// <summary>
+        ///   Import successfully.과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string StringSuccessImport {
+            get {
+                return ResourceManager.GetString("StringSuccessImport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Valid Short Block Count : {0}과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string StringValidSBCount {

@@ -6,14 +6,18 @@ using DevExpress.XtraEditors.Repository;
 using DevExpress.XtraGrid.Columns;
 using DynaRAP.Data;
 using DynaRAP.EventData;
+using DynaRAP.UTIL;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -171,14 +175,80 @@ namespace DynaRAP.UControl
             lblSplitCount.Text = string.Format(Properties.Resources.StringSplitCount, splitList.Count);
         }
 
-        private void btnSaveSplittedInterval_ButtonClick(object sender, ButtonPressedEventArgs e)
-        {
-
-        }
-
         private void btnSaveSplittedInterval_ButtonClick(object sender, EventArgs e)
         {
+            bool bResult = Import();
 
+            if (bResult)
+            {
+                MessageBox.Show(Properties.Resources.StringSuccessImport, Properties.Resources.StringSuccess, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+        }
+
+        private bool Import()
+        {
+            ImportRequest import = new ImportRequest();
+            import.command = "upload";
+            import.sourcePath = csvFilePath;
+            import.flightAt = string.Format("{0:yyyy-MM-dd}", DateTime.Now);
+            import.dataType = "flight";
+            import.parts = new List<Part>();
+
+            foreach (ImportIntervalControl ctrl in splitList)
+            {
+                string partName = ctrl.PartName;
+                string t1 = Utils.GetJulianFromDate(ctrl.Min);
+                string t2 = Utils.GetJulianFromDate(ctrl.Max);
+
+                import.parts.Add(new Part(partName, t1, t2));
+            }
+
+            var json = JsonConvert.SerializeObject(import);
+            Console.WriteLine(json);
+
+            string url = ConfigurationManager.AppSettings["UrlImport"];
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Method = "POST";
+            request.ContentType = "application/json";
+            request.Timeout = 60 * 60 * 1000;   // 1시간 timeout
+            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+
+            // POST할 데이타를 Request Stream에 쓴다
+            byte[] bytes = Encoding.ASCII.GetBytes(json);
+            request.ContentLength = bytes.Length; // 바이트수 지정
+
+            using (Stream reqStream = request.GetRequestStream())
+            {
+                reqStream.Write(bytes, 0, bytes.Length);
+            }
+
+            // Response 처리
+            string responseText = string.Empty;
+            using (WebResponse resp = request.GetResponse())
+            {
+                Stream respStream = resp.GetResponseStream();
+                using (StreamReader sr = new StreamReader(respStream))
+                {
+                    responseText = sr.ReadToEnd();
+                }
+            }
+
+            //Console.WriteLine(responseText);
+            ImportResponse result = JsonConvert.DeserializeObject<ImportResponse>(responseText);
+
+            if (result != null)
+            {
+                if (result.code != 200)
+                {
+                    MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+                else
+                {
+                }
+            }
+            return true;
         }
 
         private void lblFlyingData_Click(object sender, EventArgs e)
@@ -195,8 +265,8 @@ namespace DynaRAP.UControl
 #endif
             {
 #if DEBUG
-                csvFilePath = @"C:\temp\a_test.xls";
-                lblFlyingData.Text = @"C:\temp\a_test.xls";
+                csvFilePath = @"C:\temp\a.xls";
+                lblFlyingData.Text = @"C:\temp\a.xls";
                 StreamReader sr = new StreamReader(csvFilePath);
 #else
                 csvFilePath = dlg.FileName;

@@ -183,6 +183,9 @@
     <value>Success</value>
     <comment>ㄴ</comment>
   </data>
+  <data name="StringSuccessImport" xml:space="preserve">
+    <value>Import successfully.</value>
+  </data>
   <data name="StringValidSBCount" xml:space="preserve">
     <value>Valid Short Block Count : {0}</value>
   </data>
