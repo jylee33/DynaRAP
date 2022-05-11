@@ -195,8 +195,8 @@ namespace DynaRAP.UControl
 #endif
             {
 #if DEBUG
-                csvFilePath = @"C:\temp\a.xls";
-                lblFlyingData.Text = @"C:\temp\a.xls";
+                csvFilePath = @"C:\temp\a_test.xls";
+                lblFlyingData.Text = @"C:\temp\a_test.xls";
                 StreamReader sr = new StreamReader(csvFilePath);
 #else
                 csvFilePath = dlg.FileName;

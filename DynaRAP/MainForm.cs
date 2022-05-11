@@ -174,7 +174,7 @@ namespace DynaRAP
             {
                 mgmtParameterControl = new MgmtParameterControl();
                 DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(mgmtParameterControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
-                doc.Caption = "파라미터 관리";
+                doc.Caption = "LRP 관리";
                 tabbedView1.ActivateDocument(mgmtParameterControl);
             }
             else
@@ -186,7 +186,7 @@ namespace DynaRAP
             {
                 mgmtPresetControl = new MgmtPresetControl();
                 DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(mgmtPresetControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
-                doc.Caption = "프리셋 관리";
+                doc.Caption = "매칭테이블 작성";
                 tabbedView1.ActivateDocument(mgmtPresetControl);
             }
             else
@@ -207,7 +207,7 @@ namespace DynaRAP
             }
 
 #if DEBUG
-            tabbedView1.ActivateDocument(sbModuleControl);
+            tabbedView1.ActivateDocument(importModuleControl);
 #else
             tabbedView1.RemoveDocument(importModuleControl);
             tabbedView1.RemoveDocument(sbModuleControl);

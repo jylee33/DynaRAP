@@ -37,8 +37,6 @@ namespace DynaRAP.UControl
         List<ResponseParam> presetParamList = null;
         List<PresetData> pComboList = null;
 
-        List<SplittedSB> splittedSBList = new List<SplittedSB>();
-
         DateTime startTime = DateTime.Now;
         DateTime endTime = DateTime.Now;
 
@@ -196,7 +194,7 @@ namespace DynaRAP.UControl
 #endif
             {
 #if DEBUG
-                StreamReader sr = new StreamReader(@"C:\temp\a.xls");
+                StreamReader sr = new StreamReader(@"C:\temp\a_test.xls");
 #else
                 StreamReader sr = new StreamReader(dlg.FileName);
 #endif
@@ -332,7 +330,7 @@ namespace DynaRAP.UControl
                 i++;
             }
 
-            splittedSBList.Clear();
+            sbIntervalList.Clear();
 
             intervalIndex = startIntervalIndex;
             int reducedHeight = (paramHeight * flowLayoutPanel2.Controls.Count);
@@ -341,6 +339,8 @@ namespace DynaRAP.UControl
 
             double.TryParse(edtSBLength.Text, out sbLen);
             double.TryParse(edtOverlap.Text, out overlap);
+
+            //sbLen = 0.1;//test
 
             DateTime t1 = startTime;
             DateTime t2 = t1.AddSeconds(sbLen);
@@ -351,12 +351,13 @@ namespace DynaRAP.UControl
                 SplittedSB sb = new SplittedSB(string.Format("ShortBlock#{0}", i), string.Format("{0:yyyy-MM-dd hh:mm:ss.ffffff}", t1), string.Format("{0:yyyy-MM-dd hh:mm:ss.ffffff}", t2), 0);
                 i++;
 
-                splittedSBList.Add(sb);
                 AddSplittedInterval(sb);
                 
                 t1 = t2.AddSeconds(-(sbLen * overlap * 0.01));
                 t2 = t1.AddSeconds(sbLen);
             }
+
+            lblValidSBCount.Text = string.Format(Properties.Resources.StringValidSBCount, sbIntervalList.Count);
 
             return table;
         }

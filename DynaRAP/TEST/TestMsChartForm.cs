@@ -96,7 +96,7 @@ namespace DynaRAP.TEST
 #endif
             {
 #if DEBUG
-                StreamReader sr = new StreamReader(@"C:\temp\a.xls");
+                StreamReader sr = new StreamReader(@"C:\temp\a_test.xls");
 #else
                 StreamReader sr = new StreamReader(dlg.FileName);
 #endif
