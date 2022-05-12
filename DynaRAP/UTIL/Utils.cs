@@ -24,7 +24,7 @@ namespace DynaRAP.UTIL
         public static string GetJulianFromDate(object obj)
         {
             DateTime dt = (DateTime)obj;
-            string strDate = String.Format("{0}:{1}:{2}:{3}.{4}", dt.DayOfYear, dt.Hour, dt.Minute, dt.Second, dt.TimeOfDay.Milliseconds);
+            string strDate = String.Format("{0}:{1}:{2}:{3}.{4}", dt.DayOfYear, dt.Hour, dt.Minute, dt.Second, dt.TimeOfDay.Milliseconds * 1000);
 
             return strDate;
         }

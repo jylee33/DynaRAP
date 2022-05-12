@@ -173,7 +173,7 @@
     <value>Delete preset - {0} ?</value>
   </data>
   <data name="StringNoSelectedRegion" xml:space="preserve">
-    <value>No selected region, or synchronize in advance.</value>
+    <value>No selected region.</value>
   </data>
   <data name="StringSplitCount" xml:space="preserve">
     <value>Splitted Flying Count : {0}</value>

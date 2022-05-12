@@ -31,7 +31,6 @@
             this.cboParameter = new DevExpress.XtraEditors.ComboBoxEdit();
             this.chartControl1 = new DevExpress.XtraCharts.ChartControl();
             this.rangeControl1 = new DevExpress.XtraEditors.RangeControl();
-            this.btnSync = new DevExpress.XtraEditors.SimpleButton();
             ((System.ComponentModel.ISupportInitialize)(this.cboParameter.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.rangeControl1)).BeginInit();
@@ -65,20 +64,10 @@
             this.rangeControl1.TabIndex = 4;
             this.rangeControl1.Text = "rangeControl1";
             // 
-            // btnSync
-            // 
-            this.btnSync.Location = new System.Drawing.Point(650, 1);
-            this.btnSync.Name = "btnSync";
-            this.btnSync.Size = new System.Drawing.Size(75, 23);
-            this.btnSync.TabIndex = 5;
-            this.btnSync.Text = "동기화";
-            this.btnSync.Click += new System.EventHandler(this.btnSync_Click);
-            // 
             // ImportParamControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.btnSync);
             this.Controls.Add(this.rangeControl1);
             this.Controls.Add(this.chartControl1);
             this.Controls.Add(this.cboParameter);
@@ -97,6 +86,5 @@
         private DevExpress.XtraEditors.ComboBoxEdit cboParameter;
         private DevExpress.XtraCharts.ChartControl chartControl1;
         private DevExpress.XtraEditors.RangeControl rangeControl1;
-        private DevExpress.XtraEditors.SimpleButton btnSync;
     }
 }

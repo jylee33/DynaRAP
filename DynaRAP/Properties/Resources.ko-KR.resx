@@ -173,7 +173,7 @@
     <value>{0} 프리셋을 삭제하시겠습니까?</value>
   </data>
   <data name="StringNoSelectedRegion" xml:space="preserve">
-    <value>선택된 영역이 없거나 동기화를 먼저 진행해 주세요.</value>
+    <value>선택된 영역이 없습니다.</value>
   </data>
   <data name="StringSplitCount" xml:space="preserve">
     <value>유효비행구간 : {0}구간</value>

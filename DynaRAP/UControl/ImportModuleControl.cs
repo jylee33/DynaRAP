@@ -30,6 +30,8 @@ namespace DynaRAP.UControl
         Dictionary<string, List<string>> dicData = new Dictionary<string, List<string>>();
         List<ImportParamControl> paramList = new List<ImportParamControl>();
         List<ImportIntervalControl> splitList = new List<ImportIntervalControl>();
+        List<ResponsePreset> presetList = null;
+        List<PresetData> pComboList = null;
 
         string csvFilePath = string.Empty;
         object minValue = null;
@@ -43,6 +45,12 @@ namespace DynaRAP.UControl
         private void ImportModuleControl_Load(object sender, EventArgs e)
         {
             //InitializeSplittedRegionList();
+
+            luePresetList.Properties.DisplayMember = "PresetName";
+            luePresetList.Properties.ValueMember = "PresetPack";
+            luePresetList.Properties.NullText = "";
+
+            InitializePresetList();
 
             DateTime dtNow = DateTime.Now;
             string strNow = string.Format("{0:yyyy-MM-dd}", dtNow);
@@ -69,6 +77,78 @@ namespace DynaRAP.UControl
 
         }
 
+        private void InitializePresetList()
+        {
+            luePresetList.Properties.DataSource = null;
+
+            presetList = GetPresetList();
+            pComboList = new List<PresetData>();
+
+            foreach (ResponsePreset list in presetList)
+            {
+                //Decoding
+                byte[] byte64 = Convert.FromBase64String(list.presetName);
+                string decName = Encoding.UTF8.GetString(byte64);
+
+                pComboList.Add(new PresetData(decName, list.presetPack));
+            }
+            luePresetList.Properties.DataSource = pComboList;
+#if !DEBUG
+            luePresetList.Properties.PopulateColumns();
+            luePresetList.Properties.ShowHeader = false;
+            luePresetList.Properties.Columns["PresetPack"].Visible = false;
+            luePresetList.Properties.ShowFooter = false;
+#else
+            luePresetList.Properties.PopulateColumns();
+            luePresetList.Properties.Columns["PresetName"].Width = 800;
+#endif
+
+            //luePresetList.EditValue = edtParamName.Text;
+        }
+
+        private List<ResponsePreset> GetPresetList()
+        {
+            string url = ConfigurationManager.AppSettings["UrlPreset"];
+            string sendData = @"
+            {
+            ""command"":""list"",
+            ""pageNo"":1,
+            ""pageSize"":3000
+            }";
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Method = "POST";
+            request.ContentType = "application/json";
+            request.Timeout = 30 * 1000;
+            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+
+            // POST할 데이타를 Request Stream에 쓴다
+            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+            request.ContentLength = bytes.Length; // 바이트수 지정
+
+            using (Stream reqStream = request.GetRequestStream())
+            {
+                reqStream.Write(bytes, 0, bytes.Length);
+            }
+
+            // Response 처리
+            string responseText = string.Empty;
+            using (WebResponse resp = request.GetResponse())
+            {
+                Stream respStream = resp.GetResponseStream();
+                using (StreamReader sr = new StreamReader(respStream))
+                {
+                    responseText = sr.ReadToEnd();
+                }
+            }
+
+            //Console.WriteLine(responseText);
+            ListPresetJsonData result = JsonConvert.DeserializeObject<ListPresetJsonData>(responseText);
+
+            return result.response;
+
+        }
+
         private void btnViewData_ButtonClick(object sender, EventArgs e)
         {
             if (File.Exists(csvFilePath) == false)
@@ -89,7 +169,7 @@ namespace DynaRAP.UControl
             AddParameter();
         }
 
-        int paramIndex = 7;
+        int paramIndex = 9;
 
         private void AddParameter()
         {
@@ -193,6 +273,12 @@ namespace DynaRAP.UControl
             import.flightAt = string.Format("{0:yyyy-MM-dd}", DateTime.Now);
             import.dataType = "flight";
             import.parts = new List<Part>();
+
+            string presetPack = String.Empty;
+            if (luePresetList.GetColumnValue("PresetPack") != null)
+                presetPack = luePresetList.GetColumnValue("PresetPack").ToString();
+
+            import.presetPack = presetPack;
 
             foreach (ImportIntervalControl ctrl in splitList)
             {
@@ -324,6 +410,11 @@ namespace DynaRAP.UControl
 
                 btnAddParameter.Enabled = true;
             }
+        }
+
+        private void luePresetList_EditValueChanged(object sender, EventArgs e)
+        {
+
         }
     }
 
