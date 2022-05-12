@@ -60,6 +60,17 @@ public class PartService {
         }
     }
 
+    public int getPartCount(CryptoField.NAuth registerUid, CryptoField uploadSeq) throws HandledServiceException {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("registerUid", registerUid == null || registerUid.isEmpty() ? null : registerUid);
+            params.put("uploadSeq", uploadSeq == null || uploadSeq.isEmpty() ? null : uploadSeq);
+            return partMapper.selectPartCount(params);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
     public PartVO getPartBySeq(CryptoField partSeq) throws HandledServiceException {
         try {
             Map<String, Object> params = new HashMap<>();

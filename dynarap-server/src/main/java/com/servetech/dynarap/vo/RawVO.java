@@ -73,6 +73,7 @@ public class RawVO implements IFlexibleValue {
         private String flightAt;
         private String dataType;
         private List<UploadPart> parts;
+        private boolean forcedImport;
 
         @Data
         public static class UploadPart {
