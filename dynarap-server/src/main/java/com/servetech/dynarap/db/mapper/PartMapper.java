@@ -26,6 +26,19 @@ public interface PartMapper {
     })
     List<PartVO> selectPartList(Map<String, Object> params) throws Exception;
 
+    @Select({
+            "<script>" +
+                    "select count(*) from dynarap_part " +
+                    "where 1 = 1 " +
+                    "<if test='@com.servetech.dynarap.db.type.MybatisEmptyChecker@isNotEmpty(registerUid)'>" +
+                    " and registerUid = #{registerUid,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField_NAuth} " +
+                    "</if>" +
+                    "<if test='@com.servetech.dynarap.db.type.MybatisEmptyChecker@isNotEmpty(uploadSeq)'>" +
+                    " and uploadSeq = #{uploadSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "</if>" +
+                    "</script>"
+    })
+    int selectPartCount(Map<String, Object> params) throws Exception;
 
     @Select({
             "<script>" +

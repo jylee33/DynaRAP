@@ -78,7 +78,7 @@ public class ServiceApiController extends ApiController {
     @RequestMapping(value = "/flight")
     @ResponseBody
     public Object apiFlight(HttpServletRequest request, @PathVariable String serviceVersion,
-                         @RequestBody JsonObject payload, Authentication authentication) throws HandledServiceException {
+                            @RequestBody JsonObject payload, Authentication authentication) throws HandledServiceException {
         /*
         String accessToken = request.getHeader("Authorization");
         if (accessToken == null || (!accessToken.startsWith("bearer") && !accessToken.startsWith("Bearer")))
@@ -119,7 +119,7 @@ public class ServiceApiController extends ApiController {
     @RequestMapping(value = "/param")
     @ResponseBody
     public Object apiParam(HttpServletRequest request, @PathVariable String serviceVersion,
-                         @RequestBody JsonObject payload, Authentication authentication) throws HandledServiceException {
+                           @RequestBody JsonObject payload, Authentication authentication) throws HandledServiceException {
         /*
         String accessToken = request.getHeader("Authorization");
         if (accessToken == null || (!accessToken.startsWith("bearer") && !accessToken.startsWith("Bearer")))
@@ -219,7 +219,7 @@ public class ServiceApiController extends ApiController {
     @RequestMapping(value = "/preset")
     @ResponseBody
     public Object apiPreset(HttpServletRequest request, @PathVariable String serviceVersion,
-                           @RequestBody JsonObject payload, Authentication authentication) throws HandledServiceException {
+                            @RequestBody JsonObject payload, Authentication authentication) throws HandledServiceException {
         /*
         String accessToken = request.getHeader("Authorization");
         if (accessToken == null || (!accessToken.startsWith("bearer") && !accessToken.startsWith("Bearer")))
@@ -344,7 +344,7 @@ public class ServiceApiController extends ApiController {
     @RequestMapping(value = "/dll")
     @ResponseBody
     public Object apiDLL(HttpServletRequest request, @PathVariable String serviceVersion,
-                            @RequestBody JsonObject payload, Authentication authentication) throws HandledServiceException {
+                         @RequestBody JsonObject payload, Authentication authentication) throws HandledServiceException {
         /*
         String accessToken = request.getHeader("Authorization");
         if (accessToken == null || (!accessToken.startsWith("bearer") && !accessToken.startsWith("Bearer")))
@@ -546,6 +546,60 @@ public class ServiceApiController extends ApiController {
         if (command.equals("create-part")) {
             List<PartVO> partList = getService(PartService.class).createPartList(user.getUid(), payload);
             return ResponseHelper.response(200, "Success - Create raw data part", partList);
+        }
+
+        throw new HandledServiceException(411, "명령이 정의되지 않았습니다.");
+    }
+
+    @RequestMapping(value = "/part")
+    @ResponseBody
+    public Object apiPart(HttpServletRequest request, @PathVariable String serviceVersion,
+                         @RequestBody JsonObject payload, Authentication authentication) throws HandledServiceException {
+        /*
+        String accessToken = request.getHeader("Authorization");
+        if (accessToken == null || (!accessToken.startsWith("bearer") && !accessToken.startsWith("Bearer")))
+            return ResponseHelper.error(403, "권한이 없습니다.");
+
+        String username = authentication.getPrincipal().toString();
+        */
+        UserVO user = getService(UserService.class).getUser("admin@dynarap@dynarap");
+
+        if (checkJsonEmpty(payload, "command"))
+            throw new HandledServiceException(404, "파라미터를 확인하세요.");
+
+        String command = payload.get("command").getAsString();
+
+        if (command.equals("list")) {
+            CryptoField.NAuth registerUid = null;
+            if (!checkJsonEmpty(payload, "registerUid"))
+                registerUid = CryptoField.NAuth.decode(payload.get("registerUid").getAsString(), 0L);
+
+            CryptoField uploadSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "uploadSeq"))
+                uploadSeq = CryptoField.decode(payload.get("uploadSeq").getAsString(), 0L);
+
+            Integer pageNo = 1;
+            if (!checkJsonEmpty(payload, "pageNo"))
+                pageNo = payload.get("pageNo").getAsInt();
+
+            Integer pageSize = 15;
+            if (!checkJsonEmpty(payload, "pageSize"))
+                pageSize = payload.get("pageSize").getAsInt();
+
+            List<PartVO> partList = getService(PartService.class).getPartList(registerUid, uploadSeq, pageNo, pageSize);
+            int partCount = getService(PartService.class).getPartCount(registerUid, uploadSeq);
+
+            return ResponseHelper.response(200, "Success - Part List", partCount, partList);
+        }
+
+        if (command.equals("info")) {
+            CryptoField partSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "partSeq"))
+                partSeq = CryptoField.decode(payload.get("partSeq").getAsString(), 0L);
+
+            PartVO partInfo = getService(PartService.class).getPartBySeq(partSeq);
+
+            return ResponseHelper.response(200, "Success - Part Info", partInfo);
         }
 
         throw new HandledServiceException(411, "명령이 정의되지 않았습니다.");

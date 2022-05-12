@@ -352,7 +352,9 @@ public class RawService {
                 rawUpload.setFetchCount(0);
             }
             else {
-                if (!uploadStat.containsKey(rawUpload.getSeq().valueOf())) {
+                if (!uploadStat.containsKey(rawUpload.getSeq().valueOf())
+                    || uploadReq.isForcedImport()) {
+                    rawUpload.setImportDone(false);
                     uploadStat.put(rawUpload.getSeq().valueOf(), rawUpload);
 
                     rawUpload.setStatus("import");
