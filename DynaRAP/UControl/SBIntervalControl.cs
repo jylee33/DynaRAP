@@ -1,4 +1,5 @@
 ﻿using DevExpress.XtraEditors;
+using DynaRAP.Data;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,12 +15,14 @@ namespace DynaRAP.UControl
     public partial class SBIntervalControl : DevExpress.XtraEditors.XtraUserControl
     {
         public event EventHandler DeleteBtnClicked;
-     
+        SplittedSB sb;
+
+
         public string Title
         {
             set
             {
-                edtFlying.Text = value;
+                edtSbName.Text = value;
             }
         }
 
@@ -28,9 +31,16 @@ namespace DynaRAP.UControl
             InitializeComponent();
         }
 
+        public SBIntervalControl(SplittedSB sb) : this()
+        {
+            this.sb = sb;
+        }
+
         private void SBIntervalControl_Load(object sender, EventArgs e)
         {
-
+            edtSbName.Text = sb.SbName;
+            edtStartTime.Text = sb.StartTime;
+            edtEndTime.Text = sb.EndTime;
         }
 
         private void btnDelete_Click(object sender, EventArgs e)

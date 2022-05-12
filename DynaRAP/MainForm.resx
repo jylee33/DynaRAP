@@ -496,13 +496,13 @@
     <value>해석데이터</value>
   </data>
   <data name="barSubItem3.Caption" xml:space="preserve">
-    <value>Parameter</value>
+    <value>Matching Table</value>
   </data>
   <data name="btnMgmtParameter.Caption" xml:space="preserve">
-    <value>파라미터 관리</value>
+    <value>LRP 관리</value>
   </data>
   <data name="btnMgmtPreset.Caption" xml:space="preserve">
-    <value>프리셋 관리</value>
+    <value>매칭테이블 작성</value>
   </data>
   <data name="btnMgmtPresetGroup.Caption" xml:space="preserve">
     <value>프리셋그룹 관리</value>
@@ -765,6 +765,30 @@
   <data name="&gt;&gt;btnBinModule.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
+  <data name="&gt;&gt;barSubItem4.Name" xml:space="preserve">
+    <value>barSubItem4</value>
+  </data>
+  <data name="&gt;&gt;barSubItem4.Type" xml:space="preserve">
+    <value>DevExpress.XtraBars.BarSubItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  </data>
+  <data name="&gt;&gt;btnChartLine2d.Name" xml:space="preserve">
+    <value>btnChartLine2d</value>
+  </data>
+  <data name="&gt;&gt;btnChartLine2d.Type" xml:space="preserve">
+    <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  </data>
+  <data name="&gt;&gt;btnChartMinMax.Name" xml:space="preserve">
+    <value>btnChartMinMax</value>
+  </data>
+  <data name="&gt;&gt;btnChartMinMax.Type" xml:space="preserve">
+    <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  </data>
+  <data name="&gt;&gt;btnChartPotato.Name" xml:space="preserve">
+    <value>btnChartPotato</value>
+  </data>
+  <data name="&gt;&gt;btnChartPotato.Type" xml:space="preserve">
+    <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  </data>
   <data name="&gt;&gt;bar2.Name" xml:space="preserve">
     <value>bar2</value>
   </data>
@@ -800,30 +824,6 @@
   </data>
   <data name="&gt;&gt;tabbedView1.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.Docking2010.Views.Tabbed.TabbedView, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
-  </data>
-  <data name="&gt;&gt;barSubItem4.Name" xml:space="preserve">
-    <value>barSubItem4</value>
-  </data>
-  <data name="&gt;&gt;barSubItem4.Type" xml:space="preserve">
-    <value>DevExpress.XtraBars.BarSubItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
-  </data>
-  <data name="&gt;&gt;btnChartLine2d.Name" xml:space="preserve">
-    <value>btnChartLine2d</value>
-  </data>
-  <data name="&gt;&gt;btnChartLine2d.Type" xml:space="preserve">
-    <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
-  </data>
-  <data name="&gt;&gt;btnChartMinMax.Name" xml:space="preserve">
-    <value>btnChartMinMax</value>
-  </data>
-  <data name="&gt;&gt;btnChartMinMax.Type" xml:space="preserve">
-    <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
-  </data>
-  <data name="&gt;&gt;btnChartPotato.Name" xml:space="preserve">
-    <value>btnChartPotato</value>
-  </data>
-  <data name="&gt;&gt;btnChartPotato.Type" xml:space="preserve">
-    <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>MainForm</value>

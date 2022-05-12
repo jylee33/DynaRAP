@@ -132,6 +132,8 @@ namespace DynaRAP.UControl
             this.minValue = range.Range.Minimum;
             this.maxValue = range.Range.Maximum;
 
+            Sync();
+
         }
 
         public void SelectRegion(object min, object max)
@@ -139,7 +141,9 @@ namespace DynaRAP.UControl
             this.minValue = min;
             this.maxValue = max;
 
+            rangeControl1.RangeChanged -= RangeControl1_RangeChanged;
             rangeControl1.SelectedRange = new RangeControlRange(min, max);
+            rangeControl1.RangeChanged += RangeControl1_RangeChanged;
         }
 
         private DataTable GetChartValues(string strKey)
@@ -185,17 +189,11 @@ namespace DynaRAP.UControl
 
         }
 
-        private void btnSync_Click(object sender, EventArgs e)
+        public void Sync()
         {
             SelectedRangeEventArgs args = new SelectedRangeEventArgs(minValue, maxValue);
             if (null != OnSelectedRange)
                 OnSelectedRange(this, args);
-
-        }
-
-        public void Sync()
-        {
-            btnSync_Click(this, null);
         }
     }
 }

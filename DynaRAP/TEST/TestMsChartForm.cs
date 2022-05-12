@@ -96,7 +96,7 @@ namespace DynaRAP.TEST
 #endif
             {
 #if DEBUG
-                StreamReader sr = new StreamReader(@"C:\temp\a.xls");
+                StreamReader sr = new StreamReader(@"C:\temp\a_test.xls");
 #else
                 StreamReader sr = new StreamReader(dlg.FileName);
 #endif
@@ -180,7 +180,7 @@ namespace DynaRAP.TEST
             series1.LabelForeColor = Color.Red;
             series1.MarkerStyle = MarkerStyle.Square;
             series1.MarkerSize = 3;
-            series1.MarkerColor = Color.Red;
+            series1.MarkerColor = Color.Black;
 
             series1.XValueMember = "Argument";
             series1.YValueMembers = "Value";

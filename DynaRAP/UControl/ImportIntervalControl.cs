@@ -15,6 +15,29 @@ namespace DynaRAP.UControl
     {
         public event EventHandler DeleteBtnClicked;
 
+        object min;
+        object max;
+
+        public string PartName
+        {
+            get { return edtFlying.Text; }
+        }
+
+        public object Min
+        {
+            get { return this.min; }
+        }
+
+        public object Max
+        {
+            get { return this.max; }
+        }
+
+        public string EndTime
+        {
+            get { return edtEndTime.Text; }
+        }
+
         public string Title
         {
             set
@@ -30,6 +53,9 @@ namespace DynaRAP.UControl
 
         public ImportIntervalControl(object min, object max) : this()
         {
+            this.min = min;
+            this.max = max;
+
             edtStartTime.Text = min.ToString();
             edtEndTime.Text = max.ToString();
         }

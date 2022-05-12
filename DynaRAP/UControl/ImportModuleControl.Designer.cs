@@ -57,6 +57,8 @@
             this.lblSplitCount = new DevExpress.XtraEditors.LabelControl();
             this.btnSaveSplittedInterval = new DevExpress.XtraEditors.ButtonEdit();
             this.imageCollection1 = new DevExpress.Utils.ImageCollection(this.components);
+            this.labelControl1 = new DevExpress.XtraEditors.LabelControl();
+            this.luePresetList = new DevExpress.XtraEditors.LookUpEdit();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.separatorControl1)).BeginInit();
             this.panelData.SuspendLayout();
@@ -70,6 +72,7 @@
             this.tableLayoutPanel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnSaveSplittedInterval.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.luePresetList.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -126,6 +129,8 @@
             this.panelData.Controls.Add(this.labelControl6);
             this.panelData.Controls.Add(this.labelControl14);
             this.panelData.Controls.Add(this.labelControl17);
+            this.panelData.Controls.Add(this.labelControl1);
+            this.panelData.Controls.Add(this.luePresetList);
             this.panelData.Controls.Add(this.tableLayoutPanel2);
             this.panelData.Controls.Add(this.lblFlyingData);
             this.panelData.Controls.Add(this.labelControl18);
@@ -180,7 +185,7 @@
             this.tableLayoutPanel2.Controls.Add(this.labelControl13, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.btnViewData, 1, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 83);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 134);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 1;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -217,7 +222,7 @@
             this.lblFlyingData.Appearance.Font = new System.Drawing.Font("Tahoma", 8F, System.Drawing.FontStyle.Bold);
             this.lblFlyingData.Appearance.Options.UseFont = true;
             this.lblFlyingData.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
-            this.lblFlyingData.Location = new System.Drawing.Point(3, 115);
+            this.lblFlyingData.Location = new System.Drawing.Point(3, 166);
             this.lblFlyingData.Name = "lblFlyingData";
             this.lblFlyingData.Padding = new System.Windows.Forms.Padding(3, 0, 0, 0);
             this.lblFlyingData.Size = new System.Drawing.Size(54, 13);
@@ -227,7 +232,7 @@
             // 
             // labelControl18
             // 
-            this.labelControl18.Location = new System.Drawing.Point(3, 134);
+            this.labelControl18.Location = new System.Drawing.Point(3, 185);
             this.labelControl18.Name = "labelControl18";
             this.labelControl18.Size = new System.Drawing.Size(726, 15);
             this.labelControl18.TabIndex = 18;
@@ -237,7 +242,7 @@
             // 
             this.btnAddParameter.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnAddParameter.EditValue = "파라미터 추가";
-            this.btnAddParameter.Location = new System.Drawing.Point(619, 155);
+            this.btnAddParameter.Location = new System.Drawing.Point(619, 206);
             this.btnAddParameter.Name = "btnAddParameter";
             this.btnAddParameter.Properties.Appearance.Options.UseTextOptions = true;
             this.btnAddParameter.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
@@ -252,7 +257,7 @@
             // 
             this.labelControl19.Appearance.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold);
             this.labelControl19.Appearance.Options.UseFont = true;
-            this.labelControl19.Location = new System.Drawing.Point(3, 183);
+            this.labelControl19.Location = new System.Drawing.Point(3, 234);
             this.labelControl19.Name = "labelControl19";
             this.labelControl19.Size = new System.Drawing.Size(88, 17);
             this.labelControl19.TabIndex = 29;
@@ -260,7 +265,7 @@
             // 
             // labelControl20
             // 
-            this.labelControl20.Location = new System.Drawing.Point(3, 206);
+            this.labelControl20.Location = new System.Drawing.Point(3, 257);
             this.labelControl20.Name = "labelControl20";
             this.labelControl20.Size = new System.Drawing.Size(627, 30);
             this.labelControl20.TabIndex = 30;
@@ -271,7 +276,7 @@
             // 
             this.btnAddSplittedInterval.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnAddSplittedInterval.EditValue = "분할구간 추가";
-            this.btnAddSplittedInterval.Location = new System.Drawing.Point(619, 242);
+            this.btnAddSplittedInterval.Location = new System.Drawing.Point(619, 293);
             this.btnAddSplittedInterval.Name = "btnAddSplittedInterval";
             this.btnAddSplittedInterval.Properties.Appearance.Options.UseTextOptions = true;
             this.btnAddSplittedInterval.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
@@ -286,7 +291,7 @@
             // 
             this.separatorControl2.BackColor = System.Drawing.Color.White;
             this.separatorControl2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.separatorControl2.Location = new System.Drawing.Point(3, 270);
+            this.separatorControl2.Location = new System.Drawing.Point(3, 321);
             this.separatorControl2.Name = "separatorControl2";
             this.separatorControl2.Padding = new System.Windows.Forms.Padding(9, 10, 9, 10);
             this.separatorControl2.Size = new System.Drawing.Size(726, 1);
@@ -304,7 +309,7 @@
             this.tableLayoutPanel4.Controls.Add(this.labelControl22, 0, 0);
             this.tableLayoutPanel4.Controls.Add(this.labelControl23, 1, 0);
             this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel4.Location = new System.Drawing.Point(0, 274);
+            this.tableLayoutPanel4.Location = new System.Drawing.Point(0, 325);
             this.tableLayoutPanel4.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
             this.tableLayoutPanel4.RowCount = 1;
@@ -360,7 +365,7 @@
             // 
             this.separatorControl3.BackColor = System.Drawing.Color.White;
             this.separatorControl3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.separatorControl3.Location = new System.Drawing.Point(3, 311);
+            this.separatorControl3.Location = new System.Drawing.Point(3, 362);
             this.separatorControl3.Name = "separatorControl3";
             this.separatorControl3.Padding = new System.Windows.Forms.Padding(9, 10, 9, 10);
             this.separatorControl3.Size = new System.Drawing.Size(726, 1);
@@ -374,7 +379,7 @@
             this.tableLayoutPanel3.Controls.Add(this.lblSplitCount, 0, 0);
             this.tableLayoutPanel3.Controls.Add(this.btnSaveSplittedInterval, 1, 0);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 318);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 369);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 1;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -403,7 +408,6 @@
             this.btnSaveSplittedInterval.Properties.ReadOnly = true;
             this.btnSaveSplittedInterval.Size = new System.Drawing.Size(104, 22);
             this.btnSaveSplittedInterval.TabIndex = 12;
-            this.btnSaveSplittedInterval.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.btnSaveSplittedInterval_ButtonClick);
             this.btnSaveSplittedInterval.Click += new System.EventHandler(this.btnSaveSplittedInterval_ButtonClick);
             // 
             // imageCollection1
@@ -411,6 +415,26 @@
             this.imageCollection1.ImageStream = ((DevExpress.Utils.ImageCollectionStreamer)(resources.GetObject("imageCollection1.ImageStream")));
             this.imageCollection1.Images.SetKeyName(0, "none.png");
             this.imageCollection1.Images.SetKeyName(1, "view.png");
+            // 
+            // labelControl1
+            // 
+            this.labelControl1.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
+            this.labelControl1.Appearance.Options.UseFont = true;
+            this.labelControl1.Location = new System.Drawing.Point(3, 83);
+            this.labelControl1.Name = "labelControl1";
+            this.labelControl1.Size = new System.Drawing.Size(65, 17);
+            this.labelControl1.TabIndex = 0;
+            this.labelControl1.Text = "프리셋 구성";
+            // 
+            // luePresetList
+            // 
+            this.luePresetList.Location = new System.Drawing.Point(3, 106);
+            this.luePresetList.Name = "luePresetList";
+            this.luePresetList.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.luePresetList.Size = new System.Drawing.Size(357, 22);
+            this.luePresetList.TabIndex = 24;
+            this.luePresetList.EditValueChanged += new System.EventHandler(this.luePresetList_EditValueChanged);
             // 
             // ImportModuleControl
             // 
@@ -438,6 +462,7 @@
             this.tableLayoutPanel3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnSaveSplittedInterval.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.luePresetList.Properties)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -471,5 +496,7 @@
         private DevExpress.XtraEditors.LabelControl labelControl23;
         private DevExpress.XtraEditors.SeparatorControl separatorControl2;
         private DevExpress.XtraEditors.SeparatorControl separatorControl3;
+        private DevExpress.XtraEditors.LabelControl labelControl1;
+        private DevExpress.XtraEditors.LookUpEdit luePresetList;
     }
 }

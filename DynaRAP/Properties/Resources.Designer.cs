@@ -224,7 +224,7 @@ namespace DynaRAP.Properties {
         }
         
         /// <summary>
-        ///   No selected region, or synchronize in advance.과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   No selected region.과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string StringNoSelectedRegion {
             get {
@@ -247,6 +247,15 @@ namespace DynaRAP.Properties {
         internal static string StringSuccess {
             get {
                 return ResourceManager.GetString("StringSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Import successfully.과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string StringSuccessImport {
+            get {
+                return ResourceManager.GetString("StringSuccessImport", resourceCulture);
             }
         }
         
