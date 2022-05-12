@@ -233,7 +233,7 @@ namespace DynaRAP.UControl
             }
             
             ImportIntervalControl ctrl = new ImportIntervalControl(minValue, maxValue);
-            ctrl.Title = "비행구간#" + (paramIndex + intervalIndex).ToString();
+            ctrl.Title = "flight#" + (paramIndex + intervalIndex).ToString();
             ctrl.DeleteBtnClicked += new EventHandler(Interval_DeleteBtnClicked);
             panelData.Controls.Add(ctrl);
             panelData.Controls.SetChildIndex(ctrl, paramIndex + intervalIndex);
@@ -282,7 +282,10 @@ namespace DynaRAP.UControl
 
             foreach (ImportIntervalControl ctrl in splitList)
             {
-                string partName = ctrl.PartName;
+                //Encoding
+                byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(ctrl.PartName);
+                string partName = Convert.ToBase64String(basebyte);
+
                 string t1 = Utils.GetJulianFromDate(ctrl.Min);
                 string t2 = Utils.GetJulianFromDate(ctrl.Max);
 
