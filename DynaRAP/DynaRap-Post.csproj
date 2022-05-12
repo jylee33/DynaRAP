@@ -275,6 +275,12 @@
     <Compile Include="UControl\BinTableControl.Designer.cs">
       <DependentUpon>BinTableControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="UControl\ImportProgressForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UControl\ImportProgressForm.Designer.cs">
+      <DependentUpon>ImportProgressForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="UControl\CsvTableControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -529,6 +535,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\BinTableControl.resx">
       <DependentUpon>BinTableControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\ImportProgressForm.resx">
+      <DependentUpon>ImportProgressForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\CsvTableControl.resx">
       <DependentUpon>CsvTableControl.cs</DependentUpon>

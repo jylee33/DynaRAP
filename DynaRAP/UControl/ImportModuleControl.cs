@@ -261,7 +261,7 @@ namespace DynaRAP.UControl
 
             if (bResult)
             {
-                MessageBox.Show(Properties.Resources.StringSuccessImport, Properties.Resources.StringSuccess, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                //MessageBox.Show(Properties.Resources.StringSuccessImport, Properties.Resources.StringSuccess, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
 
@@ -335,6 +335,9 @@ namespace DynaRAP.UControl
                 }
                 else
                 {
+                // progress 확인
+                ImportProgressForm form = new ImportProgressForm(result.response.seq);
+                form.ShowDialog();
                 }
             }
             return true;

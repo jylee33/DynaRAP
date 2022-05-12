@@ -1,0 +1,155 @@
+﻿using DevExpress.XtraEditors;
+using DynaRAP.Data;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Configuration;
+using System.Data;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace DynaRAP.UControl
+{
+    public partial class ImportProgressForm : DevExpress.XtraEditors.XtraForm
+    {
+        System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
+        int progress = 0;
+        bool isCompleted = false;
+        string uploadSeq = string.Empty;
+        int fetchCount = 0;
+        int totalFetchCount = 0;
+
+        public ImportProgressForm()
+        {
+            InitializeComponent();
+
+        }
+
+        public ImportProgressForm(string uploadSeq) : this()
+        {
+            timer.Interval = 3000;
+            timer.Tick += Timer_Tick;
+
+            this.uploadSeq = uploadSeq;
+
+        }
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            if (isCompleted)
+            {
+                timer.Stop();
+                this.Close();
+            }
+
+            if (GetProgress())
+            {
+                if (fetchCount >= totalFetchCount + 1)
+                {
+                    progress = totalFetchCount;
+                    isCompleted = true;
+                }
+                progressBar.Position = fetchCount;
+                lblProgress.Text = string.Format("{0} / {1}", fetchCount, totalFetchCount);
+            }
+
+        }
+
+        private void ImportProgressForm_Load(object sender, EventArgs e)
+        {
+            isCompleted = false;
+            lblProgress.Text = String.Empty;
+
+            progressBar.Properties.ShowTitle = true;
+
+            if(GetProgress())
+            {
+                progressBar.Properties.Minimum = 0;
+                progressBar.Properties.Maximum = this.totalFetchCount;
+
+                if (fetchCount >= totalFetchCount + 1)
+                {
+                    progress = totalFetchCount;
+                    isCompleted = true;
+                }
+                progressBar.Position = fetchCount;
+                lblProgress.Text = string.Format("{0} / {1}", fetchCount, totalFetchCount);
+
+                timer.Start();
+            }
+
+        }
+
+        private bool GetProgress()
+        {
+            string url = ConfigurationManager.AppSettings["UrlImport"];
+            string sendData = string.Format(@"
+            {{
+            ""command"":""progress"",
+            ""uploadSeq"":""{0}""
+            }}"
+            , uploadSeq);
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Method = "POST";
+            request.ContentType = "application/json";
+            request.Timeout = 60 * 60 * 1000;   // 1시간 timeout
+            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+
+            // POST할 데이타를 Request Stream에 쓴다
+            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+            request.ContentLength = bytes.Length; // 바이트수 지정
+
+            using (Stream reqStream = request.GetRequestStream())
+            {
+                reqStream.Write(bytes, 0, bytes.Length);
+            }
+
+            // Response 처리
+            string responseText = string.Empty;
+            using (WebResponse resp = request.GetResponse())
+            {
+                Stream respStream = resp.GetResponseStream();
+                using (StreamReader sr = new StreamReader(respStream))
+                {
+                    responseText = sr.ReadToEnd();
+                }
+            }
+
+            //Console.WriteLine(responseText);
+            ImportResponse result = JsonConvert.DeserializeObject<ImportResponse>(responseText);
+
+            if (result != null)
+            {
+                if (result.code != 200)
+                {
+                    MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+                else
+                {
+                    if (result.response.status.Equals("import-done"))
+                    {
+                        isCompleted = true;
+                        timer.Stop();
+                        MessageBox.Show(result.response.statusMessage);
+                        this.Close();
+                    }
+                    else
+                    {
+                        this.fetchCount = result.response.fetchCount;
+                        this.totalFetchCount = result.response.totalFetchCount;
+                    }
+                }
+            }
+            return true;
+        }
+    }
+}
