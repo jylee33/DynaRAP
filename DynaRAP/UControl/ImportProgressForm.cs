@@ -25,10 +25,12 @@ namespace DynaRAP.UControl
         string uploadSeq = string.Empty;
         int fetchCount = 0;
         int totalFetchCount = 0;
+        bool bFirst = true;
 
         public ImportProgressForm()
         {
             InitializeComponent();
+            bFirst = true;
 
         }
 
@@ -139,7 +141,9 @@ namespace DynaRAP.UControl
                     {
                         isCompleted = true;
                         timer.Stop();
-                        MessageBox.Show(result.response.statusMessage);
+                        
+                        if(bFirst)
+                            MessageBox.Show(result.response.statusMessage);
                         this.Close();
                     }
                     else
@@ -149,6 +153,7 @@ namespace DynaRAP.UControl
                     }
                 }
             }
+            bFirst = false;
             return true;
         }
     }

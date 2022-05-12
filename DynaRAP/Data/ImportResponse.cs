@@ -15,6 +15,15 @@ namespace DynaRAP.Data
         public int resultCount { get; set; }
     }
 
+    public class UploadListResponse
+    {
+        public int code { get; set; }
+        public string message { get; set; }
+        public List<ResponseImport> response { get; set; }
+        public ResponseAtImport responseAt { get; set; }
+        public int resultCount { get; set; }
+    }
+
     public class FlightAt
     {
         public long timestamp { get; set; }

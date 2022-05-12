@@ -40,6 +40,8 @@ namespace DynaRAP.UControl
         DateTime startTime = DateTime.Now;
         DateTime endTime = DateTime.Now;
 
+        Dictionary<string, List<string>> uploadList = new Dictionary<string, List<string>>();
+
         public SBModuleControl()
         {
             InitializeComponent();
@@ -51,6 +53,7 @@ namespace DynaRAP.UControl
             luePresetList.Properties.ValueMember = "PresetPack";
             luePresetList.Properties.NullText = "";
 
+            GetUploadList();
             InitializePreviewChart();
             InitializeUploadTypeList();
             InitializePresetList();
@@ -93,6 +96,70 @@ namespace DynaRAP.UControl
 
         }
 
+        private bool GetUploadList()
+        {
+            string url = ConfigurationManager.AppSettings["UrlImport"];
+            string sendData = @"
+            {
+            ""command"":""upload-list""
+            }";
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Method = "POST";
+            request.ContentType = "application/json";
+            request.Timeout = 30 * 1000;
+            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+
+            // POST할 데이타를 Request Stream에 쓴다
+            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+            request.ContentLength = bytes.Length; // 바이트수 지정
+
+            using (Stream reqStream = request.GetRequestStream())
+            {
+                reqStream.Write(bytes, 0, bytes.Length);
+            }
+
+            // Response 처리
+            string responseText = string.Empty;
+            using (WebResponse resp = request.GetResponse())
+            {
+                Stream respStream = resp.GetResponseStream();
+                using (StreamReader sr = new StreamReader(respStream))
+                {
+                    responseText = sr.ReadToEnd();
+                }
+            }
+
+            //Console.WriteLine(responseText);
+            UploadListResponse result = JsonConvert.DeserializeObject<UploadListResponse>(responseText);
+            uploadList.Clear();
+
+            if (result != null)
+            {
+                if (result.code != 200)
+                {
+                    return false;
+                }
+                else
+                {
+                    foreach (ResponseImport res in result.response)
+                    {
+                        if (uploadList.ContainsKey(res.dataType) == false)
+                        {
+                            uploadList.Add(res.dataType, new List<string>());
+                        }
+
+                        //Decoding
+                        byte[] byte64 = Convert.FromBase64String(res.uploadName);
+                        string decName = Encoding.UTF8.GetString(byte64);
+                        uploadList[res.dataType].Add(decName);
+                    }
+                }
+            }
+            return true;
+
+        }
+
         private void InitializePreviewChart()
         {
             myChartArea.CursorX.IsUserEnabled = true;
@@ -101,6 +168,10 @@ namespace DynaRAP.UControl
             myChartArea.BackColor = Color.FromArgb(37, 37, 38);
             myChartArea.AxisX.LabelStyle.ForeColor = Color.White;
             myChartArea.AxisY.LabelStyle.ForeColor = Color.White;
+            myChartArea.AxisX.MajorGrid.Enabled = false;
+            myChartArea.AxisX.MinorGrid.Enabled = false;
+            myChartArea.AxisY.MajorGrid.Enabled = false;
+            myChartArea.AxisY.MinorGrid.Enabled = false;
             ////
 
             chart1.ChartAreas.RemoveAt(0);
@@ -137,11 +208,10 @@ namespace DynaRAP.UControl
             cboUploadType.SelectedIndexChanged += cboUploadType_SelectedIndexChanged;
 
             cboFlying.Properties.Items.Clear();
-            cboUploadType.Properties.Items.Add("ADAMS");
-            cboUploadType.Properties.Items.Add("ZAERO");
-            cboUploadType.Properties.Items.Add("GRT");
-            cboUploadType.Properties.Items.Add("FLTP");
-            cboUploadType.Properties.Items.Add("FLTS");
+            foreach (string str in uploadList.Keys)
+            {
+                cboUploadType.Properties.Items.Add(str);
+            }
 
             cboUploadType.SelectedIndex = 0;
         }
@@ -163,9 +233,11 @@ namespace DynaRAP.UControl
             cboFlying.SelectedIndexChanged += CboFlying_SelectedIndexChanged;
 
             cboFlying.Properties.Items.Clear();
-            cboFlying.Properties.Items.Add("비행분할 #1");
-            cboFlying.Properties.Items.Add("비행분할 #2");
-            cboFlying.Properties.Items.Add("비행분할 #3");
+
+            foreach (string str in uploadList[uploadType])
+            {
+                cboFlying.Properties.Items.Add(str);
+            }
 
             cboFlying.SelectedIndex = 0;
 
@@ -194,7 +266,7 @@ namespace DynaRAP.UControl
 #endif
             {
 #if DEBUG
-                StreamReader sr = new StreamReader(@"C:\temp\a_test.xls");
+                StreamReader sr = new StreamReader(@"C:\temp\a.xls");
 #else
                 StreamReader sr = new StreamReader(dlg.FileName);
 #endif
@@ -289,12 +361,11 @@ namespace DynaRAP.UControl
             chart1.BackColor = Color.FromArgb(37, 37, 38);
             chart1.DataBind();
 
+            AddIntervalList();
             AddStripLines();
 
         }
 
-        double sbLen = 0.0001;
-        double overlap = 0.4;
 
         private DataTable GetChartValues(string strKey)
         {
@@ -329,7 +400,16 @@ namespace DynaRAP.UControl
                 table.Rows.Add(row);
                 i++;
             }
+            Console.WriteLine(string.Format("StartTime : {0}, EndTime : {1}", string.Format("{0:yyyy-MM-dd hh:mm:ss.ffffff}", startTime), string.Format("{0:yyyy-MM-dd hh:mm:ss.ffffff}", endTime)));
 
+            return table;
+        }
+
+        double sbLen = 1;
+        double overlap = 10;
+
+        private void AddIntervalList()
+        {
             sbIntervalList.Clear();
 
             intervalIndex = startIntervalIndex;
@@ -340,41 +420,42 @@ namespace DynaRAP.UControl
             double.TryParse(edtSBLength.Text, out sbLen);
             double.TryParse(edtOverlap.Text, out overlap);
 
+            overlap *= 0.01;
+
             //sbLen = 0.1;//test
 
             DateTime t1 = startTime;
             DateTime t2 = t1.AddSeconds(sbLen);
-            i = 0;
-            while(t1 < endTime)
+            int i = 0;
+            while (t1 < endTime)
             {
-                Console.WriteLine(i + string.Format(" - StartTime : {0}, EndTime : {1}", string.Format("{0:yyyy-MM-dd hh:mm:ss.ffffff}", t1), string.Format("{0:yyyy-MM-dd hh:mm:ss.ffffff}", t2)));
+                //Console.WriteLine(i + string.Format(" - StartTime : {0}, EndTime : {1}", string.Format("{0:yyyy-MM-dd hh:mm:ss.ffffff}", t1), string.Format("{0:yyyy-MM-dd hh:mm:ss.ffffff}", t2)));
                 SplittedSB sb = new SplittedSB(string.Format("ShortBlock#{0}", i), string.Format("{0:yyyy-MM-dd hh:mm:ss.ffffff}", t1), string.Format("{0:yyyy-MM-dd hh:mm:ss.ffffff}", t2), 0);
                 i++;
 
                 AddSplittedInterval(sb);
-                
-                t1 = t2.AddSeconds(-(sbLen * overlap * 0.01));
+
+                t1 = t2.AddSeconds(-(sbLen * overlap));
                 t2 = t1.AddSeconds(sbLen);
             }
 
             lblValidSBCount.Text = string.Format(Properties.Resources.StringValidSBCount, sbIntervalList.Count);
 
-            return table;
         }
-
         private void AddStripLines()
         {
             double.TryParse(edtSBLength.Text, out sbLen);
             double.TryParse(edtOverlap.Text, out overlap);
 
-            sbLen *= 0.0001;
+            //sbLen *= 0.00001;
             //sbLen *= 0.1;
             overlap *= 0.01;
 
             if (sbLen <= 0 || overlap <= 0)
                 return;
 
-            Axis ax = chart1.ChartAreas[0].AxisX;
+            //Axis ax = chart1.ChartAreas[0].AxisX;
+            Axis ax = myChartArea.AxisX;
             List<Color> colors = new List<Color>()  {   Color.FromArgb(75, 44, 44), Color.FromArgb(98, 41, 41)
                                                         , Color.FromArgb(64, Color.LightSeaGreen), Color.FromArgb(64, Color.LightGoldenrodYellow)};
 
@@ -383,6 +464,12 @@ namespace DynaRAP.UControl
             if (double.IsNaN(hrange))
                 return;
 
+            TimeSpan spanStart = new TimeSpan(startTime.Day, startTime.Hour, startTime.Minute, startTime.Second, startTime.Millisecond);
+            TimeSpan spanEnd = new TimeSpan(endTime.Day, endTime.Hour, endTime.Minute, endTime.Second, endTime.Millisecond);
+            TimeSpan spanGap = spanEnd.Subtract(spanStart);
+
+            sbLen = sbLen * hrange / spanGap.TotalSeconds;
+
             ax.StripLines.Clear();
 
             StripLine sl = new StripLine();
@@ -390,7 +477,7 @@ namespace DynaRAP.UControl
             sl.StripWidth = hrange;            // width, 너비
             sl.IntervalOffset = 0;  // x-position, 시작점
             sl.BackColor = colors[0];
-            //ax.StripLines.Add(sl);
+            ax.StripLines.Add(sl);
 
             double offset = sbLen * (1 - overlap);
             //double startTime = 0;
@@ -553,11 +640,13 @@ namespace DynaRAP.UControl
 
         private void edtSBLength_EditValueChanged(object sender, EventArgs e)
         {
+            AddIntervalList();
             AddStripLines();
         }
 
         private void edtOverlap_EditValueChanged(object sender, EventArgs e)
         {
+            AddIntervalList();
             AddStripLines();
         }
 

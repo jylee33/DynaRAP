@@ -207,7 +207,7 @@ namespace DynaRAP
             }
 
 #if DEBUG
-            tabbedView1.ActivateDocument(importModuleControl);
+            tabbedView1.ActivateDocument(sbModuleControl);
 #else
             tabbedView1.RemoveDocument(importModuleControl);
             tabbedView1.RemoveDocument(sbModuleControl);

@@ -37,6 +37,8 @@
             this.labelControl6 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl14 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl17 = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl1 = new DevExpress.XtraEditors.LabelControl();
+            this.luePresetList = new DevExpress.XtraEditors.LookUpEdit();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.labelControl13 = new DevExpress.XtraEditors.LabelControl();
             this.btnViewData = new DevExpress.XtraEditors.ButtonEdit();
@@ -57,11 +59,11 @@
             this.lblSplitCount = new DevExpress.XtraEditors.LabelControl();
             this.btnSaveSplittedInterval = new DevExpress.XtraEditors.ButtonEdit();
             this.imageCollection1 = new DevExpress.Utils.ImageCollection(this.components);
-            this.labelControl1 = new DevExpress.XtraEditors.LabelControl();
-            this.luePresetList = new DevExpress.XtraEditors.LookUpEdit();
+            this.chkForcedImport = new DevExpress.XtraEditors.CheckEdit();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.separatorControl1)).BeginInit();
             this.panelData.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.luePresetList.Properties)).BeginInit();
             this.tableLayoutPanel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnViewData.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnAddParameter.Properties)).BeginInit();
@@ -72,7 +74,7 @@
             this.tableLayoutPanel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnSaveSplittedInterval.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.luePresetList.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chkForcedImport.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -176,6 +178,26 @@
             this.labelControl17.Size = new System.Drawing.Size(153, 15);
             this.labelControl17.TabIndex = 16;
             this.labelControl17.Text = "                                                   ";
+            // 
+            // labelControl1
+            // 
+            this.labelControl1.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
+            this.labelControl1.Appearance.Options.UseFont = true;
+            this.labelControl1.Location = new System.Drawing.Point(3, 83);
+            this.labelControl1.Name = "labelControl1";
+            this.labelControl1.Size = new System.Drawing.Size(65, 17);
+            this.labelControl1.TabIndex = 0;
+            this.labelControl1.Text = "프리셋 구성";
+            // 
+            // luePresetList
+            // 
+            this.luePresetList.Location = new System.Drawing.Point(3, 106);
+            this.luePresetList.Name = "luePresetList";
+            this.luePresetList.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.luePresetList.Size = new System.Drawing.Size(357, 22);
+            this.luePresetList.TabIndex = 24;
+            this.luePresetList.EditValueChanged += new System.EventHandler(this.luePresetList_EditValueChanged);
             // 
             // tableLayoutPanel2
             // 
@@ -373,11 +395,13 @@
             // 
             // tableLayoutPanel3
             // 
-            this.tableLayoutPanel3.ColumnCount = 2;
+            this.tableLayoutPanel3.ColumnCount = 3;
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 110F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 110F));
             this.tableLayoutPanel3.Controls.Add(this.lblSplitCount, 0, 0);
-            this.tableLayoutPanel3.Controls.Add(this.btnSaveSplittedInterval, 1, 0);
+            this.tableLayoutPanel3.Controls.Add(this.btnSaveSplittedInterval, 2, 0);
+            this.tableLayoutPanel3.Controls.Add(this.chkForcedImport, 1, 0);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 369);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
@@ -416,25 +440,13 @@
             this.imageCollection1.Images.SetKeyName(0, "none.png");
             this.imageCollection1.Images.SetKeyName(1, "view.png");
             // 
-            // labelControl1
+            // chkForcedImport
             // 
-            this.labelControl1.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
-            this.labelControl1.Appearance.Options.UseFont = true;
-            this.labelControl1.Location = new System.Drawing.Point(3, 83);
-            this.labelControl1.Name = "labelControl1";
-            this.labelControl1.Size = new System.Drawing.Size(65, 17);
-            this.labelControl1.TabIndex = 0;
-            this.labelControl1.Text = "프리셋 구성";
-            // 
-            // luePresetList
-            // 
-            this.luePresetList.Location = new System.Drawing.Point(3, 106);
-            this.luePresetList.Name = "luePresetList";
-            this.luePresetList.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.luePresetList.Size = new System.Drawing.Size(357, 22);
-            this.luePresetList.TabIndex = 24;
-            this.luePresetList.EditValueChanged += new System.EventHandler(this.luePresetList_EditValueChanged);
+            this.chkForcedImport.Location = new System.Drawing.Point(509, 3);
+            this.chkForcedImport.Name = "chkForcedImport";
+            this.chkForcedImport.Properties.Caption = "강제 Import";
+            this.chkForcedImport.Size = new System.Drawing.Size(104, 19);
+            this.chkForcedImport.TabIndex = 13;
             // 
             // ImportModuleControl
             // 
@@ -449,6 +461,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.separatorControl1)).EndInit();
             this.panelData.ResumeLayout(false);
             this.panelData.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.luePresetList.Properties)).EndInit();
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnViewData.Properties)).EndInit();
@@ -462,7 +475,7 @@
             this.tableLayoutPanel3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnSaveSplittedInterval.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.luePresetList.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chkForcedImport.Properties)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -498,5 +511,6 @@
         private DevExpress.XtraEditors.SeparatorControl separatorControl3;
         private DevExpress.XtraEditors.LabelControl labelControl1;
         private DevExpress.XtraEditors.LookUpEdit luePresetList;
+        private DevExpress.XtraEditors.CheckEdit chkForcedImport;
     }
 }

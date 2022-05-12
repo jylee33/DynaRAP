@@ -15,6 +15,7 @@ namespace DynaRAP.Data
         public string flightSeq { get; set; }
         public string flightAt { get; set; }
         public string dataType { get; set; }
+        public bool forcedImport { get; set; }
         public List<Part> parts { get; set; }
     }
 

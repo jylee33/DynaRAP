@@ -272,6 +272,7 @@ namespace DynaRAP.UControl
             import.sourcePath = csvFilePath;
             import.flightAt = string.Format("{0:yyyy-MM-dd}", DateTime.Now);
             import.dataType = "flight";
+            import.forcedImport = chkForcedImport.Checked;
             import.parts = new List<Part>();
 
             string presetPack = String.Empty;
@@ -357,8 +358,8 @@ namespace DynaRAP.UControl
 #endif
             {
 #if DEBUG
-                csvFilePath = @"C:\temp\a.xls";
-                lblFlyingData.Text = @"C:\temp\a.xls";
+                csvFilePath = @"C:\temp\a_test.xls";
+                lblFlyingData.Text = @"C:\temp\a_test.xls";
                 StreamReader sr = new StreamReader(csvFilePath);
 #else
                 csvFilePath = dlg.FileName;
