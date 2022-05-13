@@ -9,6 +9,11 @@ namespace DynaRAP.UControl
 {
     public partial class MyLineChart : UserControl
     {
+        public enum LineTypes
+        {
+            LT_1D, LT_2D
+        };
+
         public MyLineChart()
         {
             InitializeComponent();
@@ -20,7 +25,7 @@ namespace DynaRAP.UControl
 
             this.splitContainer1.SplitterDistance = this.Width - 200;
 
-            DrawChart(null);
+            DrawChart(LineTypes.LT_1D, null);
         }
 
         private DataTable CreateData()
@@ -56,7 +61,7 @@ namespace DynaRAP.UControl
             return table;
         }
 
-        public void DrawChart(DataTable data)
+        public void DrawChart(LineTypes lineTypes, DataTable data)
         {
 #if DEBUG
             data = CreateData();
@@ -87,6 +92,8 @@ namespace DynaRAP.UControl
             }
 
             XYDiagram diagram = this.chartControl.Diagram as XYDiagram;
+
+            diagram.AxisY.Visibility = lineTypes == LineTypes.LT_1D ? DevExpress.Utils.DefaultBoolean.False : DevExpress.Utils.DefaultBoolean.Default;
 
             diagram.EnableAxisXScrolling = true;
             diagram.EnableAxisXZooming = true;
