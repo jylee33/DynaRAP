@@ -32,6 +32,12 @@ namespace DynaRAP.UControl
             }
         }
 
+        public ResponseParam Param
+        {
+            get { return this.param; }
+        }
+
+
         public SBParamControl()
         {
             InitializeComponent();

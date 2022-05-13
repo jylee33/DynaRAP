@@ -301,7 +301,7 @@ namespace DynaRAP.UControl
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "POST";
             request.ContentType = "application/json";
-            request.Timeout = 60 * 60 * 1000;   // 1시간 timeout
+            request.Timeout = 30 * 1000;
             //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
 
             // POST할 데이타를 Request Stream에 쓴다

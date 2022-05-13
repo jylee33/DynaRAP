@@ -662,13 +662,21 @@ namespace DynaRAP.UControl
             req.sliceTime = sbLen;
             req.overlap = overlap;
 
-            string presetPack = String.Empty;
+            string presetPack = string.Empty;
+            string presetSeq = string.Empty;
             if (luePresetList.GetColumnValue("PresetPack") != null)
+            {
                 presetPack = luePresetList.GetColumnValue("PresetPack").ToString();
+                ResponsePreset preset = presetList.Find(x => x.presetPack.Equals(presetPack));
+
+                if (preset != null)
+                {
+                    presetSeq = preset.seq;
+                }
+            }
 
             req.presetPack = presetPack;
-
-            req.presetSeq = "";
+            req.presetSeq = presetSeq;
             
             req.parameters = new List<Parameter>();
             foreach (SBParamControl ctrl in sbParamList)
@@ -681,16 +689,41 @@ namespace DynaRAP.UControl
                 //string t2 = Utils.GetJulianFromDate(ctrl.Max);
 
                 //req.parts.Add(new Part(partName, t1, t2));
+                Parameter param = new Parameter();
+                ResponseParam resParam = ctrl.Param;
+                param.paramPack = resParam.paramPack;
+                param.paramSeq = resParam.seq;
+                param.paramName = resParam.paramName;
+                param.paramKey = resParam.paramKey;
+                param.adamsKey = resParam.adamsKey;
+                param.zaeroKey = resParam.zaeroKey;
+                param.grtKey = resParam.grtKey;
+                param.fltpKey = resParam.fltpKey;
+                param.fltsKey = resParam.fltsKey;
+                param.paramUnit = resParam.paramUnit;
+
+                req.parameters.Add(param);
+            }
+
+            req.shortBlocks = new List<ShortBlock>();
+            int i = 1;
+            foreach(SBIntervalControl ctrl in sbIntervalList)
+            {
+                ShortBlock sb = new ShortBlock();
+                SplittedSB splitSb = ctrl.Sb;
+                sb.blockNo = i++;
+                sb.blockName = splitSb.SbName;
+                sb.julianStartAt = splitSb.StartTime;
+                sb.julianEndAt = splitSb.EndTime;
+
+                req.shortBlocks.Add(sb);
+
             }
 
             var json = JsonConvert.SerializeObject(req);
             Console.WriteLine(json);
 
             string url = ConfigurationManager.AppSettings["UrlPart"];
-            string sendData = @"
-            {
-            ""command"":""upload-list""
-            }";
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "POST";
@@ -699,7 +732,7 @@ namespace DynaRAP.UControl
             //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
 
             // POST할 데이타를 Request Stream에 쓴다
-            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+            byte[] bytes = Encoding.ASCII.GetBytes(json);
             request.ContentLength = bytes.Length; // 바이트수 지정
 
             using (Stream reqStream = request.GetRequestStream())
@@ -719,7 +752,7 @@ namespace DynaRAP.UControl
             }
 
             //Console.WriteLine(responseText);
-            UploadListResponse result = JsonConvert.DeserializeObject<UploadListResponse>(responseText);
+            CreateShortBlockResponse result = JsonConvert.DeserializeObject<CreateShortBlockResponse>(responseText);
             uploadList.Clear();
 
             if (result != null)
@@ -730,18 +763,7 @@ namespace DynaRAP.UControl
                 }
                 else
                 {
-                    foreach (ResponseImport res in result.response)
-                    {
-                        if (uploadList.ContainsKey(res.dataType) == false)
-                        {
-                            uploadList.Add(res.dataType, new List<string>());
-                        }
-
-                        //Decoding
-                        byte[] byte64 = Convert.FromBase64String(res.uploadName);
-                        string decName = Encoding.UTF8.GetString(byte64);
-                        uploadList[res.dataType].Add(decName);
-                    }
+                    MessageBox.Show("Success");
                 }
             }
             return true;

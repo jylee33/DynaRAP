@@ -26,6 +26,11 @@ namespace DynaRAP.UControl
             }
         }
 
+        public SplittedSB Sb
+        {
+            get { return this.sb; }
+        }
+
         public SBIntervalControl()
         {
             InitializeComponent();
