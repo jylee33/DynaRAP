@@ -153,6 +153,12 @@
     <Compile Include="Data\SplittedInterval.cs" />
     <Compile Include="EventData\LoginResultEventArgs.cs" />
     <Compile Include="EventData\SelectedRangeEventArgs.cs" />
+    <Compile Include="TEST\TestChartForm2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TEST\TestChartForm2.Designer.cs">
+      <DependentUpon>TestChartForm2.cs</DependentUpon>
+    </Compile>
     <Compile Include="TEST\TestChartPotato.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -296,6 +302,12 @@
     </Compile>
     <Compile Include="UControl\BinModuleControl.Designer.cs">
       <DependentUpon>BinModuleControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\DXChartControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\DXChartControl.Designer.cs">
+      <DependentUpon>DXChartControl.cs</DependentUpon>
     </Compile>
     <Compile Include="UControl\ImportParamControl3.cs">
       <SubType>UserControl</SubType>
@@ -446,6 +458,9 @@
     <EmbeddedResource Include="CreateScenarioProgressForm.resx">
       <DependentUpon>CreateScenarioProgressForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="TEST\TestChartForm2.resx">
+      <DependentUpon>TestChartForm2.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="TEST\TestChartPotato.resx">
       <DependentUpon>TestChartPotato.cs</DependentUpon>
     </EmbeddedResource>
@@ -542,6 +557,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\CsvTableControl.resx">
       <DependentUpon>CsvTableControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\DXChartControl.resx">
+      <DependentUpon>DXChartControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\ImportParamControl3.resx">
       <DependentUpon>ImportParamControl3.cs</DependentUpon>
