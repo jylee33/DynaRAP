@@ -398,14 +398,14 @@ public class PartService {
 
     public ShortBlockVO.Meta getProgress(CryptoField.NAuth uid, JsonObject payload) throws HandledServiceException {
         try {
-            CryptoField metaSeq = CryptoField.LZERO;
-            if (!checkJsonEmpty(payload, "metaSeq"))
-                metaSeq = CryptoField.decode(payload.get("metaSeq").getAsString(), 0L);
+            CryptoField blockMetaSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "blockMetaSeq"))
+                blockMetaSeq = CryptoField.decode(payload.get("blockMetaSeq").getAsString(), 0L);
 
-            if (metaSeq == null || metaSeq.isEmpty())
+            if (blockMetaSeq == null || blockMetaSeq.isEmpty())
                 throw new HandledServiceException(411, "요청 파라미터 오류입니다. [필수 파라미터 누락]");
 
-            ShortBlockVO.Meta shortBlockMeta = createStat.get(metaSeq.valueOf());
+            ShortBlockVO.Meta shortBlockMeta = createStat.get(blockMetaSeq.valueOf());
             if (shortBlockMeta == null)
                 throw new HandledServiceException(411, "진행중인 생성 요청이 없습니다.");
 
