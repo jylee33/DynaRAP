@@ -143,6 +143,7 @@
     <Compile Include="Data\OverviewDataPoint.cs" />
     <Compile Include="Data\DataSlicing.cs" />
     <Compile Include="Data\FlyingData.cs" />
+    <Compile Include="Data\PartListResponse.cs" />
     <Compile Include="Data\PresetData.cs" />
     <Compile Include="Data\ProjectData.cs" />
     <Compile Include="Data\RecentProject.cs" />

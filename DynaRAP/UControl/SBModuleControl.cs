@@ -41,7 +41,9 @@ namespace DynaRAP.UControl
         DateTime startTime = DateTime.Now;
         DateTime endTime = DateTime.Now;
 
-        Dictionary<string, List<string>> uploadList = new Dictionary<string, List<string>>();
+        //Dictionary<string, List<string>> uploadList = new Dictionary<string, List<string>>();
+        List<ResponseImport> uploadList = new List<ResponseImport>();
+        List<ResponsePart> partList = new List<ResponsePart>();
 
         double sbLen = 1;
         double overlap = 10;
@@ -57,9 +59,9 @@ namespace DynaRAP.UControl
             luePresetList.Properties.ValueMember = "PresetPack";
             luePresetList.Properties.NullText = "";
 
-            GetUploadList();
+            uploadList = GetUploadList();
             InitializePreviewChart();
-            InitializeUploadTypeList();
+            InitializeFlyingList();
             InitializePresetList();
 
             //DateTime dtNow = DateTime.Now;
@@ -100,7 +102,7 @@ namespace DynaRAP.UControl
 
         }
 
-        private bool GetUploadList()
+        private List<ResponseImport> GetUploadList()
         {
             string url = ConfigurationManager.AppSettings["UrlImport"];
             string sendData = @"
@@ -136,31 +138,19 @@ namespace DynaRAP.UControl
 
             //Console.WriteLine(responseText);
             UploadListResponse result = JsonConvert.DeserializeObject<UploadListResponse>(responseText);
-            uploadList.Clear();
 
             if (result != null)
             {
                 if (result.code != 200)
                 {
-                    return false;
+                    return null;
                 }
                 else
                 {
-                    foreach (ResponseImport res in result.response)
-                    {
-                        if (uploadList.ContainsKey(res.dataType) == false)
-                        {
-                            uploadList.Add(res.dataType, new List<string>());
-                        }
-
-                        //Decoding
-                        byte[] byte64 = Convert.FromBase64String(res.uploadName);
-                        string decName = Encoding.UTF8.GetString(byte64);
-                        uploadList[res.dataType].Add(decName);
-                    }
+                    return result.response;
                 }
             }
-            return true;
+            return null;
 
         }
 
@@ -176,61 +166,26 @@ namespace DynaRAP.UControl
             myChartArea.AxisX.MinorGrid.Enabled = false;
             myChartArea.AxisY.MajorGrid.Enabled = false;
             myChartArea.AxisY.MinorGrid.Enabled = false;
-            ////
+
+            myChartArea.InnerPlotPosition.Auto = false;
+            myChartArea.InnerPlotPosition.Width = 100;
+            myChartArea.InnerPlotPosition.Height = 100;
+
+            myChartArea.Position.X = 0;
+            myChartArea.Position.Y = 0;
+            myChartArea.Position.Width = 100;
+            myChartArea.Position.Height = 100;
 
             chart1.ChartAreas.RemoveAt(0);
             chart1.ChartAreas.Add(myChartArea);
 
             /*
-            //chartPreview.BackColor = Color.FromArgb(45, 45, 48);
-
-            chartPreview.ChartAreas.RemoveAt(0);
-            chartPreview.ChartAreas.Add(myChartArea);
             chartPreview.ChartAreas[0].AxisX.LabelStyle.Enabled = false;
             chartPreview.ChartAreas[0].AxisY.LabelStyle.Enabled = false;
-
-
-            series1.ChartType = SeriesChartType.Line;
-            series1.Name = "VAS";
-            series1.XValueType = ChartValueType.DateTime;
-            series1.IsValueShownAsLabel = false;
-            //series1.IsVisibleInLegend = false;
-            series1.LabelForeColor = Color.Red;
-            series1.MarkerStyle = MarkerStyle.None;
-            series1.MarkerSize = 3;
-            series1.MarkerColor = Color.Red;
-
-            SettingMyData();
-            chartPreview.Series.Add(series1);
             */
         }
 
-        private void InitializeUploadTypeList()
-        {
-            cboUploadType.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
-
-            cboUploadType.SelectedIndexChanged += cboUploadType_SelectedIndexChanged;
-
-            cboFlying.Properties.Items.Clear();
-            foreach (string str in uploadList.Keys)
-            {
-                cboUploadType.Properties.Items.Add(str);
-            }
-
-            cboUploadType.SelectedIndex = 0;
-        }
-
-        private void cboUploadType_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            ComboBoxEdit combo = sender as ComboBoxEdit;
-
-            if (combo != null)
-            {
-                InitializeFlyingList(combo.Text);
-            }
-        }
-
-        private void InitializeFlyingList(string uploadType)
+        private void InitializeFlyingList()
         {
             cboFlying.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
 
@@ -238,9 +193,12 @@ namespace DynaRAP.UControl
 
             cboFlying.Properties.Items.Clear();
 
-            foreach (string str in uploadList[uploadType])
+            foreach (ResponseImport list in uploadList)
             {
-                cboFlying.Properties.Items.Add(str);
+                //Decoding
+                byte[] byte64 = Convert.FromBase64String(list.uploadName);
+                string decName = Encoding.UTF8.GetString(byte64);
+                cboFlying.Properties.Items.Add(decName);
             }
 
             cboFlying.SelectedIndex = 0;
@@ -248,6 +206,109 @@ namespace DynaRAP.UControl
         }
 
         private void CboFlying_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ComboBoxEdit combo = sender as ComboBoxEdit;
+
+            if (combo != null)
+            {
+                InitializePartList(combo.Text);
+            }
+        }
+
+        private void InitializePartList(string flyingName)
+        {
+            cboPart.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+
+            cboPart.SelectedIndexChanged += CboPart_SelectedIndexChanged;
+
+            cboPart.Properties.Items.Clear();
+
+            partList = null;
+            partList = GetPartList(flyingName);
+
+            foreach (ResponsePart part in partList)
+            {
+                //Decoding
+                byte[] byte64 = Convert.FromBase64String(part.partName);
+                string decName = Encoding.UTF8.GetString(byte64);
+
+                cboPart.Properties.Items.Add(decName);
+            }
+
+            cboPart.SelectedIndex = 0;
+
+        }
+
+        private List<ResponsePart> GetPartList(string flyingName)
+        {
+            string url = ConfigurationManager.AppSettings["UrlPart"];
+
+            //Encoding
+            byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(flyingName);
+            string encName = Convert.ToBase64String(basebyte);
+
+            string uploadSeq = "";
+            ResponseImport import = uploadList.Find(x => x.uploadName.Equals(encName));
+            if (import != null)
+            {
+                uploadSeq = import.seq;
+            }
+
+            string sendData = string.Format(@"
+            {{
+            ""command"":""list"",
+            ""registerUid"":"""",
+            ""uploadSeq"":""{0}"",
+            ""pageNo"":1,
+            ""pageSize"":3000
+            }}"
+            , uploadSeq);
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Method = "POST";
+            request.ContentType = "application/json";
+            request.Timeout = 30 * 1000;
+            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+
+            // POST할 데이타를 Request Stream에 쓴다
+            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+            request.ContentLength = bytes.Length; // 바이트수 지정
+
+            using (Stream reqStream = request.GetRequestStream())
+            {
+                reqStream.Write(bytes, 0, bytes.Length);
+            }
+
+            // Response 처리
+            string responseText = string.Empty;
+            using (WebResponse resp = request.GetResponse())
+            {
+                Stream respStream = resp.GetResponseStream();
+                using (StreamReader sr = new StreamReader(respStream))
+                {
+                    responseText = sr.ReadToEnd();
+                }
+            }
+
+            //Console.WriteLine(responseText);
+            PartListResponse result = JsonConvert.DeserializeObject<PartListResponse>(responseText);
+
+            if (result != null)
+            {
+                if (result.code != 200)
+                {
+                    return null;
+                }
+                else
+                {
+                    return result.response;
+                }
+            }
+            return null;
+
+        }
+
+        private void CboPart_SelectedIndexChanged(object sender, EventArgs e)
         {
             ComboBoxEdit combo = sender as ComboBoxEdit;
 
@@ -349,7 +410,7 @@ namespace DynaRAP.UControl
             series1.ChartType = SeriesChartType.Line;
             series1.Name = strKey;
             series1.XValueType = ChartValueType.DateTime;
-            //series1.IsValueShownAsLabel = true;
+            series1.IsValueShownAsLabel = false;
             series1.IsVisibleInLegend = false;
             series1.LabelForeColor = Color.Red;
             //series1.MarkerStyle = MarkerStyle.Square;
@@ -753,7 +814,6 @@ namespace DynaRAP.UControl
 
             //Console.WriteLine(responseText);
             CreateShortBlockResponse result = JsonConvert.DeserializeObject<CreateShortBlockResponse>(responseText);
-            uploadList.Clear();
 
             if (result != null)
             {

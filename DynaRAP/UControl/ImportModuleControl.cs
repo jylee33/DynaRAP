@@ -79,73 +79,87 @@ namespace DynaRAP.UControl
 
         private void InitializePresetList()
         {
-            luePresetList.Properties.DataSource = null;
-
-            presetList = GetPresetList();
-            pComboList = new List<PresetData>();
-
-            foreach (ResponsePreset list in presetList)
+            try
             {
-                //Decoding
-                byte[] byte64 = Convert.FromBase64String(list.presetName);
-                string decName = Encoding.UTF8.GetString(byte64);
+                luePresetList.Properties.DataSource = null;
 
-                pComboList.Add(new PresetData(decName, list.presetPack));
-            }
-            luePresetList.Properties.DataSource = pComboList;
+                presetList = GetPresetList();
+                pComboList = new List<PresetData>();
+
+                foreach (ResponsePreset list in presetList)
+                {
+                    //Decoding
+                    byte[] byte64 = Convert.FromBase64String(list.presetName);
+                    string decName = Encoding.UTF8.GetString(byte64);
+
+                    pComboList.Add(new PresetData(decName, list.presetPack));
+                }
+                luePresetList.Properties.DataSource = pComboList;
 #if !DEBUG
             luePresetList.Properties.PopulateColumns();
             luePresetList.Properties.ShowHeader = false;
             luePresetList.Properties.Columns["PresetPack"].Visible = false;
             luePresetList.Properties.ShowFooter = false;
 #else
-            luePresetList.Properties.PopulateColumns();
-            luePresetList.Properties.Columns["PresetName"].Width = 800;
+                luePresetList.Properties.PopulateColumns();
+                luePresetList.Properties.Columns["PresetName"].Width = 800;
 #endif
 
-            //luePresetList.EditValue = edtParamName.Text;
+                //luePresetList.EditValue = edtParamName.Text;
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
         private List<ResponsePreset> GetPresetList()
         {
-            string url = ConfigurationManager.AppSettings["UrlPreset"];
-            string sendData = @"
+            try
+            {
+                string url = ConfigurationManager.AppSettings["UrlPreset"];
+                string sendData = @"
             {
             ""command"":""list"",
             ""pageNo"":1,
             ""pageSize"":3000
             }";
 
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "POST";
-            request.ContentType = "application/json";
-            request.Timeout = 30 * 1000;
-            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Timeout = 30 * 1000;
+                //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
 
-            // POST할 데이타를 Request Stream에 쓴다
-            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
-            request.ContentLength = bytes.Length; // 바이트수 지정
+                // POST할 데이타를 Request Stream에 쓴다
+                byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+                request.ContentLength = bytes.Length; // 바이트수 지정
 
-            using (Stream reqStream = request.GetRequestStream())
-            {
-                reqStream.Write(bytes, 0, bytes.Length);
-            }
-
-            // Response 처리
-            string responseText = string.Empty;
-            using (WebResponse resp = request.GetResponse())
-            {
-                Stream respStream = resp.GetResponseStream();
-                using (StreamReader sr = new StreamReader(respStream))
+                using (Stream reqStream = request.GetRequestStream())
                 {
-                    responseText = sr.ReadToEnd();
+                    reqStream.Write(bytes, 0, bytes.Length);
                 }
+
+                // Response 처리
+                string responseText = string.Empty;
+                using (WebResponse resp = request.GetResponse())
+                {
+                    Stream respStream = resp.GetResponseStream();
+                    using (StreamReader sr = new StreamReader(respStream))
+                    {
+                        responseText = sr.ReadToEnd();
+                    }
+                }
+
+                //Console.WriteLine(responseText);
+                ListPresetJsonData result = JsonConvert.DeserializeObject<ListPresetJsonData>(responseText);
+
+                return result.response;
             }
-
-            //Console.WriteLine(responseText);
-            ListPresetJsonData result = JsonConvert.DeserializeObject<ListPresetJsonData>(responseText);
-
-            return result.response;
+            catch (Exception ex)
+            {
+                return null;
+            }
 
         }
 

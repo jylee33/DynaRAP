@@ -41,8 +41,8 @@
             this.labelControl7 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl9 = new DevExpress.XtraEditors.LabelControl();
             this.tableLayoutPanel7 = new System.Windows.Forms.TableLayoutPanel();
-            this.cboUploadType = new DevExpress.XtraEditors.ComboBoxEdit();
             this.cboFlying = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.cboPart = new DevExpress.XtraEditors.ComboBoxEdit();
             this.labelControl22 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl11 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl8 = new DevExpress.XtraEditors.LabelControl();
@@ -91,8 +91,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.separatorControl1)).BeginInit();
             this.panelData.SuspendLayout();
             this.tableLayoutPanel7.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.cboUploadType.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cboFlying.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cboPart.Properties)).BeginInit();
             this.tableLayoutPanel4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.edtSBLength.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtOverlap.Properties)).BeginInit();
@@ -255,36 +255,36 @@
             // tableLayoutPanel7
             // 
             this.tableLayoutPanel7.ColumnCount = 2;
-            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 32.92035F));
-            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 67.07964F));
-            this.tableLayoutPanel7.Controls.Add(this.cboUploadType, 0, 0);
-            this.tableLayoutPanel7.Controls.Add(this.cboFlying, 1, 0);
+            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 175F));
+            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel7.Controls.Add(this.cboFlying, 0, 0);
+            this.tableLayoutPanel7.Controls.Add(this.cboPart, 1, 0);
             this.tableLayoutPanel7.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel7.Location = new System.Drawing.Point(3, 121);
             this.tableLayoutPanel7.Name = "tableLayoutPanel7";
             this.tableLayoutPanel7.RowCount = 1;
-            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel7.Size = new System.Drawing.Size(623, 28);
             this.tableLayoutPanel7.TabIndex = 40;
             this.tableLayoutPanel7.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel7_Paint);
             // 
-            // cboUploadType
-            // 
-            this.cboUploadType.Location = new System.Drawing.Point(3, 3);
-            this.cboUploadType.Name = "cboUploadType";
-            this.cboUploadType.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.cboUploadType.Size = new System.Drawing.Size(164, 22);
-            this.cboUploadType.TabIndex = 34;
-            // 
             // cboFlying
             // 
-            this.cboFlying.Location = new System.Drawing.Point(208, 3);
+            this.cboFlying.Location = new System.Drawing.Point(3, 3);
             this.cboFlying.Name = "cboFlying";
             this.cboFlying.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.cboFlying.Size = new System.Drawing.Size(412, 22);
+            this.cboFlying.Size = new System.Drawing.Size(169, 22);
             this.cboFlying.TabIndex = 34;
+            // 
+            // cboPart
+            // 
+            this.cboPart.Location = new System.Drawing.Point(178, 3);
+            this.cboPart.Name = "cboPart";
+            this.cboPart.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.cboPart.Size = new System.Drawing.Size(442, 22);
+            this.cboPart.TabIndex = 34;
             // 
             // labelControl22
             // 
@@ -782,8 +782,8 @@
             this.panelData.ResumeLayout(false);
             this.panelData.PerformLayout();
             this.tableLayoutPanel7.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.cboUploadType.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cboFlying.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cboPart.Properties)).EndInit();
             this.tableLayoutPanel4.ResumeLayout(false);
             this.tableLayoutPanel4.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.edtSBLength.Properties)).EndInit();
@@ -863,12 +863,12 @@
         private DevExpress.XtraEditors.SeparatorControl separatorControl4;
         private DevExpress.XtraEditors.SeparatorControl separatorControl5;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel7;
-        private DevExpress.XtraEditors.ComboBoxEdit cboUploadType;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel8;
         private DevExpress.XtraEditors.ComboBoxEdit cboParameter;
         private DevExpress.XtraEditors.LookUpEdit luePresetList;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
         private DevExpress.XtraEditors.LabelControl labelControl13;
+        private DevExpress.XtraEditors.ComboBoxEdit cboPart;
     }
 }

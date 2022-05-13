@@ -58,8 +58,8 @@
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.lblSplitCount = new DevExpress.XtraEditors.LabelControl();
             this.btnSaveSplittedInterval = new DevExpress.XtraEditors.ButtonEdit();
-            this.imageCollection1 = new DevExpress.Utils.ImageCollection(this.components);
             this.chkForcedImport = new DevExpress.XtraEditors.CheckEdit();
+            this.imageCollection1 = new DevExpress.Utils.ImageCollection(this.components);
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.separatorControl1)).BeginInit();
             this.panelData.SuspendLayout();
@@ -73,8 +73,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.separatorControl3)).BeginInit();
             this.tableLayoutPanel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnSaveSplittedInterval.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chkForcedImport.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).BeginInit();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -434,12 +434,6 @@
             this.btnSaveSplittedInterval.TabIndex = 12;
             this.btnSaveSplittedInterval.Click += new System.EventHandler(this.btnSaveSplittedInterval_ButtonClick);
             // 
-            // imageCollection1
-            // 
-            this.imageCollection1.ImageStream = ((DevExpress.Utils.ImageCollectionStreamer)(resources.GetObject("imageCollection1.ImageStream")));
-            this.imageCollection1.Images.SetKeyName(0, "none.png");
-            this.imageCollection1.Images.SetKeyName(1, "view.png");
-            // 
             // chkForcedImport
             // 
             this.chkForcedImport.Location = new System.Drawing.Point(509, 3);
@@ -447,6 +441,12 @@
             this.chkForcedImport.Properties.Caption = "강제 Import";
             this.chkForcedImport.Size = new System.Drawing.Size(104, 19);
             this.chkForcedImport.TabIndex = 13;
+            // 
+            // imageCollection1
+            // 
+            this.imageCollection1.ImageStream = ((DevExpress.Utils.ImageCollectionStreamer)(resources.GetObject("imageCollection1.ImageStream")));
+            this.imageCollection1.Images.SetKeyName(0, "none.png");
+            this.imageCollection1.Images.SetKeyName(1, "view.png");
             // 
             // ImportModuleControl
             // 
@@ -474,8 +474,8 @@
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnSaveSplittedInterval.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chkForcedImport.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).EndInit();
             this.ResumeLayout(false);
 
         }
