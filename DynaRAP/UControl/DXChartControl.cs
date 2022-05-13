@@ -37,14 +37,6 @@ namespace DynaRAP.UControl
             m_pageSize = 100000;
             m_totalPages = 0;
 
-            m_dllDatas = new List<DLL_DATA>();
-            SetDllDatas();
-        }
-
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
-
             this.m_chart = new ChartControl();
             this.Controls.Add(this.m_chart);
             this.m_chart.Dock = DockStyle.Fill;
@@ -52,6 +44,14 @@ namespace DynaRAP.UControl
 
             m_drawTypes = DrawTypes.DT_1D;
             mnuDrawChart1D.Checked = true;
+
+            m_dllDatas = new List<DLL_DATA>();
+            SetDllDatas();
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
         }
 
         private void SetDllDatas()
@@ -107,7 +107,7 @@ namespace DynaRAP.UControl
             };
             m_dllDatas.Add(data);
 
-            ReadDataTable(m_filename);
+            //ReadDataTable(m_filename);
         }
 
         public void DrawChart(DataTable table, string seriesName = "Series1")

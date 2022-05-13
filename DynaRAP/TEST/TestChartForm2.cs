@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data;
 using System.Windows.Forms;
 
 namespace DynaRAP.TEST
@@ -15,6 +8,13 @@ namespace DynaRAP.TEST
         public TestChartForm2()
         {
             InitializeComponent();
+        }
+
+        public TestChartForm2(DataTable dt)
+        {
+            InitializeComponent();
+
+            this.dxChartControl1.DrawChart(dt);
         }
     }
 }
