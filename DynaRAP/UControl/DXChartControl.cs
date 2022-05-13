@@ -113,6 +113,7 @@ namespace DynaRAP.UControl
             if (this.m_chart.Series.Count > 0)
                 this.m_chart.Series.Clear();
             this.m_chart.Series.Add(new Series(seriesName, ViewType.Line));
+            this.m_chart.Legend.Visibility = DevExpress.Utils.DefaultBoolean.False;
             DrawChart_1D();
         }
 
@@ -197,7 +198,7 @@ namespace DynaRAP.UControl
 
             XYDiagram diagram = this.m_chart.Diagram as XYDiagram;
 
-            diagram.AxisY.Visibility = DevExpress.Utils.DefaultBoolean.False;
+            //diagram.AxisY.Visibility = DevExpress.Utils.DefaultBoolean.False;
 
             diagram.EnableAxisXScrolling = true;
             diagram.EnableAxisXZooming = true;

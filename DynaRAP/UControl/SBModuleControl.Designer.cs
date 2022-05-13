@@ -266,7 +266,6 @@
             this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel7.Size = new System.Drawing.Size(623, 28);
             this.tableLayoutPanel7.TabIndex = 40;
-            this.tableLayoutPanel7.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel7_Paint);
             // 
             // cboFlying
             // 
@@ -587,6 +586,7 @@
             this.chart1.Size = new System.Drawing.Size(623, 132);
             this.chart1.TabIndex = 38;
             this.chart1.Text = "chart1";
+            this.chart1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseMove);
             // 
             // labelControl4
             // 

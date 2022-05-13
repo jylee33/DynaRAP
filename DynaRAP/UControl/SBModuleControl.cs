@@ -26,8 +26,6 @@ namespace DynaRAP.UControl
 {
     public partial class SBModuleControl : DevExpress.XtraEditors.XtraUserControl
     {
-        string selectedFuselage = string.Empty;
-        Series series1 = new Series();
         ChartArea myChartArea = new ChartArea("LineChartArea");
         List<SBParamControl> sbParamList = new List<SBParamControl>();
         List<SBIntervalControl> sbIntervalList = new List<SBIntervalControl>();
@@ -688,8 +686,13 @@ namespace DynaRAP.UControl
 
         void InvalidSB_ViewBtnClicked(object sender, EventArgs e)
         {
-            string strKey = dicData.Keys.ToList()[10];  // test
-            DataTable dt = GetChartValues(strKey);
+            SBIntervalControl ctrl = sender as SBIntervalControl;
+
+            string strKey = selKey;
+            DateTime sTime = DateTime.ParseExact(ctrl.Sb.StartTime, "yyyy-MM-dd HH:mm:ss.ffffff", null);
+            DateTime eTime = DateTime.ParseExact(ctrl.Sb.EndTime, "yyyy-MM-dd HH:mm:ss.ffffff", null);
+
+            DataTable dt = GetShortBlockData(strKey, sTime, eTime);
 
             SBViewForm form = new SBViewForm(dt);
             form.Text = strKey;
@@ -699,6 +702,45 @@ namespace DynaRAP.UControl
             //form2.Text = strKey;
             //form2.Show();
 
+        }
+
+        private DataTable GetShortBlockData(string strKey, DateTime sTime, DateTime eTime)
+        {
+            // Create an empty table.
+            DataTable table = new DataTable("Table1");
+
+            // Add two columns to the table.
+            //table.Columns.Add("Argument", typeof(Int32));
+            table.Columns.Add("Argument", typeof(DateTime));
+            table.Columns.Add("Value", typeof(double));
+
+            DataRow row = null;
+            int i = 0;
+            chartData.Clear();
+            foreach (string value in dicData[strKey])
+            {
+                row = table.NewRow();
+                string day = dicData["DATE"][i];
+                DateTime dt = Utils.GetDateFromJulian(day);
+
+                int result1 = DateTime.Compare(dt, sTime);
+                int result2 = DateTime.Compare(dt, eTime);
+
+                if(result1 < 0 || result2 > 0)
+                {
+                    continue;
+                }
+
+                double data = double.Parse(value);
+                chartData.Add(data);
+                row["Argument"] = dt;
+                //row["Argument"] = i;
+                row["Value"] = data;
+                table.Rows.Add(row);
+                i++;
+            }
+
+            return table;
         }
 
         void InvalidSB_DeleteBtnClicked(object sender, EventArgs e)
@@ -948,10 +990,42 @@ namespace DynaRAP.UControl
 
         }
 
-        private void tableLayoutPanel7_Paint(object sender, PaintEventArgs e)
+        Point? prevPosition = null;
+        ToolTip tooltip = new ToolTip();
+        private void chart1_MouseMove(object sender, MouseEventArgs e)
         {
+            var pos = e.Location;
+            if (prevPosition.HasValue && pos == prevPosition.Value)
+                return;
+            tooltip.RemoveAll();
+            prevPosition = pos;
+            var results = chart1.HitTest(pos.X, pos.Y, false,
+                                            ChartElementType.DataPoint);
+            foreach (var result in results)
+            {
+                if (result.ChartElementType == ChartElementType.DataPoint)
+                {
+                    var prop = result.Object as DataPoint;
+                    if (prop != null)
+                    {
+                        var pointXPixel = result.ChartArea.AxisX.ValueToPixelPosition(prop.XValue);
+                        var pointYPixel = result.ChartArea.AxisY.ValueToPixelPosition(prop.YValues[0]);
 
+                        // check if the cursor is really close to the point (2 pixels around the point)
+                        if (Math.Abs(pos.X - pointXPixel) < 2 &&
+                            Math.Abs(pos.Y - pointYPixel) < 2)
+                        {
+                            DateTime dt1 = DateTime.FromOADate(prop.XValue);
+                            tooltip.Show("X=" + dt1 + ", Y=" + prop.YValues[0], this.chart1,
+                                            pos.X, pos.Y - 15);
+                            //Console.WriteLine(string.Format("X = {0}", prop.XValue));
+                            //Console.WriteLine(string.Format("X-time = {0}", dt1));
+                        }
+                    }
+                }
+            }
         }
+
     }
 
     
