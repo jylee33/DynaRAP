@@ -32,7 +32,7 @@
             this.edtSbName = new DevExpress.XtraEditors.TextEdit();
             this.edtStartTime = new DevExpress.XtraEditors.TextEdit();
             this.edtEndTime = new DevExpress.XtraEditors.TextEdit();
-            this.btnDelete = new DevExpress.XtraEditors.SimpleButton();
+            this.btnView = new DevExpress.XtraEditors.SimpleButton();
             ((System.ComponentModel.ISupportInitialize)(this.edtSbName.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtStartTime.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtEndTime.Properties)).BeginInit();
@@ -42,47 +42,46 @@
             // 
             this.edtSbName.Location = new System.Drawing.Point(1, 0);
             this.edtSbName.Name = "edtSbName";
-            this.edtSbName.Size = new System.Drawing.Size(216, 22);
+            this.edtSbName.Size = new System.Drawing.Size(219, 22);
             this.edtSbName.TabIndex = 0;
             // 
             // edtStartTime
             // 
-            this.edtStartTime.Location = new System.Drawing.Point(219, 0);
+            this.edtStartTime.Location = new System.Drawing.Point(228, 0);
             this.edtStartTime.Name = "edtStartTime";
             this.edtStartTime.Size = new System.Drawing.Size(168, 22);
             this.edtStartTime.TabIndex = 0;
             // 
             // edtEndTime
             // 
-            this.edtEndTime.Location = new System.Drawing.Point(390, 0);
+            this.edtEndTime.Location = new System.Drawing.Point(403, 0);
             this.edtEndTime.Name = "edtEndTime";
             this.edtEndTime.Size = new System.Drawing.Size(168, 22);
             this.edtEndTime.TabIndex = 0;
             // 
-            // btnDelete
+            // btnView
             // 
-            this.btnDelete.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.btnDelete.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btnDelete.ImageOptions.Image")));
-            this.btnDelete.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleCenter;
-            this.btnDelete.Location = new System.Drawing.Point(544, 1);
-            this.btnDelete.Margin = new System.Windows.Forms.Padding(0);
-            this.btnDelete.Name = "btnDelete";
-            this.btnDelete.Size = new System.Drawing.Size(17, 18);
-            this.btnDelete.TabIndex = 1;
-            this.btnDelete.Visible = false;
-            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+            this.btnView.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.btnView.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btnView.ImageOptions.Image")));
+            this.btnView.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleCenter;
+            this.btnView.Location = new System.Drawing.Point(587, 1);
+            this.btnView.Margin = new System.Windows.Forms.Padding(0);
+            this.btnView.Name = "btnView";
+            this.btnView.Size = new System.Drawing.Size(17, 18);
+            this.btnView.TabIndex = 1;
+            this.btnView.Click += new System.EventHandler(this.btnView_Click);
             // 
             // SBIntervalControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.btnDelete);
+            this.Controls.Add(this.btnView);
             this.Controls.Add(this.edtEndTime);
             this.Controls.Add(this.edtStartTime);
             this.Controls.Add(this.edtSbName);
             this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "SBIntervalControl";
-            this.Size = new System.Drawing.Size(569, 22);
+            this.Size = new System.Drawing.Size(621, 22);
             this.Load += new System.EventHandler(this.SBIntervalControl_Load);
             ((System.ComponentModel.ISupportInitialize)(this.edtSbName.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtStartTime.Properties)).EndInit();
@@ -96,6 +95,6 @@
         private DevExpress.XtraEditors.TextEdit edtSbName;
         private DevExpress.XtraEditors.TextEdit edtStartTime;
         private DevExpress.XtraEditors.TextEdit edtEndTime;
-        private DevExpress.XtraEditors.SimpleButton btnDelete;
+        private DevExpress.XtraEditors.SimpleButton btnView;
     }
 }

@@ -14,7 +14,7 @@ namespace DynaRAP.UControl
 {
     public partial class SBIntervalControl : DevExpress.XtraEditors.XtraUserControl
     {
-        public event EventHandler DeleteBtnClicked;
+        public event EventHandler ViewBtnClicked;
         SplittedSB sb;
 
 
@@ -43,10 +43,10 @@ namespace DynaRAP.UControl
             edtEndTime.Text = sb.EndTime;
         }
 
-        private void btnDelete_Click(object sender, EventArgs e)
+        private void btnView_Click(object sender, EventArgs e)
         {
-            if (this.DeleteBtnClicked != null)
-                this.DeleteBtnClicked(this, new EventArgs());
+            if (this.ViewBtnClicked != null)
+                this.ViewBtnClicked(this, new EventArgs());
         }
     }
 }

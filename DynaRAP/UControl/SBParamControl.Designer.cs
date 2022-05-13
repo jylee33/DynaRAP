@@ -41,11 +41,12 @@
             this.btnDelete.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.btnDelete.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btnDelete.ImageOptions.Image")));
             this.btnDelete.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleCenter;
-            this.btnDelete.Location = new System.Drawing.Point(498, 1);
+            this.btnDelete.Location = new System.Drawing.Point(587, 1);
             this.btnDelete.Margin = new System.Windows.Forms.Padding(0);
             this.btnDelete.Name = "btnDelete";
-            this.btnDelete.Size = new System.Drawing.Size(17, 17);
+            this.btnDelete.Size = new System.Drawing.Size(17, 18);
             this.btnDelete.TabIndex = 1;
+            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
             // cboParamType
             // 
@@ -53,28 +54,28 @@
             this.cboParamType.Name = "cboParamType";
             this.cboParamType.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.cboParamType.Size = new System.Drawing.Size(100, 20);
+            this.cboParamType.Size = new System.Drawing.Size(162, 22);
             this.cboParamType.TabIndex = 2;
             // 
             // cboParamName
             // 
-            this.cboParamName.Location = new System.Drawing.Point(106, 0);
+            this.cboParamName.Location = new System.Drawing.Point(168, 0);
             this.cboParamName.Name = "cboParamName";
             this.cboParamName.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.cboParamName.Size = new System.Drawing.Size(373, 20);
+            this.cboParamName.Size = new System.Drawing.Size(411, 22);
             this.cboParamName.TabIndex = 3;
             // 
             // SBParamControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 14F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.cboParamName);
             this.Controls.Add(this.cboParamType);
             this.Controls.Add(this.btnDelete);
             this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "SBParamControl";
-            this.Size = new System.Drawing.Size(527, 21);
+            this.Size = new System.Drawing.Size(614, 22);
             this.Load += new System.EventHandler(this.SBParamControl_Load);
             ((System.ComponentModel.ISupportInitialize)(this.cboParamType.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cboParamName.Properties)).EndInit();

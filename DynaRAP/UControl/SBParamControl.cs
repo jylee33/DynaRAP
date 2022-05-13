@@ -15,6 +15,8 @@ namespace DynaRAP.UControl
 {
     public partial class SBParamControl : DevExpress.XtraEditors.XtraUserControl
     {
+        public event EventHandler DeleteBtnClicked;
+       
         ResponseParam param = null;
         string title = string.Empty;
       
@@ -81,5 +83,10 @@ namespace DynaRAP.UControl
         {
         }
 
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            if (this.DeleteBtnClicked != null)
+                this.DeleteBtnClicked(this, new EventArgs());
+        }
     }
 }

@@ -27,6 +27,7 @@ namespace DynaRAP.UControl
         string selectedFuselage = string.Empty;
         Series series1 = new Series();
         ChartArea myChartArea = new ChartArea("LineChartArea");
+        List<SBParamControl> sbParamList = new List<SBParamControl>();
         List<SBIntervalControl> sbIntervalList = new List<SBIntervalControl>();
 
         Dictionary<string, List<string>> dicData = new Dictionary<string, List<string>>();
@@ -41,6 +42,9 @@ namespace DynaRAP.UControl
         DateTime endTime = DateTime.Now;
 
         Dictionary<string, List<string>> uploadList = new Dictionary<string, List<string>>();
+
+        double sbLen = 1;
+        double overlap = 10;
 
         public SBModuleControl()
         {
@@ -348,9 +352,9 @@ namespace DynaRAP.UControl
             //series1.IsValueShownAsLabel = true;
             series1.IsVisibleInLegend = false;
             series1.LabelForeColor = Color.Red;
-            series1.MarkerStyle = MarkerStyle.Square;
-            series1.MarkerSize = 3;
-            series1.MarkerColor = Color.Black;
+            //series1.MarkerStyle = MarkerStyle.Square;
+            //series1.MarkerSize = 3;
+            //series1.MarkerColor = Color.Black;
 
             series1.XValueMember = "Argument";
             series1.YValueMembers = "Value";
@@ -407,9 +411,6 @@ namespace DynaRAP.UControl
 
             return table;
         }
-
-        double sbLen = 1;
-        double overlap = 10;
 
         private void AddIntervalList()
         {
@@ -589,10 +590,23 @@ namespace DynaRAP.UControl
         {
             SBParamControl ctrl = new SBParamControl(param);
             ctrl.Title = "Parameter " + (paramIndex- startParamIndex).ToString();
+            ctrl.DeleteBtnClicked += new EventHandler(SBParam_DeleteBtnClicked);
             flowLayoutPanel1.Controls.Add(ctrl);
             flowLayoutPanel1.Controls.SetChildIndex(ctrl, paramIndex++);
+            sbParamList.Add(ctrl);
 
             flowLayoutPanel1.Height += paramHeight;
+        }
+
+        private void SBParam_DeleteBtnClicked(object sender, EventArgs e)
+        {
+            SBParamControl ctrl = sender as SBParamControl;
+            flowLayoutPanel1.Controls.Remove(ctrl);
+            sbParamList.Remove(ctrl);
+            ctrl.Dispose();
+
+            flowLayoutPanel1.Height -= paramHeight;
+            intervalIndex--;
         }
 
         const int startIntervalIndex = 0;
@@ -601,12 +615,17 @@ namespace DynaRAP.UControl
         private void AddSplittedInterval(SplittedSB sb)
         {
             SBIntervalControl ctrl = new SBIntervalControl(sb);
-            ctrl.DeleteBtnClicked += new EventHandler(InvalidSB_DeleteBtnClicked);
+            ctrl.ViewBtnClicked += new EventHandler(InvalidSB_ViewBtnClicked);
             flowLayoutPanel2.Controls.Add(ctrl);
             flowLayoutPanel2.Controls.SetChildIndex(ctrl, intervalIndex++);
             sbIntervalList.Add(ctrl);
 
             flowLayoutPanel2.Height += paramHeight;
+        }
+
+        void InvalidSB_ViewBtnClicked(object sender, EventArgs e)
+        {
+            DataTable dt = GetChartValues(dicData.Keys.ToList()[9]);
         }
 
         void InvalidSB_DeleteBtnClicked(object sender, EventArgs e)
@@ -628,6 +647,104 @@ namespace DynaRAP.UControl
 
         private void btnSaveSplittedParameter_ButtonClick(object sender, EventArgs e)
         {
+            CreateShortBlock();
+        }
+
+        private bool CreateShortBlock()
+        {
+            double.TryParse(edtSBLength.Text, out sbLen);
+            double.TryParse(edtOverlap.Text, out overlap);
+
+            CreateShortBlockRequest req = new CreateShortBlockRequest();
+            req.command = "create-shortblock";
+            req.blockMetaSeq = "";
+            req.partSeq = "";
+            req.sliceTime = sbLen;
+            req.overlap = overlap;
+
+            string presetPack = String.Empty;
+            if (luePresetList.GetColumnValue("PresetPack") != null)
+                presetPack = luePresetList.GetColumnValue("PresetPack").ToString();
+
+            req.presetPack = presetPack;
+
+            req.presetSeq = "";
+            
+            req.parameters = new List<Parameter>();
+            foreach (SBParamControl ctrl in sbParamList)
+            {
+                ////Encoding
+                //byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(ctrl.PartName);
+                //string partName = Convert.ToBase64String(basebyte);
+
+                //string t1 = Utils.GetJulianFromDate(ctrl.Min);
+                //string t2 = Utils.GetJulianFromDate(ctrl.Max);
+
+                //req.parts.Add(new Part(partName, t1, t2));
+            }
+
+            var json = JsonConvert.SerializeObject(req);
+            Console.WriteLine(json);
+
+            string url = ConfigurationManager.AppSettings["UrlPart"];
+            string sendData = @"
+            {
+            ""command"":""upload-list""
+            }";
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Method = "POST";
+            request.ContentType = "application/json";
+            request.Timeout = 30 * 1000;
+            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+
+            // POST할 데이타를 Request Stream에 쓴다
+            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+            request.ContentLength = bytes.Length; // 바이트수 지정
+
+            using (Stream reqStream = request.GetRequestStream())
+            {
+                reqStream.Write(bytes, 0, bytes.Length);
+            }
+
+            // Response 처리
+            string responseText = string.Empty;
+            using (WebResponse resp = request.GetResponse())
+            {
+                Stream respStream = resp.GetResponseStream();
+                using (StreamReader sr = new StreamReader(respStream))
+                {
+                    responseText = sr.ReadToEnd();
+                }
+            }
+
+            //Console.WriteLine(responseText);
+            UploadListResponse result = JsonConvert.DeserializeObject<UploadListResponse>(responseText);
+            uploadList.Clear();
+
+            if (result != null)
+            {
+                if (result.code != 200)
+                {
+                    return false;
+                }
+                else
+                {
+                    foreach (ResponseImport res in result.response)
+                    {
+                        if (uploadList.ContainsKey(res.dataType) == false)
+                        {
+                            uploadList.Add(res.dataType, new List<string>());
+                        }
+
+                        //Decoding
+                        byte[] byte64 = Convert.FromBase64String(res.uploadName);
+                        string decName = Encoding.UTF8.GetString(byte64);
+                        uploadList[res.dataType].Add(decName);
+                    }
+                }
+            }
+            return true;
 
         }
 
@@ -737,6 +854,10 @@ namespace DynaRAP.UControl
 
         }
 
+        private void tableLayoutPanel7_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 
     

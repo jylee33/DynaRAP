@@ -134,6 +134,7 @@
     <Compile Include="CreateScenarioProgressForm.Designer.cs">
       <DependentUpon>CreateScenarioProgressForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Data\CreateShortBlockRequest.cs" />
     <Compile Include="Data\DirData.cs" />
     <Compile Include="Data\ImportRequest.cs" />
     <Compile Include="Data\ImportResponse.cs" />
