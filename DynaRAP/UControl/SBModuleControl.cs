@@ -83,7 +83,7 @@ namespace DynaRAP.UControl
             edtOverlap.Properties.Mask.EditMask = @"d2";
             edtOverlap.Properties.Mask.UseMaskAsDisplayFormat = true;
 
-            edtSBLength.Text = "1";
+            edtSBLength.Text = "10";
             edtOverlap.Text = "10";
 
             btnAddParameter.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
@@ -360,6 +360,9 @@ namespace DynaRAP.UControl
             chart1.DataSource = GetChartValues(strKey);
             chart1.BackColor = Color.FromArgb(37, 37, 38);
             chart1.DataBind();
+
+            chart1.Update();
+            chart1.ChartAreas[0].RecalculateAxesScale();
 
             AddIntervalList();
             AddStripLines();
