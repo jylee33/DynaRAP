@@ -4,6 +4,7 @@ using DevExpress.XtraEditors.Controls;
 using DevExpress.XtraEditors.Repository;
 using DevExpress.XtraGrid.Columns;
 using DynaRAP.Data;
+using DynaRAP.Forms;
 using DynaRAP.TEST;
 using DynaRAP.UTIL;
 using Newtonsoft.Json;
@@ -449,7 +450,7 @@ namespace DynaRAP.UControl
             DataRow row = null;
             int i = 0;
             chartData.Clear();
-            foreach (string value in dicData[selKey])
+            foreach (string value in dicData[strKey])
             {
                 row = table.NewRow();
                 string day = dicData["DATE"][i];
@@ -687,10 +688,16 @@ namespace DynaRAP.UControl
 
         void InvalidSB_ViewBtnClicked(object sender, EventArgs e)
         {
-            DataTable dt = GetChartValues(dicData.Keys.ToList()[9]);
+            string strKey = dicData.Keys.ToList()[10];  // test
+            DataTable dt = GetChartValues(strKey);
 
-            TestChartForm2 form = new TestChartForm2(dt);
-            form.Show();
+            SBViewForm form = new SBViewForm(dt);
+            form.Text = strKey;
+            form.ShowDialog();
+
+            //TestChartForm2 form2 = new TestChartForm2(dt);
+            //form2.Text = strKey;
+            //form2.Show();
 
         }
 

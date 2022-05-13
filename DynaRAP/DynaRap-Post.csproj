@@ -128,10 +128,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CreateScenarioProgressForm.cs">
+    <Compile Include="Common\DLL_DATA.cs" />
+    <Compile Include="Common\DrawTypes.cs" />
+    <Compile Include="Common\SeriesPointData.cs" />
+    <Compile Include="Forms\CreateScenarioProgressForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="CreateScenarioProgressForm.Designer.cs">
+    <Compile Include="Forms\CreateScenarioProgressForm.Designer.cs">
       <DependentUpon>CreateScenarioProgressForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Data\CreateShortBlockRequest.cs" />
@@ -155,6 +158,12 @@
     <Compile Include="Data\SplittedInterval.cs" />
     <Compile Include="EventData\LoginResultEventArgs.cs" />
     <Compile Include="EventData\SelectedRangeEventArgs.cs" />
+    <Compile Include="Forms\SBViewForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SBViewForm.Designer.cs">
+      <DependentUpon>SBViewForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="TEST\TestChartForm2.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -187,17 +196,17 @@
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="MainStarter.cs" />
-    <Compile Include="NewSenarioForm.cs">
+    <Compile Include="Forms\NewSenarioForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="NewSenarioForm.Designer.cs">
+    <Compile Include="Forms\NewSenarioForm.Designer.cs">
       <DependentUpon>NewSenarioForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
-    <Compile Include="SelectSBForm.cs">
+    <Compile Include="Forms\SelectSBForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SelectSBForm.Designer.cs">
+    <Compile Include="Forms\SelectSBForm.Designer.cs">
       <DependentUpon>SelectSBForm.cs</DependentUpon>
     </Compile>
     <Compile Include="TEST\GridGroupingForm.cs">
@@ -457,8 +466,11 @@
     <Compile Include="XtraForm1.Designer.cs">
       <DependentUpon>XtraForm1.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="CreateScenarioProgressForm.resx">
+    <EmbeddedResource Include="Forms\CreateScenarioProgressForm.resx">
       <DependentUpon>CreateScenarioProgressForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SBViewForm.resx">
+      <DependentUpon>SBViewForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TEST\TestChartForm2.resx">
       <DependentUpon>TestChartForm2.cs</DependentUpon>
@@ -484,7 +496,7 @@
       <DependentUpon>MainForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="NewSenarioForm.resx">
+    <EmbeddedResource Include="Forms\NewSenarioForm.resx">
       <DependentUpon>NewSenarioForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\licenses.licx" />
@@ -503,7 +515,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="SelectSBForm.resx">
+    <EmbeddedResource Include="Forms\SelectSBForm.resx">
       <DependentUpon>SelectSBForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TEST\GridGroupingForm.resx">
