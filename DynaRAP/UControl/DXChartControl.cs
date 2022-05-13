@@ -32,7 +32,7 @@ namespace DynaRAP.UControl
             InitializeComponent();
 
             m_series = new List<string>();
-            m_filename = @"D:\DOCs\SGSONE\32063_20220314_180351_SL30_02_2nd_ALCM_FT_Full_Sample_1.xls";
+            m_filename = @"C:\temp\a.xls";
             m_pageIndex = 0;
             m_pageSize = 100000;
             m_totalPages = 0;
