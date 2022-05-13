@@ -109,7 +109,7 @@ namespace DynaRAP.UControl
         public void DrawChart(DataTable table, string seriesName = "Series1")
         {
             m_table = table;
-            this.pnPaging.Visible = true;
+            this.pnPaging.Visible = false;
             if (this.m_chart.Series.Count > 0)
                 this.m_chart.Series.Clear();
             this.m_chart.Series.Add(new Series(seriesName, ViewType.Line));
@@ -177,6 +177,8 @@ namespace DynaRAP.UControl
 
             return m_table;
         }
+
+        
 
         private void DrawChart_1D(string axisTitleX = "", int pageIndex = 0, int pageSize = 50000)
         {
