@@ -4,6 +4,7 @@ using DevExpress.XtraEditors.Controls;
 using DevExpress.XtraEditors.Repository;
 using DevExpress.XtraGrid.Columns;
 using DynaRAP.Data;
+using DynaRAP.TEST;
 using DynaRAP.UTIL;
 using Newtonsoft.Json;
 using System;
@@ -687,6 +688,10 @@ namespace DynaRAP.UControl
         void InvalidSB_ViewBtnClicked(object sender, EventArgs e)
         {
             DataTable dt = GetChartValues(dicData.Keys.ToList()[9]);
+
+            TestChartForm2 form = new TestChartForm2(dt);
+            form.Show();
+
         }
 
         void InvalidSB_DeleteBtnClicked(object sender, EventArgs e)
