@@ -46,4 +46,13 @@ public class ParamVO {
         private CryptoField.NAuth registerUid;
         private LongDate createdAt;
     }
+
+    @Data
+    public static class NotMapped {
+        private CryptoField seq;
+        private CryptoField uploadSeq;
+        private CryptoField paramPack;
+        private CryptoField paramSeq;
+        private String notMappedParamKey;
+    }
 }

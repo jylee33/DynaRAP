@@ -602,7 +602,81 @@ public class ServiceApiController extends ApiController {
             return ResponseHelper.response(200, "Success - Part Info", partInfo);
         }
 
+        // 업로드 리스트 가져가기
+        if (command.equals("create-shortblock")) {
+            ShortBlockVO.Meta shortBlockMeta = getService(PartService.class).doCreateShortBlock(user.getUid(), payload);
+            return ResponseHelper.response(200, "Success - Create ShortBlock Data", shortBlockMeta);
+        }
+
+        if (command.equals("progress")) {
+            ShortBlockVO.Meta shortBlockMeta = getService(PartService.class).getProgress(user.getUid(), payload);
+            return ResponseHelper.response(200, "Success - Get Create ShortBlock Progress", shortBlockMeta);
+        }
+
         throw new HandledServiceException(411, "명령이 정의되지 않았습니다.");
     }
 
+    @RequestMapping(value = "/shortblock")
+    @ResponseBody
+    public Object apiShortBlock(HttpServletRequest request, @PathVariable String serviceVersion,
+                          @RequestBody JsonObject payload, Authentication authentication) throws HandledServiceException {
+        /*
+        String accessToken = request.getHeader("Authorization");
+        if (accessToken == null || (!accessToken.startsWith("bearer") && !accessToken.startsWith("Bearer")))
+            return ResponseHelper.error(403, "권한이 없습니다.");
+
+        String username = authentication.getPrincipal().toString();
+        */
+        UserVO user = getService(UserService.class).getUser("admin@dynarap@dynarap");
+
+        if (checkJsonEmpty(payload, "command"))
+            throw new HandledServiceException(404, "파라미터를 확인하세요.");
+
+        String command = payload.get("command").getAsString();
+
+        if (command.equals("list")) {
+            CryptoField.NAuth registerUid = null;
+            if (!checkJsonEmpty(payload, "registerUid"))
+                registerUid = CryptoField.NAuth.decode(payload.get("registerUid").getAsString(), 0L);
+
+            CryptoField partSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "partSeq"))
+                partSeq = CryptoField.decode(payload.get("partSeq").getAsString(), 0L);
+
+            Integer pageNo = 1;
+            if (!checkJsonEmpty(payload, "pageNo"))
+                pageNo = payload.get("pageNo").getAsInt();
+
+            Integer pageSize = 15;
+            if (!checkJsonEmpty(payload, "pageSize"))
+                pageSize = payload.get("pageSize").getAsInt();
+
+            List<ShortBlockVO> shortBlockList = getService(PartService.class).getShortBlockList(registerUid, partSeq, pageNo, pageSize);
+            int shortBlockCount = getService(PartService.class).getShortBlockCount(registerUid, partSeq);
+
+            return ResponseHelper.response(200, "Success - Short Block List", shortBlockCount, shortBlockList);
+        }
+
+        if (command.equals("info")) {
+            CryptoField blockSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "blockSeq"))
+                blockSeq = CryptoField.decode(payload.get("blockSeq").getAsString(), 0L);
+
+            ShortBlockVO shortBlockInfo = getService(PartService.class).getShortBlockBySeq(blockSeq);
+
+            return ResponseHelper.response(200, "Success - ShortBlock Info", shortBlockInfo);
+        }
+
+        if (command.equals("remove-meta")) {
+            CryptoField blockMetaSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "blockMetaSeq"))
+                blockMetaSeq = CryptoField.decode(payload.get("blockMetaSeq").getAsString(), 0L);
+
+            //getService(PartService.class).deleteShortBlockMeta(blockMetaSeq);
+
+            return ResponseHelper.response(200, "Success - Remove ShortBlock Meta", "");
+        }
+
+        throw new HandledServiceException(411, "명령이 정의되지 않았습니다.");
+    }
 }

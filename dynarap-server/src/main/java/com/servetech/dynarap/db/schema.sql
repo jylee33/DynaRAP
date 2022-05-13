@@ -145,6 +145,18 @@ create table `dynarap_preset_param`
     constraint pk_dynarap_preset_param primary key (`seq`)
 ) $$
 
+drop table if exists `dynarap_notmapped_param` cascade $$
+
+create table `dynarap_notmapped_param`
+(
+    `seq` bigint auto_increment not null            comment '일련번호',
+    `uploadSeq` bigint not null                     comment '업로드 일련번호',
+    `paramPack` bigint default 0                    comment '파라미터 관리번호',
+    `paramSeq` bigint default 0                     comment '파라미터 일련번호',
+    `notMappedParamKey` varchar(64) not null        comment '비매칭 키',
+    constraint pk_dynarap_notmapped_param primary key (`seq`)
+) AUTO_INCREMENT = 9000001 $$
+
 
 -- 관련 데이터 업로드 -> 이후 파일 정보로 raw 데이터 구성 후 새로 잘라낼 수 있음
 drop table if exists `dynarap_raw_upload` cascade $$
@@ -326,7 +338,7 @@ create table `dynarap_sblock_raw`
     constraint pk_dynarap_sblock_raw primary key (`seq`)
 ) $$
 
-create index idx_sblock_raw on `dynarap_sblock_raw` (`partSeq`, `blockSeq`, paramSeq, `rowNo`) $$
+create index idx_sblock_raw on `dynarap_sblock_raw` (`partSeq`, `blockSeq`, blockParamSeq, `rowNo`) $$
 
 -- 숏블록 파라미터 처리
 drop table if exists `dynarap_sblock_param` cascade $$
@@ -334,10 +346,21 @@ drop table if exists `dynarap_sblock_param` cascade $$
 create table `dynarap_sblock_param`
 (
     `seq` bigint auto_increment not null            comment '일련번호',
-    `blockSeq` bigint not null                      comment '숏블록 일련번호',
+    `blockMetaSeq` bigint not null                      comment '숏블록 일련번호',
     `paramNo` smallint default 0                    comment '설정 파라미터 순서',
     `paramPack` bigint default 0                    comment '설정 파라미터 관리 일련번호',
     `paramSeq` bigint default 0                     comment '설정 파라미터 일련번호',
+
+    -- 파람 기초 정보
+    `paramKey` varchar(64)                          comment '파라미터 고유키',
+    `paramName` varchar(32)                         comment '파라미터 이름',
+    `adamsKey` varchar(64)                          comment 'ADAMS 고유키',
+    `zaeroKey` varchar(64)                          comment 'ZAERO 고유키',
+    `grtKey` varchar(64)                            comment 'GRP 고유키',
+    `fltpKey` varchar(64)                           comment 'FLTP 고유키',
+    `fltsKey` varchar(64)                           comment 'FLTS 고유키',
+    `paramUnit` varchar(32)                         comment '파라미터 단위',
+
     constraint pk_dynarap_sblock_param primary key (`seq`)
 ) $$
 

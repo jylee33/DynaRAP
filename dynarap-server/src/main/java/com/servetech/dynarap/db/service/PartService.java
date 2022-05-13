@@ -3,15 +3,13 @@ package com.servetech.dynarap.db.service;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.servetech.dynarap.config.ServerConstants;
-import com.servetech.dynarap.controller.ApiController;
-import com.servetech.dynarap.db.mapper.FlightMapper;
 import com.servetech.dynarap.db.mapper.PartMapper;
+import com.servetech.dynarap.db.service.task.ShortBlockCreateTask;
 import com.servetech.dynarap.db.type.CryptoField;
 import com.servetech.dynarap.db.type.LongDate;
 import com.servetech.dynarap.db.type.String64;
 import com.servetech.dynarap.ext.HandledServiceException;
 import com.servetech.dynarap.vo.*;
-import org.objectweb.asm.Handle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +26,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executor;
 
 import static com.servetech.dynarap.controller.ApiController.checkJsonEmpty;
 
@@ -46,6 +47,11 @@ public class PartService {
 
     @Autowired
     private ParamService paramService;
+
+    @Autowired
+    private Executor texecutor;
+
+    private volatile Map<String, ShortBlockVO.Meta> createStat = new ConcurrentHashMap<>();
 
     public List<PartVO> getPartList(CryptoField.NAuth registerUid, CryptoField uploadSeq, int pageNo, int pageSize) throws HandledServiceException {
         try {
@@ -329,6 +335,173 @@ public class PartService {
             throw new HandledServiceException(410, e.getMessage());
         }
     }
+
+
+
+    @Transactional
+    public ShortBlockVO.Meta doCreateShortBlock(CryptoField.NAuth uid, JsonObject payload) throws HandledServiceException {
+        try {
+            ShortBlockVO.CreateRequest createReq = ServerConstants.GSON.fromJson(payload, ShortBlockVO.CreateRequest.class);
+            if (createReq == null)
+                throw new Exception("요청 형식이 올바르지 않습니다. 파라미터를 확인하세요.");
+
+            ShortBlockVO.Meta shortBlockMeta = null;
+            if (createReq.getBlockMetaSeq() == null || createReq.getBlockMetaSeq().isEmpty()) {
+                shortBlockMeta = new ShortBlockVO.Meta();
+                shortBlockMeta.setSeq(CryptoField.LZERO);
+                shortBlockMeta.setPartSeq(createReq.getPartSeq());
+                shortBlockMeta.setRegisterUid(uid);
+                shortBlockMeta.setCreateDone(false);
+                shortBlockMeta.setCreatedAt(LongDate.now());
+                shortBlockMeta.setCreateRequest(createReq);
+                shortBlockMeta.setOverlap(createReq.getOverlap());
+                shortBlockMeta.setSliceTime(createReq.getSliceTime());
+                shortBlockMeta.setSelectedPresetPack(createReq.getPresetPack());
+                shortBlockMeta.setSelectedPresetSeq(createReq.getPresetSeq());
+                insertShortBlockMeta(shortBlockMeta);
+                createStat.put(shortBlockMeta.getSeq().valueOf(), shortBlockMeta);
+
+                shortBlockMeta.setStatus("prepare");
+                shortBlockMeta.setStatusMessage("생성 기준 데이터를 준비하고 있습니다.");
+                shortBlockMeta.setTotalFetchCount(0);
+                shortBlockMeta.setFetchCount(0);
+            }
+            else {
+                shortBlockMeta = getShortBlockMetaBySeq(createReq.getBlockMetaSeq());
+                if (!createStat.containsKey(shortBlockMeta.getSeq().valueOf())
+                        || createReq.isForcedCreate()) {
+                    shortBlockMeta.setCreateDone(false);
+                    createStat.put(shortBlockMeta.getSeq().valueOf(), shortBlockMeta);
+
+                    shortBlockMeta.setStatus("prepare");
+                    shortBlockMeta.setStatusMessage("생성 기준 데이터를 준비하고 있습니다.");
+                    shortBlockMeta.setTotalFetchCount(0);
+                    shortBlockMeta.setFetchCount(0);
+                }
+                else
+                    shortBlockMeta = createStat.get(shortBlockMeta.getSeq().valueOf());
+                shortBlockMeta.setCreateRequest(createReq);
+            }
+
+            // create thread worker start
+            if (shortBlockMeta.getStatus().equals("prepare")) {
+                ShortBlockCreateTask createTask = new ShortBlockCreateTask();
+                CompletableFuture.runAsync(createTask.asyncRunCreate(jdbcTemplate, paramService, PartService.this, shortBlockMeta), texecutor);
+            }
+
+            return shortBlockMeta;
+
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    public ShortBlockVO.Meta getProgress(CryptoField.NAuth uid, JsonObject payload) throws HandledServiceException {
+        try {
+            CryptoField metaSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "metaSeq"))
+                metaSeq = CryptoField.decode(payload.get("metaSeq").getAsString(), 0L);
+
+            if (metaSeq == null || metaSeq.isEmpty())
+                throw new HandledServiceException(411, "요청 파라미터 오류입니다. [필수 파라미터 누락]");
+
+            ShortBlockVO.Meta shortBlockMeta = createStat.get(metaSeq.valueOf());
+            if (shortBlockMeta == null)
+                throw new HandledServiceException(411, "진행중인 생성 요청이 없습니다.");
+
+            return shortBlockMeta;
+        } catch(Exception e) {
+            throw new HandledServiceException(411, e.getMessage());
+        }
+    }
+
+    public List<ShortBlockVO> getShortBlockList(CryptoField.NAuth registerUid, CryptoField partSeq, int pageNo, int pageSize) throws HandledServiceException {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("registerUid", registerUid == null || registerUid.isEmpty() ? null : registerUid);
+            params.put("partSeq", partSeq == null || partSeq.isEmpty() ? null : partSeq);
+            params.put("startIndex", (pageNo - 1) * pageSize);
+            params.put("pageSize", pageSize);
+            return partMapper.selectShortBlockList(params);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    public int getShortBlockCount(CryptoField.NAuth registerUid, CryptoField partSeq) throws HandledServiceException {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("registerUid", registerUid == null || registerUid.isEmpty() ? null : registerUid);
+            params.put("uploadSeq", partSeq == null || partSeq.isEmpty() ? null : partSeq);
+            return partMapper.selectShortBlockCount(params);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    public ShortBlockVO getShortBlockBySeq(CryptoField blockSeq) throws HandledServiceException {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("seq", blockSeq);
+            return partMapper.selectShortBlockBySeq(params);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    // insert, update, delete shortblock ...
+
+    public List<ShortBlockVO.Meta> getShortBlockMetaList(CryptoField partSeq) throws HandledServiceException {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("partSeq", partSeq == null || partSeq.isEmpty() ? null : partSeq);
+            return partMapper.selectShortBlockMetaList(params);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    public ShortBlockVO.Meta getShortBlockMetaBySeq(CryptoField blockSeq) throws HandledServiceException {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("seq", blockSeq);
+            return partMapper.selectShortBlockMetaBySeq(params);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    // insert, update, delete shortblock meta
+
+    public List<ShortBlockVO.Param> getShortBlockParamList(CryptoField blockMetaSeq) throws HandledServiceException {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("blockMetaSeq", blockMetaSeq);
+            return partMapper.selectShortBlockParamList(params);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    @Transactional
+    public void insertShortBlockMeta(ShortBlockVO.Meta shortBlockMeta) throws HandledServiceException {
+        try {
+            partMapper.insertShortBlockMeta(shortBlockMeta);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    @Transactional
+    public void updateShortBlockMeta(ShortBlockVO.Meta shortBlockMeta) throws HandledServiceException {
+        try {
+            partMapper.updateShortBlockMeta(shortBlockMeta);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    // insert, update, delete shortblock param
 
     public static double getJulianTimeOffset(String julianFrom, String julianCurrent) {
         // 년도 값을 뺀 소수 부분을 포메팅 함.

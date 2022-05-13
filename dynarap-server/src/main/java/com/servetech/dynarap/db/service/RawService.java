@@ -1,30 +1,23 @@
 package com.servetech.dynarap.db.service;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.servetech.dynarap.config.ServerConstants;
 import com.servetech.dynarap.controller.ApiController;
 import com.servetech.dynarap.db.mapper.RawMapper;
-import com.servetech.dynarap.db.service.task.ImportTask;
+import com.servetech.dynarap.db.service.task.PartImportTask;
 import com.servetech.dynarap.db.type.CryptoField;
 import com.servetech.dynarap.db.type.LongDate;
 import com.servetech.dynarap.db.type.String64;
 import com.servetech.dynarap.ext.HandledServiceException;
 import com.servetech.dynarap.vo.ParamVO;
-import com.servetech.dynarap.vo.PartVO;
 import com.servetech.dynarap.vo.PresetVO;
 import com.servetech.dynarap.vo.RawVO;
 import lombok.RequiredArgsConstructor;
-import org.apache.ibatis.session.ExecutorType;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.*;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,7 +30,6 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
-import java.util.concurrent.Future;
 
 import static com.servetech.dynarap.controller.ApiController.checkJsonEmpty;
 
@@ -369,7 +361,7 @@ public class RawService {
 
             // create thread worker start
             if (rawUpload.getStatus().equals("import")) {
-                ImportTask importTask = new ImportTask();
+                PartImportTask importTask = new PartImportTask();
                 CompletableFuture.runAsync(importTask.asyncRunImport(jdbcTemplate, paramService, RawService.this, rawUpload), texecutor);
             }
 

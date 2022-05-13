@@ -30,8 +30,8 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class ImportTask {
-    private static final Logger logger = LoggerFactory.getLogger(ImportTask.class);
+public class PartImportTask {
+    private static final Logger logger = LoggerFactory.getLogger(PartImportTask.class);
 
     @Async("texecutor")
     public Runnable asyncRunImport(final JdbcTemplate jdbcTemplate, final ParamService paramService, final RawService rawService, final RawVO.Upload rawUpload) {
