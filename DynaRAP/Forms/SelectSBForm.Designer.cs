@@ -1,4 +1,4 @@
-﻿namespace DynaRAP
+﻿namespace DynaRAP.Forms
 {
     partial class SelectSBForm
     {

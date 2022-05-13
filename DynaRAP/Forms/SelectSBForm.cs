@@ -13,7 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace DynaRAP
+namespace DynaRAP.Forms
 {
     public partial class SelectSBForm : DevExpress.XtraEditors.XtraForm
     {

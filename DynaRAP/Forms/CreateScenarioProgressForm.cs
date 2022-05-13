@@ -10,7 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace DynaRAP
+namespace DynaRAP.Forms
 {
     public partial class CreateScenarioProgressForm : DevExpress.XtraEditors.XtraForm
     {
