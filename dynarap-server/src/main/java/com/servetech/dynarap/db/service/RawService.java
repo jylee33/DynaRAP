@@ -298,8 +298,8 @@ public class RawService {
 
             if (uploadReq.getSourcePath().contains("C:\\")) {
                 uploadReq.setSourcePath(uploadReq.getSourcePath().replaceAll("\\\\", "/"));
-                //uploadReq.setSourcePath(uploadReq.getSourcePath().replaceAll("C:/", "/Users/aloepigeon/"));
-                uploadReq.setSourcePath(uploadReq.getSourcePath().replaceAll("C:/", "/home/ubuntu/"));
+                uploadReq.setSourcePath(uploadReq.getSourcePath().replaceAll("C:/", "/Users/aloepigeon/"));
+                //uploadReq.setSourcePath(uploadReq.getSourcePath().replaceAll("C:/", "/home/ubuntu/"));
             }
 
             File fStatic = new File(uploadReq.getSourcePath());
@@ -361,7 +361,7 @@ public class RawService {
 
             // create thread worker start
             if (rawUpload.getStatus().equals("import")) {
-                PartImportTask importTask = new PartImportTask();
+                PartImportTask importTask = new PartImportTask.Builder().setListOps(listOps).setZsetOps(zsetOps).createPartImportTask();
                 CompletableFuture.runAsync(importTask.asyncRunImport(jdbcTemplate, paramService, RawService.this, rawUpload), texecutor);
             }
 

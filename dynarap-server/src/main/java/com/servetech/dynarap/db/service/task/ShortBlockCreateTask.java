@@ -8,10 +8,12 @@ import com.servetech.dynarap.db.type.String64;
 import com.servetech.dynarap.vo.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.core.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.io.BufferedReader;
 import java.io.File;
@@ -30,6 +32,17 @@ import java.util.Map;
 public class ShortBlockCreateTask {
     private static final Logger logger = LoggerFactory.getLogger(ShortBlockCreateTask.class);
 
+    private ListOperations<String, String> listOps;
+    private ZSetOperations<String, String> zsetOps;
+
+    public void setListOps(ListOperations<String, String> listOps) {
+        this.listOps = listOps;
+    }
+
+    public void setZsetOps(ZSetOperations<String, String> zsetOps) {
+        this.zsetOps = zsetOps;
+    }
+
     @Async("texecutor")
     public Runnable asyncRunCreate(final JdbcTemplate jdbcTemplate,
                                    final ParamService paramService,
@@ -47,6 +60,9 @@ public class ShortBlockCreateTask {
                     conn.setAutoCommit(false);
 
                     if (shortBlockMeta.getStatus().equals("prepare")) {
+                        // 파트 정보 로딩하기
+                        shortBlockMeta.setPartInfo(partService.getPartBySeq(shortBlockMeta.getPartSeq()));
+
                         // 생성 준비 작업.
                         // blockMeta 정보를 토대로
                         // param 삭제, raw 삭제, block 삭제.
@@ -55,16 +71,38 @@ public class ShortBlockCreateTask {
                         stmt.executeUpdate("delete from dynarap_sblock_raw where blockSeq in " +
                                 "(select seq from dynarap_sblock where blockMetaSeq = " + shortBlockMeta.getSeq().originOf() + ")");
                         stmt.executeUpdate("delete from dynarap_sblock where blockMetaSeq = " + shortBlockMeta.getSeq().originOf());
-                        stmt.close();
 
                         // param 넣기
                         PreparedStatement pstmt = conn.prepareStatement(
                                 "insert into dynarap_sblock_param (" +
                                         "blockMetaSeq,paramNo,paramPack,paramSeq,paramName," +
-                                        "paramKey,adamsKey,zaeroKey,grtKey,fltpKey,fltsKey,paramUnit" +
-                                        ") values (?,?,?,?,?,?,?,?,?,?,?,?)");
+                                        "paramKey,adamsKey,zaeroKey,grtKey,fltpKey,fltsKey,paramUnit,unionParamSeq" +
+                                        ") values (?,?,?,?,?,?,?,?,?,?,?,?,?)");
                         int paramNo = 1;
                         for (ShortBlockVO.CreateRequest.Parameter p : shortBlockMeta.getCreateRequest().getParameters()) {
+                            // parameter 처리.
+                            ResultSet rs = stmt.executeQuery(
+                                    "select seq from dynarap_preset_param " +
+                                            "where presetPack = " + shortBlockMeta.getSelectedPresetPack().originOf() + " " +
+                                            "  and presetSeq = " + shortBlockMeta.getSelectedPresetSeq().originOf() + " " +
+                                            "  and paramPack = " + p.getParamPack().originOf() + " " +
+                                            "  and paramSeq = " + p.getParamSeq().originOf() + " " +
+                                            "union " +
+                                            "select seq from dynarap_notmapped_param " +
+                                            "where uploadSeq = " + shortBlockMeta.getPartInfo().getUploadSeq().originOf() + " " +
+                                            "  and paramPack = " + p.getParamPack().originOf() + " " +
+                                            "  and paramSeq = " + p.getParamSeq().originOf() + " " +
+                                            "limit 0, 1");
+
+                            if (!rs.next()) {
+                                logger.info("[[[[[ " + p.getParamName().originOf() + " " + p.getParamKey() + " not found on part info");
+                                rs.close();
+                                continue;
+                            }
+
+                            Long paramSeq = rs.getLong(1);
+                            rs.close();
+
                             pstmt.setLong(1, shortBlockMeta.getSeq().originOf());
                             pstmt.setInt(2, paramNo);
                             pstmt.setLong(3, p.getParamPack() == null || p.getParamPack().isEmpty() ? 0 : p.getParamPack().originOf());
@@ -79,6 +117,7 @@ public class ShortBlockCreateTask {
                             pstmt.setString(10, p.getFltpKey());
                             pstmt.setString(11, p.getFltsKey());
                             pstmt.setString(12, p.getParamUnit());
+                            pstmt.setLong(13, paramSeq);
                             pstmt.addBatch();
                             pstmt.clearParameters();
                             paramNo++;
@@ -88,6 +127,8 @@ public class ShortBlockCreateTask {
                         pstmt.close();
 
                         conn.commit(); /* 파라미터 정보까지 커밋 */
+
+                        stmt.close();
 
                         shortBlockMeta.setStatus("create-shortblock");
                         shortBlockMeta.setStatusMessage("숏블록을 생성하고 있습니다.");
@@ -170,6 +211,17 @@ public class ShortBlockCreateTask {
                                     shortBlock.setSeq(new CryptoField(rs.getLong(1)));
                                 rs.close();
 
+                                // 기존 오더 삭제
+                                listOps.trim("S" + shortBlock.getSeq().originOf(), 0, Integer.MAX_VALUE);
+                                zsetOps.removeRangeByScore("S" + shortBlock.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE);
+
+                                for (ShortBlockVO.Param param : shortBlockMeta.getShortBlockParamList()) {
+                                    listOps.rightPush("S" + shortBlock.getSeq().originOf(), "P" + param.getUnionParamSeq());
+                                    zsetOps.removeRangeByScore("S" + shortBlock.getSeq().originOf() + ".N" + param.getUnionParamSeq(), 0, Integer.MAX_VALUE);
+                                    zsetOps.removeRangeByScore("S" + shortBlock.getSeq().originOf() + ".L" + param.getUnionParamSeq(), 0, Integer.MAX_VALUE);
+                                    zsetOps.removeRangeByScore("S" + shortBlock.getSeq().originOf() + ".H" + param.getUnionParamSeq(), 0, Integer.MAX_VALUE);
+                                }
+
                                 // dump part raw from raw_temp table
                                 int minRowNo = -1;
                                 int maxRowNo = -1;
@@ -192,7 +244,7 @@ public class ShortBlockCreateTask {
 
                                 long jobStartAt = System.currentTimeMillis();
 
-                                String paramQuery = "select seq, presetParamSeq, rowNo, julianTimeAt, paramVal, paramValStr " +
+                                String paramQuery = "select seq, presetParamSeq, rowNo, julianTimeAt, paramVal, paramValStr, lpf, hpf " +
                                         "from dynarap_part_raw " +
                                         "where partSeq = ? " +
                                         "and rowNo between ? and ? " +
@@ -209,47 +261,42 @@ public class ShortBlockCreateTask {
                                         ") values (?,?,?,?,?,?,?,?,?,?)");
 
                                 for (ShortBlockVO.Param param : shortBlockMeta.getShortBlockParamList()) {
-                                    // parameter 처리.
-                                    rs = stmt.executeQuery(
-                                            "select seq from dynarap_preset_param " +
-                                                    "where presetPack = " + shortBlockMeta.getSelectedPresetPack().originOf() + " " +
-                                                    "  and presetSeq = " + shortBlockMeta.getSelectedPresetSeq().originOf() + " " +
-                                                    "  and paramPack = " + param.getParamPack().originOf() + " " +
-                                                    "  and paramSeq = " + param.getParamSeq().originOf() + " " +
-                                                    "union " +
-                                                    "select seq from dynarap_notmapped_param " +
-                                                    "where uploadSeq = " + shortBlockMeta.getPartInfo().getUploadSeq().originOf() + " " +
-                                                    "  and paramPack = " + param.getParamPack().originOf() + " " +
-                                                    "  and paramSeq = " + param.getParamSeq().originOf() + " " +
-                                                    "limit 0, 1");
-
-                                    if (!rs.next()) {
-                                        logger.info("[[[[[ " + param.getParamName().originOf() + " " + param.getParamKey() + " not found on part info");
-                                        continue;
-                                    }
-
-                                    long srcParamSeq = rs.getLong(1);
-                                    rs.close();
+                                    if (param.getUnionParamSeq() == null || param.getUnionParamSeq() == 0) continue;
 
                                     // part 데이터에서 param에 해당 하는 내용을 가져와서 sblock에 넣어주기.
                                     pstmt.setLong(1, shortBlock.getPartSeq().originOf());
                                     pstmt.setInt(2, minRowNo);
                                     pstmt.setInt(3, maxRowNo);
-                                    pstmt.setLong(4, srcParamSeq);
+                                    pstmt.setLong(4, param.getUnionParamSeq());
                                     rs = pstmt.executeQuery();
+
+                                    String rowKey = "S" + shortBlock.getSeq().originOf() + ".N" + param.getUnionParamSeq();
+                                    String lpfKey = "S" + shortBlock.getSeq().originOf() + ".L" + param.getUnionParamSeq();
+                                    String hpfKey = "S" + shortBlock.getSeq().originOf() + ".H" + param.getUnionParamSeq();
 
                                     int batchCount = 1;
                                     while (rs.next()) {
+                                        int rowNo = rs.getInt("rowNo");
+                                        String julianTimeAt = rs.getString("julianTimeAt");
+                                        Double dblVal = rs.getDouble("paramVal");
+
+                                        zsetOps.addIfAbsent("S" + shortBlock.getSeq().originOf() + ".R", rs.getString("julianTimeAt"), rowNo);
+
                                         pstmt_insert.setLong(1, shortBlock.getSeq().originOf());
                                         pstmt_insert.setLong(2, shortBlock.getPartSeq().originOf());
                                         pstmt_insert.setLong(3, param.getSeq().originOf());
-                                        pstmt_insert.setInt(4, rs.getInt("rowNo"));
-                                        pstmt_insert.setString(5, rs.getString("julianTimeAt"));
-                                        pstmt_insert.setDouble(6, PartService.getJulianTimeOffset(julianStartFrom, rs.getString("julianTimeAt")));
-                                        pstmt_insert.setDouble(7, rs.getDouble("paramVal"));
+                                        pstmt_insert.setInt(4, rowNo);
+                                        pstmt_insert.setString(5, julianTimeAt);
+                                        pstmt_insert.setDouble(6, PartService.getJulianTimeOffset(julianStartFrom, julianTimeAt));
+                                        pstmt_insert.setDouble(7, dblVal);
                                         pstmt_insert.setString(8, rs.getString("paramValStr"));
-                                        pstmt_insert.setDouble(9, rs.getDouble("paramVal")); // temp lpf
-                                        pstmt_insert.setDouble(10, rs.getDouble("paramVal")); // temp hpf
+
+                                        Double lpfVal = rs.getDouble("lpf");
+                                        Double hpfVal = rs.getDouble("hpf");
+
+                                        pstmt_insert.setDouble(9, lpfVal);
+                                        pstmt_insert.setDouble(10, hpfVal);
+
                                         pstmt_insert.addBatch();
                                         pstmt_insert.clearParameters();
 
@@ -258,6 +305,14 @@ public class ShortBlockCreateTask {
                                             pstmt_insert.clearBatch();
                                         }
                                         batchCount++;
+
+                                        if (dblVal != null) {
+                                            zsetOps.add(rowKey, julianTimeAt + ":" + dblVal, rowNo);
+                                            zsetOps.add(lpfKey, julianTimeAt + ":" + lpfVal, rowNo);
+                                            zsetOps.add(hpfKey, julianTimeAt + ":" + hpfVal, rowNo);
+                                        }
+                                        else
+                                            zsetOps.add(rowKey, julianTimeAt + ":" + rs.getString("paramValStr"), rowNo);
                                     }
                                     if ((batchCount % 1000) > 0) {
                                         pstmt_insert.executeBatch();
@@ -273,8 +328,6 @@ public class ShortBlockCreateTask {
 
                                 conn.commit();
                                 shortBlockList.add(shortBlock);
-
-                                // TODO : creation cache data
 
                                 stmt.close();
                                 pstmt.close();
@@ -307,5 +360,27 @@ public class ShortBlockCreateTask {
                 }
             }
         };
+    }
+
+    public static class Builder {
+        private ListOperations<String, String> listOps;
+        private ZSetOperations<String, String> zsetOps;
+
+        public ShortBlockCreateTask.Builder setListOps(ListOperations<String, String> listOps) {
+            this.listOps = listOps;
+            return this;
+        }
+
+        public ShortBlockCreateTask.Builder setZsetOps(ZSetOperations<String, String> zsetOps) {
+            this.zsetOps = zsetOps;
+            return this;
+        }
+
+        public ShortBlockCreateTask createShortBlockCreateTask() {
+            ShortBlockCreateTask task = new ShortBlockCreateTask();
+            task.setListOps(this.listOps);
+            task.setZsetOps(this.zsetOps);
+            return task;
+        }
     }
 }

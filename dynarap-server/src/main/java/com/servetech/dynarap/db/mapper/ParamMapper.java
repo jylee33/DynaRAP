@@ -343,6 +343,17 @@ public interface ParamMapper {
     })
     int selectPresetParamCount(Map<String, Object> params) throws Exception;
 
+    @Select({
+            "<script>" +
+                    "select a.*, b.seq as presetParamSeq, b.presetPack, b.presetSeq from dynarap_param a, dynarap_preset_param b " +
+                    "where a.seq = b.paramSeq " +
+                    "and a.paramPack = b.paramPack " +
+                    "and b.seq = #{seq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "limit 0, 1" +
+                    "</script>"
+    })
+    ParamVO selectPresetParamBySeq(Map<String, Object> params) throws Exception;
+
     @Insert({
             "<script>" +
                     "insert into dynarap_preset_param (" +

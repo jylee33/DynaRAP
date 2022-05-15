@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.servetech.dynarap.config.ServerConstants;
 import com.servetech.dynarap.db.mapper.PartMapper;
+import com.servetech.dynarap.db.service.task.PartImportTask;
 import com.servetech.dynarap.db.service.task.ShortBlockCreateTask;
 import com.servetech.dynarap.db.type.CryptoField;
 import com.servetech.dynarap.db.type.LongDate;
@@ -13,10 +14,12 @@ import com.servetech.dynarap.vo.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -35,6 +38,21 @@ import static com.servetech.dynarap.controller.ApiController.checkJsonEmpty;
 @Service("partService")
 public class PartService {
     private static final Logger logger = LoggerFactory.getLogger(PartService.class);
+
+    @Resource(name = "redisTemplate")
+    private ValueOperations<String, String> valueOps;
+
+    @Resource(name = "redisTemplate")
+    private ListOperations<String, String> listOps;
+
+    @Resource(name = "redisTemplate")
+    private HashOperations<String, String, String> hashOps;
+
+    @Resource(name = "redisTemplate")
+    private SetOperations<String, String> setOps;
+
+    @Resource(name = "redisTemplate")
+    private ZSetOperations<String, String> zsetOps;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -385,7 +403,7 @@ public class PartService {
 
             // create thread worker start
             if (shortBlockMeta.getStatus().equals("prepare")) {
-                ShortBlockCreateTask createTask = new ShortBlockCreateTask();
+                ShortBlockCreateTask createTask = new ShortBlockCreateTask.Builder().setListOps(listOps).setZsetOps(zsetOps).createShortBlockCreateTask();
                 CompletableFuture.runAsync(createTask.asyncRunCreate(jdbcTemplate, paramService, PartService.this, shortBlockMeta), texecutor);
             }
 

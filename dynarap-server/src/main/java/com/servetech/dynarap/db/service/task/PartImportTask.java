@@ -9,12 +9,15 @@ import com.servetech.dynarap.vo.ParamVO;
 import com.servetech.dynarap.vo.PartVO;
 import com.servetech.dynarap.vo.PresetVO;
 import com.servetech.dynarap.vo.RawVO;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.core.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.io.BufferedReader;
 import java.io.File;
@@ -32,6 +35,17 @@ import java.util.Map;
 @Component
 public class PartImportTask {
     private static final Logger logger = LoggerFactory.getLogger(PartImportTask.class);
+
+    private ListOperations<String, String> listOps;
+    private ZSetOperations<String, String> zsetOps;
+
+    public void setListOps(ListOperations<String, String> listOps) {
+        this.listOps = listOps;
+    }
+
+    public void setZsetOps(ZSetOperations<String, String> zsetOps) {
+        this.zsetOps = zsetOps;
+    }
 
     @Async("texecutor")
     public Runnable asyncRunImport(final JdbcTemplate jdbcTemplate, final ParamService paramService, final RawService rawService, final RawVO.Upload rawUpload) {
@@ -278,6 +292,17 @@ public class PartImportTask {
                                     part.setSeq(new CryptoField(rs.getLong(1)));
                                 rs.close();
 
+                                // 기존 오더 삭제
+                                listOps.trim("P" + part.getSeq().originOf(), 0, Integer.MAX_VALUE);
+                                zsetOps.removeRangeByScore("P" + part.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE);
+
+                                for (ParamVO param : presetParams) {
+                                    listOps.rightPush("P" + part.getSeq().originOf(), "P" + param.getPresetParamSeq());
+                                    zsetOps.removeRangeByScore("P" + part.getSeq().originOf() + ".N" + param.getPresetParamSeq(), 0, Integer.MAX_VALUE);
+                                    zsetOps.removeRangeByScore("P" + part.getSeq().originOf() + ".L" + param.getPresetParamSeq(), 0, Integer.MAX_VALUE);
+                                    zsetOps.removeRangeByScore("P" + part.getSeq().originOf() + ".H" + param.getPresetParamSeq(), 0, Integer.MAX_VALUE);
+                                }
+
                                 // dump part raw from raw_temp table
                                 int minRowNo = -1;
                                 int maxRowNo = -1;
@@ -321,17 +346,32 @@ public class PartImportTask {
                                     pstmt.setLong(3, param.getPresetParamSeq());
                                     rs = pstmt.executeQuery();
 
+                                    String rowKey = "P" + part.getSeq().originOf() + ".N" + param.getPresetParamSeq();
+                                    String lpfKey = "P" + part.getSeq().originOf() + ".L" + param.getPresetParamSeq();
+                                    String hpfKey = "P" + part.getSeq().originOf() + ".H" + param.getPresetParamSeq();
+
                                     int batchCount = 1;
                                     while (rs.next()) {
+                                        int rowNo = rs.getInt("rowNo");
+                                        String julianTimeAt = rs.getString("julianTimeAt");
+                                        Double dblVal = rs.getDouble("paramVal");
+
+                                        zsetOps.addIfAbsent("P" + part.getSeq().originOf() + ".R", rs.getString("julianTimeAt"), rowNo);
+
                                         pstmt_insert.setLong(1, part.getSeq().originOf());
                                         pstmt_insert.setLong(2, param.getPresetParamSeq());
-                                        pstmt_insert.setInt(3, rs.getInt("rowNo"));
-                                        pstmt_insert.setString(4, rs.getString("julianTimeAt"));
-                                        pstmt_insert.setDouble(5, PartService.getJulianTimeOffset(julianStartFrom, rs.getString("julianTimeAt")));
-                                        pstmt_insert.setDouble(6, rs.getDouble("paramVal"));
+                                        pstmt_insert.setInt(3, rowNo);
+                                        pstmt_insert.setString(4, julianTimeAt);
+                                        pstmt_insert.setDouble(5, PartService.getJulianTimeOffset(julianStartFrom, julianTimeAt));
+                                        pstmt_insert.setDouble(6, dblVal);
                                         pstmt_insert.setString(7, rs.getString("paramValStr"));
-                                        pstmt_insert.setDouble(8, rs.getDouble("paramVal")); // temp lpf
-                                        pstmt_insert.setDouble(9, rs.getDouble("paramVal")); // temp hpf
+
+                                        // FIXME : lpf, hpf
+                                        Double lpfVal = getLpfVal(dblVal);
+                                        Double hpfVal = getHpfVal(dblVal);
+
+                                        pstmt_insert.setDouble(8, lpfVal); // temp lpf
+                                        pstmt_insert.setDouble(9, hpfVal); // temp hpf
                                         pstmt_insert.addBatch();
                                         pstmt_insert.clearParameters();
 
@@ -341,6 +381,14 @@ public class PartImportTask {
                                         }
                                         batchCount++;
                                         rawUpload.setFetchCount(batchCount);
+
+                                        if (dblVal != null) {
+                                            zsetOps.add(rowKey, julianTimeAt + ":" + dblVal, rowNo);
+                                            zsetOps.add(lpfKey, julianTimeAt + ":" + lpfVal, rowNo);
+                                            zsetOps.add(hpfKey, julianTimeAt + ":" + hpfVal, rowNo);
+                                        }
+                                        else
+                                            zsetOps.add(rowKey, julianTimeAt + ":" + rs.getString("paramValStr"), rowNo);
                                     }
                                     if ((batchCount % 1000) > 0) {
                                         pstmt_insert.executeBatch();
@@ -355,8 +403,6 @@ public class PartImportTask {
                                 pstmt_insert.close();
                                 conn.commit();
                                 partList.add(part);
-
-                                // TODO : creation cache data
 
                                 stmt.close();
                                 pstmt.close();
@@ -389,5 +435,39 @@ public class PartImportTask {
                 }
             }
         };
+    }
+
+    private Double getLpfVal(Double dblVal) {
+        if (dblVal == null) return null;
+        Double lpfVal = dblVal;
+        return lpfVal;
+    }
+
+    private Double getHpfVal(Double dblVal) {
+        if (dblVal == null) return null;
+        Double hpfVal = dblVal;
+        return hpfVal;
+    }
+
+    public static class Builder {
+        private ListOperations<String, String> listOps;
+        private ZSetOperations<String, String> zsetOps;
+
+        public Builder setListOps(ListOperations<String, String> listOps) {
+            this.listOps = listOps;
+            return this;
+        }
+
+        public Builder setZsetOps(ZSetOperations<String, String> zsetOps) {
+            this.zsetOps = zsetOps;
+            return this;
+        }
+
+        public PartImportTask createPartImportTask() {
+            PartImportTask task = new PartImportTask();
+            task.setListOps(this.listOps);
+            task.setZsetOps(this.zsetOps);
+            return task;
+        }
     }
 }
