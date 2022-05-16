@@ -684,7 +684,7 @@ public class ServiceApiController extends ApiController {
             }
 
             jobjResult.add("paramSet", ServerConstants.GSON.toJsonTree(params));
-            jobjResult.add("data", ServerConstants.GSON.toJsonTree(rowData));
+            jobjResult.add("data", ServerConstants.GSON.toJsonTree(rowData.values()));
 
             return ResponseHelper.response(200, "Success - rowData", jobjResult);
         }
@@ -741,7 +741,7 @@ public class ServiceApiController extends ApiController {
             }
 
             jobjResult.add("julianSet", ServerConstants.GSON.toJsonTree(julianData));
-            jobjResult.add("data", ServerConstants.GSON.toJsonTree(paramData));
+            jobjResult.add("data", ServerConstants.GSON.toJsonTree(paramData.values()));
 
             return ResponseHelper.response(200, "Success - columnData", jobjResult);
         }
@@ -882,7 +882,7 @@ public class ServiceApiController extends ApiController {
             }
 
             jobjResult.add("paramSet", ServerConstants.GSON.toJsonTree(params));
-            jobjResult.add("data", ServerConstants.GSON.toJsonTree(rowData));
+            jobjResult.add("data", ServerConstants.GSON.toJsonTree(rowData.values()));
 
             return ResponseHelper.response(200, "Success - rowData", jobjResult);
         }
@@ -939,7 +939,7 @@ public class ServiceApiController extends ApiController {
             }
 
             jobjResult.add("julianSet", ServerConstants.GSON.toJsonTree(julianData));
-            jobjResult.add("data", ServerConstants.GSON.toJsonTree(paramData));
+            jobjResult.add("data", ServerConstants.GSON.toJsonTree(paramData.values()));
 
             return ResponseHelper.response(200, "Success - columnData", jobjResult);
         }
