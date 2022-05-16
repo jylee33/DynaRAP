@@ -31,12 +31,13 @@ namespace DynaRAP.UControl
         List<SBIntervalControl> sbIntervalList = new List<SBIntervalControl>();
 
         Dictionary<string, List<string>> dicData = new Dictionary<string, List<string>>();
-        string selKey = String.Empty;
+        string selParam = String.Empty;
         List<double> chartData = new List<double>();
 
         List<ResponsePreset> presetList = null;
         List<ResponseParam> presetParamList = null;
         List<PresetData> pComboList = null;
+        ResponsePartInfo partInfo = null;
 
         DateTime startTime = DateTime.Now;
         DateTime endTime = DateTime.Now;
@@ -55,6 +56,19 @@ namespace DynaRAP.UControl
 
         private void SBModuleControl_Load(object sender, EventArgs e)
         {
+            cboFlying.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+            cboFlying.SelectedIndexChanged += CboFlying_SelectedIndexChanged;
+
+            cboPart.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+            cboPart.SelectedIndexChanged += CboPart_SelectedIndexChanged;
+
+            cboParameter.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+            cboParameter.Properties.DropDownRows = 15;
+            cboParameter.SelectedIndexChanged += cboParameter_SelectedIndexChanged;
+
+            edtSBLength.Text = "1";
+            edtOverlap.Text = "10";
+  
             luePresetList.Properties.DisplayMember = "PresetName";
             luePresetList.Properties.ValueMember = "PresetPack";
             luePresetList.Properties.NullText = "";
@@ -88,9 +102,6 @@ namespace DynaRAP.UControl
             edtOverlap.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Numeric;
             edtOverlap.Properties.Mask.EditMask = @"d2";
             edtOverlap.Properties.Mask.UseMaskAsDisplayFormat = true;
-
-            edtSBLength.Text = "10";
-            edtOverlap.Text = "10";
 
             btnAddParameter.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             btnSaveSplittedParameter.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
@@ -187,10 +198,6 @@ namespace DynaRAP.UControl
 
         private void InitializeFlyingList()
         {
-            cboFlying.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
-
-            cboFlying.SelectedIndexChanged += CboFlying_SelectedIndexChanged;
-
             cboFlying.Properties.Items.Clear();
 
             foreach (ResponseImport list in uploadList)
@@ -217,10 +224,6 @@ namespace DynaRAP.UControl
 
         private void InitializePartList(string flyingName)
         {
-            cboPart.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
-
-            cboPart.SelectedIndexChanged += CboPart_SelectedIndexChanged;
-
             cboPart.Properties.Items.Clear();
 
             partList = null;
@@ -314,9 +317,97 @@ namespace DynaRAP.UControl
 
             if (combo != null)
             {
-                ReadCsvFile();
-                InitComboParamList();
+                //ReadCsvFile();
+                //InitComboParamList();
+
+                InitializePartInfoList(combo.Text);
             }
+        }
+
+        private void InitializePartInfoList(string partName)
+        {
+            cboParameter.Properties.Items.Clear();
+
+            partInfo = null;
+            partInfo = GetPartInfo(partName);
+
+            if (partInfo != null)
+            {
+                foreach (ParamSet param in partInfo.paramSet)
+                {
+                    cboParameter.Properties.Items.Add(param.paramKey);
+                }
+
+                cboParameter.SelectedIndex = 0;
+            }
+
+        }
+
+        private ResponsePartInfo GetPartInfo(string seq)
+        {
+            string url = ConfigurationManager.AppSettings["UrlPart"];
+
+            //Encoding
+            byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(seq);
+            string encName = Convert.ToBase64String(basebyte);
+
+            string partSeq = "";
+            ResponsePart part = partList.Find(x => x.partName.Equals(encName));
+            if (part != null)
+            {
+                partSeq = part.seq;
+            }
+
+            string sendData = string.Format(@"
+            {{
+            ""command"":""row-data"",
+            ""partSeq"":""{0}"",
+            ""julianRange"":["""", """"]
+            }}"
+            , partSeq);
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Method = "POST";
+            request.ContentType = "application/json";
+            request.Timeout = 30 * 1000;
+            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+
+            // POST할 데이타를 Request Stream에 쓴다
+            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+            request.ContentLength = bytes.Length; // 바이트수 지정
+
+            using (Stream reqStream = request.GetRequestStream())
+            {
+                reqStream.Write(bytes, 0, bytes.Length);
+            }
+
+            // Response 처리
+            string responseText = string.Empty;
+            using (WebResponse resp = request.GetResponse())
+            {
+                Stream respStream = resp.GetResponseStream();
+                using (StreamReader sr = new StreamReader(respStream))
+                {
+                    responseText = sr.ReadToEnd();
+                }
+            }
+
+            //Console.WriteLine(responseText);
+            PartInfoResponse result = JsonConvert.DeserializeObject<PartInfoResponse>(responseText);
+
+            if (result != null)
+            {
+                if (result.code != 200)
+                {
+                    return null;
+                }
+                else
+                {
+                    return result.response;
+                }
+            }
+            return null;
+
         }
 
         private void ReadCsvFile()
@@ -397,18 +488,18 @@ namespace DynaRAP.UControl
         {
             if (cboParameter.EditValue != null)
             {
-                selKey = cboParameter.EditValue.ToString();
-                AddChartData(selKey);
+                selParam = cboParameter.EditValue.ToString();
+                AddChartData(selParam);
             }
         }
 
-        private void AddChartData(string strKey)
+        private void AddChartData(string strParam)
         {
             chart1.Series.Clear();
 
             Series series1 = new Series("Series1");
             series1.ChartType = SeriesChartType.Line;
-            series1.Name = strKey;
+            series1.Name = strParam;
             series1.XValueType = ChartValueType.DateTime;
             series1.IsValueShownAsLabel = false;
             series1.IsVisibleInLegend = false;
@@ -422,7 +513,7 @@ namespace DynaRAP.UControl
 
             chart1.Series.Add(series1);
 
-            chart1.DataSource = GetChartValues(strKey);
+            chart1.DataSource = GetChartValues(strParam);
             chart1.BackColor = Color.FromArgb(37, 37, 38);
             chart1.DataBind();
 
@@ -435,7 +526,7 @@ namespace DynaRAP.UControl
         }
 
 
-        private DataTable GetChartValues(string strKey)
+        private DataTable GetChartValues(string strParam)
         {
             // Create an empty table.
             DataTable table = new DataTable("Table1");
@@ -448,25 +539,35 @@ namespace DynaRAP.UControl
             DataRow row = null;
             int i = 0;
             chartData.Clear();
-            foreach (string value in dicData[strKey])
+
+            for(i = 0; i < partInfo.paramSet.Count; i++)
             {
-                row = table.NewRow();
-                string day = dicData["DATE"][i];
-                DateTime dt = Utils.GetDateFromJulian(day);
-
-                if (i == 0)
+                if(partInfo.paramSet[i].paramKey.Equals(strParam))
                 {
-                    this.startTime = dt;
-                }
-                this.endTime = dt;
+                    int j = 0;
+                    foreach(List<double> dataArr in partInfo.data)
+                    {
+                        row = table.NewRow();
+                        string day = partInfo.julianSet[0][j];
+                        DateTime dt = Utils.GetDateFromJulian(day);
 
-                double data = double.Parse(value);
-                chartData.Add(data);
-                row["Argument"] = dt;
-                //row["Argument"] = i;
-                row["Value"] = data;
-                table.Rows.Add(row);
-                i++;
+                        if (j == 0)
+                        {
+                            this.startTime = dt;
+                        }
+                        this.endTime = dt;
+
+                        double data = dataArr[i];
+                        chartData.Add(data);
+                        row["Argument"] = dt;
+                        //row["Argument"] = i;
+                        row["Value"] = data;
+                        table.Rows.Add(row);
+
+                        j++;
+                    }
+                    break;
+                }
             }
             Console.WriteLine(string.Format("StartTime : {0}, EndTime : {1}", string.Format("{0:yyyy-MM-dd hh:mm:ss.ffffff}", startTime), string.Format("{0:yyyy-MM-dd hh:mm:ss.ffffff}", endTime)));
 
@@ -676,7 +777,7 @@ namespace DynaRAP.UControl
         private void AddSplittedInterval(SplittedSB sb)
         {
             SBIntervalControl ctrl = new SBIntervalControl(sb);
-            ctrl.ViewBtnClicked += new EventHandler(InvalidSB_ViewBtnClicked);
+            ctrl.ViewBtnClicked += new EventHandler(SB_ViewBtnClicked);
             flowLayoutPanel2.Controls.Add(ctrl);
             flowLayoutPanel2.Controls.SetChildIndex(ctrl, intervalIndex++);
             sbIntervalList.Add(ctrl);
@@ -684,19 +785,22 @@ namespace DynaRAP.UControl
             flowLayoutPanel2.Height += paramHeight;
         }
 
-        void InvalidSB_ViewBtnClicked(object sender, EventArgs e)
+        void SB_ViewBtnClicked(object sender, EventArgs e)
         {
             SBIntervalControl ctrl = sender as SBIntervalControl;
 
-            string strKey = selKey;
-            DateTime sTime = DateTime.ParseExact(ctrl.Sb.StartTime, "yyyy-MM-dd HH:mm:ss.ffffff", null);
-            DateTime eTime = DateTime.ParseExact(ctrl.Sb.EndTime, "yyyy-MM-dd HH:mm:ss.ffffff", null);
+            string strKey = selParam;
+            //DateTime sTime = DateTime.ParseExact(ctrl.Sb.StartTime, "yyyy-MM-dd HH:mm:ss.ffffff", null);
+            //DateTime eTime = DateTime.ParseExact(ctrl.Sb.EndTime, "yyyy-MM-dd HH:mm:ss.ffffff", null);
 
-            DataTable dt = GetShortBlockData(strKey, sTime, eTime);
+            DataTable dt = GetShortBlockData(ctrl.Sb.SbName, ctrl.Sb.StartTime, ctrl.Sb.EndTime);
 
-            SBViewForm form = new SBViewForm(dt);
-            form.Text = strKey;
-            form.ShowDialog();
+            if (dt != null)
+            {
+                SBViewForm form = new SBViewForm(dt);
+                form.Text = strKey;
+                form.ShowDialog();
+            }
 
             //TestChartForm2 form2 = new TestChartForm2(dt);
             //form2.Text = strKey;
@@ -704,44 +808,141 @@ namespace DynaRAP.UControl
 
         }
 
-        private DataTable GetShortBlockData(string strKey, DateTime sTime, DateTime eTime)
+        private DataTable GetShortBlockData(string strKey, string sTime, string eTime)
         {
-            // Create an empty table.
-            DataTable table = new DataTable("Table1");
+            string url = ConfigurationManager.AppSettings["UrlPart"];
 
-            // Add two columns to the table.
-            //table.Columns.Add("Argument", typeof(Int32));
-            table.Columns.Add("Argument", typeof(DateTime));
-            table.Columns.Add("Value", typeof(double));
+            string seq = cboPart.Text;
+            //Encoding
+            byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(seq);
+            string encName = Convert.ToBase64String(basebyte);
 
-            DataRow row = null;
-            int i = 0;
-            chartData.Clear();
-            foreach (string value in dicData[strKey])
+            string partSeq = "";
+            ResponsePart part = partList.Find(x => x.partName.Equals(encName));
+            if (part != null)
             {
-                row = table.NewRow();
-                string day = dicData["DATE"][i];
-                DateTime dt = Utils.GetDateFromJulian(day);
-
-                int result1 = DateTime.Compare(dt, sTime);
-                int result2 = DateTime.Compare(dt, eTime);
-
-                if(result1 < 0 || result2 > 0)
-                {
-                    continue;
-                }
-
-                double data = double.Parse(value);
-                chartData.Add(data);
-                row["Argument"] = dt;
-                //row["Argument"] = i;
-                row["Value"] = data;
-                table.Rows.Add(row);
-                i++;
+                partSeq = part.seq;
             }
 
-            return table;
+            string sendData = string.Format(@"
+            {{
+            ""command"":""row-data"",
+            ""partSeq"":""{0}"",
+            ""julianRange"":[""{1}"", ""{2}""]
+            }}"
+            , partSeq, sTime, eTime);
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Method = "POST";
+            request.ContentType = "application/json";
+            request.Timeout = 30 * 1000;
+            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+
+            // POST할 데이타를 Request Stream에 쓴다
+            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+            request.ContentLength = bytes.Length; // 바이트수 지정
+
+            using (Stream reqStream = request.GetRequestStream())
+            {
+                reqStream.Write(bytes, 0, bytes.Length);
+            }
+
+            // Response 처리
+            string responseText = string.Empty;
+            using (WebResponse resp = request.GetResponse())
+            {
+                Stream respStream = resp.GetResponseStream();
+                using (StreamReader sr = new StreamReader(respStream))
+                {
+                    responseText = sr.ReadToEnd();
+                }
+            }
+
+            //Console.WriteLine(responseText);
+            PartInfoResponse result = JsonConvert.DeserializeObject<PartInfoResponse>(responseText);
+
+            if (result != null)
+            {
+                if (result.code != 200)
+                {
+                    return null;
+                }
+                else
+                {
+                    DataTable table = new DataTable("Table1");
+                    table.Columns.Add("Argument", typeof(DateTime));
+                    table.Columns.Add("Value", typeof(double));
+
+                    DataRow row = null;
+                    int i = 0;
+
+                    for (i = 0; i < partInfo.paramSet.Count; i++)
+                    {
+                        if (partInfo.paramSet[i].paramKey.Equals(cboParameter.Text))
+                        {
+                            int j = 0;
+                            foreach (List<double> dataArr in partInfo.data)
+                            {
+                                row = table.NewRow();
+                                string day = partInfo.julianSet[0][j];
+                                DateTime dt = Utils.GetDateFromJulian(day);
+
+                                double data = dataArr[i];
+                                chartData.Add(data);
+                                row["Argument"] = dt;
+                                //row["Argument"] = i;
+                                row["Value"] = data;
+                                table.Rows.Add(row);
+
+                                j++;
+                            }
+                            break;
+                        }
+                    }
+                    return table;
+                }
+            }
+            return null;
+
         }
+        //private DataTable GetShortBlockData(string strKey, string sTime, string eTime)
+        //{
+        //    // Create an empty table.
+        //    DataTable table = new DataTable("Table1");
+
+        //    // Add two columns to the table.
+        //    //table.Columns.Add("Argument", typeof(Int32));
+        //    table.Columns.Add("Argument", typeof(DateTime));
+        //    table.Columns.Add("Value", typeof(double));
+
+        //    DataRow row = null;
+        //    int i = 0;
+        //    chartData.Clear();
+        //    foreach (string value in dicData[strKey])
+        //    {
+        //        row = table.NewRow();
+        //        string day = dicData["DATE"][i];
+        //        DateTime dt = Utils.GetDateFromJulian(day);
+
+        //        int result1 = DateTime.Compare(dt, sTime);
+        //        int result2 = DateTime.Compare(dt, eTime);
+
+        //        if(result1 < 0 || result2 > 0)
+        //        {
+        //            continue;
+        //        }
+
+        //        double data = double.Parse(value);
+        //        chartData.Add(data);
+        //        row["Argument"] = dt;
+        //        //row["Argument"] = i;
+        //        row["Value"] = data;
+        //        table.Rows.Add(row);
+        //        i++;
+        //    }
+
+        //    return table;
+        //}
 
         void InvalidSB_DeleteBtnClicked(object sender, EventArgs e)
         {
@@ -877,7 +1078,9 @@ namespace DynaRAP.UControl
                 }
                 else
                 {
-                    MessageBox.Show("Success");
+                    //MessageBox.Show("Success");
+                    CreateSBProgressForm form = new CreateSBProgressForm(result.response.seq);
+                    form.ShowDialog();
                 }
             }
             return true;

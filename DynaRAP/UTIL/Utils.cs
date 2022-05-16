@@ -9,7 +9,7 @@ namespace DynaRAP.UTIL
 {
     public static class Utils
     {
-        public static DateTime GetDateFromJulian(string julianDate)
+        public static DateTime GetDateFromJulian2(string julianDate)
         {
             string[] splits = julianDate.Split(':');
             //var arg = string.Format("{0} {1}:{2}:{3}", new DateTime().AddYears(DateTime.Now.Year - 1).AddDays(double.Parse(splits[0])).ToString("yyyy-MM-dd"), splits[1], splits[2], splits[3]);
@@ -21,15 +21,7 @@ namespace DynaRAP.UTIL
 
         }
 
-        public static string GetJulianFromDate(object obj)
-        {
-            DateTime dt = (DateTime)obj;
-            string strDate = String.Format("{0}:{1}:{2}:{3}.{4}", dt.DayOfYear, dt.Hour, dt.Minute, dt.Second, dt.TimeOfDay.Milliseconds * 1000);
-
-            return strDate;
-        }
-
-        public static DateTime GetDateFromJulian2(string julianDate)
+        public static DateTime GetDateFromJulian(string julianDate)
         {
             int year = 21;
             int day = Convert.ToInt32(julianDate.Substring(0, 3));
@@ -48,6 +40,14 @@ namespace DynaRAP.UTIL
 
             return dt;
 
+        }
+
+        public static string GetJulianFromDate(object obj)
+        {
+            DateTime dt = (DateTime)obj;
+            string strDate = String.Format("{0}:{1:00}:{2:00}:{3:00}.{4:000000}", dt.DayOfYear, dt.Hour, dt.Minute, dt.Second, dt.TimeOfDay.Milliseconds * 1000);
+
+            return strDate;
         }
 
         public static DateTime ConvertFromJulian(int m_JulianDate)
