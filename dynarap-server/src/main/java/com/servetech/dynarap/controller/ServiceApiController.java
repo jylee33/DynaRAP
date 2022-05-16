@@ -684,7 +684,7 @@ public class ServiceApiController extends ApiController {
             }
 
             jobjResult.add("paramSet", ServerConstants.GSON.toJsonTree(params));
-            jobjResult.add("julianSet", ServerConstants.GSON.toJsonTree(rowData.keySet()));
+            jobjResult.add("julianSet", ServerConstants.GSON.toJsonTree(Arrays.asList(rowData.keySet())));
             jobjResult.add("data", ServerConstants.GSON.toJsonTree(rowData.values()));
 
             return ResponseHelper.response(200, "Success - rowData", jobjResult);
@@ -741,7 +741,7 @@ public class ServiceApiController extends ApiController {
                 }
             }
 
-            jobjResult.add("julianSet", ServerConstants.GSON.toJsonTree(julianData));
+            jobjResult.add("julianSet", ServerConstants.GSON.toJsonTree(Arrays.asList(julianData)));
             jobjResult.add("data", ServerConstants.GSON.toJsonTree(paramData.values()));
 
             return ResponseHelper.response(200, "Success - columnData", jobjResult);
@@ -883,7 +883,7 @@ public class ServiceApiController extends ApiController {
             }
 
             jobjResult.add("paramSet", ServerConstants.GSON.toJsonTree(params));
-            jobjResult.add("julianSet", ServerConstants.GSON.toJsonTree(rowData.keySet()));
+            jobjResult.add("julianSet", ServerConstants.GSON.toJsonTree(Arrays.asList(rowData.keySet())));
             jobjResult.add("data", ServerConstants.GSON.toJsonTree(rowData.values()));
 
             return ResponseHelper.response(200, "Success - rowData", jobjResult);
@@ -940,7 +940,7 @@ public class ServiceApiController extends ApiController {
                 }
             }
 
-            jobjResult.add("julianSet", ServerConstants.GSON.toJsonTree(julianData));
+            jobjResult.add("julianSet", ServerConstants.GSON.toJsonTree(Arrays.asList(julianData)));
             jobjResult.add("data", ServerConstants.GSON.toJsonTree(paramData.values()));
 
             return ResponseHelper.response(200, "Success - columnData", jobjResult);
