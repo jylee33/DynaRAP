@@ -298,8 +298,8 @@ public class RawService {
 
             if (uploadReq.getSourcePath().contains("C:\\")) {
                 uploadReq.setSourcePath(uploadReq.getSourcePath().replaceAll("\\\\", "/"));
-                //uploadReq.setSourcePath(uploadReq.getSourcePath().replaceAll("C:/", "/Users/aloepigeon/"));
-                uploadReq.setSourcePath(uploadReq.getSourcePath().replaceAll("C:/", "/home/ubuntu/"));
+                uploadReq.setSourcePath(uploadReq.getSourcePath().replaceAll("C:/", "/Users/aloepigeon/"));
+                //uploadReq.setSourcePath(uploadReq.getSourcePath().replaceAll("C:/", "/home/ubuntu/"));
             }
 
             File fStatic = new File(uploadReq.getSourcePath());

@@ -91,10 +91,9 @@ public class PartImportTask {
                                 "    `paramValStr` varchar(128) default ''           comment '파라미터 값 (문자)',\n" +
                                 "    constraint pk_dynarap_raw primary key (`seq`)\n" +
                                 ")");
-                        stmt.executeUpdate("create index `idx_dynarap_" + tempTableName + "_param` on `dynarap_" + tempTableName + "` (`presetPack`, `presetSeq`, `presetParamSeq`)");
-                        stmt.executeUpdate("create index `idx_dynarap_" + tempTableName + "_row` on `dynarap_" + tempTableName + "` (`rowNo`, `presetPack`, `presetSeq`)");
                         stmt.executeUpdate("create index `idx_dynarap_" + tempTableName + "_julian` on `dynarap_" + tempTableName + "` (`julianTimeAt`)");
                         stmt.executeUpdate("create index `idx_dynarap_" + tempTableName + "_row2` on `dynarap_" + tempTableName + "` (`rowNo`)");
+                        stmt.executeUpdate("create index `idx_dynarap_" + tempTableName + "_julian_row` on `dynarap_" + tempTableName + "` (`julianTimeAt`,`rowNo`)");
                         conn.commit(); // drop 이후 커밋 처리.
 
                         if (presetParams == null) presetParams = new ArrayList<>();
@@ -306,15 +305,22 @@ public class PartImportTask {
                                 // dump part raw from raw_temp table
                                 int minRowNo = -1;
                                 int maxRowNo = -1;
-                                rs = stmt.executeQuery("select " +
-                                        "(select rowNo from dynarap_" + tempTableName + " where julianTimeAt = '" + part.getJulianStartAt() + "' limit 0, 1) as minRowNo," +
-                                        "(select rowNo from dynarap_" + tempTableName + " where julianTimeAt = '" + part.getJulianEndAt() + "' limit 0, 1) as maxRowNo limit 0, 1");
+                                String minMaxRowQuery = "select\n" +
+                                        "    (select distinct rowNo from dynarap_" + tempTableName + " where julianTimeAt = (\n" +
+                                        "        select min(julianTimeAt) from dynarap_" + tempTableName + " where julianTimeAt >= '" + part.getJulianStartAt() + "')) as minRowNo,\n" +
+                                        "    (select distinct rowNo from dynarap_" + tempTableName + " where julianTimeAt = (\n" +
+                                        "        select max(julianTimeAt) from dynarap_" + tempTableName + " where julianTimeAt <= '" + part.getJulianEndAt() + "')) as maxRowNo";
+
+                                rs = stmt.executeQuery(minMaxRowQuery);
                                 if (rs.next()) {
                                     minRowNo = rs.getInt("minRowNo");
                                     maxRowNo = rs.getInt("maxRowNo");
                                     rawUpload.setTotalFetchCount(maxRowNo - minRowNo + 1);
                                 }
                                 rs.close();
+
+                                logger.info("[[[[[ part " + part.getSeq().originOf() + " start=" + part.getJulianStartAt() + ", end=" + part.getJulianEndAt());
+                                logger.info("[[[[[ part " + part.getSeq().originOf() + " minRow=" + minRowNo + ", maxRow=" + maxRowNo);
 
                                 if (minRowNo == -1 || maxRowNo == -1)
                                     throw new Exception("기준 데이터에서 ROW를 찾을 수 없습니다.");

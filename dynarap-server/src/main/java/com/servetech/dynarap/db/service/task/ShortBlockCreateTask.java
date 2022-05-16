@@ -225,14 +225,21 @@ public class ShortBlockCreateTask {
                                 // dump part raw from raw_temp table
                                 int minRowNo = -1;
                                 int maxRowNo = -1;
-                                rs = stmt.executeQuery("select " +
-                                        "(select rowNo from dynarap_part_raw " +
-                                        "  where partSeq = " + shortBlock.getPartSeq().originOf() + " " +
-                                        "    and julianTimeAt = '" + shortBlock.getJulianStartAt() + "' limit 0, 1) as minRowNo," +
-                                        "(select rowNo from dynarap_part_raw " +
-                                        "  where partSeq = " + shortBlock.getPartSeq().originOf() + " " +
-                                        "    and julianTimeAt = '" + shortBlock.getJulianEndAt() + "' limit 0, 1) as maxRowNo limit 0, 1");
+                                String minMaxRowQuery = "select\n" +
+                                        "    (select distinct rowNo from dynarap_part_raw " +
+                                        "      where partSeq = " + shortBlock.getPartSeq().originOf() + " " +
+                                        "        and julianTimeAt = (\n" +
+                                        "        select min(julianTimeAt) from dynarap_part_raw " +
+                                        "         where partSeq = " + shortBlock.getPartSeq().originOf() + " " +
+                                        "           and julianTimeAt >= '" + shortBlock.getJulianStartAt() + "')) as minRowNo,\n" +
+                                        "    (select distinct rowNo from dynarap_part_raw " +
+                                        "      where partSeq = " + shortBlock.getPartSeq().originOf() + " " +
+                                        "        and julianTimeAt = (\n" +
+                                        "        select max(julianTimeAt) from dynarap_part_raw " +
+                                        "         where partSeq = " + shortBlock.getPartSeq().originOf() + " " +
+                                        "           and julianTimeAt <= '" + shortBlock.getJulianEndAt() + "')) as maxRowNo";
 
+                                rs = stmt.executeQuery(minMaxRowQuery);
                                 if (rs.next()) {
                                     minRowNo = rs.getInt("minRowNo");
                                     maxRowNo = rs.getInt("maxRowNo");
