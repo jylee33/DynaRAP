@@ -57,6 +57,8 @@ public class ShortBlockVO {
         private CryptoField paramPack;
         private CryptoField paramSeq;
 
+        private Long unionParamSeq;
+
         private String64 paramName;
         private String paramKey;
         private String adamsKey;

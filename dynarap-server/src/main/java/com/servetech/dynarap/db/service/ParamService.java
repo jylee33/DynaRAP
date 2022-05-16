@@ -437,6 +437,16 @@ public class ParamService {
         }
     }
 
+    public ParamVO getPresetParamBySeq(CryptoField presetParamSeq) throws HandledServiceException {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("seq", presetParamSeq);
+            return paramMapper.selectPresetParamBySeq(params);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
     @Transactional
     public void insertPresetParam(JsonObject payload) throws HandledServiceException {
         try {

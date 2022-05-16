@@ -203,7 +203,7 @@ public interface PartMapper {
     @Insert({
             "<script>" +
                     "insert into dynarap_sblock_param (" +
-                    "blockMetaSeq,paramNo,paramPack,paramSeq,paramKey,paramName,adamsKey,zaeroKey,grtKey,fltpKey,fltsKey,paramUnit" +
+                    "blockMetaSeq,paramNo,paramPack,paramSeq,paramKey,paramName,adamsKey,zaeroKey,grtKey,fltpKey,fltsKey,paramUnit,unionParamSeq" +
                     ") values (" +
                     "#{blockMetaSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField}" +
                     ",#{paramNo}" +
@@ -217,6 +217,7 @@ public interface PartMapper {
                     ",#{fltpKey}" +
                     ",#{fltsKey}" +
                     ",#{paramUnit}" +
+                    ",#{unionParamSeq}" +
                     ")" +
                     "</script>"
     })
@@ -239,6 +240,7 @@ public interface PartMapper {
                     ",fltpKey = #{fltpKey}" +
                     ",fltsKey = #{fltsKey}" +
                     ",paramUnit = #{paramUnit} " +
+                    ",unionParamSeq = #{unionParamSeq} " +
                     " where seq = #{seq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField}" +
                     "</script>"
     })

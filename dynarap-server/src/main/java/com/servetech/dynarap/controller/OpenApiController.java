@@ -1,9 +1,11 @@
 package com.servetech.dynarap.controller;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.servetech.dynarap.DynaRAPServerApplication;
 import com.servetech.dynarap.config.ServerConstants;
+import com.servetech.dynarap.db.service.ParamService;
 import com.servetech.dynarap.db.service.RawService;
 import com.servetech.dynarap.db.service.SendMailService;
 import com.servetech.dynarap.db.service.UserService;
@@ -666,6 +668,41 @@ public class OpenApiController extends ApiController {
                 ex.printStackTrace();
             }
         }
+    }
+
+    @RequestMapping(value = "/redis")
+    @ResponseBody
+    public Object openApiRedisTest(@RequestBody JsonObject payload) throws HandledServiceException {
+        String command = payload.get("command").getAsString();
+
+        if (command.equals("list-ops")) {
+            List<String> params = listOps.range(payload.get("partKey").getAsString(), 0, Integer.MAX_VALUE);
+            for (String p : params)
+                System.out.println(p);
+        }
+
+        if (command.equals("zset-ops")) {
+            JsonArray jarrParams = payload.get("paramSet").getAsJsonArray();
+            for (int i = 0; i < jarrParams.size(); i++) {
+                Long paramKey = jarrParams.get(i).getAsLong();
+                ParamVO paramInfo = getService(ParamService.class).getPresetParamBySeq(new CryptoField(paramKey));
+
+                System.out.println("param=" + paramInfo.getFltpKey() + "," + paramInfo.getFltsKey());
+                Set<String> listSet = zsetOps.rangeByScore(payload.get("partKey").getAsString() + ".N" + paramKey, 0, Integer.MAX_VALUE);
+                Set<String> rowSet = zsetOps.rangeByScore(payload.get("partKey").getAsString() + ".R", 0, Integer.MAX_VALUE);
+
+                Iterator<String> iterListSet = listSet.iterator();
+                Iterator<String> iterRowSet = rowSet.iterator();
+
+                int dataOrder = 1;
+                while (iterListSet.hasNext()) {
+                    System.out.println(iterRowSet.next() + " = " + iterListSet.next());
+                    dataOrder++;
+                }
+            }
+        }
+
+        return ResponseHelper.response(200, "Success - Redis Test", "");
     }
 
     @Data
