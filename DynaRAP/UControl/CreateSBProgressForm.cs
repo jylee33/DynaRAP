@@ -17,7 +17,7 @@ using System.Windows.Forms;
 
 namespace DynaRAP.UControl
 {
-    public partial class ImportProgressForm : DevExpress.XtraEditors.XtraForm
+    public partial class CreateSBProgressForm : DevExpress.XtraEditors.XtraForm
     {
         System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
         int progress = 0;
@@ -27,14 +27,14 @@ namespace DynaRAP.UControl
         int totalFetchCount = 0;
         bool bFirst = true;
 
-        public ImportProgressForm()
+        public CreateSBProgressForm()
         {
             InitializeComponent();
             bFirst = true;
 
         }
 
-        public ImportProgressForm(string uploadSeq) : this()
+        public CreateSBProgressForm(string uploadSeq) : this()
         {
             timer.Interval = 3000;
             timer.Tick += Timer_Tick;
@@ -65,7 +65,7 @@ namespace DynaRAP.UControl
 
         }
 
-        private void ImportProgressForm_Load(object sender, EventArgs e)
+        private void CreateSBProgressForm_Load(object sender, EventArgs e)
         {
             isCompleted = false;
             lblProgress.Text = String.Empty;
@@ -92,11 +92,11 @@ namespace DynaRAP.UControl
 
         private bool GetProgress()
         {
-            string url = ConfigurationManager.AppSettings["UrlImport"];
+            string url = ConfigurationManager.AppSettings["UrlPart"];
             string sendData = string.Format(@"
             {{
             ""command"":""progress"",
-            ""uploadSeq"":""{0}""
+            ""blockMetaSeq"":""{0}""
             }}"
             , uploadSeq);
 
@@ -138,7 +138,7 @@ namespace DynaRAP.UControl
                 }
                 else
                 {
-                    if (result.response.status.Equals("import-done"))
+                    if (result.response.status.Equals("import-done") || result.response.totalFetchCount == 0)
                     {
                         isCompleted = true;
                         timer.Stop();

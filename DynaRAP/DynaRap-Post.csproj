@@ -131,6 +131,7 @@
     <Compile Include="Common\DLL_DATA.cs" />
     <Compile Include="Common\DrawTypes.cs" />
     <Compile Include="Common\SeriesPointData.cs" />
+    <Compile Include="Data\PartInfoResponse.cs" />
     <Compile Include="Forms\CreateScenarioProgressForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -292,6 +293,12 @@
     </Compile>
     <Compile Include="UControl\BinTableControl.Designer.cs">
       <DependentUpon>BinTableControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\CreateSBProgressForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UControl\CreateSBProgressForm.Designer.cs">
+      <DependentUpon>CreateSBProgressForm.cs</DependentUpon>
     </Compile>
     <Compile Include="UControl\ImportProgressForm.cs">
       <SubType>Form</SubType>
@@ -565,6 +572,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\BinTableControl.resx">
       <DependentUpon>BinTableControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\CreateSBProgressForm.resx">
+      <DependentUpon>CreateSBProgressForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\ImportProgressForm.resx">
       <DependentUpon>ImportProgressForm.cs</DependentUpon>
