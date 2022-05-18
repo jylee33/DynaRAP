@@ -653,6 +653,9 @@ public class ServiceApiController extends ApiController {
             if (julianTo == null || julianTo.isEmpty())
                 julianTo = zsetOps.reverseRangeByScore("P" + partInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE).iterator().next();
 
+            String julianStart = zsetOps.rangeByScore("P" + partInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE).iterator().next();
+            Long startRowAt = zsetOps.score("P" + partInfo.getSeq().originOf() + ".R", julianStart).longValue();
+
             Long rankFrom = zsetOps.rank("P" + partInfo.getSeq().originOf() + ".R", julianFrom);
             if (rankFrom == null) {
                 julianFrom = zsetOps.rangeByScore("P" + partInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE).iterator().next();
@@ -667,7 +670,7 @@ public class ServiceApiController extends ApiController {
             LinkedHashMap<String, List<Double>> rowData = new LinkedHashMap<>();
             for (ParamVO p : params) {
                 Set<String> listSet = zsetOps.rangeByScore(
-                        "P" + partInfo.getSeq().originOf() + ".N" + p.getPresetParamSeq(), rankFrom + 1, rankTo + 1);
+                        "P" + partInfo.getSeq().originOf() + ".N" + p.getPresetParamSeq(), startRowAt + rankFrom, startRowAt + rankTo);
 
                 Iterator<String> iterListSet = listSet.iterator();
                 while (iterListSet.hasNext()) {
@@ -852,6 +855,9 @@ public class ServiceApiController extends ApiController {
             if (julianTo == null || julianTo.isEmpty())
                 julianTo = zsetOps.reverseRangeByScore("S" + blockInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE).iterator().next();
 
+            String julianStart = zsetOps.rangeByScore("S" + blockInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE).iterator().next();
+            Long startRowAt = zsetOps.score("S" + blockInfo.getSeq().originOf() + ".R", julianStart).longValue();
+
             Long rankFrom = zsetOps.rank("S" + blockInfo.getSeq().originOf() + ".R", julianFrom);
             if (rankFrom == null) {
                 julianFrom = zsetOps.rangeByScore("S" + blockInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE).iterator().next();
@@ -866,7 +872,7 @@ public class ServiceApiController extends ApiController {
             LinkedHashMap<String, List<Double>> rowData = new LinkedHashMap<>();
             for (ParamVO p : params) {
                 Set<String> listSet = zsetOps.rangeByScore(
-                        "S" + blockInfo.getSeq().originOf() + ".N" + p.getPresetParamSeq(), rankFrom + 1, rankTo + 1);
+                        "S" + blockInfo.getSeq().originOf() + ".N" + p.getPresetParamSeq(), startRowAt + rankFrom, startRowAt + rankTo);
 
                 Iterator<String> iterListSet = listSet.iterator();
                 while (iterListSet.hasNext()) {
