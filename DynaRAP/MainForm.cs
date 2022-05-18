@@ -42,7 +42,7 @@ namespace DynaRAP
         BinModuleControl binModuleControl = null;
         MgmtParameterControl mgmtParameterControl = null;
         MgmtPresetControl mgmtPresetControl = null;
-        MgmtPresetGroupControl mgmtPresetGroupControl = null;
+        //MgmtPresetGroupControl mgmtPresetGroupControl = null;
 
         CsvTableControl csvTableControl = null;
 
@@ -95,7 +95,7 @@ namespace DynaRAP
         public BinModuleControl BinModuleControl { get => binModuleControl; set => binModuleControl = value; }
         public MgmtParameterControl MgmtParameterControl { get => mgmtParameterControl; set => mgmtParameterControl = value; }
         public MgmtPresetControl MgmtPresetControl { get => mgmtPresetControl; set => mgmtPresetControl = value; }
-        public MgmtPresetGroupControl MgmtPresetGroupControl { get => mgmtPresetGroupControl; set => mgmtPresetGroupControl = value; }
+        //public MgmtPresetGroupControl MgmtPresetGroupControl { get => mgmtPresetGroupControl; set => mgmtPresetGroupControl = value; }
 
         public MainForm()
         {
@@ -194,17 +194,17 @@ namespace DynaRAP
                 tabbedView1.ActivateDocument(mgmtPresetControl);
             }
 
-            if (mgmtPresetGroupControl == null)
-            {
-                mgmtPresetGroupControl = new MgmtPresetGroupControl();
-                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(mgmtPresetGroupControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
-                doc.Caption = "프리셋그룹 관리";
-                tabbedView1.ActivateDocument(mgmtPresetGroupControl);
-            }
-            else
-            {
-                tabbedView1.ActivateDocument(mgmtPresetGroupControl);
-            }
+            //if (mgmtPresetGroupControl == null)
+            //{
+            //    mgmtPresetGroupControl = new MgmtPresetGroupControl();
+            //    DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(mgmtPresetGroupControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
+            //    doc.Caption = "프리셋그룹 관리";
+            //    tabbedView1.ActivateDocument(mgmtPresetGroupControl);
+            //}
+            //else
+            //{
+            //    tabbedView1.ActivateDocument(mgmtPresetGroupControl);
+            //}
 
 #if DEBUG
             tabbedView1.ActivateDocument(sbModuleControl);
@@ -214,7 +214,7 @@ namespace DynaRAP
             tabbedView1.RemoveDocument(binModuleControl);
             tabbedView1.RemoveDocument(mgmtParameterControl);
             tabbedView1.RemoveDocument(mgmtPresetControl);
-            tabbedView1.RemoveDocument(mgmtPresetGroupControl);
+            //tabbedView1.RemoveDocument(mgmtPresetGroupControl);
             tabbedView1.ActivateDocument(startControl);
 #endif
 
@@ -316,10 +316,10 @@ namespace DynaRAP
             {
                 mgmtPresetControl = null;
             }
-            else if (e.Document.Control is MgmtPresetGroupControl)
-            {
-                mgmtPresetGroupControl = null;
-            }
+            //else if (e.Document.Control is MgmtPresetGroupControl)
+            //{
+            //    mgmtPresetGroupControl = null;
+            //}
 
         }
 
@@ -530,7 +530,7 @@ namespace DynaRAP
             {
                 mgmtParameterControl = new MgmtParameterControl();
                 DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(mgmtParameterControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
-                doc.Caption = "파라미터 관리";
+                doc.Caption = "LRP 관리";
                 tabbedView1.ActivateDocument(mgmtParameterControl);
             }
             else
@@ -545,7 +545,7 @@ namespace DynaRAP
             {
                 mgmtPresetControl = new MgmtPresetControl();
                 DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(mgmtPresetControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
-                doc.Caption = "프리셋 관리";
+                doc.Caption = "매칭테이블 작성";
                 tabbedView1.ActivateDocument(mgmtPresetControl);
             }
             else
@@ -556,17 +556,17 @@ namespace DynaRAP
 
         private void btnMgmtPresetGroup_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            if (mgmtPresetGroupControl == null)
-            {
-                mgmtPresetGroupControl = new MgmtPresetGroupControl();
-                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(mgmtPresetGroupControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
-                doc.Caption = "프리셋그룹 관리";
-                tabbedView1.ActivateDocument(mgmtPresetGroupControl);
-            }
-            else
-            {
-                tabbedView1.ActivateDocument(mgmtPresetGroupControl);
-            }
+            //if (mgmtPresetGroupControl == null)
+            //{
+            //    mgmtPresetGroupControl = new MgmtPresetGroupControl();
+            //    DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(mgmtPresetGroupControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
+            //    doc.Caption = "프리셋그룹 관리";
+            //    tabbedView1.ActivateDocument(mgmtPresetGroupControl);
+            //}
+            //else
+            //{
+            //    tabbedView1.ActivateDocument(mgmtPresetGroupControl);
+            //}
         }
 
         private void btnTestChart_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)

@@ -804,6 +804,13 @@ namespace DynaRAP.UControl
                 menuItemDelete.Tag = node;
                 e.Menu.Items.Add(menuItemDelete);
             }
+
+
+            // Refresh Node
+            DXMenuItem menuItemRefresh = new DXMenuItem("Refresh Node", this.refreshNodeMenuItemClick);
+            menuItemRefresh.Tag = node;
+            e.Menu.Items.Add(menuItemRefresh);
+
         }
 
         private void modifyNodeMenuItemClick(object sender, EventArgs e)
@@ -852,6 +859,11 @@ namespace DynaRAP.UControl
             {
                 RefreshTree();
             }
+        }
+
+        private void refreshNodeMenuItemClick(object sender, EventArgs e)
+        {
+            RefreshTree();
         }
 
         private void repositoryItemCheckEdit1_EditValueChanged(object sender, EventArgs e)

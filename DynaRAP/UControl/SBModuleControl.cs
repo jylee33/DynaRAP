@@ -790,16 +790,16 @@ namespace DynaRAP.UControl
             SBIntervalControl ctrl = sender as SBIntervalControl;
 
             string strKey = selParam;
-            //DateTime sTime = DateTime.ParseExact(ctrl.Sb.StartTime, "yyyy-MM-dd HH:mm:ss.ffffff", null);
-            //DateTime eTime = DateTime.ParseExact(ctrl.Sb.EndTime, "yyyy-MM-dd HH:mm:ss.ffffff", null);
+            DateTime sTime = DateTime.ParseExact(ctrl.Sb.StartTime, "yyyy-MM-dd HH:mm:ss.ffffff", null);
+            DateTime eTime = DateTime.ParseExact(ctrl.Sb.EndTime, "yyyy-MM-dd HH:mm:ss.ffffff", null);
 
-            DataTable dt = GetShortBlockData(ctrl.Sb.SbName, ctrl.Sb.StartTime, ctrl.Sb.EndTime);
+            DataTable dt = GetShortBlockData(ctrl.Sb.SbName, sTime, eTime);
 
             if (dt != null)
             {
                 SBViewForm form = new SBViewForm(dt);
                 form.Text = strKey;
-                form.ShowDialog();
+                form.Show();
             }
 
             //TestChartForm2 form2 = new TestChartForm2(dt);
@@ -808,8 +808,11 @@ namespace DynaRAP.UControl
 
         }
 
-        private DataTable GetShortBlockData(string strKey, string sTime, string eTime)
+        private DataTable GetShortBlockData(string strKey, DateTime sTime, DateTime eTime)
         {
+            string t1 = Utils.GetJulianFromDate(sTime);
+            string t2 = Utils.GetJulianFromDate(eTime);
+
             string url = ConfigurationManager.AppSettings["UrlPart"];
 
             string seq = cboPart.Text;
@@ -830,7 +833,7 @@ namespace DynaRAP.UControl
             ""partSeq"":""{0}"",
             ""julianRange"":[""{1}"", ""{2}""]
             }}"
-            , partSeq, sTime, eTime);
+            , partSeq, t1, t2);
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "POST";
@@ -887,7 +890,7 @@ namespace DynaRAP.UControl
                                 string day = partInfo.julianSet[0][j];
                                 DateTime dt = Utils.GetDateFromJulian(day);
 
-                                double data = dataArr[i];
+                                double data = dataArr[i]; 
                                 chartData.Add(data);
                                 row["Argument"] = dt;
                                 //row["Argument"] = i;
