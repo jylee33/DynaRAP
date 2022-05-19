@@ -1,6 +1,6 @@
 ﻿namespace DynaRAP.UControl
 {
-    partial class MgmtPresetControl
+    partial class MgmtMatchingTabletControl
     {
         /// <summary> 
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MgmtPresetControl));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MgmtMatchingTabletControl));
             this.labelControl1 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl2 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl19 = new DevExpress.XtraEditors.LabelControl();
@@ -400,14 +400,14 @@
             this.splitContainer1.SplitterDistance = 320;
             this.splitContainer1.TabIndex = 1;
             // 
-            // MgmtPresetControl
+            // MgmtMatchingTableControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.splitContainer1);
-            this.Name = "MgmtPresetControl";
+            this.Name = "MgmtMatchingTableControl";
             this.Size = new System.Drawing.Size(1035, 865);
-            this.Load += new System.EventHandler(this.MgmtPresetControl_Load);
+            this.Load += new System.EventHandler(this.MgmtMatchingTableControl_Load);
             ((System.ComponentModel.ISupportInitialize)(this.edtParamName.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cboUnit.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.separatorControl1)).EndInit();

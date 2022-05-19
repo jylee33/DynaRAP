@@ -502,7 +502,7 @@
     <value>LRP 관리</value>
   </data>
   <data name="btnMgmtPreset.Caption" xml:space="preserve">
-    <value>매칭테이블 작성</value>
+    <value>매칭테이블 관리</value>
   </data>
   <data name="btnMgmtPresetGroup.Caption" xml:space="preserve">
     <value>프리셋그룹 관리</value>

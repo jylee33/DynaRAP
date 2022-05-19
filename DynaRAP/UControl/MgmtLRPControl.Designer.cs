@@ -1,6 +1,6 @@
 ﻿namespace DynaRAP.UControl
 {
-    partial class MgmtParameterControl
+    partial class MgmtLRPControl
     {
         /// <summary> 
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MgmtParameterControl));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MgmtLRPControl));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.treeList1 = new DevExpress.XtraTreeList.TreeList();
             this.ID = new DevExpress.XtraTreeList.Columns.TreeListColumn();
@@ -933,14 +933,14 @@
             this.edtLrpX.Size = new System.Drawing.Size(86, 22);
             this.edtLrpX.TabIndex = 11;
             // 
-            // MgmtParameterControl
+            // MgmtLRPControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.splitContainer1);
-            this.Name = "MgmtParameterControl";
+            this.Name = "MgmtLRPControl";
             this.Size = new System.Drawing.Size(1035, 865);
-            this.Load += new System.EventHandler(this.MgmtParameterControl_Load);
+            this.Load += new System.EventHandler(this.MgmtLRPControl_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();

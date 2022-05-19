@@ -339,17 +339,17 @@
     <Compile Include="UControl\ImportParamControl2.Designer.cs">
       <DependentUpon>ImportParamControl2.cs</DependentUpon>
     </Compile>
-    <Compile Include="UControl\MgmtParameterControl.cs">
+    <Compile Include="UControl\MgmtLRPControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UControl\MgmtParameterControl.Designer.cs">
-      <DependentUpon>MgmtParameterControl.cs</DependentUpon>
+    <Compile Include="UControl\MgmtLRPControl.Designer.cs">
+      <DependentUpon>MgmtLRPControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="UControl\MgmtPresetControl.cs">
+    <Compile Include="UControl\MgmtMatchingTabletControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UControl\MgmtPresetControl.Designer.cs">
-      <DependentUpon>MgmtPresetControl.cs</DependentUpon>
+    <Compile Include="UControl\MgmtMatchingTabletControl.Designer.cs">
+      <DependentUpon>MgmtMatchingTabletControl.cs</DependentUpon>
     </Compile>
     <Compile Include="UControl\MgmtPresetGroupControl.cs">
       <SubType>UserControl</SubType>
@@ -591,11 +591,11 @@
     <EmbeddedResource Include="UControl\ImportParamControl2.resx">
       <DependentUpon>ImportParamControl2.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UControl\MgmtParameterControl.resx">
-      <DependentUpon>MgmtParameterControl.cs</DependentUpon>
+    <EmbeddedResource Include="UControl\MgmtLRPControl.resx">
+      <DependentUpon>MgmtLRPControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UControl\MgmtPresetControl.resx">
-      <DependentUpon>MgmtPresetControl.cs</DependentUpon>
+    <EmbeddedResource Include="UControl\MgmtMatchingTabletControl.resx">
+      <DependentUpon>MgmtMatchingTabletControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\MgmtPresetGroupControl.resx">
       <DependentUpon>MgmtPresetGroupControl.cs</DependentUpon>

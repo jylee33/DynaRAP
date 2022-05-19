@@ -40,8 +40,8 @@ namespace DynaRAP
         ImportModuleControl importModuleControl = null;
         SBModuleControl sbModuleControl = null;
         BinModuleControl binModuleControl = null;
-        MgmtParameterControl mgmtParameterControl = null;
-        MgmtPresetControl mgmtPresetControl = null;
+        MgmtLRPControl mgmtLRPControl = null;
+        MgmtMatchingTabletControl mgmtMatchingTableControl = null;
         //MgmtPresetGroupControl mgmtPresetGroupControl = null;
 
         CsvTableControl csvTableControl = null;
@@ -93,8 +93,8 @@ namespace DynaRAP
         public ImportModuleControl ImportModuleControl { get => importModuleControl; set => importModuleControl = value; }
         public SBModuleControl SbModuleControl { get => sbModuleControl; set => sbModuleControl = value; }
         public BinModuleControl BinModuleControl { get => binModuleControl; set => binModuleControl = value; }
-        public MgmtParameterControl MgmtParameterControl { get => mgmtParameterControl; set => mgmtParameterControl = value; }
-        public MgmtPresetControl MgmtPresetControl { get => mgmtPresetControl; set => mgmtPresetControl = value; }
+        public MgmtLRPControl MgmtLRPControl { get => mgmtLRPControl; set => mgmtLRPControl = value; }
+        public MgmtMatchingTabletControl MgmtMatchingTabletControl { get => mgmtMatchingTableControl; set => mgmtMatchingTableControl = value; }
         //public MgmtPresetGroupControl MgmtPresetGroupControl { get => mgmtPresetGroupControl; set => mgmtPresetGroupControl = value; }
 
         public MainForm()
@@ -170,28 +170,28 @@ namespace DynaRAP
                 tabbedView1.ActivateDocument(binModuleControl);
             }
 
-            if (mgmtParameterControl == null)
+            if (mgmtLRPControl == null)
             {
-                mgmtParameterControl = new MgmtParameterControl();
-                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(mgmtParameterControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
+                mgmtLRPControl = new MgmtLRPControl();
+                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(mgmtLRPControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
                 doc.Caption = "LRP 관리";
-                tabbedView1.ActivateDocument(mgmtParameterControl);
+                tabbedView1.ActivateDocument(mgmtLRPControl);
             }
             else
             {
-                tabbedView1.ActivateDocument(mgmtParameterControl);
+                tabbedView1.ActivateDocument(mgmtLRPControl);
             }
 
-            if (mgmtPresetControl == null)
+            if (mgmtMatchingTableControl == null)
             {
-                mgmtPresetControl = new MgmtPresetControl();
-                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(mgmtPresetControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
-                doc.Caption = "매칭테이블 작성";
-                tabbedView1.ActivateDocument(mgmtPresetControl);
+                mgmtMatchingTableControl = new MgmtMatchingTabletControl();
+                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(mgmtMatchingTableControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
+                doc.Caption = "매칭테이블 관리";
+                tabbedView1.ActivateDocument(mgmtMatchingTableControl);
             }
             else
             {
-                tabbedView1.ActivateDocument(mgmtPresetControl);
+                tabbedView1.ActivateDocument(mgmtMatchingTableControl);
             }
 
             //if (mgmtPresetGroupControl == null)
@@ -212,8 +212,8 @@ namespace DynaRAP
             tabbedView1.RemoveDocument(importModuleControl);
             tabbedView1.RemoveDocument(sbModuleControl);
             tabbedView1.RemoveDocument(binModuleControl);
-            tabbedView1.RemoveDocument(mgmtParameterControl);
-            tabbedView1.RemoveDocument(mgmtPresetControl);
+            tabbedView1.RemoveDocument(mgmtLRPControl);
+            tabbedView1.RemoveDocument(mgmtMatchingTableControl);
             //tabbedView1.RemoveDocument(mgmtPresetGroupControl);
             tabbedView1.ActivateDocument(startControl);
 #endif
@@ -272,13 +272,13 @@ namespace DynaRAP
             //{
             //    e.Control = binModuleControl;
             //}
-            //else if (e.Document == mgmtParameterControl)
+            //else if (e.Document == mgmtLRPControl)
             //{
-            //    e.Control = mgmtParameterControl;
+            //    e.Control = mgmtLRPControl;
             //}
-            //else if (e.Document == mgmtPresetControl)
+            //else if (e.Document == mgmtMatchingTableControl)
             //{
-            //    e.Control = mgmtPresetControl;
+            //    e.Control = mgmtMatchingTableControl;
             //}
             //else if (e.Document == mgmtPresetGroupControl)
             //{
@@ -308,13 +308,13 @@ namespace DynaRAP
             {
                 binModuleControl = null;
             }
-            else if (e.Document.Control is MgmtParameterControl)
+            else if (e.Document.Control is MgmtLRPControl)
             {
-                mgmtParameterControl = null;
+                mgmtLRPControl = null;
             }
-            else if (e.Document.Control is MgmtPresetControl)
+            else if (e.Document.Control is MgmtMatchingTabletControl)
             {
-                mgmtPresetControl = null;
+                mgmtMatchingTableControl = null;
             }
             //else if (e.Document.Control is MgmtPresetGroupControl)
             //{
@@ -526,31 +526,31 @@ namespace DynaRAP
 
         private void btnMgmtParameter_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            if (mgmtParameterControl == null)
+            if (mgmtLRPControl == null)
             {
-                mgmtParameterControl = new MgmtParameterControl();
-                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(mgmtParameterControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
+                mgmtLRPControl = new MgmtLRPControl();
+                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(mgmtLRPControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
                 doc.Caption = "LRP 관리";
-                tabbedView1.ActivateDocument(mgmtParameterControl);
+                tabbedView1.ActivateDocument(mgmtLRPControl);
             }
             else
             {
-                tabbedView1.ActivateDocument(mgmtParameterControl);
+                tabbedView1.ActivateDocument(mgmtLRPControl);
             }
         }
 
         private void btnMgmtPreset_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            if (mgmtPresetControl == null)
+            if (mgmtMatchingTableControl == null)
             {
-                mgmtPresetControl = new MgmtPresetControl();
-                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(mgmtPresetControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
-                doc.Caption = "매칭테이블 작성";
-                tabbedView1.ActivateDocument(mgmtPresetControl);
+                mgmtMatchingTableControl = new MgmtMatchingTabletControl();
+                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(mgmtMatchingTableControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
+                doc.Caption = "매칭테이블 관리";
+                tabbedView1.ActivateDocument(mgmtMatchingTableControl);
             }
             else
             {
-                tabbedView1.ActivateDocument(mgmtPresetControl);
+                tabbedView1.ActivateDocument(mgmtMatchingTableControl);
             }
         }
 
