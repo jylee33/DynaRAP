@@ -46,6 +46,8 @@ namespace DynaRAP.UControl
         List<ResponseImport> uploadList = new List<ResponseImport>();
         List<ResponsePart> partList = new List<ResponsePart>();
 
+        DataTable curDataTable = null;
+
         double sbLen = 1;
         double overlap = 10;
 
@@ -515,7 +517,8 @@ namespace DynaRAP.UControl
 
             chart1.Series.Add(series1);
 
-            chart1.DataSource = GetChartValues(strParam);
+            curDataTable = GetChartValues(strParam);
+            chart1.DataSource = curDataTable;
             chart1.BackColor = Color.FromArgb(37, 37, 38);
             chart1.DataBind();
 
@@ -598,6 +601,16 @@ namespace DynaRAP.UControl
             while (t1 < endTime)
             {
                 //Console.WriteLine(i + string.Format(" - StartTime : {0}, EndTime : {1}", string.Format("{0:yyyy-MM-dd hh:mm:ss.ffffff}", t1), string.Format("{0:yyyy-MM-dd hh:mm:ss.ffffff}", t2)));
+                if(t2 > endTime)
+                {
+                    t2 = endTime;
+                    t1 = endTime.AddSeconds(-sbLen);
+                    SplittedSB sb2 = new SplittedSB(string.Format("ShortBlock#{0}", i), string.Format("{0:yyyy-MM-dd hh:mm:ss.ffffff}", t1), string.Format("{0:yyyy-MM-dd hh:mm:ss.ffffff}", t2), 0);
+                    i++;
+
+                    AddSplittedInterval(sb2);
+                    break;
+                }
                 SplittedSB sb = new SplittedSB(string.Format("ShortBlock#{0}", i), string.Format("{0:yyyy-MM-dd hh:mm:ss.ffffff}", t1), string.Format("{0:yyyy-MM-dd hh:mm:ss.ffffff}", t2), 0);
                 i++;
 
@@ -812,142 +825,61 @@ namespace DynaRAP.UControl
 
         private DataTable GetShortBlockData(string strKey, DateTime sTime, DateTime eTime)
         {
-            string t1 = Utils.GetJulianFromDate(sTime);
-            string t2 = Utils.GetJulianFromDate(eTime);
+            //string t1 = Utils.GetJulianFromDate(sTime);
+            //string t2 = Utils.GetJulianFromDate(eTime);
 
-            string url = ConfigurationManager.AppSettings["UrlPart"];
+            DataRow[] result = curDataTable.Select(String.Format("Argument >= #{0}# AND Argument <= #{1}#", sTime.ToString("yyyy-MM-dd HH:mm:ss.ffffff"), eTime.ToString("yyyy-MM-dd HH:mm:ss.ffffff")));
 
-            string seq = cboPart.Text;
-            //Encoding
-            byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(seq);
-            string encName = Convert.ToBase64String(basebyte);
+            DataTable table = new DataTable("Table1");
+            table.Columns.Add("Argument", typeof(DateTime));
+            table.Columns.Add("Value", typeof(double));
 
-            string partSeq = "";
-            ResponsePart part = partList.Find(x => x.partName.Equals(encName));
-            if (part != null)
+            foreach (DataRow row in result)
             {
-                partSeq = part.seq;
+                table.ImportRow(row);
             }
-
-            string sendData = string.Format(@"
-            {{
-            ""command"":""row-data"",
-            ""partSeq"":""{0}"",
-            ""julianRange"":[""{1}"", ""{2}""]
-            }}"
-            , partSeq, t1, t2);
-
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "POST";
-            request.ContentType = "application/json";
-            request.Timeout = 30 * 1000;
-            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
-
-            // POST할 데이타를 Request Stream에 쓴다
-            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
-            request.ContentLength = bytes.Length; // 바이트수 지정
-
-            using (Stream reqStream = request.GetRequestStream())
-            {
-                reqStream.Write(bytes, 0, bytes.Length);
-            }
-
-            // Response 처리
-            string responseText = string.Empty;
-            using (WebResponse resp = request.GetResponse())
-            {
-                Stream respStream = resp.GetResponseStream();
-                using (StreamReader sr = new StreamReader(respStream))
-                {
-                    responseText = sr.ReadToEnd();
-                }
-            }
-
-            //Console.WriteLine(responseText);
-            PartInfoResponse result = JsonConvert.DeserializeObject<PartInfoResponse>(responseText);
-
-            if (result != null)
-            {
-                if (result.code != 200)
-                {
-                    return null;
-                }
-                else
-                {
-                    DataTable table = new DataTable("Table1");
-                    table.Columns.Add("Argument", typeof(DateTime));
-                    table.Columns.Add("Value", typeof(double));
-
-                    DataRow row = null;
-                    int i = 0;
-
-                    for (i = 0; i < partInfo.paramSet.Count; i++)
-                    {
-                        if (partInfo.paramSet[i].paramKey.Equals(cboParameter.Text))
-                        {
-                            int j = 0;
-                            foreach (List<double> dataArr in partInfo.data)
-                            {
-                                row = table.NewRow();
-                                string day = partInfo.julianSet[0][j];
-                                DateTime dt = Utils.GetDateFromJulian(day);
-
-                                double data = dataArr[i]; 
-                                chartData.Add(data);
-                                row["Argument"] = dt;
-                                //row["Argument"] = i;
-                                row["Value"] = data;
-                                table.Rows.Add(row);
-
-                                j++;
-                            }
-                            break;
-                        }
-                    }
-                    return table;
-                }
-            }
-            return null;
+            return table;
 
         }
-        //private DataTable GetShortBlockData(string strKey, string sTime, string eTime)
-        //{
-        //    // Create an empty table.
-        //    DataTable table = new DataTable("Table1");
+        
+        private DataTable GetShortBlockData2(string strKey, DateTime sTime, DateTime eTime)
+        {
+            // Create an empty table.
+            DataTable table = new DataTable("Table1");
 
-        //    // Add two columns to the table.
-        //    //table.Columns.Add("Argument", typeof(Int32));
-        //    table.Columns.Add("Argument", typeof(DateTime));
-        //    table.Columns.Add("Value", typeof(double));
+            // Add two columns to the table.
+            //table.Columns.Add("Argument", typeof(Int32));
+            table.Columns.Add("Argument", typeof(DateTime));
+            table.Columns.Add("Value", typeof(double));
 
-        //    DataRow row = null;
-        //    int i = 0;
-        //    chartData.Clear();
-        //    foreach (string value in dicData[strKey])
-        //    {
-        //        row = table.NewRow();
-        //        string day = dicData["DATE"][i];
-        //        DateTime dt = Utils.GetDateFromJulian(day);
+            DataRow row = null;
+            int i = 0;
+            chartData.Clear();
+            foreach (string value in dicData[strKey])
+            {
+                row = table.NewRow();
+                string day = dicData["DATE"][i];
+                DateTime dt = Utils.GetDateFromJulian(day);
 
-        //        int result1 = DateTime.Compare(dt, sTime);
-        //        int result2 = DateTime.Compare(dt, eTime);
+                int result1 = DateTime.Compare(dt, sTime);
+                int result2 = DateTime.Compare(dt, eTime);
 
-        //        if(result1 < 0 || result2 > 0)
-        //        {
-        //            continue;
-        //        }
+                if(result1 < 0 || result2 > 0)
+                {
+                    continue;
+                }
 
-        //        double data = double.Parse(value);
-        //        chartData.Add(data);
-        //        row["Argument"] = dt;
-        //        //row["Argument"] = i;
-        //        row["Value"] = data;
-        //        table.Rows.Add(row);
-        //        i++;
-        //    }
+                double data = double.Parse(value);
+                chartData.Add(data);
+                row["Argument"] = dt;
+                //row["Argument"] = i;
+                row["Value"] = data;
+                table.Rows.Add(row);
+                i++;
+            }
 
-        //    return table;
-        //}
+            return table;
+        }
 
         void InvalidSB_DeleteBtnClicked(object sender, EventArgs e)
         {
@@ -1104,14 +1036,14 @@ namespace DynaRAP.UControl
 
         private void edtSBLength_EditValueChanged(object sender, EventArgs e)
         {
-            AddIntervalList();
-            AddStripLines();
+            //AddIntervalList();
+            //AddStripLines();
         }
 
         private void edtOverlap_EditValueChanged(object sender, EventArgs e)
         {
-            AddIntervalList();
-            AddStripLines();
+            //AddIntervalList();
+            //AddStripLines();
         }
 
         private void luePresetList_EditValueChanged(object sender, EventArgs e)
@@ -1234,6 +1166,17 @@ namespace DynaRAP.UControl
             }
         }
 
+        private void edtSBLength_Leave(object sender, EventArgs e)
+        {
+            AddIntervalList();
+            AddStripLines();
+        }
+
+        private void edtOverlap_Leave(object sender, EventArgs e)
+        {
+            AddIntervalList();
+            AddStripLines();
+        }
     }
 
     

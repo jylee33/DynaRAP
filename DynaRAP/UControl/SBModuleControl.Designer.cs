@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SBModuleControl));
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.separatorControl1 = new DevExpress.XtraEditors.SeparatorControl();
@@ -385,6 +385,7 @@
             this.edtSBLength.TabIndex = 7;
             this.edtSBLength.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.edtSBLength_ButtonClick);
             this.edtSBLength.EditValueChanged += new System.EventHandler(this.edtSBLength_EditValueChanged);
+            this.edtSBLength.Leave += new System.EventHandler(this.edtSBLength_Leave);
             // 
             // edtOverlap
             // 
@@ -396,6 +397,7 @@
             this.edtOverlap.TabIndex = 7;
             this.edtOverlap.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.edtOverlap_ButtonClick);
             this.edtOverlap.EditValueChanged += new System.EventHandler(this.edtOverlap_EditValueChanged);
+            this.edtOverlap.Leave += new System.EventHandler(this.edtOverlap_Leave);
             // 
             // labelControl12
             // 
@@ -579,8 +581,8 @@
             // 
             // chart1
             // 
-            chartArea2.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea2);
+            chartArea3.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea3);
             this.chart1.Location = new System.Drawing.Point(3, 587);
             this.chart1.Name = "chart1";
             this.chart1.Size = new System.Drawing.Size(623, 132);
