@@ -56,10 +56,10 @@ namespace DynaRAP.UControl
             string strNow = string.Format("{0:yyyy-MM-dd}", dtNow);
             //dateScenario.Text = strNow;
 
-            panelData.AutoScroll = true;
-            panelData.WrapContents = false;
-            panelData.HorizontalScroll.Visible = false;
-            panelData.VerticalScroll.Visible = true;
+            flowLayoutPanel1.AutoScroll = true;
+            flowLayoutPanel1.WrapContents = false;
+            flowLayoutPanel1.HorizontalScroll.Visible = false;
+            flowLayoutPanel1.VerticalScroll.Visible = true;
 
             btnViewData.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             btnAddParameter.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
@@ -183,7 +183,8 @@ namespace DynaRAP.UControl
             AddParameter();
         }
 
-        int paramIndex = 9;
+        const int startParamIndex = 0;
+        int paramIndex = startParamIndex;
 
         private void AddParameter()
         {
@@ -191,12 +192,12 @@ namespace DynaRAP.UControl
             ctrl.Title = "Parameter " + paramIndex.ToString();
             ctrl.DicData = dicData;
             ctrl.OnSelectedRange += ChartControl_OnSelectedRange;
-            ctrl.Dock = DockStyle.Fill;
-            panelData.Controls.Add(ctrl);
-            panelData.Controls.SetChildIndex(ctrl, paramIndex++);
-
+            //ctrl.Dock = DockStyle.Fill;
+            flowLayoutPanel2.Controls.Add(ctrl);
+            flowLayoutPanel2.Controls.SetChildIndex(ctrl, paramIndex++);
             paramList.Add(ctrl);
 
+            flowLayoutPanel2.Height += ctrl.Height + 6;
         }
         private void ChartControl_OnSelectedRange(object sender, SelectedRangeEventArgs e)
         {
@@ -222,7 +223,9 @@ namespace DynaRAP.UControl
             lblSplitCount.Text = string.Format(Properties.Resources.StringSplitCount, splitList.Count);
         }
 
-        int intervalIndex = 6;
+        const int startSplitIndex = 0;
+        int intervalIndex = startSplitIndex;
+        const int splitHeight = 22;
 
         private void AddSplittedInterval()
         {
@@ -249,21 +252,22 @@ namespace DynaRAP.UControl
             ImportIntervalControl ctrl = new ImportIntervalControl(minValue, maxValue);
             ctrl.Title = "flight#" + (paramIndex + intervalIndex).ToString();
             ctrl.DeleteBtnClicked += new EventHandler(Interval_DeleteBtnClicked);
-            panelData.Controls.Add(ctrl);
-            panelData.Controls.SetChildIndex(ctrl, paramIndex + intervalIndex);
+            flowLayoutPanel3.Controls.Add(ctrl);
+            flowLayoutPanel3.Controls.SetChildIndex(ctrl, intervalIndex++);
             splitList.Add(ctrl);
 
-            intervalIndex++;
+            flowLayoutPanel3.Height += splitHeight;
 
         }
 
         void Interval_DeleteBtnClicked(object sender, EventArgs e)
         {
             ImportIntervalControl ctrl = sender as ImportIntervalControl;
-            panelData.Controls.Remove(ctrl);
+            flowLayoutPanel1.Controls.Remove(ctrl);
             splitList.Remove(ctrl);
             ctrl.Dispose();
-            
+
+            flowLayoutPanel3.Height -= splitHeight;
             intervalIndex--;
 
             lblSplitCount.Text = string.Format(Properties.Resources.StringSplitCount, splitList.Count);

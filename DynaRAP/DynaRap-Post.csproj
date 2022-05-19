@@ -130,6 +130,7 @@
   <ItemGroup>
     <Compile Include="Common\DLL_DATA.cs" />
     <Compile Include="Common\DrawTypes.cs" />
+    <Compile Include="Common\ParamProperty.cs" />
     <Compile Include="Common\SeriesPointData.cs" />
     <Compile Include="Data\PartInfoResponse.cs" />
     <Compile Include="Forms\CreateScenarioProgressForm.cs">

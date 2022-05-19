@@ -4,6 +4,7 @@ using DevExpress.XtraEditors.Controls;
 using DevExpress.XtraTreeList;
 using DevExpress.XtraTreeList.Columns;
 using DevExpress.XtraTreeList.Nodes;
+using DynaRAP.Common;
 using DynaRAP.Data;
 using DynaRAP.UTIL;
 using Newtonsoft.Json;
@@ -27,6 +28,8 @@ namespace DynaRAP.UControl
         int focusedNodeId = 0;
         TreeListNode focusedNode = null;
         List<ResponseParam> paramList = null;
+        Dictionary<string, List<ParamProperty>> dicProperty= new Dictionary<string, List<ParamProperty>>();
+        string selPropertyType = string.Empty;
 
         public MgmtLRPControl()
         {
@@ -430,7 +433,7 @@ namespace DynaRAP.UControl
             ""specified"":""{18}"",
             ""paramVal"":null
             }}"
-            , opType, paramPack, encName, paramKey, cboProperty.Text, edtAdams.Text
+            , opType, paramPack, encName, paramKey, cboPropertyType.Text, edtAdams.Text
             , edtZaero.Text, edtGrt.Text, edtFltp.Text, edtFlts.Text
             , cboPart.Text, cboPartLocation.Text
             , edtLrpX.Text, edtLrpY.Text, edtLrpZ.Text
@@ -528,6 +531,74 @@ namespace DynaRAP.UControl
             return true;
         }
 
+        private void InitializeProperty()
+        {
+            dicProperty.Clear();
+            dicProperty = GetPropertyInfo();
+
+            foreach (string propertyType in dicProperty.Keys)
+            {
+                cboPropertyType.Properties.Items.Add(propertyType);
+            }
+        }
+
+        private Dictionary<string, List<ParamProperty>> GetPropertyInfo()
+        {
+            List<ParamProperty> paramLoad = new List<ParamProperty>();
+            paramLoad.Add(new ParamProperty("V", "N"));
+            paramLoad.Add(new ParamProperty("M", "N-mm"));
+            paramLoad.Add(new ParamProperty("T", "N-mm"));
+            paramLoad.Add(new ParamProperty("HM", "N-mm"));
+            if(dicProperty.ContainsKey("LOAD") == false)
+                dicProperty.Add("LOAD", paramLoad);
+
+            List<ParamProperty> paramAccel = new List<ParamProperty>();
+            paramAccel.Add(new ParamProperty("Vertical Accel", "G"));
+            paramAccel.Add(new ParamProperty("Lateral Accel", "G"));
+            paramAccel.Add(new ParamProperty("Normal Accel", "G"));
+            paramAccel.Add(new ParamProperty("Longitudinal Accel", "G"));
+            paramAccel.Add(new ParamProperty("X-Axis Accel", "G"));
+            paramAccel.Add(new ParamProperty("Y-Axis Accel", "G"));
+            paramAccel.Add(new ParamProperty("Z-Axis Accel", "Mach"));
+            if (dicProperty.ContainsKey("ACCELERATION") == false)
+                dicProperty.Add("ACCELERATION", paramAccel);
+
+            List<ParamProperty> paramFlight = new List<ParamProperty>();
+            paramFlight.Add(new ParamProperty("Mach", "Mach"));
+            paramFlight.Add(new ParamProperty("Total Pressure", ""));
+            paramFlight.Add(new ParamProperty("Static Pressure", ""));
+            paramFlight.Add(new ParamProperty("Prs. Alt.", "ft"));
+            paramFlight.Add(new ParamProperty("AOA", "deg"));
+            paramFlight.Add(new ParamProperty("AOS", "deg"));
+            paramFlight.Add(new ParamProperty("Roll Rate", "deg/sec"));
+            paramFlight.Add(new ParamProperty("Pitch Rate", "deg/sec"));
+            paramFlight.Add(new ParamProperty("Yaw Rate", "deg/sec"));
+            if (dicProperty.ContainsKey("FLIGHT PARAMETER") == false)
+                dicProperty.Add("FLIGHT PARAMETER", paramFlight);
+
+            return dicProperty;
+        }
+
+        private void InitializePropertyCode(string text)
+        {
+            cboPropertyCode.Properties.Items.Clear();
+            cboUnit.Properties.Items.Clear();
+
+            cboPropertyCode.Text = String.Empty;
+            cboUnit.Text = String.Empty;
+
+            if (dicProperty.ContainsKey(text))
+            {
+                foreach (ParamProperty param in dicProperty[text])
+                {
+                    if(cboPropertyCode.Properties.Items.Contains(param.Code) == false)
+                        cboPropertyCode.Properties.Items.Add(param.Code);
+                    if(cboUnit.Properties.Items.Contains(param.Unit) == false)
+                        cboUnit.Properties.Items.Add(param.Unit);
+                }
+            }
+        }
+
         #endregion Method
 
         #region EventHandler
@@ -535,11 +606,17 @@ namespace DynaRAP.UControl
         {
             this.splitContainer1.SplitterDistance = 250;
             cboParamList.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
-            //cboProperty.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+            cboPropertyType.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+            cboPropertyCode.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
             //cboUnit.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
             //cboPart.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
             //cboPartLocation.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
             //cboAirplane.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+
+            cboPropertyType.SelectedIndexChanged += CboPropertyType_SelectedIndexChanged;
+            cboPropertyCode.SelectedIndexChanged += CboPropertyCode_SelectedIndexChanged;
+
+            InitializeProperty();
 
 #if DEBUG
             //edtKey.Text = "Bending, LH Wing BL1870";
@@ -558,6 +635,35 @@ namespace DynaRAP.UControl
             InitializeParamList();
             InitializeDirDataList();
         }
+
+        private void CboPropertyType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ComboBoxEdit combo = sender as ComboBoxEdit;
+
+            if (combo != null)
+            {
+                selPropertyType = combo.Text;
+                InitializePropertyCode(selPropertyType);
+            }
+        }
+
+        private void CboPropertyCode_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ComboBoxEdit combo = sender as ComboBoxEdit;
+
+            if (combo != null)
+            {
+                if(dicProperty.ContainsKey(selPropertyType))
+                {
+                    ParamProperty param = dicProperty[selPropertyType].Find(x => x.Code == combo.Text);
+                    if(param != null)
+                    {
+                        cboUnit.Text = param.Unit;
+                    }
+                }
+            }
+        }
+
 
         private void addFolderMenuItemClick(object sender, EventArgs e)
         {
@@ -978,7 +1084,7 @@ namespace DynaRAP.UControl
             edtGrt.Text = grtKey;
             edtFltp.Text = fltpKey;
             edtFlts.Text = fltsKey;
-            cboProperty.Text = paramSpec;
+            cboPropertyType.Text = paramSpec;
             cboUnit.Text = paramUnit;
             cboPart.Text = partInfo;
             cboPartLocation.Text = partInfoSub;
@@ -989,6 +1095,11 @@ namespace DynaRAP.UControl
             edtMaximum.Text = domainMax;
             edtMinumum.Text = domainMin;
             edtSpecialValue.Text = specified;
+        }
+
+        private void btnPropertyConfig_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("구현 중...");
         }
 
         #endregion EventHandler

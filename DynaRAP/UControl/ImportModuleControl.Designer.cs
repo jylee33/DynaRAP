@@ -33,7 +33,7 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.separatorControl1 = new DevExpress.XtraEditors.SeparatorControl();
             this.labelControl2 = new DevExpress.XtraEditors.LabelControl();
-            this.panelData = new System.Windows.Forms.FlowLayoutPanel();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.labelControl6 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl14 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl17 = new DevExpress.XtraEditors.LabelControl();
@@ -60,9 +60,11 @@
             this.btnSaveSplittedInterval = new DevExpress.XtraEditors.ButtonEdit();
             this.chkForcedImport = new DevExpress.XtraEditors.CheckEdit();
             this.imageCollection1 = new DevExpress.Utils.ImageCollection(this.components);
+            this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
+            this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.separatorControl1)).BeginInit();
-            this.panelData.SuspendLayout();
+            this.flowLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.luePresetList.Properties)).BeginInit();
             this.tableLayoutPanel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnViewData.Properties)).BeginInit();
@@ -88,7 +90,7 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.Controls.Add(this.separatorControl1, 2, 1);
             this.tableLayoutPanel1.Controls.Add(this.labelControl2, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.panelData, 4, 1);
+            this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel1, 4, 1);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -126,31 +128,33 @@
             this.labelControl2.TabIndex = 1;
             this.labelControl2.Text = "비행데이터";
             // 
-            // panelData
+            // flowLayoutPanel1
             // 
-            this.panelData.Controls.Add(this.labelControl6);
-            this.panelData.Controls.Add(this.labelControl14);
-            this.panelData.Controls.Add(this.labelControl17);
-            this.panelData.Controls.Add(this.labelControl1);
-            this.panelData.Controls.Add(this.luePresetList);
-            this.panelData.Controls.Add(this.tableLayoutPanel2);
-            this.panelData.Controls.Add(this.lblFlyingData);
-            this.panelData.Controls.Add(this.labelControl18);
-            this.panelData.Controls.Add(this.btnAddParameter);
-            this.panelData.Controls.Add(this.labelControl19);
-            this.panelData.Controls.Add(this.labelControl20);
-            this.panelData.Controls.Add(this.btnAddSplittedInterval);
-            this.panelData.Controls.Add(this.separatorControl2);
-            this.panelData.Controls.Add(this.tableLayoutPanel4);
-            this.panelData.Controls.Add(this.separatorControl3);
-            this.panelData.Controls.Add(this.tableLayoutPanel3);
-            this.panelData.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelData.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.panelData.Location = new System.Drawing.Point(227, 24);
-            this.panelData.Name = "panelData";
-            this.tableLayoutPanel1.SetRowSpan(this.panelData, 3);
-            this.panelData.Size = new System.Drawing.Size(901, 1156);
-            this.panelData.TabIndex = 4;
+            this.flowLayoutPanel1.Controls.Add(this.labelControl6);
+            this.flowLayoutPanel1.Controls.Add(this.labelControl14);
+            this.flowLayoutPanel1.Controls.Add(this.labelControl17);
+            this.flowLayoutPanel1.Controls.Add(this.labelControl1);
+            this.flowLayoutPanel1.Controls.Add(this.luePresetList);
+            this.flowLayoutPanel1.Controls.Add(this.tableLayoutPanel2);
+            this.flowLayoutPanel1.Controls.Add(this.lblFlyingData);
+            this.flowLayoutPanel1.Controls.Add(this.labelControl18);
+            this.flowLayoutPanel1.Controls.Add(this.btnAddParameter);
+            this.flowLayoutPanel1.Controls.Add(this.flowLayoutPanel2);
+            this.flowLayoutPanel1.Controls.Add(this.labelControl19);
+            this.flowLayoutPanel1.Controls.Add(this.labelControl20);
+            this.flowLayoutPanel1.Controls.Add(this.btnAddSplittedInterval);
+            this.flowLayoutPanel1.Controls.Add(this.separatorControl2);
+            this.flowLayoutPanel1.Controls.Add(this.tableLayoutPanel4);
+            this.flowLayoutPanel1.Controls.Add(this.separatorControl3);
+            this.flowLayoutPanel1.Controls.Add(this.flowLayoutPanel3);
+            this.flowLayoutPanel1.Controls.Add(this.tableLayoutPanel3);
+            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(227, 24);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.tableLayoutPanel1.SetRowSpan(this.flowLayoutPanel1, 3);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(901, 1156);
+            this.flowLayoutPanel1.TabIndex = 4;
             // 
             // labelControl6
             // 
@@ -211,7 +215,7 @@
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 1;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(726, 26);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(737, 26);
             this.tableLayoutPanel2.TabIndex = 28;
             // 
             // labelControl13
@@ -228,7 +232,7 @@
             // 
             this.btnViewData.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnViewData.EditValue = "데이터 보기";
-            this.btnViewData.Location = new System.Drawing.Point(619, 3);
+            this.btnViewData.Location = new System.Drawing.Point(630, 3);
             this.btnViewData.Name = "btnViewData";
             this.btnViewData.Properties.Appearance.Options.UseTextOptions = true;
             this.btnViewData.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
@@ -264,7 +268,7 @@
             // 
             this.btnAddParameter.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnAddParameter.EditValue = "파라미터 추가";
-            this.btnAddParameter.Location = new System.Drawing.Point(619, 206);
+            this.btnAddParameter.Location = new System.Drawing.Point(630, 206);
             this.btnAddParameter.Name = "btnAddParameter";
             this.btnAddParameter.Properties.Appearance.Options.UseTextOptions = true;
             this.btnAddParameter.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
@@ -279,7 +283,7 @@
             // 
             this.labelControl19.Appearance.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold);
             this.labelControl19.Appearance.Options.UseFont = true;
-            this.labelControl19.Location = new System.Drawing.Point(3, 234);
+            this.labelControl19.Location = new System.Drawing.Point(3, 262);
             this.labelControl19.Name = "labelControl19";
             this.labelControl19.Size = new System.Drawing.Size(88, 17);
             this.labelControl19.TabIndex = 29;
@@ -287,7 +291,7 @@
             // 
             // labelControl20
             // 
-            this.labelControl20.Location = new System.Drawing.Point(3, 257);
+            this.labelControl20.Location = new System.Drawing.Point(3, 285);
             this.labelControl20.Name = "labelControl20";
             this.labelControl20.Size = new System.Drawing.Size(627, 30);
             this.labelControl20.TabIndex = 30;
@@ -298,7 +302,7 @@
             // 
             this.btnAddSplittedInterval.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnAddSplittedInterval.EditValue = "분할구간 추가";
-            this.btnAddSplittedInterval.Location = new System.Drawing.Point(619, 293);
+            this.btnAddSplittedInterval.Location = new System.Drawing.Point(630, 321);
             this.btnAddSplittedInterval.Name = "btnAddSplittedInterval";
             this.btnAddSplittedInterval.Properties.Appearance.Options.UseTextOptions = true;
             this.btnAddSplittedInterval.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
@@ -313,10 +317,10 @@
             // 
             this.separatorControl2.BackColor = System.Drawing.Color.White;
             this.separatorControl2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.separatorControl2.Location = new System.Drawing.Point(3, 321);
+            this.separatorControl2.Location = new System.Drawing.Point(3, 349);
             this.separatorControl2.Name = "separatorControl2";
             this.separatorControl2.Padding = new System.Windows.Forms.Padding(9, 10, 9, 10);
-            this.separatorControl2.Size = new System.Drawing.Size(726, 1);
+            this.separatorControl2.Size = new System.Drawing.Size(737, 1);
             this.separatorControl2.TabIndex = 35;
             // 
             // tableLayoutPanel4
@@ -331,12 +335,12 @@
             this.tableLayoutPanel4.Controls.Add(this.labelControl22, 0, 0);
             this.tableLayoutPanel4.Controls.Add(this.labelControl23, 1, 0);
             this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel4.Location = new System.Drawing.Point(0, 325);
+            this.tableLayoutPanel4.Location = new System.Drawing.Point(0, 353);
             this.tableLayoutPanel4.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
             this.tableLayoutPanel4.RowCount = 1;
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(732, 34);
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(743, 34);
             this.tableLayoutPanel4.TabIndex = 34;
             // 
             // labelControl25
@@ -346,7 +350,7 @@
             this.labelControl25.Dock = System.Windows.Forms.DockStyle.Fill;
             this.labelControl25.Location = new System.Drawing.Point(667, 3);
             this.labelControl25.Name = "labelControl25";
-            this.labelControl25.Size = new System.Drawing.Size(62, 28);
+            this.labelControl25.Size = new System.Drawing.Size(73, 28);
             this.labelControl25.TabIndex = 3;
             this.labelControl25.Text = "삭제";
             // 
@@ -387,10 +391,10 @@
             // 
             this.separatorControl3.BackColor = System.Drawing.Color.White;
             this.separatorControl3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.separatorControl3.Location = new System.Drawing.Point(3, 362);
+            this.separatorControl3.Location = new System.Drawing.Point(3, 390);
             this.separatorControl3.Name = "separatorControl3";
             this.separatorControl3.Padding = new System.Windows.Forms.Padding(9, 10, 9, 10);
-            this.separatorControl3.Size = new System.Drawing.Size(726, 1);
+            this.separatorControl3.Size = new System.Drawing.Size(737, 1);
             this.separatorControl3.TabIndex = 35;
             // 
             // tableLayoutPanel3
@@ -403,11 +407,11 @@
             this.tableLayoutPanel3.Controls.Add(this.btnSaveSplittedInterval, 2, 0);
             this.tableLayoutPanel3.Controls.Add(this.chkForcedImport, 1, 0);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 369);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 425);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 1;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(726, 26);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(737, 26);
             this.tableLayoutPanel3.TabIndex = 33;
             // 
             // lblSplitCount
@@ -423,7 +427,7 @@
             // btnSaveSplittedInterval
             // 
             this.btnSaveSplittedInterval.EditValue = "분할구간 저장";
-            this.btnSaveSplittedInterval.Location = new System.Drawing.Point(619, 3);
+            this.btnSaveSplittedInterval.Location = new System.Drawing.Point(630, 3);
             this.btnSaveSplittedInterval.Name = "btnSaveSplittedInterval";
             this.btnSaveSplittedInterval.Properties.Appearance.Options.UseTextOptions = true;
             this.btnSaveSplittedInterval.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
@@ -436,7 +440,7 @@
             // 
             // chkForcedImport
             // 
-            this.chkForcedImport.Location = new System.Drawing.Point(509, 3);
+            this.chkForcedImport.Location = new System.Drawing.Point(520, 3);
             this.chkForcedImport.Name = "chkForcedImport";
             this.chkForcedImport.Properties.Caption = "강제 Import";
             this.chkForcedImport.Size = new System.Drawing.Size(104, 19);
@@ -447,6 +451,24 @@
             this.imageCollection1.ImageStream = ((DevExpress.Utils.ImageCollectionStreamer)(resources.GetObject("imageCollection1.ImageStream")));
             this.imageCollection1.Images.SetKeyName(0, "none.png");
             this.imageCollection1.Images.SetKeyName(1, "view.png");
+            // 
+            // flowLayoutPanel2
+            // 
+            this.flowLayoutPanel2.AutoScroll = true;
+            this.flowLayoutPanel2.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 234);
+            this.flowLayoutPanel2.Name = "flowLayoutPanel2";
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(737, 22);
+            this.flowLayoutPanel2.TabIndex = 36;
+            // 
+            // flowLayoutPanel3
+            // 
+            this.flowLayoutPanel3.AutoScroll = true;
+            this.flowLayoutPanel3.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flowLayoutPanel3.Location = new System.Drawing.Point(3, 397);
+            this.flowLayoutPanel3.Name = "flowLayoutPanel3";
+            this.flowLayoutPanel3.Size = new System.Drawing.Size(737, 22);
+            this.flowLayoutPanel3.TabIndex = 37;
             // 
             // ImportModuleControl
             // 
@@ -459,8 +481,8 @@
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.separatorControl1)).EndInit();
-            this.panelData.ResumeLayout(false);
-            this.panelData.PerformLayout();
+            this.flowLayoutPanel1.ResumeLayout(false);
+            this.flowLayoutPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.luePresetList.Properties)).EndInit();
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
@@ -487,7 +509,7 @@
         private DevExpress.XtraEditors.LabelControl labelControl2;
         private DevExpress.XtraEditors.LabelControl labelControl6;
         private DevExpress.XtraEditors.LabelControl labelControl14;
-        private System.Windows.Forms.FlowLayoutPanel panelData;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private DevExpress.XtraEditors.LabelControl labelControl17;
         private DevExpress.XtraEditors.LabelControl labelControl13;
         private DevExpress.XtraEditors.ButtonEdit btnAddParameter;
@@ -512,5 +534,7 @@
         private DevExpress.XtraEditors.LabelControl labelControl1;
         private DevExpress.XtraEditors.LookUpEdit luePresetList;
         private DevExpress.XtraEditors.CheckEdit chkForcedImport;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel3;
     }
 }

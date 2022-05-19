@@ -225,6 +225,7 @@ namespace DynaRAP.UControl
         private void InitializePartList(string flyingName)
         {
             cboPart.Properties.Items.Clear();
+            cboPart.Text = String.Empty;
 
             partList = null;
             partList = GetPartList(flyingName);
@@ -327,6 +328,7 @@ namespace DynaRAP.UControl
         private void InitializePartInfoList(string partName)
         {
             cboParameter.Properties.Items.Clear();
+            cboParameter.Text = String.Empty;
 
             partInfo = null;
             partInfo = GetPartInfo(partName);
