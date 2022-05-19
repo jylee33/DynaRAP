@@ -7,17 +7,13 @@ import com.servetech.dynarap.db.mapper.ParamMapper;
 import com.servetech.dynarap.db.type.CryptoField;
 import com.servetech.dynarap.db.type.LongDate;
 import com.servetech.dynarap.ext.HandledServiceException;
-import com.servetech.dynarap.vo.DirVO;
 import com.servetech.dynarap.vo.ParamVO;
 import com.servetech.dynarap.vo.PresetVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service("paramService")
 public class ParamService {
@@ -33,6 +29,12 @@ public class ParamService {
             params.put("pageSize", pageSize);
             List<ParamVO> paramList = paramMapper.selectParamList(params);
             if (paramList == null) paramList = new ArrayList<>();
+            for (ParamVO param : paramList) {
+                params.put("paramPack", param.getParamPack());
+                params.put("propSeq", param.getPropSeq());
+                param.setPropInfo(paramMapper.selectParamPropBySeq(params));
+                param.setExtras(getParamExtraMap(param.getParamPack()));
+            }
             return paramList;
         } catch(Exception e) {
             throw new HandledServiceException(410, e.getMessage());
@@ -49,14 +51,20 @@ public class ParamService {
         }
     }
 
-    public List<ParamVO> getParamListByGroup(CryptoField paramGroupSeq, int pageNo, int pageSize) throws HandledServiceException {
+    public List<ParamVO> getParamListByProp(CryptoField propSeq, int pageNo, int pageSize) throws HandledServiceException {
         try {
             Map<String, Object> params = new HashMap<>();
-            params.put("paramGroupSeq", paramGroupSeq);
+            params.put("propSeq", propSeq);
             params.put("startIndex", (pageNo - 1) * pageSize);
             params.put("pageSize", pageSize);
-            List<ParamVO> paramList = paramMapper.selectParamListByGroup(params);
+            List<ParamVO> paramList = paramMapper.selectParamListByProp(params);
             if (paramList == null) paramList = new ArrayList<>();
+            for (ParamVO param : paramList) {
+                params.put("paramPack", param.getParamPack());
+                params.put("propSeq", param.getPropSeq());
+                param.setPropInfo(paramMapper.selectParamPropBySeq(params));
+                param.setExtras(getParamExtraMap(param.getParamPack()));
+            }
             return paramList;
         } catch(Exception e) {
             throw new HandledServiceException(410, e.getMessage());
@@ -67,7 +75,13 @@ public class ParamService {
         try {
             Map<String, Object> params = new HashMap<>();
             params.put("paramPack", paramPack);
-            return paramMapper.selectActiveParam(params);
+            ParamVO paramInfo = paramMapper.selectActiveParam(params);
+            if (paramInfo != null) {
+                params.put("propSeq", paramInfo.getPropSeq());
+                paramInfo.setPropInfo(paramMapper.selectParamPropBySeq(params));
+                paramInfo.setExtras(getParamExtraMap(paramInfo.getParamPack()));
+            }
+            return paramInfo;
         } catch(Exception e) {
             throw new HandledServiceException(410, e.getMessage());
         }
@@ -79,6 +93,12 @@ public class ParamService {
             params.put("paramPack", paramPack);
             List<ParamVO> paramList = paramMapper.selectParamPackList(params);
             if (paramList == null) paramList = new ArrayList<>();
+            for (ParamVO param : paramList) {
+                params.put("paramPack", param.getParamPack());
+                params.put("propSeq", param.getPropSeq());
+                param.setPropInfo(paramMapper.selectParamPropBySeq(params));
+                param.setExtras(getParamExtraMap(param.getParamPack()));
+            }
             return paramList;
         } catch(Exception e) {
             throw new HandledServiceException(410, e.getMessage());
@@ -89,7 +109,13 @@ public class ParamService {
         try {
             Map<String, Object> params = new HashMap<>();
             params.put("seq", paramSeq);
-            return paramMapper.selectParamBySeq(params);
+            ParamVO paramInfo = paramMapper.selectParamBySeq(params);
+            if (paramInfo != null) {
+                params.put("propSeq", paramInfo.getPropSeq());
+                paramInfo.setPropInfo(paramMapper.selectParamPropBySeq(params));
+                paramInfo.setExtras(getParamExtraMap(paramInfo.getParamPack()));
+            }
+            return paramInfo;
         } catch(Exception e) {
             throw new HandledServiceException(410, e.getMessage());
         }
@@ -109,6 +135,25 @@ public class ParamService {
 
             param.setParamPack(param.getSeq());
             paramMapper.updateParamNoRenew(param);
+
+            // extra 처리.
+            if (param.getExtras() != null) {
+                Set<String> keys = param.getExtras().keySet();
+                Iterator<String> iterKeys = keys.iterator();
+                while (iterKeys.hasNext()) {
+                    String key = iterKeys.next();
+
+                    Map<String, Object> params = new HashMap<>();
+                    params.put("paramPack", param.getParamPack());
+                    params.put("extraKey", key);
+                    params.put("extraValue", param.getExtras().get(key));
+                    paramMapper.insertParamExtra(params);
+                }
+                param.setExtras(getParamExtraMap(param.getParamPack()));
+            }
+
+            if (param.getPropSeq() != null && !param.getPropSeq().isEmpty())
+                param.setPropInfo(getParamPropBySeq(param.getPropSeq()));
 
             return param;
         } catch(Exception e) {
@@ -133,6 +178,36 @@ public class ParamService {
                 param.setParamPack(param.getSeq());
                 paramMapper.updateParamNoRenew(param);
             }
+
+            // extra 처리.
+            if (param.getExtras() != null) {
+                // 기존 extra 가져오기
+                Map<String, Object> oldExtras = getParamExtraMap(param.getParamPack());
+                List<String> existKeys = new ArrayList<>();
+
+                Set<String> keys = param.getExtras().keySet();
+                Iterator<String> iterKeys = keys.iterator();
+                while (iterKeys.hasNext()) {
+                    String key = iterKeys.next();
+                    existKeys.add(key);
+                    insertParamExtra(param.getParamPack(), key, param.getExtras().get(key));
+                }
+
+                if (oldExtras != null) {
+                    Set<String> oldKeys = oldExtras.keySet();
+                    Iterator<String> iterOldKeys = oldKeys.iterator();
+                    while (iterOldKeys.hasNext()) {
+                        String key = iterOldKeys.next();
+                        if (!existKeys.contains(key))
+                            deleteParamExtra(param.getParamPack(), key);
+                    }
+                }
+
+                param.setExtras(getParamExtraMap(param.getParamPack()));
+            }
+
+            if (param.getPropSeq() != null && !param.getPropSeq().isEmpty())
+                param.setPropInfo(getParamPropBySeq(param.getPropSeq()));
 
             return param;
         } catch(Exception e) {
@@ -181,7 +256,6 @@ public class ParamService {
                 || param.getSeq() == null || param.getSeq().isEmpty()) {
                 throw new HandledServiceException(411, "요청 내용이 파라미터 형식에 맞지 않습니다.");
             }
-
             paramMapper.updateParamNoRenew(param);
             return param;
         } catch(Exception e) {
@@ -189,58 +263,155 @@ public class ParamService {
         }
     }
 
-    public List<ParamVO.Group> getParamGroupList() throws HandledServiceException {
-        try {
-            return paramMapper.selectParamGroupList();
-        } catch(Exception e) {
-            throw new HandledServiceException(410, e.getMessage());
-        }
-    }
 
-    public ParamVO.Group getParamGroupBySeq(CryptoField groupSeq) throws HandledServiceException {
+    public List<ParamVO.Prop> getParamPropList(String propType) throws HandledServiceException {
         try {
             Map<String, Object> params = new HashMap<>();
-            params.put("seq", groupSeq);
-            return paramMapper.selectParamGroupBySeq(params);
+            params.put("propType", propType);
+            return paramMapper.selectParamPropList(params);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    public ParamVO.Prop getParamPropBySeq(CryptoField propSeq) throws HandledServiceException {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("propSeq", propSeq);
+            return paramMapper.selectParamPropBySeq(params);
         } catch(Exception e) {
             throw new HandledServiceException(410, e.getMessage());
         }
     }
 
     @Transactional
-    public ParamVO.Group insertParamGroup(CryptoField.NAuth uid, JsonObject payload) throws HandledServiceException {
+    public ParamVO.Prop insertParamProp(CryptoField.NAuth uid, JsonObject payload) throws HandledServiceException {
         try {
-            ParamVO.Group paramGroup = ServerConstants.GSON.fromJson(payload, ParamVO.Group.class);
-            if (paramGroup == null) {
+            ParamVO.Prop paramProp = ServerConstants.GSON.fromJson(payload, ParamVO.Prop.class);
+            if (paramProp == null) {
                 throw new HandledServiceException(411, "요청 내용이 파라미터 그룹 형식에 맞지 않습니다.");
             }
 
-            paramGroup.setRegisterUid(uid);
-            paramGroup.setCreatedAt(LongDate.now());
-            paramMapper.insertParamGroup(paramGroup);
+            paramProp.setRegisterUid(uid);
+            paramProp.setCreatedAt(LongDate.now());
+            paramMapper.insertParamProp(paramProp);
+            paramProp = getParamPropBySeq(paramProp.getSeq());
 
-            return paramGroup;
+            return paramProp;
         } catch(Exception e) {
             throw new HandledServiceException(410, e.getMessage());
         }
     }
 
     @Transactional
-    public ParamVO.Group updateParamGroup(CryptoField.NAuth uid, JsonObject payload) throws HandledServiceException {
+    public ParamVO.Prop updateParamProp(CryptoField.NAuth uid, JsonObject payload) throws HandledServiceException {
         try {
-            ParamVO.Group paramGroup = ServerConstants.GSON.fromJson(payload, ParamVO.Group.class);
-            if (paramGroup == null || paramGroup.getSeq() == null || paramGroup.getSeq().isEmpty()) {
+            ParamVO.Prop paramProp = ServerConstants.GSON.fromJson(payload, ParamVO.Prop.class);
+            if (paramProp == null || paramProp.getSeq() == null || paramProp.getSeq().isEmpty()) {
                 throw new HandledServiceException(411, "요청 내용이 파라미터 그룹 형식에 맞지 않습니다.");
             }
 
-            paramMapper.updateParamGroup(paramGroup);
+            paramMapper.updateParamProp(paramProp);
+            paramProp = getParamPropBySeq(paramProp.getSeq());
 
-            return paramGroup;
+            return paramProp;
         } catch(Exception e) {
             throw new HandledServiceException(410, e.getMessage());
         }
     }
 
+
+    public List<Map<String, Object>> getParamExtraList(CryptoField paramPack) throws HandledServiceException {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("paramPack", paramPack);
+            return paramMapper.selectParamExtraList(params);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    public Map<String, Object> getParamExtraMap(CryptoField paramPack) throws HandledServiceException {
+        try {
+            List<Map<String, Object>> extraList = getParamExtraList(paramPack);
+            if (extraList == null) extraList = new ArrayList<>();
+            LinkedHashMap<String, Object> extraMap = new LinkedHashMap<>();
+            for (Map<String, Object> extra: extraList) {
+                extraMap.put(extra.get("extraKey").toString(), extra.get("extraValue"));
+            }
+            return extraMap;
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    @Transactional
+    public Map<String, Object> insertParamExtra(CryptoField paramPack, String key, Object value) throws HandledServiceException {
+        try {
+            List<Map<String, Object>> extraList = getParamExtraList(paramPack);
+            if (extraList == null) extraList = new ArrayList<>();
+            Map<String, Object> extraInfo = null;
+            for (Map<String, Object> extra : extraList) {
+                if (extra.get("extraKey").toString().equals(key)) {
+                    extraInfo = extra;
+                    break;
+                }
+            }
+
+            Map<String, Object> params = new HashMap<>();
+            params.put("paramPack", paramPack);
+            params.put("extraKey", key);
+            params.put("extraValue", value);
+            if (extraInfo != null) {
+                paramMapper.updateParamExtra(params);
+            }
+            else {
+                paramMapper.insertParamExtra(params);
+            }
+            return extraInfo;
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    @Transactional
+    public Map<String, Object> updateParamExtra(CryptoField paramPack, String key, Object value) throws HandledServiceException {
+        try {
+            List<Map<String, Object>> extraList = getParamExtraList(paramPack);
+            if (extraList == null) extraList = new ArrayList<>();
+            Map<String, Object> extraInfo = null;
+            for (Map<String, Object> extra : extraList) {
+                if (extra.get("extraKey").toString().equals(key)) {
+                    extraInfo = extra;
+                    break;
+                }
+            }
+
+            if (extraInfo != null) {
+                Map<String, Object> params = new HashMap<>();
+                params.put("paramPack", paramPack);
+                params.put("extraKey", key);
+                params.put("extraValue", value);
+                paramMapper.updateParamExtra(params);
+                extraInfo.put("extraValue", value);
+            }
+            return extraInfo;
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    @Transactional
+    public void deleteParamExtra(CryptoField paramPack, String key) throws HandledServiceException {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("paramPack", paramPack);
+            params.put("extraKey", key);
+            paramMapper.deleteParamExtra(params);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
 
     public List<PresetVO> getPresetList(int pageNo, int pageSize) throws HandledServiceException {
         try {
@@ -410,6 +581,12 @@ public class ParamService {
             params.put("pageSize", pageSize);
             List<ParamVO> paramList = paramMapper.selectPresetParamList(params);
             if (paramList == null) paramList = new ArrayList<>();
+            for (ParamVO param : paramList) {
+                params.put("paramPack", param.getParamPack());
+                params.put("propSeq", param.getPropSeq());
+                param.setPropInfo(paramMapper.selectParamPropBySeq(params));
+                param.setExtras(getParamExtraMap(param.getParamPack()));
+            }
             return paramList;
         } catch(Exception e) {
             throw new HandledServiceException(410, e.getMessage());
@@ -441,7 +618,15 @@ public class ParamService {
         try {
             Map<String, Object> params = new HashMap<>();
             params.put("seq", presetParamSeq);
-            return paramMapper.selectPresetParamBySeq(params);
+
+            ParamVO paramInfo = paramMapper.selectPresetParamBySeq(params);
+            if (paramInfo != null) {
+                params.put("paramPack", paramInfo.getParamPack());
+                params.put("propSeq", paramInfo.getPropSeq());
+                paramInfo.setPropInfo(paramMapper.selectParamPropBySeq(params));
+                paramInfo.setExtras(getParamExtraMap(paramInfo.getParamPack()));
+            }
+            return paramInfo;
         } catch(Exception e) {
             throw new HandledServiceException(410, e.getMessage());
         }

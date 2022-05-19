@@ -5,14 +5,14 @@ import com.servetech.dynarap.db.type.LongDate;
 import com.servetech.dynarap.db.type.String64;
 import lombok.Data;
 
+import java.util.Map;
+
 @Data
 public class ParamVO {
     private CryptoField seq;
     private CryptoField paramPack;
-    private CryptoField paramGroupSeq;
-    private String64 paramName;
+    private CryptoField propSeq;
     private String paramKey;
-    private String paramSpec;
     private String adamsKey;
     private String zaeroKey;
     private String grtKey;
@@ -23,28 +23,28 @@ public class ParamVO {
     private Double lrpX;
     private Double lrpY;
     private Double lrpZ;
-    private String paramUnit;
-    private Double domainMin;
-    private Double domainMax;
-    private Double specified;
-    private String paramVal;
     private CryptoField.NAuth registerUid;
     private transient LongDate appliedAt;
     private transient LongDate appliedEndAt;
+
+    private Map<String, Object> extras;
+    private String64 tags;
 
     private Long presetParamSeq;
     private CryptoField presetPack;
     private CryptoField presetSeq;
 
-    private Group groupInfo;
+    private Prop propInfo;
 
     @Data
-    public static class Group {
+    public static class Prop {
         private CryptoField seq;
-        private String64 groupName;
-        private String groupType;
+        private String propCode;
+        private String propType;
+        private String paramUnit;
         private CryptoField.NAuth registerUid;
         private LongDate createdAt;
+        private boolean deleted;
     }
 
     @Data

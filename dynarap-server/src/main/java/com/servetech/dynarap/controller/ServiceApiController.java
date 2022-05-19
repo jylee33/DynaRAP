@@ -198,19 +198,23 @@ public class ServiceApiController extends ApiController {
             return ResponseHelper.response(200, "Success - Param Deleted", "");
         }
 
-        if (command.equals("group-list")) {
-            List<ParamVO.Group> paramGroups = getService(ParamService.class).getParamGroupList();
-            return ResponseHelper.response(200, "Success - Param Group List", paramGroups);
+        if (command.equals("prop-list")) {
+            String propType = null;
+            if (!checkJsonEmpty(payload, "propType"))
+                propType = payload.get("propType").getAsString();
+
+            List<ParamVO.Prop> paramProps = getService(ParamService.class).getParamPropList(propType);
+            return ResponseHelper.response(200, "Success - Param Prop List", paramProps);
         }
 
-        if (command.equals("group-add")) {
-            ParamVO.Group paramGroup = getService(ParamService.class).insertParamGroup(user.getUid(), payload);
-            return ResponseHelper.response(200, "Success - Param Group Add", paramGroup);
+        if (command.equals("prop-add")) {
+            ParamVO.Prop paramProp = getService(ParamService.class).insertParamProp(user.getUid(), payload);
+            return ResponseHelper.response(200, "Success - Param Prop Add", paramProp);
         }
 
-        if (command.equals("group-modify")) {
-            ParamVO.Group paramGroup = getService(ParamService.class).updateParamGroup(user.getUid(), payload);
-            return ResponseHelper.response(200, "Success - Param Group Modify", paramGroup);
+        if (command.equals("prop-modify")) {
+            ParamVO.Prop paramProp = getService(ParamService.class).updateParamProp(user.getUid(), payload);
+            return ResponseHelper.response(200, "Success - Param Prop Modify", paramProp);
         }
 
         throw new HandledServiceException(411, "명령이 정의되지 않았습니다.");

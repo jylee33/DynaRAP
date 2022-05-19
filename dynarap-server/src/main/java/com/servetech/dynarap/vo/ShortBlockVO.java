@@ -67,6 +67,8 @@ public class ShortBlockVO {
         private String fltpKey;
         private String fltsKey;
         private String paramUnit;
+        private String propType;
+        private String propCode;
 
         private ParamVO paramInfo;
     }
@@ -122,6 +124,8 @@ public class ShortBlockVO {
             private String fltsKey;
             private String64 paramName;
             private String paramUnit;
+            private String propType;
+            private String propCode;
         }
 
         @Data
