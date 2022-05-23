@@ -156,7 +156,18 @@ public interface ParamMapper {
                     "limit 0, 1 " +
                     "</script>"
     })
-    ParamVO.Prop selectParamPropBySeq(Map<String, Object> params) throws  Exception;
+    ParamVO.Prop selectParamPropBySeq(Map<String, Object> params) throws Exception;
+
+    @Select({
+            "<script>" +
+                    "select * from dynarap_param_prop " +
+                    "where propType = #{propType} " +
+                    "and propCode = #{propCode} " +
+                    "order by createdAt desc " +
+                    "limit 0, 1 " +
+                    "</script>"
+    })
+    ParamVO.Prop selectParamPropByType(Map<String, Object> params) throws Exception;
 
     @Insert({
             "<script>" +

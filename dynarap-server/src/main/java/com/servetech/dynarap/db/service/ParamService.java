@@ -288,8 +288,21 @@ public class ParamService {
     public ParamVO.Prop insertParamProp(CryptoField.NAuth uid, JsonObject payload) throws HandledServiceException {
         try {
             ParamVO.Prop paramProp = ServerConstants.GSON.fromJson(payload, ParamVO.Prop.class);
-            if (paramProp == null) {
-                throw new HandledServiceException(411, "요청 내용이 파라미터 그룹 형식에 맞지 않습니다.");
+            if (paramProp == null || paramProp.getPropType() == null || paramProp.getPropType().isEmpty()
+                || paramProp.getPropCode() == null || paramProp.getPropCode().isEmpty()) {
+                throw new HandledServiceException(411, "요청 내용이 파라미터 그룹 형식에 맞지 않습니다. [propType, propCode 필수]");
+            }
+
+            Map<String, Object> params = new HashMap<>();
+            params.put("propType", paramProp.getPropType());
+            params.put("propCode", paramProp.getPropCode());
+            ParamVO.Prop oldParamProp = paramMapper.selectParamPropByType(params);
+            if (oldParamProp != null) {
+                oldParamProp.setDeleted(!oldParamProp.isDeleted());
+                if (paramProp.getParamUnit() != null && !paramProp.getParamUnit().isEmpty())
+                    oldParamProp.setParamUnit(paramProp.getParamUnit());
+                paramMapper.updateParamProp(oldParamProp);
+                return oldParamProp;
             }
 
             paramProp.setRegisterUid(uid);
@@ -307,12 +320,23 @@ public class ParamService {
     public ParamVO.Prop updateParamProp(CryptoField.NAuth uid, JsonObject payload) throws HandledServiceException {
         try {
             ParamVO.Prop paramProp = ServerConstants.GSON.fromJson(payload, ParamVO.Prop.class);
-            if (paramProp == null || paramProp.getSeq() == null || paramProp.getSeq().isEmpty()) {
-                throw new HandledServiceException(411, "요청 내용이 파라미터 그룹 형식에 맞지 않습니다.");
+            if (paramProp == null || paramProp.getPropType() == null || paramProp.getPropType().isEmpty()
+                    || paramProp.getPropCode() == null || paramProp.getPropCode().isEmpty()) {
+                throw new HandledServiceException(411, "요청 내용이 파라미터 그룹 형식에 맞지 않습니다. [propType, propCode 필수]");
             }
 
-            paramMapper.updateParamProp(paramProp);
-            paramProp = getParamPropBySeq(paramProp.getSeq());
+            Map<String, Object> params = new HashMap<>();
+            params.put("propType", paramProp.getPropType());
+            params.put("propCode", paramProp.getPropCode());
+            ParamVO.Prop oldParamProp = paramMapper.selectParamPropByType(params);
+            if (oldParamProp != null) {
+                oldParamProp.setDeleted(paramProp.isDeleted());
+                if (paramProp.getParamUnit() != null && !paramProp.getParamUnit().isEmpty())
+                    oldParamProp.setParamUnit(paramProp.getParamUnit());
+                paramMapper.updateParamProp(oldParamProp);
+
+                paramProp = getParamPropBySeq(oldParamProp.getSeq());
+            }
 
             return paramProp;
         } catch(Exception e) {
