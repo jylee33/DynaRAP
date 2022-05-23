@@ -122,7 +122,7 @@ namespace DynaRAP.Data
         public double lrpY { get; set; }
         public double lrpZ { get; set; }
         public string registerUid { get; set; }
-        public Extras extras { get; set; }
+        public Dictionary<string, string> extras { get; set; }
         public string tags { get; set; }
         public PropInfo propInfo { get; set; }
     }

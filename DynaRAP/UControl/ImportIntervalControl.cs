@@ -1,7 +1,9 @@
 ﻿using DevExpress.XtraEditors;
+using DevExpress.XtraEditors.Controls;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
 using System.Linq;
@@ -20,7 +22,7 @@ namespace DynaRAP.UControl
 
         public string PartName
         {
-            get { return edtFlying.Text; }
+            get { return cboName.Text; }
         }
 
         public object Min
@@ -42,7 +44,6 @@ namespace DynaRAP.UControl
         {
             set
             {
-                edtFlying.Text = value;
             }
         }
 
@@ -62,6 +63,21 @@ namespace DynaRAP.UControl
 
         private void ImportIntervalControl_Load(object sender, EventArgs e)
         {
+            cboName.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+            InitNameList();
+        }
+
+        private void InitNameList()
+        {
+            string importType = ConfigurationManager.AppSettings["ImportType"];
+
+            string[] types = importType.Split(',');
+
+            cboName.Properties.Items.Clear();
+            foreach (string type in types)
+            {
+                cboName.Properties.Items.Add(type);
+            }
 
         }
 

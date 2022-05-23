@@ -250,7 +250,7 @@ namespace DynaRAP.UControl
             }
             
             ImportIntervalControl ctrl = new ImportIntervalControl(minValue, maxValue);
-            ctrl.Title = "flight#" + (paramIndex + intervalIndex).ToString();
+            //ctrl.Title = "flight#" + (paramIndex + intervalIndex).ToString();
             ctrl.DeleteBtnClicked += new EventHandler(Interval_DeleteBtnClicked);
             flowLayoutPanel3.Controls.Add(ctrl);
             flowLayoutPanel3.Controls.SetChildIndex(ctrl, intervalIndex++);

@@ -41,6 +41,11 @@
             this.sharedImageCollection1 = new DevExpress.Utils.SharedImageCollection(this.components);
             this.panelControl1 = new DevExpress.XtraEditors.PanelControl();
             this.xtraScrollableControl1 = new DevExpress.XtraEditors.XtraScrollableControl();
+            this.lblTag = new DevExpress.XtraEditors.LabelControl();
+            this.edtTag = new DevExpress.XtraEditors.ButtonEdit();
+            this.btnAddExtra = new DevExpress.XtraEditors.ButtonEdit();
+            this.panelTag = new System.Windows.Forms.FlowLayoutPanel();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.labelControl1 = new DevExpress.XtraEditors.LabelControl();
             this.btnSaveAsNewParameter = new DevExpress.XtraEditors.SimpleButton();
             this.labelControl14 = new DevExpress.XtraEditors.LabelControl();
@@ -100,6 +105,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.panelControl1)).BeginInit();
             this.panelControl1.SuspendLayout();
             this.xtraScrollableControl1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.edtTag.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.btnAddExtra.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtAdams.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtZaero.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtGrt.Properties)).BeginInit();
@@ -131,7 +138,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.panelControl1);
-            this.splitContainer1.Size = new System.Drawing.Size(1035, 865);
+            this.splitContainer1.Size = new System.Drawing.Size(1035, 1145);
             this.splitContainer1.SplitterDistance = 320;
             this.splitContainer1.TabIndex = 0;
             // 
@@ -148,7 +155,7 @@
             this.treeList1.ImageIndexFieldName = "DirName";
             this.treeList1.Location = new System.Drawing.Point(0, 0);
             this.treeList1.Name = "treeList1";
-            this.treeList1.Size = new System.Drawing.Size(320, 865);
+            this.treeList1.Size = new System.Drawing.Size(320, 1145);
             this.treeList1.StateImageList = this.sharedImageCollection1;
             this.treeList1.TabIndex = 2;
             this.treeList1.GetStateImage += new DevExpress.XtraTreeList.GetStateImageEventHandler(this.treeList1_GetStateImage);
@@ -220,11 +227,16 @@
             this.panelControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelControl1.Location = new System.Drawing.Point(0, 0);
             this.panelControl1.Name = "panelControl1";
-            this.panelControl1.Size = new System.Drawing.Size(711, 865);
+            this.panelControl1.Size = new System.Drawing.Size(711, 1145);
             this.panelControl1.TabIndex = 6;
             // 
             // xtraScrollableControl1
             // 
+            this.xtraScrollableControl1.Controls.Add(this.lblTag);
+            this.xtraScrollableControl1.Controls.Add(this.edtTag);
+            this.xtraScrollableControl1.Controls.Add(this.btnAddExtra);
+            this.xtraScrollableControl1.Controls.Add(this.panelTag);
+            this.xtraScrollableControl1.Controls.Add(this.flowLayoutPanel1);
             this.xtraScrollableControl1.Controls.Add(this.labelControl1);
             this.xtraScrollableControl1.Controls.Add(this.btnSaveAsNewParameter);
             this.xtraScrollableControl1.Controls.Add(this.labelControl14);
@@ -277,8 +289,62 @@
             this.xtraScrollableControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.xtraScrollableControl1.Location = new System.Drawing.Point(2, 2);
             this.xtraScrollableControl1.Name = "xtraScrollableControl1";
-            this.xtraScrollableControl1.Size = new System.Drawing.Size(707, 861);
+            this.xtraScrollableControl1.Size = new System.Drawing.Size(707, 1141);
             this.xtraScrollableControl1.TabIndex = 0;
+            // 
+            // lblTag
+            // 
+            this.lblTag.Appearance.Font = new System.Drawing.Font("Tahoma", 13F, System.Drawing.FontStyle.Bold);
+            this.lblTag.Appearance.Options.UseFont = true;
+            this.lblTag.Location = new System.Drawing.Point(107, 613);
+            this.lblTag.Name = "lblTag";
+            this.lblTag.Size = new System.Drawing.Size(26, 22);
+            this.lblTag.TabIndex = 3;
+            this.lblTag.Text = "태그";
+            // 
+            // edtTag
+            // 
+            this.edtTag.Location = new System.Drawing.Point(107, 641);
+            this.edtTag.Name = "edtTag";
+            this.edtTag.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Plus)});
+            this.edtTag.Size = new System.Drawing.Size(301, 22);
+            this.edtTag.TabIndex = 27;
+            this.edtTag.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.edtTag_ButtonClick);
+            this.edtTag.KeyUp += new System.Windows.Forms.KeyEventHandler(this.edtTag_KeyUp);
+            // 
+            // btnAddExtra
+            // 
+            this.btnAddExtra.EditValue = "부가정보 추가";
+            this.btnAddExtra.Location = new System.Drawing.Point(242, 565);
+            this.btnAddExtra.Name = "btnAddExtra";
+            this.btnAddExtra.Properties.Appearance.Options.UseTextOptions = true;
+            this.btnAddExtra.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.btnAddExtra.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Plus)});
+            this.btnAddExtra.Properties.ReadOnly = true;
+            this.btnAddExtra.Size = new System.Drawing.Size(114, 22);
+            this.btnAddExtra.TabIndex = 12;
+            this.btnAddExtra.Click += new System.EventHandler(this.btnAddExtra_ButtonClick);
+            // 
+            // panelTag
+            // 
+            this.panelTag.AutoScroll = true;
+            this.panelTag.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelTag.Location = new System.Drawing.Point(107, 669);
+            this.panelTag.Name = "panelTag";
+            this.panelTag.Size = new System.Drawing.Size(554, 96);
+            this.panelTag.TabIndex = 28;
+            // 
+            // flowLayoutPanel1
+            // 
+            this.flowLayoutPanel1.AutoScroll = true;
+            this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(107, 604);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(561, 2);
+            this.flowLayoutPanel1.TabIndex = 26;
+            this.flowLayoutPanel1.WrapContents = false;
             // 
             // labelControl1
             // 
@@ -292,7 +358,7 @@
             // 
             // btnSaveAsNewParameter
             // 
-            this.btnSaveAsNewParameter.Location = new System.Drawing.Point(490, 821);
+            this.btnSaveAsNewParameter.Location = new System.Drawing.Point(490, 780);
             this.btnSaveAsNewParameter.Name = "btnSaveAsNewParameter";
             this.btnSaveAsNewParameter.Size = new System.Drawing.Size(110, 23);
             this.btnSaveAsNewParameter.TabIndex = 22;
@@ -333,7 +399,7 @@
             // 
             // btnDeleteParameter
             // 
-            this.btnDeleteParameter.Location = new System.Drawing.Point(369, 821);
+            this.btnDeleteParameter.Location = new System.Drawing.Point(369, 780);
             this.btnDeleteParameter.Name = "btnDeleteParameter";
             this.btnDeleteParameter.Size = new System.Drawing.Size(110, 23);
             this.btnDeleteParameter.TabIndex = 21;
@@ -344,7 +410,7 @@
             // 
             this.labelControl19.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
             this.labelControl19.Appearance.Options.UseFont = true;
-            this.labelControl19.Location = new System.Drawing.Point(107, 544);
+            this.labelControl19.Location = new System.Drawing.Point(107, 568);
             this.labelControl19.Name = "labelControl19";
             this.labelControl19.Size = new System.Drawing.Size(48, 15);
             this.labelControl19.TabIndex = 0;
@@ -378,7 +444,7 @@
             // 
             // btnModifyParameter
             // 
-            this.btnModifyParameter.Location = new System.Drawing.Point(242, 821);
+            this.btnModifyParameter.Location = new System.Drawing.Point(242, 780);
             this.btnModifyParameter.Name = "btnModifyParameter";
             this.btnModifyParameter.Size = new System.Drawing.Size(110, 23);
             this.btnModifyParameter.TabIndex = 20;
@@ -731,7 +797,7 @@
             // separatorControl2
             // 
             this.separatorControl2.BackColor = System.Drawing.Color.White;
-            this.separatorControl2.Location = new System.Drawing.Point(107, 565);
+            this.separatorControl2.Location = new System.Drawing.Point(107, 592);
             this.separatorControl2.Name = "separatorControl2";
             this.separatorControl2.Size = new System.Drawing.Size(561, 1);
             this.separatorControl2.TabIndex = 1;
@@ -776,7 +842,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.splitContainer1);
             this.Name = "MgmtLRPControl";
-            this.Size = new System.Drawing.Size(1035, 865);
+            this.Size = new System.Drawing.Size(1035, 1145);
             this.Load += new System.EventHandler(this.MgmtLRPControl_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
@@ -789,6 +855,8 @@
             this.panelControl1.ResumeLayout(false);
             this.xtraScrollableControl1.ResumeLayout(false);
             this.xtraScrollableControl1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.edtTag.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.btnAddExtra.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtAdams.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtZaero.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtGrt.Properties)).EndInit();
@@ -871,5 +939,10 @@
         private DevExpress.XtraEditors.SimpleButton btnLink;
         private DevExpress.XtraEditors.SimpleButton btnPropertyConfig;
         private DevExpress.XtraEditors.ComboBoxEdit cboPropertyCode;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private DevExpress.XtraEditors.ButtonEdit edtTag;
+        private System.Windows.Forms.FlowLayoutPanel panelTag;
+        private DevExpress.XtraEditors.LabelControl lblTag;
+        private DevExpress.XtraEditors.ButtonEdit btnAddExtra;
     }
 }

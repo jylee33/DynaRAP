@@ -365,6 +365,12 @@
     <Compile Include="UControl\MgmtPresetGroupControl.Designer.cs">
       <DependentUpon>MgmtPresetGroupControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="UControl\MgmtLRPExtraControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\MgmtLRPExtraControl.Designer.cs">
+      <DependentUpon>MgmtLRPExtraControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="UControl\MgmtPresetParameterControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -610,6 +616,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\MgmtPresetGroupControl.resx">
       <DependentUpon>MgmtPresetGroupControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\MgmtLRPExtraControl.resx">
+      <DependentUpon>MgmtLRPExtraControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\MyLineChart.resx">
       <DependentUpon>MyLineChart.cs</DependentUpon>

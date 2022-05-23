@@ -1,4 +1,5 @@
-﻿using DevExpress.Utils.Menu;
+﻿using DevExpress.Utils;
+using DevExpress.Utils.Menu;
 using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Controls;
 using DevExpress.XtraTreeList;
@@ -31,6 +32,7 @@ namespace DynaRAP.UControl
         List<ResponseParam> paramList = null;
         List<ResponsePropList> propList = new List<ResponsePropList>();
         string selPropertyType = string.Empty;
+        List<MgmtLRPExtraControl> extraControlList = new List<MgmtLRPExtraControl>();
 
         public MgmtLRPControl()
         {
@@ -390,7 +392,7 @@ namespace DynaRAP.UControl
 
         }
 
-        private bool AddModParameter(string opType, string paramKey, string paramPack = "")
+        private bool AddModParameter(string opType, string paramKey, string tags, string extras, string paramPack = "")
         {
             ResponseParam param = paramList.Find(x => x.paramKey.Equals(paramKey));
             if(param == null || opType.Equals("modify"))
@@ -422,13 +424,13 @@ namespace DynaRAP.UControl
             ""lrpX"":""{10}"",
             ""lrpY"":""{11}"",
             ""lrpZ"":""{12}"",
-            ""tags"":"""",
-            ""extras"":null
+            ""tags"":""{13}"",
+            ""extras"":{14}
             }}"
             , opType, paramPack, paramKey, edtAdams.Text
             , edtZaero.Text, edtGrt.Text, edtFltp.Text, edtFlts.Text
             , cboPart.Text, cboPartLocation.Text
-            , edtLrpX.Text, edtLrpY.Text, edtLrpZ.Text);
+            , edtLrpX.Text, edtLrpY.Text, edtLrpZ.Text, tags, extras);
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "POST";
@@ -599,6 +601,67 @@ namespace DynaRAP.UControl
             }
         }
 
+        private void addTag(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+                return;
+
+            ButtonEdit btn = new ButtonEdit();
+            btn.Properties.Buttons[0].Kind = ButtonPredefines.Close;
+            btn.BorderStyle = BorderStyles.Simple;
+            btn.ForeColor = Color.White;
+            btn.Properties.Appearance.BorderColor = Color.White;
+            btn.Font = new Font(btn.Font, FontStyle.Bold);
+            btn.Properties.Appearance.TextOptions.HAlignment = HorzAlignment.Center;
+            //btn.ReadOnly = true;
+            btn.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            btn.Properties.AllowFocused = false;
+            btn.ButtonClick += removeTag_ButtonClick;
+            btn.Text = name;
+            panelTag.Controls.Add(btn);
+        }
+
+        const int startExtraIndex = 0;
+        int extraIndex = startExtraIndex;
+        const int extraHeight = 22;
+        const int flowLayoutPanel1Height = 2;
+
+        private void AddExtra(string extraKey = "", string extraVal = "")
+        {
+            MgmtLRPExtraControl ctrl = new MgmtLRPExtraControl(extraKey, extraVal);
+            ctrl.Title = "Parameter " + extraIndex.ToString();
+            ctrl.DeleteBtnClicked += new EventHandler(ExtraControl_DeleteBtnClicked);
+            //ctrl.Dock = DockStyle.Fill;
+            flowLayoutPanel1.Controls.Add(ctrl);
+            flowLayoutPanel1.Controls.SetChildIndex(ctrl, extraIndex++);
+            extraControlList.Add(ctrl);
+
+            flowLayoutPanel1.Height += extraHeight;
+            lblTag.Location = new Point(lblTag.Location.X, lblTag.Location.Y + extraHeight);
+            edtTag.Location = new Point(edtTag.Location.X, edtTag.Location.Y + extraHeight);
+            panelTag.Location = new Point(panelTag.Location.X, panelTag.Location.Y + extraHeight);
+            btnModifyParameter.Location = new Point(btnModifyParameter.Location.X, btnModifyParameter.Location.Y + extraHeight);
+            btnDeleteParameter.Location = new Point(btnDeleteParameter.Location.X, btnDeleteParameter.Location.Y + extraHeight);
+            btnSaveAsNewParameter.Location = new Point(btnSaveAsNewParameter.Location.X, btnSaveAsNewParameter.Location.Y + extraHeight);
+        }
+
+        void ExtraControl_DeleteBtnClicked(object sender, EventArgs e)
+        {
+            MgmtLRPExtraControl ctrl = sender as MgmtLRPExtraControl;
+            flowLayoutPanel1.Controls.Remove(ctrl);
+            extraControlList.Remove(ctrl);
+            ctrl.Dispose();
+
+            flowLayoutPanel1.Height -= extraHeight;
+            extraIndex--;
+            lblTag.Location = new Point(lblTag.Location.X, lblTag.Location.Y - extraHeight);
+            edtTag.Location = new Point(edtTag.Location.X, edtTag.Location.Y - extraHeight);
+            panelTag.Location = new Point(panelTag.Location.X, panelTag.Location.Y - extraHeight);
+            btnModifyParameter.Location = new Point(btnModifyParameter.Location.X, btnModifyParameter.Location.Y - extraHeight);
+            btnDeleteParameter.Location = new Point(btnDeleteParameter.Location.X, btnDeleteParameter.Location.Y - extraHeight);
+            btnSaveAsNewParameter.Location = new Point(btnSaveAsNewParameter.Location.X, btnSaveAsNewParameter.Location.Y - extraHeight);
+        }
+
         #endregion Method
 
         #region EventHandler
@@ -615,6 +678,9 @@ namespace DynaRAP.UControl
 
             cboPropertyType.SelectedIndexChanged += CboPropertyType_SelectedIndexChanged;
             cboPropertyCode.SelectedIndexChanged += CboPropertyCode_SelectedIndexChanged;
+
+            btnAddExtra.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            btnAddExtra.Properties.AllowFocused = false;
 
             InitializeProperty();
 
@@ -950,7 +1016,33 @@ namespace DynaRAP.UControl
 
             if (param != null)
             {
-                bool bResult = AddModParameter("modify", paramKey, param.paramPack);
+                string tags = string.Empty;
+                foreach(ButtonEdit tag in panelTag.Controls)
+                {
+                    tags += tag.Text + "|";
+                }
+                if (tags.Length > 0)
+                {
+                    tags = tags.Substring(0, tags.LastIndexOf("|"));
+                }
+
+                //Encoding
+                byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(tags);
+                string encTags = Convert.ToBase64String(basebyte);
+
+                string extras = string.Empty;
+                Dictionary<string, string> dicExtra = new Dictionary<string, string>();
+                foreach (MgmtLRPExtraControl ctrl in flowLayoutPanel1.Controls)
+                {
+                    if (dicExtra.ContainsKey(ctrl.ExtraKey) == false)
+                    {
+                        dicExtra.Add(ctrl.ExtraKey, ctrl.ExtraVal);
+                    }
+                }
+
+                extras = JsonConvert.SerializeObject(dicExtra);
+
+                bool bResult = AddModParameter("modify", paramKey, encTags, extras, param.paramPack);
 
                 if (bResult)
                 {
@@ -979,6 +1071,7 @@ namespace DynaRAP.UControl
                 {
                     MessageBox.Show(Properties.Resources.SuccessRemove, Properties.Resources.StringSuccess, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     InitializeParamList();
+                    cboParamList_SelectedIndexChanged(cboParamList, null);
                 }
             }
 
@@ -993,7 +1086,33 @@ namespace DynaRAP.UControl
                 MessageBox.Show(Properties.Resources.InputParameterKey, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            bool bResult = AddModParameter("add", paramKey);
+            string tags = string.Empty;
+            foreach (ButtonEdit tag in panelTag.Controls)
+            {
+                tags += tag.Text + "|";
+            }
+            if (tags.Length > 0)
+            {
+                tags = tags.Substring(0, tags.LastIndexOf("|"));
+            }
+
+            //Encoding
+            byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(tags);
+            string encTags = Convert.ToBase64String(basebyte);
+
+            string extras = string.Empty;
+            Dictionary<string, string> dicExtra = new Dictionary<string, string>();
+            foreach (MgmtLRPExtraControl ctrl in flowLayoutPanel1.Controls)
+            {
+                if(dicExtra.ContainsKey(ctrl.ExtraKey) == false)
+                {
+                    dicExtra.Add(ctrl.ExtraKey, ctrl.ExtraVal);
+                }
+            }
+
+            extras = JsonConvert.SerializeObject(dicExtra);
+
+            bool bResult = AddModParameter("add", paramKey, encTags, extras);
 
             if (bResult)
             {
@@ -1045,6 +1164,7 @@ namespace DynaRAP.UControl
             string fltpKey = String.Empty;
             string fltsKey = String.Empty;
             string propType = String.Empty;
+            string propCode = String.Empty;
             string paramUnit = String.Empty;
             string partInfo = String.Empty;
             string partInfoSub = String.Empty;
@@ -1059,8 +1179,12 @@ namespace DynaRAP.UControl
                 grtKey = param.grtKey;
                 fltpKey = param.fltpKey;
                 fltsKey = param.fltsKey;
-                propType = param.propInfo.propType;
-                paramUnit = param.propInfo.paramUnit;
+                if (param.propInfo != null)
+                {
+                    propType = param.propInfo.propType;
+                    propCode = param.propInfo.propCode;
+                    paramUnit = param.propInfo.paramUnit;
+                }
                 partInfo = param.partInfo;
                 partInfoSub = param.partInfoSub;
                 lrpX = param.lrpX.ToString();
@@ -1073,12 +1197,62 @@ namespace DynaRAP.UControl
             edtFltp.Text = fltpKey;
             edtFlts.Text = fltsKey;
             cboPropertyType.Text = propType;
+            cboPropertyCode.Text = propCode;
             cboUnit.Text = paramUnit;
             cboPart.Text = partInfo;
             cboPartLocation.Text = partInfoSub;
             edtLrpX.Text = lrpX;
             edtLrpY.Text = lrpY;
             edtLrpZ.Text = lrpZ;
+
+            int height = extraHeight * flowLayoutPanel1.Controls.Count;
+            lblTag.Location = new Point(lblTag.Location.X, lblTag.Location.Y - height);
+            edtTag.Location = new Point(edtTag.Location.X, edtTag.Location.Y - height);
+            panelTag.Location = new Point(panelTag.Location.X, panelTag.Location.Y - height);
+            btnModifyParameter.Location = new Point(btnModifyParameter.Location.X, btnModifyParameter.Location.Y - height);
+            btnDeleteParameter.Location = new Point(btnDeleteParameter.Location.X, btnDeleteParameter.Location.Y - height);
+            btnSaveAsNewParameter.Location = new Point(btnSaveAsNewParameter.Location.X, btnSaveAsNewParameter.Location.Y - height);
+            flowLayoutPanel1.Height = flowLayoutPanel1Height;
+
+            extraIndex = startExtraIndex;
+
+            MgmtLRPExtraControl[] controls = new MgmtLRPExtraControl[flowLayoutPanel1.Controls.Count];
+            extraControlList.CopyTo(controls);
+            foreach (MgmtLRPExtraControl ctrl in controls)
+            {
+                flowLayoutPanel1.Controls.Remove(ctrl);
+                ctrl.Dispose();
+                extraControlList.Remove(ctrl);
+            }
+
+            if (param != null)
+            {
+                foreach (KeyValuePair<string, string> pair in param.extras)
+                {
+                    AddExtra(pair.Key, pair.Value);
+                }
+            }
+
+            ButtonEdit[] controlArray = new ButtonEdit[panelTag.Controls.Count];
+            panelTag.Controls.CopyTo(controlArray, 0);
+
+            foreach (ButtonEdit btn in controlArray)
+            {
+                panelTag.Controls.Remove(btn);
+            }
+
+            if (param != null)
+            {
+                //Decoding
+                byte[] byte64 = Convert.FromBase64String(param.tags);
+                string decName = Encoding.UTF8.GetString(byte64);
+
+                string[] tags = decName.Split('|');
+                foreach (string tag in tags)
+                {
+                    addTag(tag);
+                }
+            }
         }
 
         private void btnPropertyConfig_Click(object sender, EventArgs e)
@@ -1088,6 +1262,40 @@ namespace DynaRAP.UControl
             form.ShowDialog();
 
             InitializeProperty();
+        }
+
+        private void edtTag_ButtonClick(object sender, ButtonPressedEventArgs e)
+        {
+            ButtonEdit me = sender as ButtonEdit;
+            if (me != null)
+            {
+                addTag(me.Text);
+                me.Text = String.Empty;
+            }
+        }
+
+        private void edtTag_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode != Keys.Enter)
+                return;
+
+            ButtonEdit me = sender as ButtonEdit;
+            if (me != null)
+            {
+                addTag(me.Text);
+                me.Text = String.Empty;
+            }
+        }
+        private void removeTag_ButtonClick(object sender, ButtonPressedEventArgs e)
+        {
+            ButtonEdit btn = sender as ButtonEdit;
+            panelTag.Controls.Remove(btn);
+
+        }
+
+        private void btnAddExtra_ButtonClick(object sender, EventArgs e)
+        {
+            AddExtra();
         }
 
         #endregion EventHandler
