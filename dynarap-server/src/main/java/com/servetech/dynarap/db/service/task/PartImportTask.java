@@ -92,8 +92,9 @@ public class PartImportTask {
                                 "    constraint pk_dynarap_raw primary key (`seq`)\n" +
                                 ")");
                         stmt.executeUpdate("create index `idx_dynarap_" + tempTableName + "_julian` on `dynarap_" + tempTableName + "` (`julianTimeAt`)");
-                        stmt.executeUpdate("create index `idx_dynarap_" + tempTableName + "_row2` on `dynarap_" + tempTableName + "` (`rowNo`)");
+                        stmt.executeUpdate("create index `idx_dynarap_" + tempTableName + "_row` on `dynarap_" + tempTableName + "` (`rowNo`)");
                         stmt.executeUpdate("create index `idx_dynarap_" + tempTableName + "_julian_row` on `dynarap_" + tempTableName + "` (`julianTimeAt`,`rowNo`)");
+                        stmt.executeUpdate("create index `idx_dynarap_" + tempTableName + "_preset_row` on `dynarap_" + tempTableName + "` (`presetPack`,`presetSeq`,`presetParamSeq`,`rowNo`)");
                         conn.commit(); // drop 이후 커밋 처리.
 
                         if (presetParams == null) presetParams = new ArrayList<>();
@@ -104,12 +105,12 @@ public class PartImportTask {
                         Map<String, ParamVO> fltpMap = new LinkedHashMap<>();
                         Map<String, ParamVO> fltsMap = new LinkedHashMap<>();
                         for (ParamVO param : presetParams) {
-                            paramMap.put(param.getParamKey() + "_" + param.getParamUnit(), param);
-                            adamsMap.put(param.getAdamsKey() + "_" + param.getParamUnit(), param);
-                            zaeroMap.put(param.getZaeroKey() + "_" + param.getParamUnit(), param);
-                            grtMap.put(param.getGrtKey() + "_" + param.getParamUnit(), param);
-                            fltpMap.put(param.getFltpKey() + "_" + param.getParamUnit(), param);
-                            fltsMap.put(param.getFltsKey() + "_" + param.getParamUnit(), param);
+                            paramMap.put(param.getParamKey() + "_" + param.getPropInfo().getParamUnit(), param);
+                            adamsMap.put(param.getAdamsKey() + "_" + param.getPropInfo().getParamUnit(), param);
+                            zaeroMap.put(param.getZaeroKey() + "_" + param.getPropInfo().getParamUnit(), param);
+                            grtMap.put(param.getGrtKey() + "_" + param.getPropInfo().getParamUnit(), param);
+                            fltpMap.put(param.getFltpKey() + "_" + param.getPropInfo().getParamUnit(), param);
+                            fltsMap.put(param.getFltsKey() + "_" + param.getPropInfo().getParamUnit(), param);
                         }
 
                         // File loading
@@ -344,7 +345,7 @@ public class PartImportTask {
 
                                 for (ParamVO param : presetParams) {
                                     rawUpload.setStatus("create-part-" + i + "-" + param.getPresetParamSeq());
-                                    rawUpload.setStatusMessage((i + 1) + "번째 분할 구간 데이터를 생성하고 있습니다. [" + param.getParamName().originOf() + "]");
+                                    rawUpload.setStatusMessage((i + 1) + "번째 분할 구간 데이터를 생성하고 있습니다. [" + param.getParamKey() + "]");
 
                                     // raw 데이터에서 param에 해당 하는 내용을 가져와서 part에 넣어주기.
                                     pstmt.setLong(1, param.getPresetPack().originOf());

@@ -298,8 +298,8 @@ public class RawService {
 
             if (uploadReq.getSourcePath().contains("C:\\")) {
                 uploadReq.setSourcePath(uploadReq.getSourcePath().replaceAll("\\\\", "/"));
-                uploadReq.setSourcePath(uploadReq.getSourcePath().replaceAll("C:/", "/Users/aloepigeon/"));
-                //uploadReq.setSourcePath(uploadReq.getSourcePath().replaceAll("C:/", "/home/ubuntu/"));
+                //uploadReq.setSourcePath(uploadReq.getSourcePath().replaceAll("C:/", "/Users/aloepigeon/"));
+                uploadReq.setSourcePath(uploadReq.getSourcePath().replaceAll("C:/", "/home/ubuntu/"));
             }
 
             File fStatic = new File(uploadReq.getSourcePath());
@@ -463,12 +463,12 @@ public class RawService {
             Map<String, ParamVO> fltpMap = new LinkedHashMap<>();
             Map<String, ParamVO> fltsMap = new LinkedHashMap<>();
             for (ParamVO param : presetParams) {
-                paramMap.put(param.getParamKey() + "_" + param.getParamUnit(), param);
-                adamsMap.put(param.getAdamsKey() + "_" + param.getParamUnit(), param);
-                zaeroMap.put(param.getZaeroKey() + "_" + param.getParamUnit(), param);
-                grtMap.put(param.getGrtKey() + "_" + param.getParamUnit(), param);
-                fltpMap.put(param.getFltpKey() + "_" + param.getParamUnit(), param);
-                fltsMap.put(param.getFltsKey() + "_" + param.getParamUnit(), param);
+                paramMap.put(param.getParamKey() + "_" + param.getPropInfo().getParamUnit(), param);
+                adamsMap.put(param.getAdamsKey() + "_" + param.getPropInfo().getParamUnit(), param);
+                zaeroMap.put(param.getZaeroKey() + "_" + param.getPropInfo().getParamUnit(), param);
+                grtMap.put(param.getGrtKey() + "_" + param.getPropInfo().getParamUnit(), param);
+                fltpMap.put(param.getFltpKey() + "_" + param.getPropInfo().getParamUnit(), param);
+                fltsMap.put(param.getFltsKey() + "_" + param.getPropInfo().getParamUnit(), param);
             }
 
             // File loading

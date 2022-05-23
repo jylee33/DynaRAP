@@ -76,9 +76,8 @@ create table `dynarap_param`
 (
     `seq` bigint auto_increment not null            comment '일련번호',
     `paramPack` bigint default 0                    comment '이력일련번호',
-    `paramGroupSeq` bigint default 0                comment '파라미터 그룹',
+    `propSeq` varchar(32)                           comment '파라미터 특성 레퍼런스',
     `paramKey` varchar(64) not null                 comment '파라미터 고유키',
-    `paramSpec` varchar(32)                         comment '파라미터 특성',
     `adamsKey` varchar(64)                          comment 'ADAMS 고유키',
     `zaeroKey` varchar(64)                          comment 'ZAERO 고유키',
     `grtKey` varchar(64)                            comment 'GRP 고유키',
@@ -89,11 +88,7 @@ create table `dynarap_param`
     `lrpX` double default 0.0                       comment 'LRP X',
     `lrpY` double default 0.0                       comment 'LRP Y',
     `lrpZ` double default 0.0                       comment 'LRP Z',
-    `paramUnit` varchar(32)                         comment '파라미터 단위',
-    `domainMin` double default 0.0                  comment '파라미터 범위 최저값',
-    `domainMax` double default 0.0                  comment '파라미터 범위 최대값',
-    `specified` double default 0.0                  comment '파라미터 지정 값',
-    `paramVal` varchar(1024)                        comment '파라미터 지정 값 (숫자외)',
+    `tags` varchar(1024)                            comment '태그',
     `registerUid` bigint default 0                  comment '등록자',
     `appliedAt` bigint default 0                    comment '정보 적용일자',
     `appliedEndAt` bigint default 0                 comment '정보 만료일자',
@@ -102,16 +97,27 @@ create table `dynarap_param`
 
 
 -- 파라미터 그룹 정보 (마하, Q, AOS 등등)
-drop table if exists `dynarap_param_group` cascade $$
+drop table if exists dynarap_param_prop cascade $$
 
 create table `dynarap_param_group`
 (
     `seq` bigint auto_increment not null            comment '일련번호',
     `groupName` varchar(32) not null                comment '파라미터 그룹 이름',
-    `groupType` varchar(32)                         comment '파라미터 그룹 타입',
+    `groupType` varchar(32)                         comment '파라미터 그룹 타입 (Load, Acceleration, Flight)',
     `registerUid` bigint default 0                  comment '등록자',
     `createdAt` bigint default 0                    comment '생성일자',
     constraint pk_dynarap_param_group primary key (`seq`)
+) $$
+
+drop table if exists dynarap_param_extra cascade $$
+
+create table `dynarap_param_extra`
+(
+    `seq` bigint auto_increment not null            comment '일련번호',
+    `paramPack` bigint default 0                    comment '이력일련번호',
+    `key` varchar(64) not null                      comment '속성 명',
+    `value` varchar(1024)                           comment '속성 값',
+    constraint pk_dynarap_param_extra primary key (`seq`)
 ) $$
 
 
