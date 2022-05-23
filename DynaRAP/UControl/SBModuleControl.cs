@@ -946,14 +946,14 @@ namespace DynaRAP.UControl
                 ResponseParam resParam = ctrl.Param;
                 param.paramPack = resParam.paramPack;
                 param.paramSeq = resParam.seq;
-                param.paramName = resParam.paramName;
+                //param.paramName = resParam.paramName;// resParam 구조체 변경되면서 수정되어야 하는데 일단 주석처리함.
                 param.paramKey = resParam.paramKey;
                 param.adamsKey = resParam.adamsKey;
                 param.zaeroKey = resParam.zaeroKey;
                 param.grtKey = resParam.grtKey;
                 param.fltpKey = resParam.fltpKey;
                 param.fltsKey = resParam.fltsKey;
-                param.paramUnit = resParam.paramUnit;
+                param.paramUnit = resParam.propInfo.paramUnit;
 
                 req.parameters.Add(param);
             }

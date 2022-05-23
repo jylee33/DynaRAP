@@ -207,7 +207,7 @@ namespace DynaRAP
             //}
 
 #if DEBUG
-            tabbedView1.ActivateDocument(mgmtMatchingTableControl);
+            tabbedView1.ActivateDocument(mgmtLRPControl);
 #else
             tabbedView1.RemoveDocument(importModuleControl);
             tabbedView1.RemoveDocument(sbModuleControl);

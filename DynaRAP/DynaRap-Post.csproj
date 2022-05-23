@@ -133,6 +133,7 @@
     <Compile Include="Common\ParamProperty.cs" />
     <Compile Include="Common\SeriesPointData.cs" />
     <Compile Include="Data\PartInfoResponse.cs" />
+    <Compile Include="Data\PropListResponse.cs" />
     <Compile Include="Forms\CreateScenarioProgressForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -160,6 +161,12 @@
     <Compile Include="Data\SplittedInterval.cs" />
     <Compile Include="EventData\LoginResultEventArgs.cs" />
     <Compile Include="EventData\SelectedRangeEventArgs.cs" />
+    <Compile Include="Forms\PropertyConfigForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\PropertyConfigForm.Designer.cs">
+      <DependentUpon>PropertyConfigForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\SBViewForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -476,6 +483,9 @@
     </Compile>
     <EmbeddedResource Include="Forms\CreateScenarioProgressForm.resx">
       <DependentUpon>CreateScenarioProgressForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\PropertyConfigForm.resx">
+      <DependentUpon>PropertyConfigForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SBViewForm.resx">
       <DependentUpon>SBViewForm.cs</DependentUpon>

@@ -6,6 +6,7 @@ using DevExpress.XtraTreeList.Columns;
 using DevExpress.XtraTreeList.Nodes;
 using DynaRAP.Common;
 using DynaRAP.Data;
+using DynaRAP.Forms;
 using DynaRAP.UTIL;
 using Newtonsoft.Json;
 using System;
@@ -28,7 +29,7 @@ namespace DynaRAP.UControl
         int focusedNodeId = 0;
         TreeListNode focusedNode = null;
         List<ResponseParam> paramList = null;
-        Dictionary<string, List<ParamProperty>> dicProperty= new Dictionary<string, List<ParamProperty>>();
+        List<ResponsePropList> propList = new List<ResponsePropList>();
         string selPropertyType = string.Empty;
 
         public MgmtLRPControl()
@@ -403,42 +404,31 @@ namespace DynaRAP.UControl
                 return false;
             }
 
-            //Encoding
-            byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(edtParamName.Text);
-            string encName = Convert.ToBase64String(basebyte);
-
             string url = ConfigurationManager.AppSettings["UrlParam"];
             string sendData = string.Format(@"
             {{
             ""command"":""{0}"",
             ""seq"":"""",
             ""paramPack"":""{1}"",
-            ""paramGroupSeq"":"""",
-            ""paramName"":""{2}"",
-            ""paramKey"":""{3}"",
-            ""paramSpec"":""{4}"",
-            ""adamsKey"":""{5}"",
-            ""zaeroKey"":""{6}"",
-            ""grtKey"":""{7}"",
-            ""fltpKey"":""{8}"",
-            ""fltsKey"":""{9}"",
-            ""partInfo"":""{10}"",
-            ""partInfoSub"":""{11}"",
-            ""lrpX"":""{12}"",
-            ""lrpY"":""{13}"",
-            ""lrpZ"":""{14}"",
-            ""paramUnit"":""{15}"",
-            ""domainMin"":""{16}"",
-            ""domainMax"":""{17}"",
-            ""specified"":""{18}"",
-            ""paramVal"":null
+            ""propSeq"":"""",
+            ""paramKey"":""{2}"",
+            ""adamsKey"":""{3}"",
+            ""zaeroKey"":""{4}"",
+            ""grtKey"":""{5}"",
+            ""fltpKey"":""{6}"",
+            ""fltsKey"":""{7}"",
+            ""partInfo"":""{8}"",
+            ""partInfoSub"":""{9}"",
+            ""lrpX"":""{10}"",
+            ""lrpY"":""{11}"",
+            ""lrpZ"":""{12}"",
+            ""tags"":"""",
+            ""extras"":null
             }}"
-            , opType, paramPack, encName, paramKey, cboPropertyType.Text, edtAdams.Text
+            , opType, paramPack, paramKey, edtAdams.Text
             , edtZaero.Text, edtGrt.Text, edtFltp.Text, edtFlts.Text
             , cboPart.Text, cboPartLocation.Text
-            , edtLrpX.Text, edtLrpY.Text, edtLrpZ.Text
-            , cboUnit.Text, edtMinumum.Text, edtMaximum.Text
-            , edtSpecialValue.Text);
+            , edtLrpX.Text, edtLrpY.Text, edtLrpZ.Text);
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "POST";
@@ -533,50 +523,60 @@ namespace DynaRAP.UControl
 
         private void InitializeProperty()
         {
-            dicProperty.Clear();
-            dicProperty = GetPropertyInfo();
+            propList.Clear();
+            propList = GetPropertyInfo();
 
-            foreach (string propertyType in dicProperty.Keys)
+            foreach (ResponsePropList prop in propList)
             {
-                cboPropertyType.Properties.Items.Add(propertyType);
+                if (cboPropertyType.Properties.Items.Contains(prop.propType) == false && prop.deleted == false)
+                {
+                    cboPropertyType.Properties.Items.Add(prop.propType);
+                }
             }
         }
 
-        private Dictionary<string, List<ParamProperty>> GetPropertyInfo()
+        private List<ResponsePropList> GetPropertyInfo()
         {
-            List<ParamProperty> paramLoad = new List<ParamProperty>();
-            paramLoad.Add(new ParamProperty("V", "N"));
-            paramLoad.Add(new ParamProperty("M", "N-mm"));
-            paramLoad.Add(new ParamProperty("T", "N-mm"));
-            paramLoad.Add(new ParamProperty("HM", "N-mm"));
-            if(dicProperty.ContainsKey("LOAD") == false)
-                dicProperty.Add("LOAD", paramLoad);
+            BindingList<DirData> list = new BindingList<DirData>();
 
-            List<ParamProperty> paramAccel = new List<ParamProperty>();
-            paramAccel.Add(new ParamProperty("Vertical Accel", "G"));
-            paramAccel.Add(new ParamProperty("Lateral Accel", "G"));
-            paramAccel.Add(new ParamProperty("Normal Accel", "G"));
-            paramAccel.Add(new ParamProperty("Longitudinal Accel", "G"));
-            paramAccel.Add(new ParamProperty("X-Axis Accel", "G"));
-            paramAccel.Add(new ParamProperty("Y-Axis Accel", "G"));
-            paramAccel.Add(new ParamProperty("Z-Axis Accel", "Mach"));
-            if (dicProperty.ContainsKey("ACCELERATION") == false)
-                dicProperty.Add("ACCELERATION", paramAccel);
+            string url = ConfigurationManager.AppSettings["UrlParam"];
+            string sendData = @"
+            {
+            ""command"":""prop-list"",
+            ""propType"":""""
+            }";
 
-            List<ParamProperty> paramFlight = new List<ParamProperty>();
-            paramFlight.Add(new ParamProperty("Mach", "Mach"));
-            paramFlight.Add(new ParamProperty("Total Pressure", ""));
-            paramFlight.Add(new ParamProperty("Static Pressure", ""));
-            paramFlight.Add(new ParamProperty("Prs. Alt.", "ft"));
-            paramFlight.Add(new ParamProperty("AOA", "deg"));
-            paramFlight.Add(new ParamProperty("AOS", "deg"));
-            paramFlight.Add(new ParamProperty("Roll Rate", "deg/sec"));
-            paramFlight.Add(new ParamProperty("Pitch Rate", "deg/sec"));
-            paramFlight.Add(new ParamProperty("Yaw Rate", "deg/sec"));
-            if (dicProperty.ContainsKey("FLIGHT PARAMETER") == false)
-                dicProperty.Add("FLIGHT PARAMETER", paramFlight);
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Method = "POST";
+            request.ContentType = "application/json";
+            request.Timeout = 30 * 1000;
+            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
 
-            return dicProperty;
+            // POST할 데이타를 Request Stream에 쓴다
+            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+            request.ContentLength = bytes.Length; // 바이트수 지정
+
+            using (Stream reqStream = request.GetRequestStream())
+            {
+                reqStream.Write(bytes, 0, bytes.Length);
+            }
+
+            // Response 처리
+            string responseText = string.Empty;
+            using (WebResponse resp = request.GetResponse())
+            {
+                Stream respStream = resp.GetResponseStream();
+                using (StreamReader sr = new StreamReader(respStream))
+                {
+                    responseText = sr.ReadToEnd();
+                }
+            }
+
+            //Console.WriteLine(responseText);
+            PropListResponse result = JsonConvert.DeserializeObject<PropListResponse>(responseText);
+
+            return result.response;
+
         }
 
         private void InitializePropertyCode(string text)
@@ -587,14 +587,14 @@ namespace DynaRAP.UControl
             cboPropertyCode.Text = String.Empty;
             cboUnit.Text = String.Empty;
 
-            if (dicProperty.ContainsKey(text))
+            foreach (ResponsePropList prop in propList)
             {
-                foreach (ParamProperty param in dicProperty[text])
+                if (prop.propType.Equals(text))
                 {
-                    if(cboPropertyCode.Properties.Items.Contains(param.Code) == false)
-                        cboPropertyCode.Properties.Items.Add(param.Code);
-                    if(cboUnit.Properties.Items.Contains(param.Unit) == false)
-                        cboUnit.Properties.Items.Add(param.Unit);
+                    if (cboPropertyCode.Properties.Items.Contains(prop.propCode) == false)
+                        cboPropertyCode.Properties.Items.Add(prop.propCode);
+                    if (cboUnit.Properties.Items.Contains(prop.paramUnit) == false)
+                        cboUnit.Properties.Items.Add(prop.paramUnit);
                 }
             }
         }
@@ -608,7 +608,7 @@ namespace DynaRAP.UControl
             cboParamList.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
             cboPropertyType.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
             cboPropertyCode.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
-            //cboUnit.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+            cboUnit.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
             //cboPart.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
             //cboPartLocation.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
             //cboAirplane.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
@@ -653,12 +653,15 @@ namespace DynaRAP.UControl
 
             if (combo != null)
             {
-                if(dicProperty.ContainsKey(selPropertyType))
+                foreach(ResponsePropList prop in propList)
                 {
-                    ParamProperty param = dicProperty[selPropertyType].Find(x => x.Code == combo.Text);
-                    if(param != null)
+                    if(prop.propType.Equals(selPropertyType) == false)
                     {
-                        cboUnit.Text = param.Unit;
+                        continue;
+                    }
+                    if(prop.propCode.Equals(combo.Text))
+                    {
+                        cboUnit.Text = prop.paramUnit;
                     }
                 }
             }
@@ -1036,70 +1039,55 @@ namespace DynaRAP.UControl
                 
             ResponseParam param = paramList.Find(x => x.paramKey.Equals(cbo.Text));
 
-            string paramName = String.Empty;
             string adamsKey = String.Empty;
             string zaeroKey = String.Empty;
             string grtKey = String.Empty;
             string fltpKey = String.Empty;
             string fltsKey = String.Empty;
-            string paramSpec = String.Empty;
+            string propType = String.Empty;
             string paramUnit = String.Empty;
             string partInfo = String.Empty;
             string partInfoSub = String.Empty;
             string lrpX = String.Empty;
             string lrpY = String.Empty;
             string lrpZ = String.Empty;
-            string airplane = String.Empty;
-            string domainMax = String.Empty;
-            string domainMin = String.Empty;
-            string specified = String.Empty;
 
             if (param != null)
             {
-                //Decoding
-                byte[] byte64 = Convert.FromBase64String(param.paramName);
-                string decName = Encoding.UTF8.GetString(byte64);
-
-                paramName =decName;
                 adamsKey = param.adamsKey;
                 zaeroKey = param.zaeroKey;
                 grtKey = param.grtKey;
                 fltpKey = param.fltpKey;
                 fltsKey = param.fltsKey;
-                paramSpec = param.paramSpec;
-                paramUnit = param.paramUnit;
+                propType = param.propInfo.propType;
+                paramUnit = param.propInfo.paramUnit;
                 partInfo = param.partInfo;
                 partInfoSub = param.partInfoSub;
                 lrpX = param.lrpX.ToString();
                 lrpY = param.lrpY.ToString();
                 lrpZ = param.lrpZ.ToString();
-                airplane = "";
-                domainMax = param.domainMax.ToString();
-                domainMin = param.domainMin.ToString();
-                specified = param.specified.ToString();
             }
-            edtParamName.Text = paramName;
             edtAdams.Text = adamsKey;
             edtZaero.Text = zaeroKey;
             edtGrt.Text = grtKey;
             edtFltp.Text = fltpKey;
             edtFlts.Text = fltsKey;
-            cboPropertyType.Text = paramSpec;
+            cboPropertyType.Text = propType;
             cboUnit.Text = paramUnit;
             cboPart.Text = partInfo;
             cboPartLocation.Text = partInfoSub;
             edtLrpX.Text = lrpX;
             edtLrpY.Text = lrpY;
             edtLrpZ.Text = lrpZ;
-            cboAirplane.Text = airplane;
-            edtMaximum.Text = domainMax;
-            edtMinumum.Text = domainMin;
-            edtSpecialValue.Text = specified;
         }
 
         private void btnPropertyConfig_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("구현 중...");
+            PropertyConfigForm form = new PropertyConfigForm();
+            form.StartPosition = FormStartPosition.CenterScreen;
+            form.ShowDialog();
+
+            InitializeProperty();
         }
 
         #endregion EventHandler
