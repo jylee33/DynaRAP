@@ -36,11 +36,8 @@
             this.btnLink = new DevExpress.XtraEditors.SimpleButton();
             this.labelControl3 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl37 = new DevExpress.XtraEditors.LabelControl();
-            this.labelControl17 = new DevExpress.XtraEditors.LabelControl();
             this.lblMandatoryField = new DevExpress.XtraEditors.LabelControl();
             this.edtParamName = new DevExpress.XtraEditors.TextEdit();
-            this.cboUnit = new DevExpress.XtraEditors.ComboBoxEdit();
-            this.labelControl18 = new DevExpress.XtraEditors.LabelControl();
             this.separatorControl1 = new DevExpress.XtraEditors.SeparatorControl();
             this.separatorControl2 = new DevExpress.XtraEditors.SeparatorControl();
             this.panelControl1 = new DevExpress.XtraEditors.PanelControl();
@@ -61,7 +58,6 @@
             this.treeList1 = new DevExpress.XtraTreeList.TreeList();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             ((System.ComponentModel.ISupportInitialize)(this.edtParamName.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cboUnit.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.separatorControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.separatorControl2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.panelControl1)).BeginInit();
@@ -84,9 +80,9 @@
             this.labelControl1.Appearance.Options.UseFont = true;
             this.labelControl1.Location = new System.Drawing.Point(107, 3);
             this.labelControl1.Name = "labelControl1";
-            this.labelControl1.Size = new System.Drawing.Size(65, 17);
+            this.labelControl1.Size = new System.Drawing.Size(77, 17);
             this.labelControl1.TabIndex = 0;
-            this.labelControl1.Text = "프리셋 구성";
+            this.labelControl1.Text = "파라미터 그룹";
             // 
             // labelControl2
             // 
@@ -94,19 +90,19 @@
             this.labelControl2.Appearance.Options.UseFont = true;
             this.labelControl2.Location = new System.Drawing.Point(107, 57);
             this.labelControl2.Name = "labelControl2";
-            this.labelControl2.Size = new System.Drawing.Size(116, 15);
+            this.labelControl2.Size = new System.Drawing.Size(128, 15);
             this.labelControl2.TabIndex = 0;
-            this.labelControl2.Text = "프리셋 구성 파라미터";
+            this.labelControl2.Text = "파라미터 그룹 파라미터";
             // 
             // labelControl19
             // 
             this.labelControl19.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
             this.labelControl19.Appearance.Options.UseFont = true;
-            this.labelControl19.Location = new System.Drawing.Point(107, 199);
+            this.labelControl19.Location = new System.Drawing.Point(107, 141);
             this.labelControl19.Name = "labelControl19";
-            this.labelControl19.Size = new System.Drawing.Size(116, 15);
+            this.labelControl19.Size = new System.Drawing.Size(128, 15);
             this.labelControl19.TabIndex = 0;
-            this.labelControl19.Text = "프리셋 구성 파라미터";
+            this.labelControl19.Text = "파라미터 그룹 파라미터";
             // 
             // btnLink
             // 
@@ -139,16 +135,6 @@
             this.labelControl37.TabIndex = 0;
             this.labelControl37.Text = "구성을 구분할 특징적인 이름을 입력하세요.";
             // 
-            // labelControl17
-            // 
-            this.labelControl17.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
-            this.labelControl17.Appearance.Options.UseFont = true;
-            this.labelControl17.Location = new System.Drawing.Point(107, 134);
-            this.labelControl17.Name = "labelControl17";
-            this.labelControl17.Size = new System.Drawing.Size(80, 13);
-            this.labelControl17.TabIndex = 0;
-            this.labelControl17.Text = "프리셋 카테고리";
-            // 
             // lblMandatoryField
             // 
             this.lblMandatoryField.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold);
@@ -170,28 +156,6 @@
             this.edtParamName.Size = new System.Drawing.Size(222, 22);
             this.edtParamName.TabIndex = 1;
             // 
-            // cboUnit
-            // 
-            this.cboUnit.EditValue = "";
-            this.cboUnit.Location = new System.Drawing.Point(242, 129);
-            this.cboUnit.Name = "cboUnit";
-            this.cboUnit.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.cboUnit.Size = new System.Drawing.Size(100, 22);
-            this.cboUnit.TabIndex = 8;
-            // 
-            // labelControl18
-            // 
-            this.labelControl18.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F);
-            this.labelControl18.Appearance.ForeColor = System.Drawing.Color.Gray;
-            this.labelControl18.Appearance.Options.UseFont = true;
-            this.labelControl18.Appearance.Options.UseForeColor = true;
-            this.labelControl18.Location = new System.Drawing.Point(242, 156);
-            this.labelControl18.Name = "labelControl18";
-            this.labelControl18.Size = new System.Drawing.Size(109, 13);
-            this.labelControl18.TabIndex = 0;
-            this.labelControl18.Text = "센서 위치를 선택합니다.";
-            // 
             // separatorControl1
             // 
             this.separatorControl1.BackColor = System.Drawing.Color.White;
@@ -203,7 +167,7 @@
             // separatorControl2
             // 
             this.separatorControl2.BackColor = System.Drawing.Color.White;
-            this.separatorControl2.Location = new System.Drawing.Point(107, 224);
+            this.separatorControl2.Location = new System.Drawing.Point(107, 166);
             this.separatorControl2.Name = "separatorControl2";
             this.separatorControl2.Size = new System.Drawing.Size(561, 1);
             this.separatorControl2.TabIndex = 1;
@@ -231,11 +195,8 @@
             this.xtraScrollableControl1.Controls.Add(this.btnLink);
             this.xtraScrollableControl1.Controls.Add(this.labelControl3);
             this.xtraScrollableControl1.Controls.Add(this.labelControl37);
-            this.xtraScrollableControl1.Controls.Add(this.labelControl17);
             this.xtraScrollableControl1.Controls.Add(this.lblMandatoryField);
             this.xtraScrollableControl1.Controls.Add(this.edtParamName);
-            this.xtraScrollableControl1.Controls.Add(this.cboUnit);
-            this.xtraScrollableControl1.Controls.Add(this.labelControl18);
             this.xtraScrollableControl1.Controls.Add(this.separatorControl1);
             this.xtraScrollableControl1.Controls.Add(this.separatorControl2);
             this.xtraScrollableControl1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -246,7 +207,7 @@
             // 
             // btnSaveAsNewParameter
             // 
-            this.btnSaveAsNewParameter.Location = new System.Drawing.Point(388, 259);
+            this.btnSaveAsNewParameter.Location = new System.Drawing.Point(388, 201);
             this.btnSaveAsNewParameter.Name = "btnSaveAsNewParameter";
             this.btnSaveAsNewParameter.Size = new System.Drawing.Size(110, 23);
             this.btnSaveAsNewParameter.TabIndex = 26;
@@ -255,7 +216,7 @@
             // 
             // btnDeleteParameter
             // 
-            this.btnDeleteParameter.Location = new System.Drawing.Point(247, 259);
+            this.btnDeleteParameter.Location = new System.Drawing.Point(247, 201);
             this.btnDeleteParameter.Name = "btnDeleteParameter";
             this.btnDeleteParameter.Size = new System.Drawing.Size(110, 23);
             this.btnDeleteParameter.TabIndex = 25;
@@ -266,14 +227,14 @@
             // 
             this.flowLayoutPanel1.AutoScroll = true;
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(107, 231);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(107, 173);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(561, 22);
             this.flowLayoutPanel1.TabIndex = 25;
             // 
             // btnModifyParameter
             // 
-            this.btnModifyParameter.Location = new System.Drawing.Point(107, 259);
+            this.btnModifyParameter.Location = new System.Drawing.Point(107, 201);
             this.btnModifyParameter.Name = "btnModifyParameter";
             this.btnModifyParameter.Size = new System.Drawing.Size(110, 23);
             this.btnModifyParameter.TabIndex = 24;
@@ -293,7 +254,7 @@
             // btnAddParameter
             // 
             this.btnAddParameter.EditValue = "파라미터 추가";
-            this.btnAddParameter.Location = new System.Drawing.Point(554, 196);
+            this.btnAddParameter.Location = new System.Drawing.Point(554, 138);
             this.btnAddParameter.Name = "btnAddParameter";
             this.btnAddParameter.Properties.Appearance.Options.UseTextOptions = true;
             this.btnAddParameter.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
@@ -400,16 +361,15 @@
             this.splitContainer1.SplitterDistance = 320;
             this.splitContainer1.TabIndex = 1;
             // 
-            // MgmtMatchingTableControl
+            // MgmtMatchingTabletControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.splitContainer1);
-            this.Name = "MgmtMatchingTableControl";
+            this.Name = "MgmtMatchingTabletControl";
             this.Size = new System.Drawing.Size(1035, 865);
             this.Load += new System.EventHandler(this.MgmtMatchingTableControl_Load);
             ((System.ComponentModel.ISupportInitialize)(this.edtParamName.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cboUnit.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.separatorControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.separatorControl2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.panelControl1)).EndInit();
@@ -437,11 +397,8 @@
         private DevExpress.XtraEditors.SimpleButton btnLink;
         private DevExpress.XtraEditors.LabelControl labelControl3;
         private DevExpress.XtraEditors.LabelControl labelControl37;
-        private DevExpress.XtraEditors.LabelControl labelControl17;
         private DevExpress.XtraEditors.LabelControl lblMandatoryField;
         private DevExpress.XtraEditors.TextEdit edtParamName;
-        private DevExpress.XtraEditors.ComboBoxEdit cboUnit;
-        private DevExpress.XtraEditors.LabelControl labelControl18;
         private DevExpress.XtraEditors.SeparatorControl separatorControl1;
         private DevExpress.XtraEditors.SeparatorControl separatorControl2;
         private DevExpress.XtraEditors.PanelControl panelControl1;

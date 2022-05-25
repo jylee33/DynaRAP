@@ -22,7 +22,7 @@ namespace DynaRAP.UControl
 
         public string PartName
         {
-            get { return cboName.Text; }
+            get { return cboType.Text; }
         }
 
         public object Min
@@ -63,7 +63,9 @@ namespace DynaRAP.UControl
 
         private void ImportIntervalControl_Load(object sender, EventArgs e)
         {
-            cboName.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+            cboType.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+            edtStartTime.Enabled = false;
+            edtEndTime.Enabled = false;
             InitNameList();
         }
 
@@ -73,10 +75,10 @@ namespace DynaRAP.UControl
 
             string[] types = importType.Split(',');
 
-            cboName.Properties.Items.Clear();
+            cboType.Properties.Items.Clear();
             foreach (string type in types)
             {
-                cboName.Properties.Items.Add(type);
+                cboType.Properties.Items.Add(type);
             }
 
         }

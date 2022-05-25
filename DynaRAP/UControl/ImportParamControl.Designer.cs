@@ -28,9 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ImportParamControl));
             this.cboParameter = new DevExpress.XtraEditors.ComboBoxEdit();
             this.chartControl1 = new DevExpress.XtraCharts.ChartControl();
             this.rangeControl1 = new DevExpress.XtraEditors.RangeControl();
+            this.btnDelete = new DevExpress.XtraEditors.SimpleButton();
             ((System.ComponentModel.ISupportInitialize)(this.cboParameter.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.rangeControl1)).BeginInit();
@@ -64,10 +66,24 @@
             this.rangeControl1.TabIndex = 4;
             this.rangeControl1.Text = "rangeControl1";
             // 
+            // btnDelete
+            // 
+            this.btnDelete.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.btnDelete.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btnDelete.ImageOptions.Image")));
+            this.btnDelete.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleCenter;
+            this.btnDelete.Location = new System.Drawing.Point(698, 3);
+            this.btnDelete.Margin = new System.Windows.Forms.Padding(0);
+            this.btnDelete.Name = "btnDelete";
+            this.btnDelete.Size = new System.Drawing.Size(17, 18);
+            this.btnDelete.TabIndex = 5;
+            this.btnDelete.ToolTip = "삭제";
+            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+            // 
             // ImportParamControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.btnDelete);
             this.Controls.Add(this.rangeControl1);
             this.Controls.Add(this.chartControl1);
             this.Controls.Add(this.cboParameter);
@@ -86,5 +102,6 @@
         private DevExpress.XtraEditors.ComboBoxEdit cboParameter;
         private DevExpress.XtraCharts.ChartControl chartControl1;
         private DevExpress.XtraEditors.RangeControl rangeControl1;
+        private DevExpress.XtraEditors.SimpleButton btnDelete;
     }
 }

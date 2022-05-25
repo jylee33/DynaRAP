@@ -169,9 +169,6 @@ namespace DynaRAP.UControl
 
         private void InitializePreviewChart()
         {
-            myChartArea.CursorX.IsUserEnabled = true;
-            myChartArea.CursorX.IsUserSelectionEnabled = true;
-            myChartArea.AxisX.ScaleView.Zoomable = false;
             myChartArea.BackColor = Color.FromArgb(37, 37, 38);
             myChartArea.AxisX.LabelStyle.ForeColor = Color.White;
             myChartArea.AxisY.LabelStyle.ForeColor = Color.White;
@@ -180,9 +177,33 @@ namespace DynaRAP.UControl
             myChartArea.AxisY.MajorGrid.Enabled = false;
             myChartArea.AxisY.MinorGrid.Enabled = false;
 
-            myChartArea.InnerPlotPosition.Auto = false;
-            myChartArea.InnerPlotPosition.Width = 100;
-            myChartArea.InnerPlotPosition.Height = 100;
+            myChartArea.AxisX.ScrollBar.Enabled = true;
+            myChartArea.AxisX.ScaleView.Zoomable = true;
+           
+            myChartArea.CursorX.IsUserEnabled = true;
+            myChartArea.CursorX.AutoScroll = true;
+            myChartArea.CursorX.IsUserSelectionEnabled = true;
+
+            myChartArea.AxisY.ScrollBar.Enabled = true;
+            myChartArea.AxisY.ScaleView.Zoomable = true;
+            myChartArea.CursorY.AutoScroll = true;
+            myChartArea.CursorY.IsUserSelectionEnabled = true;
+
+            myChartArea.AxisX.Enabled = AxisEnabled.True;
+            myChartArea.AxisX.LabelStyle.Enabled = true;
+            //myChartArea.AxisX.Title = "X Axis";
+
+            myChartArea.AxisY.Enabled = AxisEnabled.True;
+            myChartArea.AxisY.LabelStyle.Enabled = true;
+
+            myChartArea.AxisX.IntervalType = DateTimeIntervalType.Milliseconds;
+            myChartArea.AxisX.LabelStyle.Format = "HH:mm:ss.fff";
+            myChartArea.AxisX.LabelStyle.Interval = 500;
+            //myChartArea.AxisX.LabelStyle.IntervalOffset = 1;
+
+            myChartArea.InnerPlotPosition.Auto = true;
+            //myChartArea.InnerPlotPosition.Width = 100;
+            //myChartArea.InnerPlotPosition.Height = 100;
 
             myChartArea.Position.X = 0;
             myChartArea.Position.Y = 0;
@@ -191,11 +212,45 @@ namespace DynaRAP.UControl
 
             chart1.ChartAreas.RemoveAt(0);
             chart1.ChartAreas.Add(myChartArea);
+            chart1.MouseWheel += Chart1_MouseWheel;
 
             /*
             chartPreview.ChartAreas[0].AxisX.LabelStyle.Enabled = false;
             chartPreview.ChartAreas[0].AxisY.LabelStyle.Enabled = false;
             */
+        }
+
+        private void Chart1_MouseWheel(object sender, MouseEventArgs e)
+        {
+            var chart = (Chart)sender;
+            var xAxis = chart.ChartAreas[0].AxisX;
+            var yAxis = chart.ChartAreas[0].AxisY;
+
+            try
+            {
+                if (e.Delta < 0) // Scrolled down.
+                {
+                    xAxis.ScaleView.ZoomReset();
+                    yAxis.ScaleView.ZoomReset();
+                }
+                else if (e.Delta > 0) // Scrolled up.
+                {
+                    var xMin = xAxis.ScaleView.ViewMinimum;
+                    var xMax = xAxis.ScaleView.ViewMaximum;
+                    var yMin = yAxis.ScaleView.ViewMinimum;
+                    var yMax = yAxis.ScaleView.ViewMaximum;
+
+                    var posXStart = xAxis.PixelPositionToValue(e.Location.X) - (xMax - xMin) / 4;
+                    var posXFinish = xAxis.PixelPositionToValue(e.Location.X) + (xMax - xMin) / 4;
+                    var posYStart = yAxis.PixelPositionToValue(e.Location.Y) - (yMax - yMin) / 4;
+                    var posYFinish = yAxis.PixelPositionToValue(e.Location.Y) + (yMax - yMin) / 4;
+
+                    xAxis.ScaleView.Zoom(posXStart, posXFinish);
+                    yAxis.ScaleView.Zoom(posYStart, posYFinish);
+                }
+            }
+            catch { }
+
         }
 
         private void InitializeFlyingList()
@@ -664,6 +719,16 @@ namespace DynaRAP.UControl
             //double startTime = 0;
             while (offset < hrange)
             {
+                if(offset + sbLen > hrange)
+                {
+                    StripLine sl3 = new StripLine();
+                    sl3.Interval = hrange;
+                    sl3.IntervalOffset = hrange - sbLen;    // 시작점
+                    sl3.StripWidth = sbLen * overlap;   // 너비
+                    sl3.BackColor = colors[1];
+                    ax.StripLines.Add(sl3);
+                    break;
+                }
                 StripLine sl2 = new StripLine();
                 sl2.Interval = hrange;
                 sl2.IntervalOffset = offset;    // 시작점
@@ -674,7 +739,7 @@ namespace DynaRAP.UControl
                 //AddSplittedInterval(new SplittedSB("", startTime, endTime, 0));
                 //Console.WriteLine(string.Format("starttime : {0}, endtime : {1}", string.Format("{0:yyyy-MM-dd hh:mm:ss.ffffff}", startTime), string.Format("{0:yyyy-MM-dd hh:mm:ss.ffffff}", endTime)));
                 
-                offset += sbLen;
+                offset += sbLen*(1 - overlap);
             }
         }
 

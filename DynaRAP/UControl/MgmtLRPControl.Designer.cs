@@ -42,9 +42,7 @@
             this.panelControl1 = new DevExpress.XtraEditors.PanelControl();
             this.xtraScrollableControl1 = new DevExpress.XtraEditors.XtraScrollableControl();
             this.lblTag = new DevExpress.XtraEditors.LabelControl();
-            this.edtTag = new DevExpress.XtraEditors.ButtonEdit();
             this.btnAddExtra = new DevExpress.XtraEditors.ButtonEdit();
-            this.panelTag = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.labelControl1 = new DevExpress.XtraEditors.LabelControl();
             this.btnSaveAsNewParameter = new DevExpress.XtraEditors.SimpleButton();
@@ -95,6 +93,8 @@
             this.edtLrpZ = new DevExpress.XtraEditors.TextEdit();
             this.edtLrpY = new DevExpress.XtraEditors.TextEdit();
             this.edtLrpX = new DevExpress.XtraEditors.TextEdit();
+            this.panelTag = new System.Windows.Forms.FlowLayoutPanel();
+            this.edtTag = new DevExpress.XtraEditors.ButtonEdit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -105,7 +105,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.panelControl1)).BeginInit();
             this.panelControl1.SuspendLayout();
             this.xtraScrollableControl1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.edtTag.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnAddExtra.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtAdams.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtZaero.Properties)).BeginInit();
@@ -123,6 +122,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.edtLrpZ.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtLrpY.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtLrpX.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.edtTag.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -302,17 +302,6 @@
             this.lblTag.TabIndex = 3;
             this.lblTag.Text = "태그";
             // 
-            // edtTag
-            // 
-            this.edtTag.Location = new System.Drawing.Point(107, 641);
-            this.edtTag.Name = "edtTag";
-            this.edtTag.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Plus)});
-            this.edtTag.Size = new System.Drawing.Size(301, 22);
-            this.edtTag.TabIndex = 27;
-            this.edtTag.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.edtTag_ButtonClick);
-            this.edtTag.KeyUp += new System.Windows.Forms.KeyEventHandler(this.edtTag_KeyUp);
-            // 
             // btnAddExtra
             // 
             this.btnAddExtra.EditValue = "부가정보 추가";
@@ -324,17 +313,8 @@
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Plus)});
             this.btnAddExtra.Properties.ReadOnly = true;
             this.btnAddExtra.Size = new System.Drawing.Size(114, 22);
-            this.btnAddExtra.TabIndex = 12;
+            this.btnAddExtra.TabIndex = 15;
             this.btnAddExtra.Click += new System.EventHandler(this.btnAddExtra_ButtonClick);
-            // 
-            // panelTag
-            // 
-            this.panelTag.AutoScroll = true;
-            this.panelTag.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelTag.Location = new System.Drawing.Point(107, 669);
-            this.panelTag.Name = "panelTag";
-            this.panelTag.Size = new System.Drawing.Size(554, 96);
-            this.panelTag.TabIndex = 28;
             // 
             // flowLayoutPanel1
             // 
@@ -361,7 +341,7 @@
             this.btnSaveAsNewParameter.Location = new System.Drawing.Point(490, 780);
             this.btnSaveAsNewParameter.Name = "btnSaveAsNewParameter";
             this.btnSaveAsNewParameter.Size = new System.Drawing.Size(110, 23);
-            this.btnSaveAsNewParameter.TabIndex = 22;
+            this.btnSaveAsNewParameter.TabIndex = 19;
             this.btnSaveAsNewParameter.Text = "새 파라미터로 저장";
             this.btnSaveAsNewParameter.Click += new System.EventHandler(this.btnSaveAsNewParameter_Click);
             // 
@@ -371,7 +351,7 @@
             this.labelControl14.Appearance.ForeColor = System.Drawing.Color.Gray;
             this.labelControl14.Appearance.Options.UseFont = true;
             this.labelControl14.Appearance.Options.UseForeColor = true;
-            this.labelControl14.Location = new System.Drawing.Point(242, 436);
+            this.labelControl14.Location = new System.Drawing.Point(242, 529);
             this.labelControl14.Name = "labelControl14";
             this.labelControl14.Size = new System.Drawing.Size(202, 13);
             this.labelControl14.TabIndex = 0;
@@ -402,7 +382,7 @@
             this.btnDeleteParameter.Location = new System.Drawing.Point(369, 780);
             this.btnDeleteParameter.Name = "btnDeleteParameter";
             this.btnDeleteParameter.Size = new System.Drawing.Size(110, 23);
-            this.btnDeleteParameter.TabIndex = 21;
+            this.btnDeleteParameter.TabIndex = 18;
             this.btnDeleteParameter.Text = "파라미터 삭제";
             this.btnDeleteParameter.Click += new System.EventHandler(this.btnDeleteParameter_Click);
             // 
@@ -419,10 +399,10 @@
             // edtAdams
             // 
             this.edtAdams.EditValue = "";
-            this.edtAdams.Location = new System.Drawing.Point(242, 221);
+            this.edtAdams.Location = new System.Drawing.Point(242, 314);
             this.edtAdams.Name = "edtAdams";
             this.edtAdams.Size = new System.Drawing.Size(222, 22);
-            this.edtAdams.TabIndex = 6;
+            this.edtAdams.TabIndex = 10;
             // 
             // btnLink
             // 
@@ -435,10 +415,10 @@
             // 
             // btnPropertyConfig
             // 
-            this.btnPropertyConfig.Location = new System.Drawing.Point(554, 455);
+            this.btnPropertyConfig.Location = new System.Drawing.Point(554, 223);
             this.btnPropertyConfig.Name = "btnPropertyConfig";
             this.btnPropertyConfig.Size = new System.Drawing.Size(110, 23);
-            this.btnPropertyConfig.TabIndex = 13;
+            this.btnPropertyConfig.TabIndex = 8;
             this.btnPropertyConfig.Text = "특성정보 관리";
             this.btnPropertyConfig.Click += new System.EventHandler(this.btnPropertyConfig_Click);
             // 
@@ -447,17 +427,17 @@
             this.btnModifyParameter.Location = new System.Drawing.Point(242, 780);
             this.btnModifyParameter.Name = "btnModifyParameter";
             this.btnModifyParameter.Size = new System.Drawing.Size(110, 23);
-            this.btnModifyParameter.TabIndex = 20;
+            this.btnModifyParameter.TabIndex = 17;
             this.btnModifyParameter.Text = "정보저장";
             this.btnModifyParameter.Click += new System.EventHandler(this.btnModifyParameter_Click);
             // 
             // edtZaero
             // 
             this.edtZaero.EditValue = "";
-            this.edtZaero.Location = new System.Drawing.Point(242, 267);
+            this.edtZaero.Location = new System.Drawing.Point(242, 360);
             this.edtZaero.Name = "edtZaero";
             this.edtZaero.Size = new System.Drawing.Size(222, 22);
-            this.edtZaero.TabIndex = 7;
+            this.edtZaero.TabIndex = 11;
             // 
             // labelControl20
             // 
@@ -499,7 +479,7 @@
             this.labelControl12.Appearance.ForeColor = System.Drawing.Color.Gray;
             this.labelControl12.Appearance.Options.UseFont = true;
             this.labelControl12.Appearance.Options.UseForeColor = true;
-            this.labelControl12.Location = new System.Drawing.Point(242, 388);
+            this.labelControl12.Location = new System.Drawing.Point(242, 481);
             this.labelControl12.Name = "labelControl12";
             this.labelControl12.Size = new System.Drawing.Size(186, 13);
             this.labelControl12.TabIndex = 0;
@@ -511,7 +491,7 @@
             this.labelControl16.Appearance.ForeColor = System.Drawing.Color.Gray;
             this.labelControl16.Appearance.Options.UseFont = true;
             this.labelControl16.Appearance.Options.UseForeColor = true;
-            this.labelControl16.Location = new System.Drawing.Point(242, 481);
+            this.labelControl16.Location = new System.Drawing.Point(242, 249);
             this.labelControl16.Name = "labelControl16";
             this.labelControl16.Size = new System.Drawing.Size(162, 13);
             this.labelControl16.TabIndex = 0;
@@ -521,7 +501,7 @@
             // 
             this.labelControl5.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
             this.labelControl5.Appearance.Options.UseFont = true;
-            this.labelControl5.Location = new System.Drawing.Point(107, 221);
+            this.labelControl5.Location = new System.Drawing.Point(107, 314);
             this.labelControl5.Name = "labelControl5";
             this.labelControl5.Size = new System.Drawing.Size(99, 13);
             this.labelControl5.TabIndex = 0;
@@ -533,7 +513,7 @@
             this.labelControl6.Appearance.ForeColor = System.Drawing.Color.Gray;
             this.labelControl6.Appearance.Options.UseFont = true;
             this.labelControl6.Appearance.Options.UseForeColor = true;
-            this.labelControl6.Location = new System.Drawing.Point(242, 247);
+            this.labelControl6.Location = new System.Drawing.Point(242, 340);
             this.labelControl6.Name = "labelControl6";
             this.labelControl6.Size = new System.Drawing.Size(193, 13);
             this.labelControl6.TabIndex = 0;
@@ -543,7 +523,7 @@
             // 
             this.labelControl17.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
             this.labelControl17.Appearance.Options.UseFont = true;
-            this.labelControl17.Location = new System.Drawing.Point(107, 503);
+            this.labelControl17.Location = new System.Drawing.Point(107, 271);
             this.labelControl17.Name = "labelControl17";
             this.labelControl17.Size = new System.Drawing.Size(44, 13);
             this.labelControl17.TabIndex = 0;
@@ -552,16 +532,16 @@
             // edtGrt
             // 
             this.edtGrt.EditValue = "";
-            this.edtGrt.Location = new System.Drawing.Point(242, 314);
+            this.edtGrt.Location = new System.Drawing.Point(242, 407);
             this.edtGrt.Name = "edtGrt";
             this.edtGrt.Size = new System.Drawing.Size(222, 22);
-            this.edtGrt.TabIndex = 8;
+            this.edtGrt.TabIndex = 12;
             // 
             // labelControl7
             // 
             this.labelControl7.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
             this.labelControl7.Appearance.Options.UseFont = true;
-            this.labelControl7.Location = new System.Drawing.Point(107, 267);
+            this.labelControl7.Location = new System.Drawing.Point(107, 360);
             this.labelControl7.Name = "labelControl7";
             this.labelControl7.Size = new System.Drawing.Size(98, 13);
             this.labelControl7.TabIndex = 0;
@@ -603,12 +583,12 @@
             // cboUnit
             // 
             this.cboUnit.EditValue = "";
-            this.cboUnit.Location = new System.Drawing.Point(242, 498);
+            this.cboUnit.Location = new System.Drawing.Point(242, 266);
             this.cboUnit.Name = "cboUnit";
             this.cboUnit.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.cboUnit.Size = new System.Drawing.Size(150, 22);
-            this.cboUnit.TabIndex = 14;
+            this.cboUnit.TabIndex = 9;
             // 
             // cboParamList
             // 
@@ -623,22 +603,22 @@
             // cboPropertyCode
             // 
             this.cboPropertyCode.EditValue = "";
-            this.cboPropertyCode.Location = new System.Drawing.Point(398, 455);
+            this.cboPropertyCode.Location = new System.Drawing.Point(398, 223);
             this.cboPropertyCode.Name = "cboPropertyCode";
             this.cboPropertyCode.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.cboPropertyCode.Size = new System.Drawing.Size(150, 22);
-            this.cboPropertyCode.TabIndex = 12;
+            this.cboPropertyCode.TabIndex = 7;
             // 
             // cboPropertyType
             // 
             this.cboPropertyType.EditValue = "";
-            this.cboPropertyType.Location = new System.Drawing.Point(242, 455);
+            this.cboPropertyType.Location = new System.Drawing.Point(242, 223);
             this.cboPropertyType.Name = "cboPropertyType";
             this.cboPropertyType.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.cboPropertyType.Size = new System.Drawing.Size(150, 22);
-            this.cboPropertyType.TabIndex = 11;
+            this.cboPropertyType.TabIndex = 6;
             // 
             // labelControl18
             // 
@@ -646,7 +626,7 @@
             this.labelControl18.Appearance.ForeColor = System.Drawing.Color.Gray;
             this.labelControl18.Appearance.Options.UseFont = true;
             this.labelControl18.Appearance.Options.UseForeColor = true;
-            this.labelControl18.Location = new System.Drawing.Point(242, 525);
+            this.labelControl18.Location = new System.Drawing.Point(242, 293);
             this.labelControl18.Name = "labelControl18";
             this.labelControl18.Size = new System.Drawing.Size(162, 13);
             this.labelControl18.TabIndex = 0;
@@ -656,7 +636,7 @@
             // 
             this.labelControl9.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
             this.labelControl9.Appearance.Options.UseFont = true;
-            this.labelControl9.Location = new System.Drawing.Point(107, 314);
+            this.labelControl9.Location = new System.Drawing.Point(107, 407);
             this.labelControl9.Name = "labelControl9";
             this.labelControl9.Size = new System.Drawing.Size(84, 13);
             this.labelControl9.TabIndex = 0;
@@ -680,7 +660,7 @@
             this.labelControl8.Appearance.ForeColor = System.Drawing.Color.Gray;
             this.labelControl8.Appearance.Options.UseFont = true;
             this.labelControl8.Appearance.Options.UseForeColor = true;
-            this.labelControl8.Location = new System.Drawing.Point(242, 293);
+            this.labelControl8.Location = new System.Drawing.Point(242, 386);
             this.labelControl8.Name = "labelControl8";
             this.labelControl8.Size = new System.Drawing.Size(190, 13);
             this.labelControl8.TabIndex = 0;
@@ -690,7 +670,7 @@
             // 
             this.labelControl15.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
             this.labelControl15.Appearance.Options.UseFont = true;
-            this.labelControl15.Location = new System.Drawing.Point(107, 455);
+            this.labelControl15.Location = new System.Drawing.Point(107, 223);
             this.labelControl15.Name = "labelControl15";
             this.labelControl15.Size = new System.Drawing.Size(44, 13);
             this.labelControl15.TabIndex = 0;
@@ -699,16 +679,16 @@
             // edtFltp
             // 
             this.edtFltp.EditValue = "";
-            this.edtFltp.Location = new System.Drawing.Point(242, 362);
+            this.edtFltp.Location = new System.Drawing.Point(242, 455);
             this.edtFltp.Name = "edtFltp";
             this.edtFltp.Size = new System.Drawing.Size(222, 22);
-            this.edtFltp.TabIndex = 9;
+            this.edtFltp.TabIndex = 13;
             // 
             // labelControl11
             // 
             this.labelControl11.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
             this.labelControl11.Appearance.Options.UseFont = true;
-            this.labelControl11.Location = new System.Drawing.Point(107, 362);
+            this.labelControl11.Location = new System.Drawing.Point(107, 455);
             this.labelControl11.Name = "labelControl11";
             this.labelControl11.Size = new System.Drawing.Size(87, 13);
             this.labelControl11.TabIndex = 0;
@@ -780,7 +760,7 @@
             this.labelControl10.Appearance.ForeColor = System.Drawing.Color.Gray;
             this.labelControl10.Appearance.Options.UseFont = true;
             this.labelControl10.Appearance.Options.UseForeColor = true;
-            this.labelControl10.Location = new System.Drawing.Point(242, 340);
+            this.labelControl10.Location = new System.Drawing.Point(242, 433);
             this.labelControl10.Name = "labelControl10";
             this.labelControl10.Size = new System.Drawing.Size(175, 13);
             this.labelControl10.TabIndex = 0;
@@ -789,10 +769,10 @@
             // edtFlts
             // 
             this.edtFlts.EditValue = "";
-            this.edtFlts.Location = new System.Drawing.Point(242, 410);
+            this.edtFlts.Location = new System.Drawing.Point(242, 503);
             this.edtFlts.Name = "edtFlts";
             this.edtFlts.Size = new System.Drawing.Size(222, 22);
-            this.edtFlts.TabIndex = 10;
+            this.edtFlts.TabIndex = 14;
             // 
             // separatorControl2
             // 
@@ -806,7 +786,7 @@
             // 
             this.labelControl13.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
             this.labelControl13.Appearance.Options.UseFont = true;
-            this.labelControl13.Location = new System.Drawing.Point(107, 410);
+            this.labelControl13.Location = new System.Drawing.Point(107, 503);
             this.labelControl13.Name = "labelControl13";
             this.labelControl13.Size = new System.Drawing.Size(87, 13);
             this.labelControl13.TabIndex = 0;
@@ -836,6 +816,26 @@
             this.edtLrpX.Size = new System.Drawing.Size(86, 22);
             this.edtLrpX.TabIndex = 3;
             // 
+            // panelTag
+            // 
+            this.panelTag.AutoScroll = true;
+            this.panelTag.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelTag.Location = new System.Drawing.Point(107, 669);
+            this.panelTag.Name = "panelTag";
+            this.panelTag.Size = new System.Drawing.Size(554, 96);
+            this.panelTag.TabIndex = 28;
+            // 
+            // edtTag
+            // 
+            this.edtTag.Location = new System.Drawing.Point(107, 641);
+            this.edtTag.Name = "edtTag";
+            this.edtTag.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Plus)});
+            this.edtTag.Size = new System.Drawing.Size(301, 22);
+            this.edtTag.TabIndex = 16;
+            this.edtTag.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.edtTag_ButtonClick);
+            this.edtTag.KeyUp += new System.Windows.Forms.KeyEventHandler(this.edtTag_KeyUp);
+            // 
             // MgmtLRPControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -855,7 +855,6 @@
             this.panelControl1.ResumeLayout(false);
             this.xtraScrollableControl1.ResumeLayout(false);
             this.xtraScrollableControl1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.edtTag.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnAddExtra.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtAdams.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtZaero.Properties)).EndInit();
@@ -873,6 +872,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.edtLrpZ.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtLrpY.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtLrpX.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.edtTag.Properties)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -940,9 +940,9 @@
         private DevExpress.XtraEditors.SimpleButton btnPropertyConfig;
         private DevExpress.XtraEditors.ComboBoxEdit cboPropertyCode;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
-        private DevExpress.XtraEditors.ButtonEdit edtTag;
-        private System.Windows.Forms.FlowLayoutPanel panelTag;
         private DevExpress.XtraEditors.LabelControl lblTag;
         private DevExpress.XtraEditors.ButtonEdit btnAddExtra;
+        private DevExpress.XtraEditors.ButtonEdit edtTag;
+        private System.Windows.Forms.FlowLayoutPanel panelTag;
     }
 }

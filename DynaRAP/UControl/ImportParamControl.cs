@@ -16,6 +16,7 @@ namespace DynaRAP.UControl
     public partial class ImportParamControl : DevExpress.XtraEditors.XtraUserControl
     {
         public event EventHandler<SelectedRangeEventArgs> OnSelectedRange;
+        public event EventHandler DeleteBtnClicked;
 
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
        
@@ -111,16 +112,16 @@ namespace DynaRAP.UControl
             diagram.AxisX.DateTimeScaleOptions.GridAlignment = DateTimeGridAlignment.Millisecond;
             diagram.AxisX.DateTimeScaleOptions.AutoGrid = false;
             diagram.AxisX.DateTimeScaleOptions.GridSpacing = 1;
-            diagram.AxisX.Label.TextPattern = "{A:HH:mm:ss.ffff}";
+            diagram.AxisX.Label.TextPattern = "{A:HH:mm:ss.fff}";
             //diag.AxisX.Label.TextPattern = "{A:MMM-dd HH}";
 
             this.rangeControl1.Client = this.chartControl1;
             rangeControl1.RangeChanged += RangeControl1_RangeChanged;
-            rangeControl1.ShowLabels = false;
+            rangeControl1.ShowLabels = true;
             diagram.RangeControlDateTimeGridOptions.GridMode = ChartRangeControlClientGridMode.Manual;
             diagram.RangeControlDateTimeGridOptions.GridOffset = 1;
             diagram.RangeControlDateTimeGridOptions.GridSpacing = 60;
-            diagram.RangeControlDateTimeGridOptions.LabelFormat = "";
+            diagram.RangeControlDateTimeGridOptions.LabelFormat = "HH:mm:ss.fff";
             diagram.RangeControlDateTimeGridOptions.SnapAlignment = DateTimeGridAlignment.Millisecond;
 
             rangeControl1.SelectedRange = new RangeControlRange(minValue, maxValue);
@@ -194,6 +195,12 @@ namespace DynaRAP.UControl
             SelectedRangeEventArgs args = new SelectedRangeEventArgs(minValue, maxValue);
             if (null != OnSelectedRange)
                 OnSelectedRange(this, args);
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            if (this.DeleteBtnClicked != null)
+                this.DeleteBtnClicked(this, new EventArgs());
         }
     }
 }

@@ -44,6 +44,11 @@ namespace DynaRAP.UControl
 
         private void ImportModuleControl_Load(object sender, EventArgs e)
         {
+            cboImportType.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+            cboImportType.Properties.Items.Add("GRT");
+            cboImportType.Properties.Items.Add("FLTP");
+            cboImportType.Properties.Items.Add("FLTS");
+
             //InitializeSplittedRegionList();
 
             luePresetList.Properties.DisplayMember = "PresetName";
@@ -185,11 +190,13 @@ namespace DynaRAP.UControl
 
         const int startParamIndex = 0;
         int paramIndex = startParamIndex;
+        const int paramHeight = 138;
 
         private void AddParameter()
         {
             ImportParamControl ctrl = new ImportParamControl();
             ctrl.Title = "Parameter " + paramIndex.ToString();
+            ctrl.DeleteBtnClicked += new EventHandler(ImportParamControl_DeleteBtnClicked);
             ctrl.DicData = dicData;
             ctrl.OnSelectedRange += ChartControl_OnSelectedRange;
             //ctrl.Dock = DockStyle.Fill;
@@ -197,8 +204,20 @@ namespace DynaRAP.UControl
             flowLayoutPanel2.Controls.SetChildIndex(ctrl, paramIndex++);
             paramList.Add(ctrl);
 
-            flowLayoutPanel2.Height += ctrl.Height + 6;
+            flowLayoutPanel2.Height += paramHeight;
         }
+
+        void ImportParamControl_DeleteBtnClicked(object sender, EventArgs e)
+        {
+            ImportParamControl ctrl = sender as ImportParamControl;
+            flowLayoutPanel2.Controls.Remove(ctrl);
+            paramList.Remove(ctrl);
+            ctrl.Dispose();
+
+            flowLayoutPanel2.Height -= paramHeight;
+            paramIndex--;
+        }
+
         private void ChartControl_OnSelectedRange(object sender, SelectedRangeEventArgs e)
         {
             ImportParamControl me = sender as ImportParamControl;
@@ -439,6 +458,56 @@ namespace DynaRAP.UControl
 
         private void luePresetList_EditValueChanged(object sender, EventArgs e)
         {
+
+        }
+
+        private void edtTag_ButtonClick(object sender, ButtonPressedEventArgs e)
+        {
+            ButtonEdit me = sender as ButtonEdit;
+            if (me != null)
+            {
+                addTag(me.Text);
+                me.Text = String.Empty;
+            }
+        }
+
+        private void edtTag_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode != Keys.Enter)
+                return;
+
+            ButtonEdit me = sender as ButtonEdit;
+            if (me != null)
+            {
+                addTag(me.Text);
+                me.Text = String.Empty;
+            }
+        }
+
+        private void addTag(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+                return;
+
+            ButtonEdit btn = new ButtonEdit();
+            btn.Properties.Buttons[0].Kind = ButtonPredefines.Close;
+            btn.BorderStyle = BorderStyles.Simple;
+            btn.ForeColor = Color.White;
+            btn.Properties.Appearance.BorderColor = Color.White;
+            btn.Font = new Font(btn.Font, FontStyle.Bold);
+            btn.Properties.Appearance.TextOptions.HAlignment = HorzAlignment.Center;
+            //btn.ReadOnly = true;
+            btn.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            btn.Properties.AllowFocused = false;
+            btn.ButtonClick += removeTag_ButtonClick;
+            btn.Text = name;
+            panelTag.Controls.Add(btn);
+        }
+
+        private void removeTag_ButtonClick(object sender, ButtonPressedEventArgs e)
+        {
+            ButtonEdit btn = sender as ButtonEdit;
+            panelTag.Controls.Remove(btn);
 
         }
     }
