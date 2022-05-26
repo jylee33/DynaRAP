@@ -246,6 +246,7 @@ namespace DynaRAP
             panelScenario.Hide();
             panelOther.Hide();
             panelProperties.Hide();
+
         }
 
         void LoadWorkspaces()
@@ -772,6 +773,22 @@ namespace DynaRAP
             chartControl.Legend.Visibility = DevExpress.Utils.DefaultBoolean.False;
 
             return chartControl;
+        }
+
+        private void barButtonItem1_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            //GridGroupingForm form = new GridGroupingForm();
+            //form.Show();
+
+            TestGrid2Form form2 = new TestGrid2Form();
+            form2.Show();
+
+            //TestGrid3Form form3 = new TestGrid3Form();
+            //form3.Show();
+
+            //TestGridForm form4 = new TestGridForm();
+            //form4.Show();
+
         }
     }
 

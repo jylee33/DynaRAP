@@ -134,6 +134,7 @@
     <Compile Include="Common\SeriesPointData.cs" />
     <Compile Include="Data\PartInfoResponse.cs" />
     <Compile Include="Data\PropListResponse.cs" />
+    <Compile Include="Data\PresetParamData.cs" />
     <Compile Include="Forms\CreateScenarioProgressForm.cs">
       <SubType>Form</SubType>
     </Compile>

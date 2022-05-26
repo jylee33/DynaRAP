@@ -59,7 +59,7 @@
             this.btnDelete.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.btnDelete.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btnDelete.ImageOptions.Image")));
             this.btnDelete.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleCenter;
-            this.btnDelete.Location = new System.Drawing.Point(699, 1);
+            this.btnDelete.Location = new System.Drawing.Point(682, 1);
             this.btnDelete.Margin = new System.Windows.Forms.Padding(0);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(17, 18);
@@ -93,7 +93,7 @@
             this.Controls.Add(this.edtStartTime);
             this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "ImportIntervalControl";
-            this.Size = new System.Drawing.Size(726, 22);
+            this.Size = new System.Drawing.Size(711, 22);
             this.Load += new System.EventHandler(this.ImportIntervalControl_Load);
             ((System.ComponentModel.ISupportInitialize)(this.edtStartTime.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtEndTime.Properties)).EndInit();

@@ -1,6 +1,8 @@
-﻿using DevExpress.Utils.Menu;
+﻿using DevExpress.Utils;
+using DevExpress.Utils.Menu;
 using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Controls;
+using DevExpress.XtraGrid.Columns;
 using DevExpress.XtraTreeList;
 using DevExpress.XtraTreeList.Columns;
 using DevExpress.XtraTreeList.Nodes;
@@ -30,6 +32,7 @@ namespace DynaRAP.UControl
         List<ResponseParam> paramList = null;
         List<ResponseParam> presetParamList = null;
         List<PresetData> pComboList = null;
+        List<PresetParamData> gridList = null;
 
         public MgmtMatchingTabletControl()
         {
@@ -582,16 +585,16 @@ namespace DynaRAP.UControl
 
         private void AddParameter(ResponseParam param)
         {
-            MgmtPresetParameterControl ctrl = new MgmtPresetParameterControl(this.presetParamList);
-            ctrl.Title = "Parameter " + paramIndex.ToString();
-            ctrl.SelectedParam = param;
-            flowLayoutPanel1.Controls.Add(ctrl);
-            flowLayoutPanel1.Controls.SetChildIndex(ctrl, paramIndex++);
+            //MgmtPresetParameterControl ctrl = new MgmtPresetParameterControl(this.presetParamList);
+            //ctrl.Title = "Parameter " + paramIndex.ToString();
+            //ctrl.SelectedParam = param;
+            //flowLayoutPanel1.Controls.Add(ctrl);
+            //flowLayoutPanel1.Controls.SetChildIndex(ctrl, paramIndex++);
 
-            flowLayoutPanel1.Height += paramHeight;
-            btnModifyParameter.Location = new Point(btnModifyParameter.Location.X, btnModifyParameter.Location.Y + paramHeight);
-            btnDeleteParameter.Location = new Point(btnDeleteParameter.Location.X, btnDeleteParameter.Location.Y + paramHeight);
-            btnSaveAsNewParameter.Location = new Point(btnSaveAsNewParameter.Location.X, btnSaveAsNewParameter.Location.Y + paramHeight);
+            //flowLayoutPanel1.Height += paramHeight;
+            //btnModifyParameter.Location = new Point(btnModifyParameter.Location.X, btnModifyParameter.Location.Y + paramHeight);
+            //btnDeleteParameter.Location = new Point(btnDeleteParameter.Location.X, btnDeleteParameter.Location.Y + paramHeight);
+            //btnSaveAsNewParameter.Location = new Point(btnSaveAsNewParameter.Location.X, btnSaveAsNewParameter.Location.Y + paramHeight);
 
         }
 
@@ -643,6 +646,55 @@ namespace DynaRAP.UControl
 
         }
 
+        private void InitializeGridControl()
+        {
+            //paramList
+            repositoryItemComboBox1.TextEditStyle = TextEditStyles.DisableTextEditor;
+
+            foreach (ResponseParam param in paramList)
+            {
+                repositoryItemComboBox1.Items.Add(param.paramKey);
+            }
+
+            //gridView1.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+
+            gridView1.OptionsView.ShowColumnHeaders = true;
+            gridView1.OptionsView.ShowGroupPanel = false;
+            gridView1.OptionsView.ShowIndicator = false;
+            gridView1.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.False;
+            gridView1.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.False;
+            gridView1.OptionsView.ColumnAutoWidth = true;
+
+            gridView1.OptionsBehavior.ReadOnly = false;
+            //gridView1.OptionsBehavior.Editable = false;
+
+            gridView1.OptionsSelection.MultiSelectMode = DevExpress.XtraGrid.Views.Grid.GridMultiSelectMode.RowSelect;
+            gridView1.OptionsSelection.EnableAppearanceFocusedCell = false;
+
+            GridColumn colType = gridView1.Columns["ParamKey"];
+            colType.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
+            colType.OptionsColumn.FixedWidth = true;
+            colType.Width = 240;
+            colType.Caption = "Parameter Name";
+
+            GridColumn colDel = gridView1.Columns["Del"];
+            colDel.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
+            colDel.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
+            colDel.OptionsColumn.FixedWidth = true;
+            colDel.Width = 40;
+            colDel.Caption = "삭제";
+            colDel.OptionsColumn.ReadOnly = true;
+
+            this.repositoryItemImageComboBox1.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(0, 0));
+            this.repositoryItemImageComboBox1.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(1, 1));
+
+            this.repositoryItemImageComboBox1.GlyphAlignment = HorzAlignment.Center;
+            this.repositoryItemImageComboBox1.Buttons[0].Visible = false;
+
+            this.repositoryItemImageComboBox1.Click += RepositoryItemImageComboBox1_Click;
+        }
+
+
         #endregion Method
 
         #region EventHandler
@@ -679,6 +731,8 @@ namespace DynaRAP.UControl
             InitializePresetList();
             InitializeDirDataList();
             paramList = GetParamList();
+
+            InitializeGridControl();
 
         }
 
@@ -1090,12 +1144,12 @@ namespace DynaRAP.UControl
         private void luePresetList_EditValueChanged(object sender, EventArgs e)
         {
             paramIndex = startParamIndex;
-            int reducedHeight = (paramHeight * flowLayoutPanel1.Controls.Count);
-            flowLayoutPanel1.Height -= reducedHeight;
-            flowLayoutPanel1.Controls.Clear();
-            btnModifyParameter.Location = new Point(btnModifyParameter.Location.X, btnModifyParameter.Location.Y - reducedHeight);
-            btnDeleteParameter.Location = new Point(btnDeleteParameter.Location.X, btnDeleteParameter.Location.Y - reducedHeight);
-            btnSaveAsNewParameter.Location = new Point(btnSaveAsNewParameter.Location.X, btnSaveAsNewParameter.Location.Y - reducedHeight);
+            //int reducedHeight = (paramHeight * flowLayoutPanel1.Controls.Count);
+            //flowLayoutPanel1.Height -= reducedHeight;
+            //flowLayoutPanel1.Controls.Clear();
+            //btnModifyParameter.Location = new Point(btnModifyParameter.Location.X, btnModifyParameter.Location.Y - reducedHeight);
+            //btnDeleteParameter.Location = new Point(btnDeleteParameter.Location.X, btnDeleteParameter.Location.Y - reducedHeight);
+            //btnSaveAsNewParameter.Location = new Point(btnSaveAsNewParameter.Location.X, btnSaveAsNewParameter.Location.Y - reducedHeight);
 
             string presetPack = String.Empty;
             if (luePresetList.GetColumnValue("PresetPack") != null)
@@ -1119,13 +1173,22 @@ namespace DynaRAP.UControl
 
             if (presetParamList != null)
             {
+                gridList = new List<PresetParamData>();
                 foreach (ResponseParam param in presetParamList)
                 {
-                    AddParameter(param);
+                    //AddParameter(param);
+                    gridList.Add(new PresetParamData(param.paramKey, param.adamsKey, param.zaeroKey, param.grtKey, param.fltpKey, param.fltsKey, param.partInfo, param.partInfoSub, 1));
                 }
+
+                this.gridControl1.DataSource = gridList;
             }
             edtParamName.Text = presetName;
         }
+
+        private void RepositoryItemImageComboBox1_Click(object sender, EventArgs e)
+        {
+        }
+
 
         #endregion EventHandler
     }

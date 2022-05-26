@@ -188,9 +188,10 @@ namespace DynaRAP.UControl
             AddParameter();
         }
 
-        const int startParamIndex = 0;
-        int paramIndex = startParamIndex;
-        const int paramHeight = 138;
+        const int START_PARAM_INDEX = 0;
+        const int PARAM_HEIGHT = 140;
+        const int MAX_CHART_CNT = 3;
+        int paramIndex = START_PARAM_INDEX;
 
         private void AddParameter()
         {
@@ -200,22 +201,29 @@ namespace DynaRAP.UControl
             ctrl.DicData = dicData;
             ctrl.OnSelectedRange += ChartControl_OnSelectedRange;
             //ctrl.Dock = DockStyle.Fill;
-            flowLayoutPanel2.Controls.Add(ctrl);
-            flowLayoutPanel2.Controls.SetChildIndex(ctrl, paramIndex++);
+            flowLayoutPanel3.Controls.Add(ctrl);
+            flowLayoutPanel3.Controls.SetChildIndex(ctrl, paramIndex);
             paramList.Add(ctrl);
 
-            flowLayoutPanel2.Height += paramHeight;
+            paramIndex++;
+            if (paramIndex <= MAX_CHART_CNT)
+            {
+                flowLayoutPanel3.Height += PARAM_HEIGHT;
+            }
         }
 
         void ImportParamControl_DeleteBtnClicked(object sender, EventArgs e)
         {
             ImportParamControl ctrl = sender as ImportParamControl;
-            flowLayoutPanel2.Controls.Remove(ctrl);
+            flowLayoutPanel3.Controls.Remove(ctrl);
             paramList.Remove(ctrl);
             ctrl.Dispose();
 
-            flowLayoutPanel2.Height -= paramHeight;
             paramIndex--;
+            if (paramIndex < MAX_CHART_CNT)
+            {
+                flowLayoutPanel3.Height -= PARAM_HEIGHT;
+            }
         }
 
         private void ChartControl_OnSelectedRange(object sender, SelectedRangeEventArgs e)
@@ -242,9 +250,10 @@ namespace DynaRAP.UControl
             lblSplitCount.Text = string.Format(Properties.Resources.StringSplitCount, splitList.Count);
         }
 
-        const int startSplitIndex = 0;
-        int intervalIndex = startSplitIndex;
-        const int splitHeight = 22;
+        const int START_SPLIT_INDEX = 0;
+        const int SPLIT_HEIGHT = 24;
+        const int MAX_SPLIT_CNT = 10;
+        int intervalIndex = START_SPLIT_INDEX;
 
         private void AddSplittedInterval()
         {
@@ -271,11 +280,15 @@ namespace DynaRAP.UControl
             ImportIntervalControl ctrl = new ImportIntervalControl(minValue, maxValue);
             //ctrl.Title = "flight#" + (paramIndex + intervalIndex).ToString();
             ctrl.DeleteBtnClicked += new EventHandler(Interval_DeleteBtnClicked);
-            flowLayoutPanel3.Controls.Add(ctrl);
-            flowLayoutPanel3.Controls.SetChildIndex(ctrl, intervalIndex++);
+            flowLayoutPanel4.Controls.Add(ctrl);
+            flowLayoutPanel4.Controls.SetChildIndex(ctrl, intervalIndex);
             splitList.Add(ctrl);
 
-            flowLayoutPanel3.Height += splitHeight;
+            intervalIndex++;
+            if (intervalIndex <= MAX_SPLIT_CNT)
+            {
+                flowLayoutPanel4.Height += SPLIT_HEIGHT;
+            }
 
         }
 
@@ -286,8 +299,11 @@ namespace DynaRAP.UControl
             splitList.Remove(ctrl);
             ctrl.Dispose();
 
-            flowLayoutPanel3.Height -= splitHeight;
             intervalIndex--;
+            if (intervalIndex <= MAX_SPLIT_CNT)
+            {
+                flowLayoutPanel4.Height -= SPLIT_HEIGHT;
+            }
 
             lblSplitCount.Text = string.Format(Properties.Resources.StringSplitCount, splitList.Count);
         }

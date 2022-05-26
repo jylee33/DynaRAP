@@ -44,14 +44,6 @@
             this.cboFlying = new DevExpress.XtraEditors.ComboBoxEdit();
             this.cboPart = new DevExpress.XtraEditors.ComboBoxEdit();
             this.labelControl22 = new DevExpress.XtraEditors.LabelControl();
-            this.labelControl8 = new DevExpress.XtraEditors.LabelControl();
-            this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
-            this.labelControl23 = new DevExpress.XtraEditors.LabelControl();
-            this.labelControl24 = new DevExpress.XtraEditors.LabelControl();
-            this.labelControl25 = new DevExpress.XtraEditors.LabelControl();
-            this.labelControl26 = new DevExpress.XtraEditors.LabelControl();
-            this.edtSBLength = new DevExpress.XtraEditors.ButtonEdit();
-            this.edtOverlap = new DevExpress.XtraEditors.ButtonEdit();
             this.labelControl12 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl10 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl27 = new DevExpress.XtraEditors.LabelControl();
@@ -65,6 +57,14 @@
             this.labelControl33 = new DevExpress.XtraEditors.LabelControl();
             this.separatorControl2 = new DevExpress.XtraEditors.SeparatorControl();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.labelControl8 = new DevExpress.XtraEditors.LabelControl();
+            this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
+            this.labelControl23 = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl24 = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl25 = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl26 = new DevExpress.XtraEditors.LabelControl();
+            this.edtSBLength = new DevExpress.XtraEditors.ButtonEdit();
+            this.edtOverlap = new DevExpress.XtraEditors.ButtonEdit();
             this.tableLayoutPanel8 = new System.Windows.Forms.TableLayoutPanel();
             this.cboParameter = new DevExpress.XtraEditors.ComboBoxEdit();
             this.labelControl16 = new DevExpress.XtraEditors.LabelControl();
@@ -92,15 +92,15 @@
             this.tableLayoutPanel7.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cboFlying.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cboPart.Properties)).BeginInit();
-            this.tableLayoutPanel4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.edtSBLength.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.edtOverlap.Properties)).BeginInit();
             this.tableLayoutPanel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnAddParameter.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.luePresetList.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.separatorControl3)).BeginInit();
             this.tableLayoutPanel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.separatorControl2)).BeginInit();
+            this.tableLayoutPanel4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.edtSBLength.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.edtOverlap.Properties)).BeginInit();
             this.tableLayoutPanel8.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cboParameter.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
@@ -291,103 +291,6 @@
             this.labelControl22.TabIndex = 1;
             this.labelControl22.Text = "Short Block 분할에 사용할 버펫팅 유효 데이터를 선택하세요.";
             // 
-            // labelControl8
-            // 
-            this.labelControl8.Appearance.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold);
-            this.labelControl8.Appearance.Options.UseFont = true;
-            this.labelControl8.Location = new System.Drawing.Point(3, 366);
-            this.labelControl8.Name = "labelControl8";
-            this.labelControl8.Size = new System.Drawing.Size(48, 17);
-            this.labelControl8.TabIndex = 6;
-            this.labelControl8.Text = "설정인자";
-            // 
-            // tableLayoutPanel4
-            // 
-            this.tableLayoutPanel4.ColumnCount = 3;
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 170F));
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 140F));
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel4.Controls.Add(this.labelControl23, 0, 0);
-            this.tableLayoutPanel4.Controls.Add(this.labelControl24, 1, 1);
-            this.tableLayoutPanel4.Controls.Add(this.labelControl25, 0, 3);
-            this.tableLayoutPanel4.Controls.Add(this.labelControl26, 1, 4);
-            this.tableLayoutPanel4.Controls.Add(this.edtSBLength, 1, 0);
-            this.tableLayoutPanel4.Controls.Add(this.edtOverlap, 1, 3);
-            this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 389);
-            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
-            this.tableLayoutPanel4.RowCount = 5;
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 39F));
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 15F));
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 39F));
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(623, 137);
-            this.tableLayoutPanel4.TabIndex = 35;
-            // 
-            // labelControl23
-            // 
-            this.labelControl23.Appearance.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold);
-            this.labelControl23.Appearance.Options.UseFont = true;
-            this.labelControl23.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelControl23.Location = new System.Drawing.Point(3, 3);
-            this.labelControl23.Name = "labelControl23";
-            this.labelControl23.Size = new System.Drawing.Size(164, 33);
-            this.labelControl23.TabIndex = 6;
-            this.labelControl23.Text = "Short Block 길이 (sec)";
-            // 
-            // labelControl24
-            // 
-            this.tableLayoutPanel4.SetColumnSpan(this.labelControl24, 2);
-            this.labelControl24.Location = new System.Drawing.Point(173, 42);
-            this.labelControl24.Name = "labelControl24";
-            this.labelControl24.Size = new System.Drawing.Size(338, 15);
-            this.labelControl24.TabIndex = 1;
-            this.labelControl24.Text = "최소 1초 이상, 소수점 2자리까지 입력할 수 있습니다. (단위 sec)";
-            // 
-            // labelControl25
-            // 
-            this.labelControl25.Appearance.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold);
-            this.labelControl25.Appearance.Options.UseFont = true;
-            this.labelControl25.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelControl25.Location = new System.Drawing.Point(3, 78);
-            this.labelControl25.Name = "labelControl25";
-            this.labelControl25.Size = new System.Drawing.Size(164, 33);
-            this.labelControl25.TabIndex = 6;
-            this.labelControl25.Text = "Overlap (%)";
-            // 
-            // labelControl26
-            // 
-            this.tableLayoutPanel4.SetColumnSpan(this.labelControl26, 2);
-            this.labelControl26.Location = new System.Drawing.Point(173, 117);
-            this.labelControl26.Name = "labelControl26";
-            this.labelControl26.Size = new System.Drawing.Size(281, 15);
-            this.labelControl26.TabIndex = 1;
-            this.labelControl26.Text = "0 이상 100 미만의 값을 입력할 수 있습니다. (단위 %)";
-            // 
-            // edtSBLength
-            // 
-            this.edtSBLength.Location = new System.Drawing.Point(173, 3);
-            this.edtSBLength.Name = "edtSBLength";
-            this.edtSBLength.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Close)});
-            this.edtSBLength.Size = new System.Drawing.Size(100, 22);
-            this.edtSBLength.TabIndex = 7;
-            this.edtSBLength.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.edtSBLength_ButtonClick);
-            this.edtSBLength.EditValueChanged += new System.EventHandler(this.edtSBLength_EditValueChanged);
-            this.edtSBLength.Leave += new System.EventHandler(this.edtSBLength_Leave);
-            // 
-            // edtOverlap
-            // 
-            this.edtOverlap.Location = new System.Drawing.Point(173, 78);
-            this.edtOverlap.Name = "edtOverlap";
-            this.edtOverlap.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Close)});
-            this.edtOverlap.Size = new System.Drawing.Size(100, 22);
-            this.edtOverlap.TabIndex = 7;
-            this.edtOverlap.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.edtOverlap_ButtonClick);
-            this.edtOverlap.EditValueChanged += new System.EventHandler(this.edtOverlap_EditValueChanged);
-            this.edtOverlap.Leave += new System.EventHandler(this.edtOverlap_Leave);
-            // 
             // labelControl12
             // 
             this.labelControl12.Location = new System.Drawing.Point(3, 176);
@@ -534,6 +437,104 @@
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(623, 22);
             this.flowLayoutPanel1.TabIndex = 25;
+            this.flowLayoutPanel1.WrapContents = false;
+            // 
+            // labelControl8
+            // 
+            this.labelControl8.Appearance.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold);
+            this.labelControl8.Appearance.Options.UseFont = true;
+            this.labelControl8.Location = new System.Drawing.Point(3, 366);
+            this.labelControl8.Name = "labelControl8";
+            this.labelControl8.Size = new System.Drawing.Size(48, 17);
+            this.labelControl8.TabIndex = 6;
+            this.labelControl8.Text = "설정인자";
+            // 
+            // tableLayoutPanel4
+            // 
+            this.tableLayoutPanel4.ColumnCount = 3;
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 170F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 140F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel4.Controls.Add(this.labelControl23, 0, 0);
+            this.tableLayoutPanel4.Controls.Add(this.labelControl24, 1, 1);
+            this.tableLayoutPanel4.Controls.Add(this.labelControl25, 0, 3);
+            this.tableLayoutPanel4.Controls.Add(this.labelControl26, 1, 4);
+            this.tableLayoutPanel4.Controls.Add(this.edtSBLength, 1, 0);
+            this.tableLayoutPanel4.Controls.Add(this.edtOverlap, 1, 3);
+            this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 389);
+            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
+            this.tableLayoutPanel4.RowCount = 5;
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 39F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 15F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 39F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(623, 137);
+            this.tableLayoutPanel4.TabIndex = 35;
+            // 
+            // labelControl23
+            // 
+            this.labelControl23.Appearance.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold);
+            this.labelControl23.Appearance.Options.UseFont = true;
+            this.labelControl23.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.labelControl23.Location = new System.Drawing.Point(3, 3);
+            this.labelControl23.Name = "labelControl23";
+            this.labelControl23.Size = new System.Drawing.Size(164, 33);
+            this.labelControl23.TabIndex = 6;
+            this.labelControl23.Text = "Short Block 길이 (sec)";
+            // 
+            // labelControl24
+            // 
+            this.tableLayoutPanel4.SetColumnSpan(this.labelControl24, 2);
+            this.labelControl24.Location = new System.Drawing.Point(173, 42);
+            this.labelControl24.Name = "labelControl24";
+            this.labelControl24.Size = new System.Drawing.Size(338, 15);
+            this.labelControl24.TabIndex = 1;
+            this.labelControl24.Text = "최소 1초 이상, 소수점 2자리까지 입력할 수 있습니다. (단위 sec)";
+            // 
+            // labelControl25
+            // 
+            this.labelControl25.Appearance.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold);
+            this.labelControl25.Appearance.Options.UseFont = true;
+            this.labelControl25.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.labelControl25.Location = new System.Drawing.Point(3, 78);
+            this.labelControl25.Name = "labelControl25";
+            this.labelControl25.Size = new System.Drawing.Size(164, 33);
+            this.labelControl25.TabIndex = 6;
+            this.labelControl25.Text = "Overlap (%)";
+            // 
+            // labelControl26
+            // 
+            this.tableLayoutPanel4.SetColumnSpan(this.labelControl26, 2);
+            this.labelControl26.Location = new System.Drawing.Point(173, 117);
+            this.labelControl26.Name = "labelControl26";
+            this.labelControl26.Size = new System.Drawing.Size(281, 15);
+            this.labelControl26.TabIndex = 1;
+            this.labelControl26.Text = "0 이상 100 미만의 값을 입력할 수 있습니다. (단위 %)";
+            // 
+            // edtSBLength
+            // 
+            this.edtSBLength.Location = new System.Drawing.Point(173, 3);
+            this.edtSBLength.Name = "edtSBLength";
+            this.edtSBLength.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Close)});
+            this.edtSBLength.Size = new System.Drawing.Size(100, 22);
+            this.edtSBLength.TabIndex = 7;
+            this.edtSBLength.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.edtSBLength_ButtonClick);
+            this.edtSBLength.EditValueChanged += new System.EventHandler(this.edtSBLength_EditValueChanged);
+            this.edtSBLength.Leave += new System.EventHandler(this.edtSBLength_Leave);
+            // 
+            // edtOverlap
+            // 
+            this.edtOverlap.Location = new System.Drawing.Point(173, 78);
+            this.edtOverlap.Name = "edtOverlap";
+            this.edtOverlap.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Close)});
+            this.edtOverlap.Size = new System.Drawing.Size(100, 22);
+            this.edtOverlap.TabIndex = 7;
+            this.edtOverlap.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.edtOverlap_ButtonClick);
+            this.edtOverlap.EditValueChanged += new System.EventHandler(this.edtOverlap_EditValueChanged);
+            this.edtOverlap.Leave += new System.EventHandler(this.edtOverlap_Leave);
             // 
             // tableLayoutPanel8
             // 
@@ -705,6 +706,7 @@
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
             this.flowLayoutPanel2.Size = new System.Drawing.Size(623, 22);
             this.flowLayoutPanel2.TabIndex = 25;
+            this.flowLayoutPanel2.WrapContents = false;
             // 
             // tableLayoutPanel3
             // 
@@ -775,10 +777,6 @@
             this.tableLayoutPanel7.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.cboFlying.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cboPart.Properties)).EndInit();
-            this.tableLayoutPanel4.ResumeLayout(false);
-            this.tableLayoutPanel4.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.edtSBLength.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.edtOverlap.Properties)).EndInit();
             this.tableLayoutPanel5.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.btnAddParameter.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.luePresetList.Properties)).EndInit();
@@ -786,6 +784,10 @@
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.separatorControl2)).EndInit();
+            this.tableLayoutPanel4.ResumeLayout(false);
+            this.tableLayoutPanel4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.edtSBLength.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.edtOverlap.Properties)).EndInit();
             this.tableLayoutPanel8.ResumeLayout(false);
             this.tableLayoutPanel8.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cboParameter.Properties)).EndInit();

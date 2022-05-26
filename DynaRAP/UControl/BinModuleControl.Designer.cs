@@ -143,6 +143,7 @@
             this.tableLayoutPanel1.SetRowSpan(this.panelData, 3);
             this.panelData.Size = new System.Drawing.Size(831, 1692);
             this.panelData.TabIndex = 4;
+            this.panelData.WrapContents = false;
             // 
             // labelControl3
             // 

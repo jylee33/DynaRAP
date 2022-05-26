@@ -58,10 +58,10 @@ namespace DynaRAP.TEST
             list.Add(new TestData("MACH", "SW903_NM", 0, 0, 0, 1));
             list.Add(new TestData("MACH", "SW903_NM", 0, 0, 0, 1));
             list.Add(new TestData("MACH", "SW903_NM", 0, 0, 0, 1));
-            list.Add(new TestData("MACH", "SW903_NM", 0, 0, 0, 1));
-            list.Add(new TestData("MACH", "SW903_NM", 0, 0, 0, 1));
-            list.Add(new TestData("MACH", "SW903_NM", 0, 0, 0, 1));
-            list.Add(new TestData("MACH", "SW903_NM", 0, 0, 0, 1));
+            list.Add(new TestData("MACH", "SW903_NM", 0, 0, 0, 0));
+            list.Add(new TestData("MACH", "SW903_NM", 0, 0, 0, 0));
+            list.Add(new TestData("MACH", "SW903_NM", 0, 0, 0, 0));
+            list.Add(new TestData("MACH", "SW903_NM", 0, 0, 0, 0));
             list.Add(new TestData("MACH", "SW903_NM", 0, 0, 0, 1));
 
             this.gridControl1.DataSource = list;
