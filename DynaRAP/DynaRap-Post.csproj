@@ -38,6 +38,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>7.1</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -47,6 +48,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>7.1</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>DynaRAP.ico</ApplicationIcon>
@@ -164,11 +166,11 @@
     <Compile Include="Forms\SBViewForm.Designer.cs">
       <DependentUpon>SBViewForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="TEST\TestChartForm2.cs">
+    <Compile Include="TEST\TestChartLine.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="TEST\TestChartForm2.Designer.cs">
-      <DependentUpon>TestChartForm2.cs</DependentUpon>
+    <Compile Include="TEST\TestChartLine.Designer.cs">
+      <DependentUpon>TestChartLine.cs</DependentUpon>
     </Compile>
     <Compile Include="TEST\TestChartPotato.cs">
       <SubType>Form</SubType>
@@ -214,12 +216,6 @@
     </Compile>
     <Compile Include="TEST\GridGroupingForm.Designer.cs">
       <DependentUpon>GridGroupingForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TEST\TestChartLine.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="TEST\TestChartLine.Designer.cs">
-      <DependentUpon>TestChartLine.cs</DependentUpon>
     </Compile>
     <Compile Include="TEST\TestFilter2Form.cs">
       <SubType>Form</SubType>
@@ -356,6 +352,12 @@
     <Compile Include="UControl\MgmtPresetParameterControl.Designer.cs">
       <DependentUpon>MgmtPresetParameterControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="UControl\MyChartControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\MyChartControl.Designer.cs">
+      <DependentUpon>MyChartControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="UControl\MyLineChart.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -440,12 +442,6 @@
     <Compile Include="UControl\ScenarioSummaryControl.Designer.cs">
       <DependentUpon>ScenarioSummaryControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="UControl\MyChartControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UControl\MyChartControl.Designer.cs">
-      <DependentUpon>MyChartControl.cs</DependentUpon>
-    </Compile>
     <Compile Include="UserControl1.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -472,8 +468,8 @@
     <EmbeddedResource Include="Forms\SBViewForm.resx">
       <DependentUpon>SBViewForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="TEST\TestChartForm2.resx">
-      <DependentUpon>TestChartForm2.cs</DependentUpon>
+    <EmbeddedResource Include="TEST\TestChartLine.resx">
+      <DependentUpon>TestChartLine.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TEST\TestChartPotato.resx">
       <DependentUpon>TestChartPotato.cs</DependentUpon>
@@ -520,9 +516,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="TEST\GridGroupingForm.resx">
       <DependentUpon>GridGroupingForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TEST\TestChartLine.resx">
-      <DependentUpon>TestChartLine.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TEST\TestFilter2Form.resx">
       <DependentUpon>TestFilter2Form.cs</DependentUpon>
@@ -589,6 +582,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\MgmtPresetGroupControl.resx">
       <DependentUpon>MgmtPresetGroupControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\MyChartControl.resx">
+      <DependentUpon>MyChartControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\MyLineChart.resx">
       <DependentUpon>MyLineChart.cs</DependentUpon>

@@ -29,12 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.mnuFileRead = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
-            this.mnuDrawChart1D = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuDrawChart2D = new System.Windows.Forms.ToolStripMenuItem();
-            this.pnPaging = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
             this.cbSeries = new System.Windows.Forms.ComboBox();
             this.btnReset = new System.Windows.Forms.Button();
@@ -45,65 +39,17 @@
             this.btnMoveLeft = new System.Windows.Forms.Button();
             this.btnMoveRight = new System.Windows.Forms.Button();
             this.btnMoveLast = new System.Windows.Forms.Button();
-            this.contextMenuStrip.SuspendLayout();
+            this.mnuDrawPotato = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuDrawChartMinMax = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuDrawChart2D = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuDrawChart1D = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
+            this.mnuFileRead = new System.Windows.Forms.ToolStripMenuItem();
+            this.pnPaging = new System.Windows.Forms.Panel();
+            this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.pnPaging.SuspendLayout();
+            this.contextMenuStrip.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // contextMenuStrip
-            // 
-            this.contextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuFileRead,
-            this.toolStripMenuItem1,
-            this.mnuDrawChart1D,
-            this.mnuDrawChart2D});
-            this.contextMenuStrip.Name = "contextMenuStrip";
-            this.contextMenuStrip.Size = new System.Drawing.Size(152, 76);
-            // 
-            // mnuFileRead
-            // 
-            this.mnuFileRead.Name = "mnuFileRead";
-            this.mnuFileRead.Size = new System.Drawing.Size(151, 22);
-            this.mnuFileRead.Text = "File Read";
-            // 
-            // toolStripMenuItem1
-            // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(148, 6);
-            // 
-            // mnuDrawChart1D
-            // 
-            this.mnuDrawChart1D.Enabled = false;
-            this.mnuDrawChart1D.Name = "mnuDrawChart1D";
-            this.mnuDrawChart1D.Size = new System.Drawing.Size(151, 22);
-            this.mnuDrawChart1D.Text = "DrawChart 1D";
-            // 
-            // mnuDrawChart2D
-            // 
-            this.mnuDrawChart2D.Enabled = false;
-            this.mnuDrawChart2D.Name = "mnuDrawChart2D";
-            this.mnuDrawChart2D.Size = new System.Drawing.Size(151, 22);
-            this.mnuDrawChart2D.Text = "DrawChart 2D";
-            // 
-            // pnPaging
-            // 
-            this.pnPaging.BackColor = System.Drawing.Color.White;
-            this.pnPaging.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnPaging.Controls.Add(this.label2);
-            this.pnPaging.Controls.Add(this.cbSeries);
-            this.pnPaging.Controls.Add(this.btnReset);
-            this.pnPaging.Controls.Add(this.label1);
-            this.pnPaging.Controls.Add(this.txtPageSize);
-            this.pnPaging.Controls.Add(this.lblPages);
-            this.pnPaging.Controls.Add(this.btnMoveFirst);
-            this.pnPaging.Controls.Add(this.btnMoveLeft);
-            this.pnPaging.Controls.Add(this.btnMoveRight);
-            this.pnPaging.Controls.Add(this.btnMoveLast);
-            this.pnPaging.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnPaging.Location = new System.Drawing.Point(0, 0);
-            this.pnPaging.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.pnPaging.Name = "pnPaging";
-            this.pnPaging.Size = new System.Drawing.Size(603, 56);
-            this.pnPaging.TabIndex = 6;
             // 
             // label2
             // 
@@ -127,6 +73,7 @@
             this.cbSeries.Name = "cbSeries";
             this.cbSeries.Size = new System.Drawing.Size(185, 28);
             this.cbSeries.TabIndex = 3;
+            this.cbSeries.SelectedIndexChanged += new System.EventHandler(this.cbSeries_SelectedIndexChanged);
             // 
             // btnReset
             // 
@@ -137,6 +84,7 @@
             this.btnReset.TabIndex = 7;
             this.btnReset.Text = "Reset";
             this.btnReset.UseVisualStyleBackColor = true;
+            this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
             // 
             // label1
             // 
@@ -180,6 +128,7 @@
             this.btnMoveFirst.TabIndex = 3;
             this.btnMoveFirst.Text = "<<";
             this.btnMoveFirst.UseVisualStyleBackColor = true;
+            this.btnMoveFirst.Click += new System.EventHandler(this.btnMoveFirst_Click);
             // 
             // btnMoveLeft
             // 
@@ -191,6 +140,7 @@
             this.btnMoveLeft.TabIndex = 2;
             this.btnMoveLeft.Text = "<";
             this.btnMoveLeft.UseVisualStyleBackColor = true;
+            this.btnMoveLeft.Click += new System.EventHandler(this.btnMoveLeft_Click);
             // 
             // btnMoveRight
             // 
@@ -202,6 +152,7 @@
             this.btnMoveRight.TabIndex = 1;
             this.btnMoveRight.Text = ">";
             this.btnMoveRight.UseVisualStyleBackColor = true;
+            this.btnMoveRight.Click += new System.EventHandler(this.btnMoveRight_Click);
             // 
             // btnMoveLast
             // 
@@ -213,6 +164,84 @@
             this.btnMoveLast.TabIndex = 0;
             this.btnMoveLast.Text = ">>";
             this.btnMoveLast.UseVisualStyleBackColor = true;
+            this.btnMoveLast.Click += new System.EventHandler(this.btnMoveLast_Click);
+            // 
+            // mnuDrawPotato
+            // 
+            this.mnuDrawPotato.Enabled = false;
+            this.mnuDrawPotato.Name = "mnuDrawPotato";
+            this.mnuDrawPotato.Size = new System.Drawing.Size(189, 22);
+            this.mnuDrawPotato.Text = "DrawPotato";
+            this.mnuDrawPotato.Click += new System.EventHandler(this.mnuDrawPotato_Click);
+            // 
+            // mnuDrawChartMinMax
+            // 
+            this.mnuDrawChartMinMax.Enabled = false;
+            this.mnuDrawChartMinMax.Name = "mnuDrawChartMinMax";
+            this.mnuDrawChartMinMax.Size = new System.Drawing.Size(189, 22);
+            this.mnuDrawChartMinMax.Text = "DrawChart MIN/MAX";
+            this.mnuDrawChartMinMax.Click += new System.EventHandler(this.mnuDrawChartMinMax_Click);
+            // 
+            // mnuDrawChart2D
+            // 
+            this.mnuDrawChart2D.Enabled = false;
+            this.mnuDrawChart2D.Name = "mnuDrawChart2D";
+            this.mnuDrawChart2D.Size = new System.Drawing.Size(189, 22);
+            this.mnuDrawChart2D.Text = "DrawChart 2D";
+            this.mnuDrawChart2D.Click += new System.EventHandler(this.mnuDrawChart2D_Click);
+            // 
+            // mnuDrawChart1D
+            // 
+            this.mnuDrawChart1D.Enabled = false;
+            this.mnuDrawChart1D.Name = "mnuDrawChart1D";
+            this.mnuDrawChart1D.Size = new System.Drawing.Size(189, 22);
+            this.mnuDrawChart1D.Text = "DrawChart 1D";
+            this.mnuDrawChart1D.Click += new System.EventHandler(this.mnuDrawChart1D_Click);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(186, 6);
+            // 
+            // mnuFileRead
+            // 
+            this.mnuFileRead.Name = "mnuFileRead";
+            this.mnuFileRead.Size = new System.Drawing.Size(189, 22);
+            this.mnuFileRead.Text = "File Read";
+            this.mnuFileRead.Click += new System.EventHandler(this.mnuFileRead_Click);
+            // 
+            // pnPaging
+            // 
+            this.pnPaging.BackColor = System.Drawing.Color.White;
+            this.pnPaging.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnPaging.Controls.Add(this.label2);
+            this.pnPaging.Controls.Add(this.cbSeries);
+            this.pnPaging.Controls.Add(this.btnReset);
+            this.pnPaging.Controls.Add(this.label1);
+            this.pnPaging.Controls.Add(this.txtPageSize);
+            this.pnPaging.Controls.Add(this.lblPages);
+            this.pnPaging.Controls.Add(this.btnMoveFirst);
+            this.pnPaging.Controls.Add(this.btnMoveLeft);
+            this.pnPaging.Controls.Add(this.btnMoveRight);
+            this.pnPaging.Controls.Add(this.btnMoveLast);
+            this.pnPaging.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnPaging.Location = new System.Drawing.Point(0, 0);
+            this.pnPaging.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.pnPaging.Name = "pnPaging";
+            this.pnPaging.Size = new System.Drawing.Size(603, 56);
+            this.pnPaging.TabIndex = 6;
+            // 
+            // contextMenuStrip
+            // 
+            this.contextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuFileRead,
+            this.toolStripMenuItem1,
+            this.mnuDrawChart1D,
+            this.mnuDrawChart2D,
+            this.mnuDrawChartMinMax,
+            this.mnuDrawPotato});
+            this.contextMenuStrip.Name = "contextMenuStrip";
+            this.contextMenuStrip.Size = new System.Drawing.Size(190, 120);
             // 
             // DXChartControl
             // 
@@ -221,21 +250,15 @@
             this.Controls.Add(this.pnPaging);
             this.Name = "DXChartControl";
             this.Size = new System.Drawing.Size(603, 150);
-            this.contextMenuStrip.ResumeLayout(false);
             this.pnPaging.ResumeLayout(false);
             this.pnPaging.PerformLayout();
+            this.contextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.ContextMenuStrip contextMenuStrip;
-        private System.Windows.Forms.ToolStripMenuItem mnuFileRead;
-        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem mnuDrawChart1D;
-        private System.Windows.Forms.ToolStripMenuItem mnuDrawChart2D;
-        private System.Windows.Forms.Panel pnPaging;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox cbSeries;
         private System.Windows.Forms.Button btnReset;
@@ -246,5 +269,13 @@
         private System.Windows.Forms.Button btnMoveLeft;
         private System.Windows.Forms.Button btnMoveRight;
         private System.Windows.Forms.Button btnMoveLast;
+        private System.Windows.Forms.ToolStripMenuItem mnuDrawPotato;
+        private System.Windows.Forms.ToolStripMenuItem mnuDrawChartMinMax;
+        private System.Windows.Forms.ToolStripMenuItem mnuDrawChart2D;
+        private System.Windows.Forms.ToolStripMenuItem mnuDrawChart1D;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem mnuFileRead;
+        private System.Windows.Forms.Panel pnPaging;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip;
     }
 }

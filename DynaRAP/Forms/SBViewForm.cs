@@ -21,7 +21,7 @@ namespace DynaRAP.Forms
         {
             // Form Test
             //dt = SetData();
-            this.dxChartControl1.DrawChart(dt);
+            //this.dxChartControl1.DrawChart(dt);
         }
 
 
