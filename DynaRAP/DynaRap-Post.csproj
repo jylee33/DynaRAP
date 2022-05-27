@@ -613,6 +613,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\MyChartControl.resx">
       <DependentUpon>MyChartControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UControl\MgmtLRPExtraControl.resx">
       <DependentUpon>MgmtLRPExtraControl.cs</DependentUpon>
     </EmbeddedResource>
