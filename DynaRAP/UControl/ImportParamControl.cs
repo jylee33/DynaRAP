@@ -1,4 +1,5 @@
-﻿using DevExpress.XtraCharts;
+﻿using DevExpress.XtraBars.Docking;
+using DevExpress.XtraCharts;
 using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Controls;
 using DynaRAP.EventData;
@@ -10,12 +11,14 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace DynaRAP.UControl
 {
     public partial class ImportParamControl : DevExpress.XtraEditors.XtraUserControl
     {
         public event EventHandler<SelectedRangeEventArgs> OnSelectedRange;
+        public event EventHandler DeleteBtnClicked;
 
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
        
@@ -29,6 +32,9 @@ namespace DynaRAP.UControl
 
         object minValue = null;
         object maxValue = null;
+
+        DockPanel panelChart = null;
+        ChartControl chartControl = null;
 
         public string Title
         {
@@ -80,6 +86,7 @@ namespace DynaRAP.UControl
         {
             if (cboParameter.EditValue != null)
             {
+                rangeControl1.RangeChanged -= RangeControl1_RangeChanged;
                 selKey = cboParameter.EditValue.ToString();
                 AddChartData(selKey);
             }
@@ -87,10 +94,20 @@ namespace DynaRAP.UControl
 
         private void AddChartData(string strKey)
         {
-            chartControl1.Series.Clear();
+            MainForm mainForm = this.ParentForm as MainForm;
+
+            if (chartControl != null)
+            {
+                chartControl.Dispose();
+                chartControl = null;
+            }
+
+            chartControl = new ChartControl();
+
+            chartControl.Series.Clear();
 
             Series series = new Series("Series1", ViewType.Line);
-            chartControl1.Series.Add(series);
+            chartControl.Series.Add(series);
 
             series.DataSource = GetChartValues(strKey);
 
@@ -99,10 +116,10 @@ namespace DynaRAP.UControl
             series.ValueScaleType = ScaleType.Numerical;
             series.ValueDataMembers.AddRange(new string[] { "Value" });
 
-            //((XYDiagram)chartControl1.Diagram).AxisY.Visibility = DevExpress.Utils.DefaultBoolean.False;
-            chartControl1.Legend.Visibility = DevExpress.Utils.DefaultBoolean.False;
+            //((XYDiagram)chartControl.Diagram).AxisY.Visibility = DevExpress.Utils.DefaultBoolean.False;
+            chartControl.Legend.Visibility = DevExpress.Utils.DefaultBoolean.False;
 
-            XYDiagram diagram = (XYDiagram)chartControl1.Diagram;
+            XYDiagram diagram = (XYDiagram)chartControl.Diagram;
 
             diagram.EnableAxisXScrolling = true;
             diagram.EnableAxisXZooming = true;
@@ -111,19 +128,45 @@ namespace DynaRAP.UControl
             diagram.AxisX.DateTimeScaleOptions.GridAlignment = DateTimeGridAlignment.Millisecond;
             diagram.AxisX.DateTimeScaleOptions.AutoGrid = false;
             diagram.AxisX.DateTimeScaleOptions.GridSpacing = 1;
-            diagram.AxisX.Label.TextPattern = "{A:HH:mm:ss.ffff}";
+            diagram.AxisX.Label.TextPattern = "{A:HH:mm:ss.fff}";
             //diag.AxisX.Label.TextPattern = "{A:MMM-dd HH}";
 
-            this.rangeControl1.Client = this.chartControl1;
+            this.rangeControl1.Client = chartControl;
             rangeControl1.RangeChanged += RangeControl1_RangeChanged;
-            rangeControl1.ShowLabels = false;
+            rangeControl1.ShowLabels = true;
             diagram.RangeControlDateTimeGridOptions.GridMode = ChartRangeControlClientGridMode.Manual;
             diagram.RangeControlDateTimeGridOptions.GridOffset = 1;
             diagram.RangeControlDateTimeGridOptions.GridSpacing = 60;
-            diagram.RangeControlDateTimeGridOptions.LabelFormat = "";
+            diagram.RangeControlDateTimeGridOptions.LabelFormat = "HH:mm:ss.fff";
             diagram.RangeControlDateTimeGridOptions.SnapAlignment = DateTimeGridAlignment.Millisecond;
 
             rangeControl1.SelectedRange = new RangeControlRange(minValue, maxValue);
+
+            if (panelChart == null)
+            {
+                panelChart = new DockPanel();
+                panelChart = mainForm.DockManager1.AddPanel(DockingStyle.Float);
+                panelChart.FloatLocation = new Point(500, 100);
+                panelChart.FloatSize = new Size(1058, 528);
+                panelChart.Name = strKey;
+                panelChart.Text = strKey;
+                chartControl.Dock = DockStyle.Fill;
+                panelChart.Controls.Add(chartControl);
+                panelChart.ClosedPanel += PanelChart_ClosedPanel;
+            }
+            else
+            {
+                panelChart.Name = strKey;
+                panelChart.Text = strKey;
+                //panelChart.Controls.Clear();
+                chartControl.Dock = DockStyle.Fill;
+                panelChart.Controls.Add(chartControl);
+                panelChart.Show();
+            }
+        }
+
+        private void PanelChart_ClosedPanel(object sender, DockPanelEventArgs e)
+        {
         }
 
         private void RangeControl1_RangeChanged(object sender, DevExpress.XtraEditors.RangeControlRangeEventArgs range)
@@ -194,6 +237,22 @@ namespace DynaRAP.UControl
             SelectedRangeEventArgs args = new SelectedRangeEventArgs(minValue, maxValue);
             if (null != OnSelectedRange)
                 OnSelectedRange(this, args);
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            if (this.DeleteBtnClicked != null)
+                this.DeleteBtnClicked(this, new EventArgs());
+
+            panelChart.Close();
+        }
+
+        private void btnView_Click(object sender, EventArgs e)
+        {
+            if (panelChart != null)
+            {
+                panelChart.Show();
+            }
         }
     }
 }

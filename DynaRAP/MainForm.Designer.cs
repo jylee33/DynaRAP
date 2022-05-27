@@ -87,6 +87,7 @@ namespace DynaRAP
             this.controlContainer2 = new DevExpress.XtraBars.Docking.ControlContainer();
             this.tabbedView1 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.TabbedView(this.components);
             this.panelContainer1 = new DevExpress.XtraBars.Docking.DockPanel();
+            this.barButtonItem1 = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.documentManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dockManager1)).BeginInit();
@@ -149,9 +150,10 @@ namespace DynaRAP
             this.barSubItem4,
             this.btnChartLine2d,
             this.btnChartMinMax,
-            this.btnChartPotato});
+            this.btnChartPotato,
+            this.barButtonItem1});
             this.barManager1.MainMenu = this.bar2;
-            this.barManager1.MaxItemId = 32;
+            this.barManager1.MaxItemId = 33;
             this.barManager1.StatusBar = this.bar3;
             // 
             // bar1
@@ -181,7 +183,8 @@ namespace DynaRAP
             new DevExpress.XtraBars.LinkPersistInfo(this.btnChartTest),
             new DevExpress.XtraBars.LinkPersistInfo(this.btnWebTest),
             new DevExpress.XtraBars.LinkPersistInfo(this.btnLPF),
-            new DevExpress.XtraBars.LinkPersistInfo(this.btnTestChart)});
+            new DevExpress.XtraBars.LinkPersistInfo(this.btnTestChart),
+            new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItem1)});
             this.barSubItemTest.Name = "barSubItemTest";
             // 
             // btnPythonTest
@@ -571,6 +574,13 @@ namespace DynaRAP
             this.panelContainer1.Name = "panelContainer1";
             this.panelContainer1.OriginalSize = new System.Drawing.Size(200, 200);
             // 
+            // barButtonItem1
+            // 
+            resources.ApplyResources(this.barButtonItem1, "barButtonItem1");
+            this.barButtonItem1.Id = 32;
+            this.barButtonItem1.Name = "barButtonItem1";
+            this.barButtonItem1.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem1_ItemClick);
+            // 
             // MainForm
             // 
             resources.ApplyResources(this, "$this");
@@ -660,6 +670,7 @@ namespace DynaRAP
         private DevExpress.XtraBars.BarButtonItem btnChartLine2d;
         private DevExpress.XtraBars.BarButtonItem btnChartMinMax;
         private DevExpress.XtraBars.BarButtonItem btnChartPotato;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem1;
 
         public TabbedView TabbedView1 { get => tabbedView1; set => tabbedView1 = value; }
     }

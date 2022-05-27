@@ -1,7 +1,6 @@
 package com.servetech.dynarap.db.mapper;
 
 import com.servetech.dynarap.db.type.CryptoField;
-import com.servetech.dynarap.ext.HandledServiceException;
 import com.servetech.dynarap.vo.ParamVO;
 import com.servetech.dynarap.vo.PresetVO;
 import org.apache.ibatis.annotations.*;
@@ -16,7 +15,7 @@ public interface ParamMapper {
             "<script>" +
                     "select a.* from dynarap_param a " +
                     "where a.appliedEndAt = 0 " +
-                    "order by a.paramName asc, a.appliedAt desc " +
+                    "order by a.appliedAt desc " +
                     "limit #{startIndex}, #{pageSize}" +
                     "</script>"
     })
@@ -34,12 +33,12 @@ public interface ParamMapper {
             "<script>" +
                     "select a.* from dynarap_param a " +
                     "where a.appliedEndAt = 0 " +
-                    "and a.paramGroupSeq = #{paramGroupSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
-                    "order by a.paramName asc, a.appliedAt desc " +
+                    "and a.propSeq = #{propSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "order by a.appliedAt desc " +
                     "limit #{startIndex}, #{pageSize}" +
                     "</script>"
     })
-    List<ParamVO> selectParamListByGroup(Map<String, Object> params) throws Exception;
+    List<ParamVO> selectParamListByProp(Map<String, Object> params) throws Exception;
 
     @Select({
             "<script>" +
@@ -73,16 +72,14 @@ public interface ParamMapper {
     @Insert({
             "<script>" +
                     "insert into dynarap_param (" +
-                    "paramPack, paramGroupSeq, paramKey, paramName, paramSpec, " +
+                    "paramPack, propSeq, paramKey, " +
                     "adamsKey, zaeroKey, grtKey, fltpKey, fltsKey, " +
-                    "partInfo, partInfoSub, lrpX, lrpY, lrpZ, paramUnit, " +
-                    "domainMin, domainMax, specified, paramVal, registerUid, appliedAt, appliedEndAt " +
+                    "partInfo, partInfoSub, lrpX, lrpY, lrpZ, tags, " +
+                    "registerUid, appliedAt, appliedEndAt " +
                     ") values (" +
                     "#{paramPack,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField}" +
-                    ",#{paramGroupSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField}" +
+                    ",#{propSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField}" +
                     ",#{paramKey}" +
-                    ",#{paramName,javaType=java.lang.String,jdbcType=VARCHAR,typeHandler=String64}" +
-                    ",#{paramSpec}" +
                     ",#{adamsKey}" +
                     ",#{zaeroKey}" +
                     ",#{grtKey}" +
@@ -93,11 +90,7 @@ public interface ParamMapper {
                     ",#{lrpX}" +
                     ",#{lrpY}" +
                     ",#{lrpZ}" +
-                    ",#{paramUnit}" +
-                    ",#{domainMin}" +
-                    ",#{domainMax}" +
-                    ",#{specified}" +
-                    ",#{paramVal}" +
+                    ",#{tags,javaType=java.lang.String,jdbcType=VARCHAR,typeHandler=String64}" +
                     ",#{registerUid,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField_NAuth}" +
                     ",#{appliedAt,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=LongDate}" +
                     ",#{appliedEndAt,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=LongDate}" +
@@ -123,10 +116,8 @@ public interface ParamMapper {
             "<script>" +
                     " update dynarap_param set " +
                     " paramPack = #{paramPack,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
-                    ",paramGroupSeq = #{paramGroupSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    ",propSeq = #{propSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
                     ",paramKey = #{paramKey} " +
-                    ",paramName = #{paramName,javaType=java.lang.String,jdbcType=VARCHAR,typeHandler=String64} " +
-                    ",paramSpec = #{paramSpec} " +
                     ",adamsKey = #{adamsKey} " +
                     ",zaeroKey = #{zaeroKey} " +
                     ",grtKey = #{grtKey} " +
@@ -137,11 +128,7 @@ public interface ParamMapper {
                     ",lrpX = #{lrpX} " +
                     ",lrpY = #{lrpY} " +
                     ",lrpZ = #{lrpZ} " +
-                    ",paramUnit = #{paramUnit} " +
-                    ",domainMin = #{domainMin} " +
-                    ",domainMax = #{domainMax} " +
-                    ",specified = #{specified} " +
-                    ",paramVal = #{paramVal} " +
+                    ",tags = #{tags,javaType=java.lang.String,jdbcType=VARCHAR,typeHandler=String64} " +
                     ",appliedAt = #{appliedAt,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=LongDate} " +
                     ",appliedEndAt = #{appliedEndAt,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=LongDate} " +
                     " where seq = #{seq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
@@ -152,48 +139,111 @@ public interface ParamMapper {
 
     @Select({
             "<script>" +
-                    "select * from dynarap_param_group " +
-                    "order by groupName asc, groupType asc " +
+                    "select * from dynarap_param_prop " +
+                    "where deleted = 0 " +
+                    "<if test='@com.servetech.dynarap.db.type.MybatisEmptyChecker@isNotEmpty(propType)'>" +
+                    " and propType = #{propType} " +
+                    "</if>" +
+                    "order by propType asc, propCode asc " +
                     "</script>"
     })
-    List<ParamVO.Group> selectParamGroupList() throws Exception;
+    List<ParamVO.Prop> selectParamPropList(Map<String, Object> params) throws Exception;
 
     @Select({
             "<script>" +
-                    "select * from dynarap_param_group " +
-                    "where seq = #{seq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "select * from dynarap_param_prop " +
+                    "where seq = #{propSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
                     "limit 0, 1 " +
                     "</script>"
     })
-    ParamVO.Group selectParamGroupBySeq(Map<String, Object> params) throws  Exception;
+    ParamVO.Prop selectParamPropBySeq(Map<String, Object> params) throws Exception;
+
+    @Select({
+            "<script>" +
+                    "select * from dynarap_param_prop " +
+                    "where propType = #{propType} " +
+                    "and propCode = #{propCode} " +
+                    "order by createdAt desc " +
+                    "limit 0, 1 " +
+                    "</script>"
+    })
+    ParamVO.Prop selectParamPropByType(Map<String, Object> params) throws Exception;
 
     @Insert({
             "<script>" +
-                    "insert into dynarap_param_group (" +
-                    "groupName, groupType, registerUid, createdAt" +
+                    "insert into dynarap_param_prop (" +
+                    "propType, propCode, paramUnit, registerUid, createdAt, deleted" +
                     ") values (" +
-                    "#{groupName,javaType=java.lang.String,jdbcType=VARCHAR,typeHandler=String64}" +
-                    ",#{groupType}" +
+                    "#{propType}" +
+                    ",#{propCode}" +
+                    ",#{paramUnit}" +
                     ",#{registerUid,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField_NAuth}" +
                     ",#{createdAt,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=LongDate}" +
+                    ",#{deleted}" +
                     ")" +
                     "</script>"
     })
     @SelectKey(before = false, keyColumn = "seq", keyProperty = "seq",
             resultType = CryptoField.class,
-            statement = "SELECT last_insert_id() FROM dynarap_param_group LIMIT 0, 1")
-    void insertParamGroup(ParamVO.Group paramGroup) throws Exception;
+            statement = "SELECT last_insert_id() FROM dynarap_param_prop LIMIT 0, 1")
+    void insertParamProp(ParamVO.Prop paramProp) throws Exception;
 
     @Update({
             "<script>" +
-                    " update dynarap_param_group set " +
-                    " groupName = #{groupName,javaType=java.lang.String,jdbcType=VARCHAR,typeHandler=String64} " +
-                    ",groupType = #{groupType} " +
+                    " update dynarap_param_prop set " +
+                    " deleted = #{deleted} " +
+                    ",paramUnit = #{paramUnit} " +
+                    ",propType = #{propType} " +
+                    ",propCode = #{propCode} " +
                     " where seq = #{seq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
                     "</script>"
     })
-    void updateParamGroup(ParamVO.Group paramGroup) throws Exception;
+    void updateParamProp(ParamVO.Prop paramProp) throws Exception;
 
+
+    @Select({
+            "<script>" +
+                    "select extraKey,extraValue from dynarap_param_extra " +
+                    "where paramPack = #{paramPack,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "order by seq asc " +
+                    "</script>"
+    })
+    List<Map<String, Object>> selectParamExtraList(Map<String, Object> params) throws Exception;
+
+    @Insert({
+            "<script>" +
+                    "insert into dynarap_param_extra (" +
+                    "paramPack,extraKey,extraValue" +
+                    ") values (" +
+                    "#{paramPack,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField}" +
+                    ",#{extraKey}" +
+                    ",#{extraValue}" +
+                    ")" +
+                    "</script>"
+    })
+    @SelectKey(before = false, keyColumn = "seq", keyProperty = "seq",
+            resultType = CryptoField.class,
+            statement = "SELECT last_insert_id() FROM dynarap_param_extra LIMIT 0, 1")
+    void insertParamExtra(Map<String, Object> params) throws Exception;
+
+    @Update({
+            "<script>" +
+                    " update dynarap_param_extra set " +
+                    " extraValue = #{extraValue} " +
+                    " where paramPack = #{paramPack,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    " and extraKey = #{extraKey} " +
+                    "</script>"
+    })
+    void updateParamExtra(Map<String, Object> params) throws Exception;
+
+    @Delete({
+            "<script>" +
+                    "delete from dynarap_param_extra " +
+                    "where paramPack = #{paramPack,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "and extraKey = #{extraKey}" +
+                    "</script>"
+    })
+    void deleteParamExtra(Map<String, Object> params) throws Exception;
 
     @Select({
             "<script>" +
@@ -308,7 +358,7 @@ public interface ParamMapper {
                     "and c.appliedEndAt = 0 " +
                     "</otherwise> " +
                     "</choose> " +
-                    "order by c.paramName asc, c.appliedAt desc " +
+                    "order by c.appliedAt desc " +
                     "limit #{startIndex}, #{pageSize}" +
                     "</script>"
     })
@@ -342,6 +392,17 @@ public interface ParamMapper {
                     "</script>"
     })
     int selectPresetParamCount(Map<String, Object> params) throws Exception;
+
+    @Select({
+            "<script>" +
+                    "select a.*, b.seq as presetParamSeq, b.presetPack, b.presetSeq from dynarap_param a, dynarap_preset_param b " +
+                    "where a.seq = b.paramSeq " +
+                    "and a.paramPack = b.paramPack " +
+                    "and b.seq = #{seq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "limit 0, 1" +
+                    "</script>"
+    })
+    ParamVO selectPresetParamBySeq(Map<String, Object> params) throws Exception;
 
     @Insert({
             "<script>" +

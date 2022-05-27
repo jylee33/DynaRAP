@@ -1,10 +1,13 @@
-﻿using DevExpress.Utils.Menu;
+﻿using DevExpress.Utils;
+using DevExpress.Utils.Menu;
 using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Controls;
 using DevExpress.XtraTreeList;
 using DevExpress.XtraTreeList.Columns;
 using DevExpress.XtraTreeList.Nodes;
+using DynaRAP.Common;
 using DynaRAP.Data;
+using DynaRAP.Forms;
 using DynaRAP.UTIL;
 using Newtonsoft.Json;
 using System;
@@ -22,16 +25,16 @@ using System.Windows.Forms;
 
 namespace DynaRAP.UControl
 {
-    public partial class MgmtPresetControl : DevExpress.XtraEditors.XtraUserControl
+    public partial class MgmtLRPControl : DevExpress.XtraEditors.XtraUserControl
     {
         int focusedNodeId = 0;
         TreeListNode focusedNode = null;
-        List<ResponsePreset> presetList = null;
         List<ResponseParam> paramList = null;
-        List<ResponseParam> presetParamList = null;
-        List<PresetData> pComboList = null;
+        List<ResponsePropList> propList = new List<ResponsePropList>();
+        string selPropertyType = string.Empty;
+        List<MgmtLRPExtraControl> extraControlList = new List<MgmtLRPExtraControl>();
 
-        public MgmtPresetControl()
+        public MgmtLRPControl()
         {
             InitializeComponent();
         }
@@ -108,75 +111,17 @@ namespace DynaRAP.UControl
 
         }
 
-        private void InitializePresetList()
+        private void InitializeParamList()
         {
-            luePresetList.Properties.DataSource = null;
+            cboParamList.Properties.Items.Clear();
 
-            presetList = GetPresetList();
-            pComboList = new List<PresetData>();
+            paramList = GetParamList();
 
-            foreach (ResponsePreset list in presetList)
+            foreach (ResponseParam list in paramList)
             {
-                //Decoding
-                byte[] byte64 = Convert.FromBase64String(list.presetName);
-                string decName = Encoding.UTF8.GetString(byte64);
-
-                pComboList.Add(new PresetData(decName, list.presetPack));
+                cboParamList.Properties.Items.Add(list.paramKey);
             }
-            luePresetList.Properties.DataSource = pComboList;
-#if !DEBUG
-            luePresetList.Properties.PopulateColumns();
-            luePresetList.Properties.ShowHeader = false;
-            luePresetList.Properties.Columns["PresetPack"].Visible = false;
-            luePresetList.Properties.ShowFooter = false;
-#else
-            luePresetList.Properties.PopulateColumns();
-            luePresetList.Properties.Columns["PresetName"].Width = 800;
-#endif
-
-            //luePresetList.EditValue = edtParamName.Text;
-        }
-
-        private List<ResponseParam> GetParamList()
-        {
-            string url = ConfigurationManager.AppSettings["UrlParam"];
-            string sendData = @"
-            {
-            ""command"":""list"",
-            ""pageNo"":1,
-            ""pageSize"":3000
-            }";
-
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "POST";
-            request.ContentType = "application/json";
-            request.Timeout = 30 * 1000;
-            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
-
-            // POST할 데이타를 Request Stream에 쓴다
-            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
-            request.ContentLength = bytes.Length; // 바이트수 지정
-
-            using (Stream reqStream = request.GetRequestStream())
-            {
-                reqStream.Write(bytes, 0, bytes.Length);
-            }
-
-            // Response 처리
-            string responseText = string.Empty;
-            using (WebResponse resp = request.GetResponse())
-            {
-                Stream respStream = resp.GetResponseStream();
-                using (StreamReader sr = new StreamReader(respStream))
-                {
-                    responseText = sr.ReadToEnd();
-                }
-            }
-
-            //Console.WriteLine(responseText);
-            ListParamJsonData result = JsonConvert.DeserializeObject<ListParamJsonData>(responseText);
-
-            return result.response;
+            cboParamList.SelectedIndex = -1;
 
         }
 
@@ -351,7 +296,7 @@ namespace DynaRAP.UControl
             }
             return true;
         }
-
+        
         private BindingList<DirData> GetDirList()
         {
             BindingList<DirData> list = new BindingList<DirData>();
@@ -394,7 +339,7 @@ namespace DynaRAP.UControl
                 byte[] byte64 = Convert.FromBase64String(pool.dirName);
                 string name = Encoding.UTF8.GetString(byte64);
 
-                if (pool.dirType.Equals("folder") || pool.dirType.Equals("preset"))
+                if (pool.dirType.Equals("folder") || pool.dirType.Equals("param"))
                 {
                     list.Add(new DirData(pool.seq, pool.parentDirSeq, pool.dirType, name, pool.refSeq, pool.refSubSeq));
                 }
@@ -404,9 +349,9 @@ namespace DynaRAP.UControl
 
         }
 
-        private List<ResponsePreset> GetPresetList()
+        private List<ResponseParam> GetParamList()
         {
-            string url = ConfigurationManager.AppSettings["UrlPreset"];
+            string url = ConfigurationManager.AppSettings["UrlParam"];
             string sendData = @"
             {
             ""command"":""list"",
@@ -441,41 +386,51 @@ namespace DynaRAP.UControl
             }
 
             //Console.WriteLine(responseText);
-            ListPresetJsonData result = JsonConvert.DeserializeObject<ListPresetJsonData>(responseText);
+            ListParamJsonData result = JsonConvert.DeserializeObject<ListParamJsonData>(responseText);
 
             return result.response;
 
         }
 
-        private bool AddModParameter(string opType, string presetPack = "")
+        private bool AddModParameter(string opType, string paramKey, string tags, string extras, string paramPack = "")
         {
-            ResponsePreset preset = presetList.Find(x => x.presetPack.Equals(presetPack));
-            string paramName = edtParamName.Text;
-
-            if (string.IsNullOrEmpty(paramName))
+            ResponseParam param = paramList.Find(x => x.paramKey.Equals(paramKey));
+            if(param == null || opType.Equals("modify"))
             {
-                lblMandatoryField.Visible = true;
-                MessageBox.Show("Failed", "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
+                lblDuplicateKey.Visible = false;
             }
             else
             {
-                lblMandatoryField.Visible = false;
+                lblDuplicateKey.Visible = true;
+                MessageBox.Show("Failed", "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
             }
 
-            //Encoding
-            byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(paramName);
-            string encName = Convert.ToBase64String(basebyte);
-
-            string url = ConfigurationManager.AppSettings["UrlPreset"];
+            string url = ConfigurationManager.AppSettings["UrlParam"];
             string sendData = string.Format(@"
-            {{""command"":""{0}"",
+            {{
+            ""command"":""{0}"",
             ""seq"":"""",
-            ""presetPack"":""{1}"",
-            ""presetName"":""{2}"",
-            ""presetPackFrom"":""""
+            ""paramPack"":""{1}"",
+            ""propSeq"":"""",
+            ""paramKey"":""{2}"",
+            ""adamsKey"":""{3}"",
+            ""zaeroKey"":""{4}"",
+            ""grtKey"":""{5}"",
+            ""fltpKey"":""{6}"",
+            ""fltsKey"":""{7}"",
+            ""partInfo"":""{8}"",
+            ""partInfoSub"":""{9}"",
+            ""lrpX"":""{10}"",
+            ""lrpY"":""{11}"",
+            ""lrpZ"":""{12}"",
+            ""tags"":""{13}"",
+            ""extras"":{14}
             }}"
-            , opType, presetPack, encName);
+            , opType, paramPack, paramKey, edtAdams.Text
+            , edtZaero.Text, edtGrt.Text, edtFltp.Text, edtFlts.Text
+            , cboPart.Text, cboPartLocation.Text
+            , edtLrpX.Text, edtLrpY.Text, edtLrpZ.Text, tags, extras);
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "POST";
@@ -503,8 +458,8 @@ namespace DynaRAP.UControl
                 }
             }
 
-            //Console.WriteLine(responseText);
-            AddPresetJsonData result = JsonConvert.DeserializeObject<AddPresetJsonData>(responseText);
+            Console.WriteLine(responseText);
+            AddParamJsonData result = JsonConvert.DeserializeObject<AddParamJsonData>(responseText);
 
             if (result != null)
             {
@@ -513,24 +468,20 @@ namespace DynaRAP.UControl
                     MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }
-                else
-                {
-                    edtParamName.Text = string.Empty;
-                }
                 //this.focusedNodeId = result.response.seq;
             }
             return true;
         }
 
-        private bool RemovePreset(string presetPack)
+        private bool RemoveParam(string paramPack)
         {
-            string url = ConfigurationManager.AppSettings["UrlPreset"];
+            string url = ConfigurationManager.AppSettings["UrlParam"];
             string sendData = string.Format(@"
             {{
             ""command"":""remove"",
-            ""presetPack"":""{0}""
+            ""paramPack"":""{0}""
             }}"
-            , presetPack);
+            , paramPack);
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "POST";
@@ -568,47 +519,34 @@ namespace DynaRAP.UControl
                     MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }
-                else
-                {
-                    edtParamName.Text = string.Empty;
-                }
             }
             return true;
         }
 
-        const int startParamIndex = 0;
-        int paramIndex = startParamIndex;
-        const int paramHeight = 22;
-
-        private void AddParameter(ResponseParam param)
+        private void InitializeProperty()
         {
-            MgmtPresetParameterControl ctrl = new MgmtPresetParameterControl(this.presetParamList);
-            ctrl.Title = "Parameter " + paramIndex.ToString();
-            ctrl.SelectedParam = param;
-            flowLayoutPanel1.Controls.Add(ctrl);
-            flowLayoutPanel1.Controls.SetChildIndex(ctrl, paramIndex++);
+            propList.Clear();
+            propList = GetPropertyInfo();
 
-            flowLayoutPanel1.Height += paramHeight;
-            btnModifyParameter.Location = new Point(btnModifyParameter.Location.X, btnModifyParameter.Location.Y + paramHeight);
-            btnDeleteParameter.Location = new Point(btnDeleteParameter.Location.X, btnDeleteParameter.Location.Y + paramHeight);
-            btnSaveAsNewParameter.Location = new Point(btnSaveAsNewParameter.Location.X, btnSaveAsNewParameter.Location.Y + paramHeight);
-
+            foreach (ResponsePropList prop in propList)
+            {
+                if (cboPropertyType.Properties.Items.Contains(prop.propType) == false && prop.deleted == false)
+                {
+                    cboPropertyType.Properties.Items.Add(prop.propType);
+                }
+            }
         }
 
-        private List<ResponseParam> GetPresetParamList(string presetPack)
+        private List<ResponsePropList> GetPropertyInfo()
         {
-            string url = ConfigurationManager.AppSettings["UrlPreset"];
-            string sendData = string.Format(@"
-            {{
-            ""command"":""param-list"",
-            ""presetPack"":""{0}"",
-            ""presetSeq"":"""",
-            ""paramPack"":"""",
-            ""paramSeq"":"""",
-            ""pageNo"":1,
-            ""pageSize"":3000
-            }}"
-            , presetPack);
+            BindingList<DirData> list = new BindingList<DirData>();
+
+            string url = ConfigurationManager.AppSettings["UrlParam"];
+            string sendData = @"
+            {
+            ""command"":""prop-list"",
+            ""propType"":""""
+            }";
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "POST";
@@ -637,26 +575,114 @@ namespace DynaRAP.UControl
             }
 
             //Console.WriteLine(responseText);
-            ListParamJsonData result = JsonConvert.DeserializeObject<ListParamJsonData>(responseText);
+            PropListResponse result = JsonConvert.DeserializeObject<PropListResponse>(responseText);
 
             return result.response;
 
         }
 
+        private void InitializePropertyCode(string text)
+        {
+            cboPropertyCode.Properties.Items.Clear();
+            cboUnit.Properties.Items.Clear();
+
+            cboPropertyCode.Text = String.Empty;
+            cboUnit.Text = String.Empty;
+
+            foreach (ResponsePropList prop in propList)
+            {
+                if (prop.propType.Equals(text))
+                {
+                    if (cboPropertyCode.Properties.Items.Contains(prop.propCode) == false)
+                        cboPropertyCode.Properties.Items.Add(prop.propCode);
+                    if (cboUnit.Properties.Items.Contains(prop.paramUnit) == false)
+                        cboUnit.Properties.Items.Add(prop.paramUnit);
+                }
+            }
+        }
+
+        private void addTag(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+                return;
+
+            ButtonEdit btn = new ButtonEdit();
+            btn.Properties.Buttons[0].Kind = ButtonPredefines.Close;
+            btn.BorderStyle = BorderStyles.Simple;
+            btn.ForeColor = Color.White;
+            btn.Properties.Appearance.BorderColor = Color.White;
+            btn.Font = new Font(btn.Font, FontStyle.Bold);
+            btn.Properties.Appearance.TextOptions.HAlignment = HorzAlignment.Center;
+            //btn.ReadOnly = true;
+            btn.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            btn.Properties.AllowFocused = false;
+            btn.ButtonClick += removeTag_ButtonClick;
+            btn.Text = name;
+            panelTag.Controls.Add(btn);
+        }
+
+        const int startExtraIndex = 0;
+        int extraIndex = startExtraIndex;
+        const int extraHeight = 22;
+        const int flowLayoutPanel1Height = 2;
+
+        private void AddExtra(string extraKey = "", string extraVal = "")
+        {
+            MgmtLRPExtraControl ctrl = new MgmtLRPExtraControl(extraKey, extraVal);
+            ctrl.Title = "Parameter " + extraIndex.ToString();
+            ctrl.DeleteBtnClicked += new EventHandler(ExtraControl_DeleteBtnClicked);
+            //ctrl.Dock = DockStyle.Fill;
+            flowLayoutPanel1.Controls.Add(ctrl);
+            flowLayoutPanel1.Controls.SetChildIndex(ctrl, extraIndex++);
+            extraControlList.Add(ctrl);
+
+            flowLayoutPanel1.Height += extraHeight;
+            lblTag.Location = new Point(lblTag.Location.X, lblTag.Location.Y + extraHeight);
+            edtTag.Location = new Point(edtTag.Location.X, edtTag.Location.Y + extraHeight);
+            panelTag.Location = new Point(panelTag.Location.X, panelTag.Location.Y + extraHeight);
+            btnModifyParameter.Location = new Point(btnModifyParameter.Location.X, btnModifyParameter.Location.Y + extraHeight);
+            btnDeleteParameter.Location = new Point(btnDeleteParameter.Location.X, btnDeleteParameter.Location.Y + extraHeight);
+            btnSaveAsNewParameter.Location = new Point(btnSaveAsNewParameter.Location.X, btnSaveAsNewParameter.Location.Y + extraHeight);
+        }
+
+        void ExtraControl_DeleteBtnClicked(object sender, EventArgs e)
+        {
+            MgmtLRPExtraControl ctrl = sender as MgmtLRPExtraControl;
+            flowLayoutPanel1.Controls.Remove(ctrl);
+            extraControlList.Remove(ctrl);
+            ctrl.Dispose();
+
+            flowLayoutPanel1.Height -= extraHeight;
+            extraIndex--;
+            lblTag.Location = new Point(lblTag.Location.X, lblTag.Location.Y - extraHeight);
+            edtTag.Location = new Point(edtTag.Location.X, edtTag.Location.Y - extraHeight);
+            panelTag.Location = new Point(panelTag.Location.X, panelTag.Location.Y - extraHeight);
+            btnModifyParameter.Location = new Point(btnModifyParameter.Location.X, btnModifyParameter.Location.Y - extraHeight);
+            btnDeleteParameter.Location = new Point(btnDeleteParameter.Location.X, btnDeleteParameter.Location.Y - extraHeight);
+            btnSaveAsNewParameter.Location = new Point(btnSaveAsNewParameter.Location.X, btnSaveAsNewParameter.Location.Y - extraHeight);
+        }
+
         #endregion Method
 
         #region EventHandler
-        private void MgmtPresetControl_Load(object sender, EventArgs e)
+        private void MgmtLRPControl_Load(object sender, EventArgs e)
         {
             this.splitContainer1.SplitterDistance = 250;
-            //cboProperty.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
-            //cboUnit.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+            cboParamList.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+            cboPropertyType.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+            cboPropertyCode.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+            cboUnit.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
             //cboPart.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
             //cboPartLocation.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
             //cboAirplane.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
 
-            btnAddParameter.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
-            btnAddParameter.Properties.AllowFocused = false;
+            cboPropertyType.SelectedIndexChanged += CboPropertyType_SelectedIndexChanged;
+            cboPropertyCode.SelectedIndexChanged += CboPropertyCode_SelectedIndexChanged;
+
+            btnAddExtra.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            btnAddExtra.Properties.AllowFocused = false;
+
+            InitializeProperty();
 
 #if DEBUG
             //edtKey.Text = "Bending, LH Wing BL1870";
@@ -672,15 +698,41 @@ namespace DynaRAP.UControl
             //cboAirplane.Text = "A2/3/6";
 #endif
 
-            luePresetList.Properties.DisplayMember = "PresetName";
-            luePresetList.Properties.ValueMember = "PresetPack";
-            luePresetList.Properties.NullText = "";
-
-            InitializePresetList();
+            InitializeParamList();
             InitializeDirDataList();
-            paramList = GetParamList();
-
         }
+
+        private void CboPropertyType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ComboBoxEdit combo = sender as ComboBoxEdit;
+
+            if (combo != null)
+            {
+                selPropertyType = combo.Text;
+                InitializePropertyCode(selPropertyType);
+            }
+        }
+
+        private void CboPropertyCode_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ComboBoxEdit combo = sender as ComboBoxEdit;
+
+            if (combo != null)
+            {
+                foreach(ResponsePropList prop in propList)
+                {
+                    if(prop.propType.Equals(selPropertyType) == false)
+                    {
+                        continue;
+                    }
+                    if(prop.propCode.Equals(combo.Text))
+                    {
+                        cboUnit.Text = prop.paramUnit;
+                    }
+                }
+            }
+        }
+
 
         private void addFolderMenuItemClick(object sender, EventArgs e)
         {
@@ -729,28 +781,28 @@ namespace DynaRAP.UControl
             TreeListNode node = item.Tag as TreeListNode;
             //if (node == null) return;
 
-            string presetName = Prompt.ShowDialog("Preset Name", "Add Preset");
+            string paramName = Prompt.ShowDialog("Parameter Name", "Add Parameter");
 
-            if (string.IsNullOrEmpty(presetName))
+            if (string.IsNullOrEmpty(paramName))
             {
                 MessageBox.Show(Properties.Resources.InputParameterName, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             //Encoding
-            byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(presetName);
+            byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(paramName);
             string name = Convert.ToBase64String(basebyte);
 
             bool bResult = false;
             if (node == null)
-                bResult = AddDir("preset", name, "0");
+                bResult = AddDir("param", name, "0");
             else
-                bResult = AddDir("preset", name, node.GetValue("ID").ToString());
+                bResult = AddDir("param", name, node.GetValue("ID").ToString());
 
             if (bResult)
             {
                 //TreeListNode newNode = treeList1.AppendNode(new object[] { "" }, node);
-                //newNode.SetValue("DirName", presetName);
+                //newNode.SetValue("DirName", paramName);
 
                 ////treeList1.ExpandAll();
                 //node.Expand();
@@ -767,6 +819,7 @@ namespace DynaRAP.UControl
                 }
             }
         }
+
 
         private void TreeList1_PopupMenuShowing(object sender, PopupMenuShowingEventArgs e)
         {
@@ -787,8 +840,8 @@ namespace DynaRAP.UControl
             menuItemAddFolder.Tag = node;
             e.Menu.Items.Add(menuItemAddFolder);
 
-            // Create the Add Preset command.
-            DXMenuItem menuItemAdd = new DXMenuItem("Add Preset", this.addParamMenuItemClick);
+            // Create the Add Parameter command.
+            DXMenuItem menuItemAdd = new DXMenuItem("Add Parameter", this.addParamMenuItemClick);
             menuItemAdd.Tag = node;
             e.Menu.Items.Add(menuItemAdd);
 
@@ -804,6 +857,11 @@ namespace DynaRAP.UControl
                 menuItemDelete.Tag = node;
                 e.Menu.Items.Add(menuItemDelete);
             }
+
+            // Refresh Node
+            DXMenuItem menuItemRefresh = new DXMenuItem("Refresh Node", this.refreshNodeMenuItemClick);
+            menuItemRefresh.Tag = node;
+            e.Menu.Items.Add(menuItemRefresh);
         }
 
         private void modifyNodeMenuItemClick(object sender, EventArgs e)
@@ -854,6 +912,11 @@ namespace DynaRAP.UControl
             }
         }
 
+        private void refreshNodeMenuItemClick(object sender, EventArgs e)
+        {
+            RefreshTree();
+        }
+
         private void repositoryItemCheckEdit1_EditValueChanged(object sender, EventArgs e)
         {
             treeList1.PostEditor();
@@ -898,7 +961,7 @@ namespace DynaRAP.UControl
         {
             TreeListNode node = e.Node;
 
-            if (node != null)
+            if (node != null && node.GetValue("DirType") != null)
             {
                 if (node.GetValue("DirType").ToString().Equals("folder"))
                 {
@@ -910,23 +973,12 @@ namespace DynaRAP.UControl
                 }
                 focusedNode = node;
 
-                ResponsePreset preset = presetList.Find(x => x.presetPack.Equals(node.GetValue("RefSeq").ToString()));
-                if (preset == null)
-                {
-                    luePresetList.EditValue = null;
-                }
+                ResponseParam param = paramList.Find(x => x.paramPack.Equals(node.GetValue("RefSeq").ToString()));
+                if (param == null)
+                    this.cboParamList.SelectedIndex = -1;
                 else
                 {
-                    //luePresetList.Properties.PopulateColumns();
-                    //    luePresetList.Properties.ValueMember = preset.presetPack;
-                    //luePresetList.EditValue = preset.ToString();
-
-                    //PresetData p = pComboList.Find(x => x.PresetPack.Equals(preset.presetPack));
-                    //luePresetList.EditValue = p;
-                    //luePresetList.ItemIndex = 1;
-                    //luePresetList.EditValue = luePresetList.Properties.GetDataSourceValue(luePresetList.Properties.KeyMember, decName);
-                    //luePresetList.SelectedText = decName;
-                    luePresetList.ItemIndex = pComboList.FindIndex(x => x.PresetPack.Equals(preset.presetPack));
+                    this.cboParamList.Text = param.paramKey;
                 }
             }
         }
@@ -947,94 +999,126 @@ namespace DynaRAP.UControl
                 }
                 focusedNode = node;
 
-                ResponsePreset preset = presetList.Find(x => x.presetPack.Equals(node.GetValue("RefSeq").ToString()));
-                if (preset == null)
-                {
-                    luePresetList.EditValue = null;
-                }
+                ResponseParam param = paramList.Find(x => x.paramPack.Equals(node.GetValue("RefSeq").ToString()));
+                if (param == null)
+                    this.cboParamList.SelectedIndex = -1;
                 else
                 {
-                    //luePresetList.Properties.PopulateColumns();
-                    //    luePresetList.Properties.ValueMember = preset.presetPack;
-                    //luePresetList.EditValue = preset.ToString();
-
-                    //PresetData p = pComboList.Find(x => x.PresetPack.Equals(preset.presetPack));
-                    //luePresetList.EditValue = p;
-                    luePresetList.ItemIndex = pComboList.FindIndex(x => x.PresetPack.Equals(preset.presetPack));
+                    this.cboParamList.Text = param.paramKey;
                 }
             }
         }
 
-        private void btnModifyPreset_Click(object sender, EventArgs e)
+        private void btnModifyParameter_Click(object sender, EventArgs e)
         {
-            string presetPack = String.Empty;
-            if (luePresetList.GetColumnValue("PresetPack") != null)
-                presetPack = luePresetList.GetColumnValue("PresetPack").ToString();
+            string paramKey = cboParamList.Text;
+            ResponseParam param = paramList.Find(x => x.paramKey.Equals(paramKey));
 
-            ResponsePreset preset = presetList.Find(x => x.presetPack.Equals(presetPack));
-
-            if (preset != null)
+            if (param != null)
             {
-                bool bResult = AddModParameter("modify", preset.presetPack);
+                string tags = string.Empty;
+                foreach(ButtonEdit tag in panelTag.Controls)
+                {
+                    tags += tag.Text + "|";
+                }
+                if (tags.Length > 0)
+                {
+                    tags = tags.Substring(0, tags.LastIndexOf("|"));
+                }
+
+                //Encoding
+                byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(tags);
+                string encTags = Convert.ToBase64String(basebyte);
+
+                string extras = string.Empty;
+                Dictionary<string, string> dicExtra = new Dictionary<string, string>();
+                foreach (MgmtLRPExtraControl ctrl in flowLayoutPanel1.Controls)
+                {
+                    if (dicExtra.ContainsKey(ctrl.ExtraKey) == false)
+                    {
+                        dicExtra.Add(ctrl.ExtraKey, ctrl.ExtraVal);
+                    }
+                }
+
+                extras = JsonConvert.SerializeObject(dicExtra);
+
+                bool bResult = AddModParameter("modify", paramKey, encTags, extras, param.paramPack);
 
                 if (bResult)
                 {
                     MessageBox.Show(Properties.Resources.SuccessModify, Properties.Resources.StringSuccess, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    InitializePresetList();
-                    //cboPresetList.Text = presetPack;
-                    //luePresetList.EditValue = luePresetList.Properties.GetKeyValueByDisplayText(presetPack);
-                    //luePresetList.EditValue = edtParamName.Text;
+                    InitializeParamList();
+                    //cboParamList.Text = paramKey;
                 }
             }
         }
 
-        private void btnDeletePreset_Click(object sender, EventArgs e)
+        private void btnDeleteParameter_Click(object sender, EventArgs e)
         {
-            if (luePresetList.GetColumnValue("PresetName") == null)
-                return;
-
-            string msg = string.Format(Properties.Resources.StringDeletePreset, luePresetList.GetColumnValue("PresetName").ToString());
+            string msg = string.Format(Properties.Resources.StringDeleteParameter, cboParamList.Text);
             if (MessageBox.Show(msg, Properties.Resources.StringConfirmation, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
             {
                 return;
             }
 
-            string presetPack = String.Empty;
-            if (luePresetList.GetColumnValue("PresetPack") != null)
-                presetPack = luePresetList.GetColumnValue("PresetPack").ToString();
+            ResponseParam param = paramList.Find(x => x.paramKey.Equals(cboParamList.Text));
 
-            ResponsePreset preset = presetList.Find(x => x.presetPack.Equals(presetPack));
-
-            if (preset != null)
+            if(param != null)
             {
-                bool bResult = RemovePreset(preset.presetPack);
+                bool bResult = RemoveParam(param.paramPack);
 
                 if (bResult)
                 {
                     MessageBox.Show(Properties.Resources.SuccessRemove, Properties.Resources.StringSuccess, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    InitializePresetList();
+                    InitializeParamList();
+                    cboParamList_SelectedIndexChanged(cboParamList, null);
                 }
             }
 
         }
 
-        private void btnSaveAsNewPreset_Click(object sender, EventArgs e)
+        private void btnSaveAsNewParameter_Click(object sender, EventArgs e)
         {
-            //string presetKey = Prompt.ShowDialog("Preset Key", "New Preset");
+            string paramKey = Prompt.ShowDialog("Parameter Key", "New Parameter");
 
-            //if (string.IsNullOrEmpty(presetKey))
-            //{
-            //    MessageBox.Show(Properties.Resources.InputParameterKey, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            //    return;
-            //}
-            bool bResult = AddModParameter("add", "");
+            if (string.IsNullOrEmpty(paramKey))
+            {
+                MessageBox.Show(Properties.Resources.InputParameterKey, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            string tags = string.Empty;
+            foreach (ButtonEdit tag in panelTag.Controls)
+            {
+                tags += tag.Text + "|";
+            }
+            if (tags.Length > 0)
+            {
+                tags = tags.Substring(0, tags.LastIndexOf("|"));
+            }
+
+            //Encoding
+            byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(tags);
+            string encTags = Convert.ToBase64String(basebyte);
+
+            string extras = string.Empty;
+            Dictionary<string, string> dicExtra = new Dictionary<string, string>();
+            foreach (MgmtLRPExtraControl ctrl in flowLayoutPanel1.Controls)
+            {
+                if(dicExtra.ContainsKey(ctrl.ExtraKey) == false)
+                {
+                    dicExtra.Add(ctrl.ExtraKey, ctrl.ExtraVal);
+                }
+            }
+
+            extras = JsonConvert.SerializeObject(dicExtra);
+
+            bool bResult = AddModParameter("add", paramKey, encTags, extras);
 
             if (bResult)
             {
                 MessageBox.Show(Properties.Resources.SuccessAdd, Properties.Resources.StringSuccess, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                InitializePresetList();
-                //cboPresetList.Text = "";
-                //cboPresetList.SelectedIndex = -1;
+                InitializeParamList();
+                //cboParamList.Text = paramKey;
             }
         }
 
@@ -1047,15 +1131,11 @@ namespace DynaRAP.UControl
             string paramPack = string.Empty;
             string seq = string.Empty;
 
-            string presetPack = String.Empty;
-            if (luePresetList.GetColumnValue("PresetPack") != null)
-                presetPack = luePresetList.GetColumnValue("PresetPack").ToString();
-
-            ResponsePreset preset = presetList.Find(x => x.presetPack.Equals(presetPack));
-            if (preset != null)
+            ResponseParam param = paramList.Find(x => x.paramKey.Equals(cboParamList.Text));
+            if (param != null)
             {
-                paramPack = preset.presetPack;
-                seq = preset.seq;
+                paramPack = param.paramPack;
+                seq = param.seq;
             }
 
             //Encoding
@@ -1070,51 +1150,155 @@ namespace DynaRAP.UControl
             }
         }
 
-        private void btnAddParameter_Click(object sender, EventArgs e)
+        private void cboParamList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            AddParameter(null);
-        }
+            var cbo = sender as ComboBoxEdit;
 
-        private void luePresetList_EditValueChanged(object sender, EventArgs e)
-        {
-            paramIndex = startParamIndex;
-            int reducedHeight = (paramHeight * flowLayoutPanel1.Controls.Count);
-            flowLayoutPanel1.Height -= reducedHeight;
-            flowLayoutPanel1.Controls.Clear();
-            btnModifyParameter.Location = new Point(btnModifyParameter.Location.X, btnModifyParameter.Location.Y - reducedHeight);
-            btnDeleteParameter.Location = new Point(btnDeleteParameter.Location.X, btnDeleteParameter.Location.Y - reducedHeight);
-            btnSaveAsNewParameter.Location = new Point(btnSaveAsNewParameter.Location.X, btnSaveAsNewParameter.Location.Y - reducedHeight);
+            lblDuplicateKey.Visible = false;
+                
+            ResponseParam param = paramList.Find(x => x.paramKey.Equals(cbo.Text));
 
-            string presetPack = String.Empty;
-            if (luePresetList.GetColumnValue("PresetPack") != null)
-                presetPack = luePresetList.GetColumnValue("PresetPack").ToString();
+            string adamsKey = String.Empty;
+            string zaeroKey = String.Empty;
+            string grtKey = String.Empty;
+            string fltpKey = String.Empty;
+            string fltsKey = String.Empty;
+            string propType = String.Empty;
+            string propCode = String.Empty;
+            string paramUnit = String.Empty;
+            string partInfo = String.Empty;
+            string partInfoSub = String.Empty;
+            string lrpX = String.Empty;
+            string lrpY = String.Empty;
+            string lrpZ = String.Empty;
 
-            presetParamList = null;
-            ResponsePreset preset = presetList.Find(x => x.presetPack.Equals(presetPack));
-
-            string presetName = String.Empty;
-
-            if (preset != null)
+            if (param != null)
             {
-                //Decoding
-                byte[] byte64 = Convert.FromBase64String(preset.presetName);
-                string decName = Encoding.UTF8.GetString(byte64);
+                adamsKey = param.adamsKey;
+                zaeroKey = param.zaeroKey;
+                grtKey = param.grtKey;
+                fltpKey = param.fltpKey;
+                fltsKey = param.fltsKey;
+                if (param.propInfo != null)
+                {
+                    propType = param.propInfo.propType;
+                    propCode = param.propInfo.propCode;
+                    paramUnit = param.propInfo.paramUnit;
+                }
+                partInfo = param.partInfo;
+                partInfoSub = param.partInfoSub;
+                lrpX = param.lrpX.ToString();
+                lrpY = param.lrpY.ToString();
+                lrpZ = param.lrpZ.ToString();
+            }
+            edtAdams.Text = adamsKey;
+            edtZaero.Text = zaeroKey;
+            edtGrt.Text = grtKey;
+            edtFltp.Text = fltpKey;
+            edtFlts.Text = fltsKey;
+            cboPropertyType.Text = propType;
+            cboPropertyCode.Text = propCode;
+            cboUnit.Text = paramUnit;
+            cboPart.Text = partInfo;
+            cboPartLocation.Text = partInfoSub;
+            edtLrpX.Text = lrpX;
+            edtLrpY.Text = lrpY;
+            edtLrpZ.Text = lrpZ;
 
-                presetName = decName;
+            int height = extraHeight * flowLayoutPanel1.Controls.Count;
+            lblTag.Location = new Point(lblTag.Location.X, lblTag.Location.Y - height);
+            edtTag.Location = new Point(edtTag.Location.X, edtTag.Location.Y - height);
+            panelTag.Location = new Point(panelTag.Location.X, panelTag.Location.Y - height);
+            btnModifyParameter.Location = new Point(btnModifyParameter.Location.X, btnModifyParameter.Location.Y - height);
+            btnDeleteParameter.Location = new Point(btnDeleteParameter.Location.X, btnDeleteParameter.Location.Y - height);
+            btnSaveAsNewParameter.Location = new Point(btnSaveAsNewParameter.Location.X, btnSaveAsNewParameter.Location.Y - height);
+            flowLayoutPanel1.Height = flowLayoutPanel1Height;
 
-                presetParamList = GetPresetParamList(preset.presetPack);
+            extraIndex = startExtraIndex;
+
+            MgmtLRPExtraControl[] controls = new MgmtLRPExtraControl[flowLayoutPanel1.Controls.Count];
+            extraControlList.CopyTo(controls);
+            foreach (MgmtLRPExtraControl ctrl in controls)
+            {
+                flowLayoutPanel1.Controls.Remove(ctrl);
+                ctrl.Dispose();
+                extraControlList.Remove(ctrl);
             }
 
-            if (presetParamList != null)
+            if (param != null)
             {
-                foreach (ResponseParam param in presetParamList)
+                foreach (KeyValuePair<string, string> pair in param.extras)
                 {
-                    AddParameter(param);
+                    AddExtra(pair.Key, pair.Value);
                 }
             }
-            edtParamName.Text = presetName;
+
+            ButtonEdit[] controlArray = new ButtonEdit[panelTag.Controls.Count];
+            panelTag.Controls.CopyTo(controlArray, 0);
+
+            foreach (ButtonEdit btn in controlArray)
+            {
+                panelTag.Controls.Remove(btn);
+            }
+
+            if (param != null)
+            {
+                //Decoding
+                byte[] byte64 = Convert.FromBase64String(param.tags);
+                string decName = Encoding.UTF8.GetString(byte64);
+
+                string[] tags = decName.Split('|');
+                foreach (string tag in tags)
+                {
+                    addTag(tag);
+                }
+            }
+        }
+
+        private void btnPropertyConfig_Click(object sender, EventArgs e)
+        {
+            PropertyConfigForm form = new PropertyConfigForm();
+            form.StartPosition = FormStartPosition.CenterScreen;
+            form.ShowDialog();
+
+            InitializeProperty();
+        }
+
+        private void edtTag_ButtonClick(object sender, ButtonPressedEventArgs e)
+        {
+            ButtonEdit me = sender as ButtonEdit;
+            if (me != null)
+            {
+                addTag(me.Text);
+                me.Text = String.Empty;
+            }
+        }
+
+        private void edtTag_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode != Keys.Enter)
+                return;
+
+            ButtonEdit me = sender as ButtonEdit;
+            if (me != null)
+            {
+                addTag(me.Text);
+                me.Text = String.Empty;
+            }
+        }
+        private void removeTag_ButtonClick(object sender, ButtonPressedEventArgs e)
+        {
+            ButtonEdit btn = sender as ButtonEdit;
+            panelTag.Controls.Remove(btn);
+
+        }
+
+        private void btnAddExtra_ButtonClick(object sender, EventArgs e)
+        {
+            AddExtra();
         }
 
         #endregion EventHandler
+
     }
 }

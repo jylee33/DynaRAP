@@ -2,6 +2,7 @@ package com.servetech.dynarap.controller;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.servetech.dynarap.config.ServerConstants;
 import com.servetech.dynarap.db.mapper.DirMapper;
 import com.servetech.dynarap.db.service.*;
 import com.servetech.dynarap.db.type.CryptoField;
@@ -22,8 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Controller
 @RequestMapping(value = "/api/{serviceVersion}")
@@ -198,19 +198,23 @@ public class ServiceApiController extends ApiController {
             return ResponseHelper.response(200, "Success - Param Deleted", "");
         }
 
-        if (command.equals("group-list")) {
-            List<ParamVO.Group> paramGroups = getService(ParamService.class).getParamGroupList();
-            return ResponseHelper.response(200, "Success - Param Group List", paramGroups);
+        if (command.equals("prop-list")) {
+            String propType = null;
+            if (!checkJsonEmpty(payload, "propType"))
+                propType = payload.get("propType").getAsString();
+
+            List<ParamVO.Prop> paramProps = getService(ParamService.class).getParamPropList(propType);
+            return ResponseHelper.response(200, "Success - Param Prop List", paramProps);
         }
 
-        if (command.equals("group-add")) {
-            ParamVO.Group paramGroup = getService(ParamService.class).insertParamGroup(user.getUid(), payload);
-            return ResponseHelper.response(200, "Success - Param Group Add", paramGroup);
+        if (command.equals("prop-add")) {
+            ParamVO.Prop paramProp = getService(ParamService.class).insertParamProp(user.getUid(), payload);
+            return ResponseHelper.response(200, "Success - Param Prop Add", paramProp);
         }
 
-        if (command.equals("group-modify")) {
-            ParamVO.Group paramGroup = getService(ParamService.class).updateParamGroup(user.getUid(), payload);
-            return ResponseHelper.response(200, "Success - Param Group Modify", paramGroup);
+        if (command.equals("prop-modify")) {
+            ParamVO.Prop paramProp = getService(ParamService.class).updateParamProp(user.getUid(), payload);
+            return ResponseHelper.response(200, "Success - Param Prop Modify", paramProp);
         }
 
         throw new HandledServiceException(411, "명령이 정의되지 않았습니다.");
@@ -613,6 +617,143 @@ public class ServiceApiController extends ApiController {
             return ResponseHelper.response(200, "Success - Get Create ShortBlock Progress", shortBlockMeta);
         }
 
+        if (command.equals("row-data")) {
+            CryptoField partSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "partSeq"))
+                partSeq = CryptoField.decode(payload.get("partSeq").getAsString(), 0L);
+
+            PartVO partInfo = getService(PartService.class).getPartBySeq(partSeq);
+
+            // 요청 파라미터 셋.
+            JsonObject jobjResult = new JsonObject();
+            JsonArray jarrParams = null;
+            if (!checkJsonEmpty(payload, "paramSet"))
+                jarrParams = payload.get("paramSet").getAsJsonArray();
+            List<ParamVO> params = new ArrayList<>();
+
+            if (jarrParams == null || jarrParams.size() == 0) {
+                List<String> paramSet = listOps.range("P" + partInfo.getSeq().originOf(), 0, Integer.MAX_VALUE);
+                for (String p : paramSet) {
+                    ParamVO param = getService(ParamService.class).getPresetParamBySeq(
+                            new CryptoField(Long.parseLong(p.substring(1))));
+                    if (param == null) continue;
+                    params.add(param);
+                }
+            }
+            else {
+                for (int i = 0; i < jarrParams.size(); i++) {
+                    Long paramKey = jarrParams.get(i).getAsLong();
+                    ParamVO param = getService(ParamService.class).getPresetParamBySeq(new CryptoField(paramKey));
+                    if (param == null) continue;
+                    params.add(param);
+                }
+            }
+
+            JsonArray jarrJulian = payload.get("julianRange").getAsJsonArray();
+            String julianFrom = jarrJulian.get(0).getAsString();
+            if (julianFrom == null || julianFrom.isEmpty())
+                julianFrom = zsetOps.rangeByScore("P" + partInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE).iterator().next();
+            String julianTo = jarrJulian.get(1).getAsString();
+            if (julianTo == null || julianTo.isEmpty())
+                julianTo = zsetOps.reverseRangeByScore("P" + partInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE).iterator().next();
+
+            String julianStart = zsetOps.rangeByScore("P" + partInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE).iterator().next();
+            Long startRowAt = zsetOps.score("P" + partInfo.getSeq().originOf() + ".R", julianStart).longValue();
+
+            Long rankFrom = zsetOps.rank("P" + partInfo.getSeq().originOf() + ".R", julianFrom);
+            if (rankFrom == null) {
+                julianFrom = zsetOps.rangeByScore("P" + partInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE).iterator().next();
+                rankFrom = zsetOps.rank("P" + partInfo.getSeq().originOf() + ".R", julianFrom);
+            }
+            Long rankTo = zsetOps.rank("P" + partInfo.getSeq().originOf() + ".R", julianTo);
+            if (rankTo == null) {
+                julianTo = zsetOps.reverseRangeByScore("P" + partInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE).iterator().next();
+                rankTo = zsetOps.rank("P" + partInfo.getSeq().originOf() + ".R", julianTo);
+            }
+
+            LinkedHashMap<String, List<Double>> rowData = new LinkedHashMap<>();
+            for (ParamVO p : params) {
+                Set<String> listSet = zsetOps.rangeByScore(
+                        "P" + partInfo.getSeq().originOf() + ".N" + p.getPresetParamSeq(), startRowAt + rankFrom, startRowAt + rankTo);
+
+                Iterator<String> iterListSet = listSet.iterator();
+                while (iterListSet.hasNext()) {
+                    String rowVal = iterListSet.next();
+                    String julianTime = rowVal.substring(0, rowVal.lastIndexOf(":"));
+                    List<Double> rowList = rowData.get(julianTime);
+                    if (rowList == null) {
+                        rowList = new ArrayList<>();
+                        rowData.put(julianTime, rowList);
+                    }
+                    Double dblVal = Double.parseDouble(rowVal.substring(rowVal.lastIndexOf(":") + 1));
+                    rowList.add(dblVal);
+                }
+            }
+
+            jobjResult.add("paramSet", ServerConstants.GSON.toJsonTree(params));
+            jobjResult.add("julianSet", ServerConstants.GSON.toJsonTree(Arrays.asList(rowData.keySet())));
+            jobjResult.add("data", ServerConstants.GSON.toJsonTree(rowData.values()));
+
+            return ResponseHelper.response(200, "Success - rowData", jobjResult);
+        }
+
+        if (command.equals("column-data")) {
+            CryptoField partSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "partSeq"))
+                partSeq = CryptoField.decode(payload.get("partSeq").getAsString(), 0L);
+
+            PartVO partInfo = getService(PartService.class).getPartBySeq(partSeq);
+
+            // 요청 파라미터 셋.
+            JsonObject jobjResult = new JsonObject();
+            JsonArray jarrParams = null;
+            if (!checkJsonEmpty(payload, "paramSet"))
+                jarrParams = payload.get("paramSet").getAsJsonArray();
+            List<ParamVO> params = new ArrayList<>();
+
+            if (jarrParams == null || jarrParams.size() == 0) {
+                List<String> paramSet = listOps.range("P" + partInfo.getSeq().originOf(), 0, Integer.MAX_VALUE);
+                for (String p : paramSet) {
+                    ParamVO param = getService(ParamService.class).getPresetParamBySeq(
+                            new CryptoField(Long.parseLong(p.substring(1))));
+                    if (param == null) continue;
+                    params.add(param);
+                }
+            }
+            else {
+                for (int i = 0; i < jarrParams.size(); i++) {
+                    Long paramKey = jarrParams.get(i).getAsLong();
+                    ParamVO param = getService(ParamService.class).getPresetParamBySeq(new CryptoField(paramKey));
+                    if (param == null) continue;
+                    params.add(param);
+                }
+            }
+
+            List<String> julianData = new ArrayList<>();
+            LinkedHashMap<String, List<Double>> paramData = new LinkedHashMap<>();
+            for (ParamVO p : params) {
+                Set<String> listSet = zsetOps.rangeByScore(
+                        "P" + partInfo.getSeq().originOf() + ".N" + p.getPresetParamSeq(), 0, Integer.MAX_VALUE);
+                List<Double> rowData = new ArrayList<>();
+                paramData.put(p.getParamKey(), rowData);
+
+                Iterator<String> iterListSet = listSet.iterator();
+                while (iterListSet.hasNext()) {
+                    String rowVal = iterListSet.next();
+                    String julianTime = rowVal.substring(0, rowVal.lastIndexOf(":"));
+                    if (!julianData.contains(julianTime)) julianData.add(julianTime);
+
+                    Double dblVal = Double.parseDouble(rowVal.substring(rowVal.lastIndexOf(":") + 1));
+                    rowData.add(dblVal);
+                }
+            }
+
+            jobjResult.add("julianSet", ServerConstants.GSON.toJsonTree(Arrays.asList(julianData)));
+            jobjResult.add("data", ServerConstants.GSON.toJsonTree(paramData.values()));
+
+            return ResponseHelper.response(200, "Success - columnData", jobjResult);
+        }
+
         throw new HandledServiceException(411, "명령이 정의되지 않았습니다.");
     }
 
@@ -675,6 +816,144 @@ public class ServiceApiController extends ApiController {
             //getService(PartService.class).deleteShortBlockMeta(blockMetaSeq);
 
             return ResponseHelper.response(200, "Success - Remove ShortBlock Meta", "");
+        }
+
+        if (command.equals("row-data")) {
+            CryptoField blockSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "blockSeq"))
+                blockSeq = CryptoField.decode(payload.get("blockSeq").getAsString(), 0L);
+
+            ShortBlockVO blockInfo = getService(PartService.class).getShortBlockBySeq(blockSeq);
+
+            // 요청 파라미터 셋.
+            JsonObject jobjResult = new JsonObject();
+            JsonArray jarrParams = null;
+            if (!checkJsonEmpty(payload, "paramSet"))
+                jarrParams = payload.get("paramSet").getAsJsonArray();
+            List<ParamVO> params = new ArrayList<>();
+
+            if (jarrParams == null || jarrParams.size() == 0) {
+                List<String> paramSet = listOps.range("S" + blockInfo.getSeq().originOf(), 0, Integer.MAX_VALUE);
+                for (String p : paramSet) {
+                    // FIXME : unmapped params 처리
+                    ParamVO param = getService(ParamService.class).getPresetParamBySeq(
+                            new CryptoField(Long.parseLong(p.substring(1))));
+                    if (param == null) continue;
+                    params.add(param);
+                }
+            }
+            else {
+                for (int i = 0; i < jarrParams.size(); i++) {
+                    Long paramKey = jarrParams.get(i).getAsLong();
+                    ParamVO param = getService(ParamService.class).getPresetParamBySeq(new CryptoField(paramKey));
+                    if (param == null) continue;
+                    params.add(param);
+                }
+            }
+
+            JsonArray jarrJulian = payload.get("julianRange").getAsJsonArray();
+            String julianFrom = jarrJulian.get(0).getAsString();
+            if (julianFrom == null || julianFrom.isEmpty())
+                julianFrom = zsetOps.rangeByScore("S" + blockInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE).iterator().next();
+            String julianTo = jarrJulian.get(1).getAsString();
+            if (julianTo == null || julianTo.isEmpty())
+                julianTo = zsetOps.reverseRangeByScore("S" + blockInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE).iterator().next();
+
+            String julianStart = zsetOps.rangeByScore("S" + blockInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE).iterator().next();
+            Long startRowAt = zsetOps.score("S" + blockInfo.getSeq().originOf() + ".R", julianStart).longValue();
+
+            Long rankFrom = zsetOps.rank("S" + blockInfo.getSeq().originOf() + ".R", julianFrom);
+            if (rankFrom == null) {
+                julianFrom = zsetOps.rangeByScore("S" + blockInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE).iterator().next();
+                rankFrom = zsetOps.rank("S" + blockInfo.getSeq().originOf() + ".R", julianFrom);
+            }
+            Long rankTo = zsetOps.rank("S" + blockInfo.getSeq().originOf() + ".R", julianTo);
+            if (rankTo == null) {
+                julianTo = zsetOps.reverseRangeByScore("S" + blockInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE).iterator().next();
+                rankTo = zsetOps.rank("S" + blockInfo.getSeq().originOf() + ".R", julianTo);
+            }
+
+            LinkedHashMap<String, List<Double>> rowData = new LinkedHashMap<>();
+            for (ParamVO p : params) {
+                Set<String> listSet = zsetOps.rangeByScore(
+                        "S" + blockInfo.getSeq().originOf() + ".N" + p.getPresetParamSeq(), startRowAt + rankFrom, startRowAt + rankTo);
+
+                Iterator<String> iterListSet = listSet.iterator();
+                while (iterListSet.hasNext()) {
+                    String rowVal = iterListSet.next();
+                    String julianTime = rowVal.substring(0, rowVal.lastIndexOf(":"));
+                    List<Double> rowList = rowData.get(julianTime);
+                    if (rowList == null) {
+                        rowList = new ArrayList<>();
+                        rowData.put(julianTime, rowList);
+                    }
+                    Double dblVal = Double.parseDouble(rowVal.substring(rowVal.lastIndexOf(":") + 1));
+                    rowList.add(dblVal);
+                }
+            }
+
+            jobjResult.add("paramSet", ServerConstants.GSON.toJsonTree(params));
+            jobjResult.add("julianSet", ServerConstants.GSON.toJsonTree(Arrays.asList(rowData.keySet())));
+            jobjResult.add("data", ServerConstants.GSON.toJsonTree(rowData.values()));
+
+            return ResponseHelper.response(200, "Success - rowData", jobjResult);
+        }
+
+        if (command.equals("column-data")) {
+            CryptoField blockSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "blockSeq"))
+                blockSeq = CryptoField.decode(payload.get("blockSeq").getAsString(), 0L);
+
+            ShortBlockVO blockInfo = getService(PartService.class).getShortBlockBySeq(blockSeq);
+
+            // 요청 파라미터 셋.
+            JsonObject jobjResult = new JsonObject();
+            JsonArray jarrParams = null;
+            if (!checkJsonEmpty(payload, "paramSet"))
+                jarrParams = payload.get("paramSet").getAsJsonArray();
+            List<ParamVO> params = new ArrayList<>();
+
+            if (jarrParams == null || jarrParams.size() == 0) {
+                List<String> paramSet = listOps.range("S" + blockInfo.getSeq().originOf(), 0, Integer.MAX_VALUE);
+                for (String p : paramSet) {
+                    ParamVO param = getService(ParamService.class).getPresetParamBySeq(
+                            new CryptoField(Long.parseLong(p.substring(1))));
+                    if (param == null) continue;
+                    params.add(param);
+                }
+            }
+            else {
+                for (int i = 0; i < jarrParams.size(); i++) {
+                    Long paramKey = jarrParams.get(i).getAsLong();
+                    ParamVO param = getService(ParamService.class).getPresetParamBySeq(new CryptoField(paramKey));
+                    if (param == null) continue;
+                    params.add(param);
+                }
+            }
+
+            List<String> julianData = new ArrayList<>();
+            LinkedHashMap<String, List<Double>> paramData = new LinkedHashMap<>();
+            for (ParamVO p : params) {
+                Set<String> listSet = zsetOps.rangeByScore(
+                        "S" + blockInfo.getSeq().originOf() + ".N" + p.getPresetParamSeq(), 0, Integer.MAX_VALUE);
+                List<Double> rowData = new ArrayList<>();
+                paramData.put(p.getParamKey(), rowData);
+
+                Iterator<String> iterListSet = listSet.iterator();
+                while (iterListSet.hasNext()) {
+                    String rowVal = iterListSet.next();
+                    String julianTime = rowVal.substring(0, rowVal.lastIndexOf(":"));
+                    if (!julianData.contains(julianTime)) julianData.add(julianTime);
+
+                    Double dblVal = Double.parseDouble(rowVal.substring(rowVal.lastIndexOf(":") + 1));
+                    rowData.add(dblVal);
+                }
+            }
+
+            jobjResult.add("julianSet", ServerConstants.GSON.toJsonTree(Arrays.asList(julianData)));
+            jobjResult.add("data", ServerConstants.GSON.toJsonTree(paramData.values()));
+
+            return ResponseHelper.response(200, "Success - columnData", jobjResult);
         }
 
         throw new HandledServiceException(411, "명령이 정의되지 않았습니다.");

@@ -44,6 +44,11 @@ namespace DynaRAP.UControl
 
         private void ImportModuleControl_Load(object sender, EventArgs e)
         {
+            cboImportType.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+            cboImportType.Properties.Items.Add("GRT");
+            cboImportType.Properties.Items.Add("FLTP");
+            cboImportType.Properties.Items.Add("FLTS");
+
             //InitializeSplittedRegionList();
 
             luePresetList.Properties.DisplayMember = "PresetName";
@@ -56,10 +61,10 @@ namespace DynaRAP.UControl
             string strNow = string.Format("{0:yyyy-MM-dd}", dtNow);
             //dateScenario.Text = strNow;
 
-            panelData.AutoScroll = true;
-            panelData.WrapContents = false;
-            panelData.HorizontalScroll.Visible = false;
-            panelData.VerticalScroll.Visible = true;
+            flowLayoutPanel1.AutoScroll = true;
+            flowLayoutPanel1.WrapContents = false;
+            flowLayoutPanel1.HorizontalScroll.Visible = false;
+            flowLayoutPanel1.VerticalScroll.Visible = true;
 
             btnViewData.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             btnAddParameter.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
@@ -183,21 +188,44 @@ namespace DynaRAP.UControl
             AddParameter();
         }
 
-        int paramIndex = 9;
+        const int START_PARAM_INDEX = 0;
+        const int PARAM_HEIGHT = 140;
+        const int MAX_CHART_CNT = 3;
+        int paramIndex = START_PARAM_INDEX;
 
         private void AddParameter()
         {
             ImportParamControl ctrl = new ImportParamControl();
             ctrl.Title = "Parameter " + paramIndex.ToString();
+            ctrl.DeleteBtnClicked += new EventHandler(ImportParamControl_DeleteBtnClicked);
             ctrl.DicData = dicData;
             ctrl.OnSelectedRange += ChartControl_OnSelectedRange;
-            ctrl.Dock = DockStyle.Fill;
-            panelData.Controls.Add(ctrl);
-            panelData.Controls.SetChildIndex(ctrl, paramIndex++);
-
+            //ctrl.Dock = DockStyle.Fill;
+            flowLayoutPanel3.Controls.Add(ctrl);
+            flowLayoutPanel3.Controls.SetChildIndex(ctrl, paramIndex);
             paramList.Add(ctrl);
 
+            paramIndex++;
+            if (paramIndex <= MAX_CHART_CNT)
+            {
+                flowLayoutPanel3.Height += PARAM_HEIGHT;
+            }
         }
+
+        void ImportParamControl_DeleteBtnClicked(object sender, EventArgs e)
+        {
+            ImportParamControl ctrl = sender as ImportParamControl;
+            flowLayoutPanel3.Controls.Remove(ctrl);
+            paramList.Remove(ctrl);
+            ctrl.Dispose();
+
+            paramIndex--;
+            if (paramIndex < MAX_CHART_CNT)
+            {
+                flowLayoutPanel3.Height -= PARAM_HEIGHT;
+            }
+        }
+
         private void ChartControl_OnSelectedRange(object sender, SelectedRangeEventArgs e)
         {
             ImportParamControl me = sender as ImportParamControl;
@@ -222,7 +250,10 @@ namespace DynaRAP.UControl
             lblSplitCount.Text = string.Format(Properties.Resources.StringSplitCount, splitList.Count);
         }
 
-        int intervalIndex = 6;
+        const int START_SPLIT_INDEX = 0;
+        const int SPLIT_HEIGHT = 24;
+        const int MAX_SPLIT_CNT = 10;
+        int intervalIndex = START_SPLIT_INDEX;
 
         private void AddSplittedInterval()
         {
@@ -247,24 +278,32 @@ namespace DynaRAP.UControl
             }
             
             ImportIntervalControl ctrl = new ImportIntervalControl(minValue, maxValue);
-            ctrl.Title = "flight#" + (paramIndex + intervalIndex).ToString();
+            //ctrl.Title = "flight#" + (paramIndex + intervalIndex).ToString();
             ctrl.DeleteBtnClicked += new EventHandler(Interval_DeleteBtnClicked);
-            panelData.Controls.Add(ctrl);
-            panelData.Controls.SetChildIndex(ctrl, paramIndex + intervalIndex);
+            flowLayoutPanel4.Controls.Add(ctrl);
+            flowLayoutPanel4.Controls.SetChildIndex(ctrl, intervalIndex);
             splitList.Add(ctrl);
 
             intervalIndex++;
+            if (intervalIndex <= MAX_SPLIT_CNT)
+            {
+                flowLayoutPanel4.Height += SPLIT_HEIGHT;
+            }
 
         }
 
         void Interval_DeleteBtnClicked(object sender, EventArgs e)
         {
             ImportIntervalControl ctrl = sender as ImportIntervalControl;
-            panelData.Controls.Remove(ctrl);
+            flowLayoutPanel1.Controls.Remove(ctrl);
             splitList.Remove(ctrl);
             ctrl.Dispose();
-            
+
             intervalIndex--;
+            if (intervalIndex <= MAX_SPLIT_CNT)
+            {
+                flowLayoutPanel4.Height -= SPLIT_HEIGHT;
+            }
 
             lblSplitCount.Text = string.Format(Properties.Resources.StringSplitCount, splitList.Count);
         }
@@ -372,8 +411,8 @@ namespace DynaRAP.UControl
 #endif
             {
 #if DEBUG
-                csvFilePath = @"C:\temp\a_test.xls";
-                lblFlyingData.Text = @"C:\temp\a_test.xls";
+                csvFilePath = @"C:\temp\a.xls";
+                lblFlyingData.Text = @"C:\temp\a.xls";
                 StreamReader sr = new StreamReader(csvFilePath);
 #else
                 csvFilePath = dlg.FileName;
@@ -435,6 +474,56 @@ namespace DynaRAP.UControl
 
         private void luePresetList_EditValueChanged(object sender, EventArgs e)
         {
+
+        }
+
+        private void edtTag_ButtonClick(object sender, ButtonPressedEventArgs e)
+        {
+            ButtonEdit me = sender as ButtonEdit;
+            if (me != null)
+            {
+                addTag(me.Text);
+                me.Text = String.Empty;
+            }
+        }
+
+        private void edtTag_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode != Keys.Enter)
+                return;
+
+            ButtonEdit me = sender as ButtonEdit;
+            if (me != null)
+            {
+                addTag(me.Text);
+                me.Text = String.Empty;
+            }
+        }
+
+        private void addTag(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+                return;
+
+            ButtonEdit btn = new ButtonEdit();
+            btn.Properties.Buttons[0].Kind = ButtonPredefines.Close;
+            btn.BorderStyle = BorderStyles.Simple;
+            btn.ForeColor = Color.White;
+            btn.Properties.Appearance.BorderColor = Color.White;
+            btn.Font = new Font(btn.Font, FontStyle.Bold);
+            btn.Properties.Appearance.TextOptions.HAlignment = HorzAlignment.Center;
+            //btn.ReadOnly = true;
+            btn.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            btn.Properties.AllowFocused = false;
+            btn.ButtonClick += removeTag_ButtonClick;
+            btn.Text = name;
+            panelTag.Controls.Add(btn);
+        }
+
+        private void removeTag_ButtonClick(object sender, ButtonPressedEventArgs e)
+        {
+            ButtonEdit btn = sender as ButtonEdit;
+            panelTag.Controls.Remove(btn);
 
         }
     }

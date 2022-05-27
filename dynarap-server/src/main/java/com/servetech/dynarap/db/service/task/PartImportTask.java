@@ -9,12 +9,15 @@ import com.servetech.dynarap.vo.ParamVO;
 import com.servetech.dynarap.vo.PartVO;
 import com.servetech.dynarap.vo.PresetVO;
 import com.servetech.dynarap.vo.RawVO;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.core.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.io.BufferedReader;
 import java.io.File;
@@ -32,6 +35,17 @@ import java.util.Map;
 @Component
 public class PartImportTask {
     private static final Logger logger = LoggerFactory.getLogger(PartImportTask.class);
+
+    private ListOperations<String, String> listOps;
+    private ZSetOperations<String, String> zsetOps;
+
+    public void setListOps(ListOperations<String, String> listOps) {
+        this.listOps = listOps;
+    }
+
+    public void setZsetOps(ZSetOperations<String, String> zsetOps) {
+        this.zsetOps = zsetOps;
+    }
 
     @Async("texecutor")
     public Runnable asyncRunImport(final JdbcTemplate jdbcTemplate, final ParamService paramService, final RawService rawService, final RawVO.Upload rawUpload) {
@@ -77,10 +91,10 @@ public class PartImportTask {
                                 "    `paramValStr` varchar(128) default ''           comment '파라미터 값 (문자)',\n" +
                                 "    constraint pk_dynarap_raw primary key (`seq`)\n" +
                                 ")");
-                        stmt.executeUpdate("create index `idx_dynarap_" + tempTableName + "_param` on `dynarap_" + tempTableName + "` (`presetPack`, `presetSeq`, `presetParamSeq`)");
-                        stmt.executeUpdate("create index `idx_dynarap_" + tempTableName + "_row` on `dynarap_" + tempTableName + "` (`rowNo`, `presetPack`, `presetSeq`)");
                         stmt.executeUpdate("create index `idx_dynarap_" + tempTableName + "_julian` on `dynarap_" + tempTableName + "` (`julianTimeAt`)");
-                        stmt.executeUpdate("create index `idx_dynarap_" + tempTableName + "_row2` on `dynarap_" + tempTableName + "` (`rowNo`)");
+                        stmt.executeUpdate("create index `idx_dynarap_" + tempTableName + "_row` on `dynarap_" + tempTableName + "` (`rowNo`)");
+                        stmt.executeUpdate("create index `idx_dynarap_" + tempTableName + "_julian_row` on `dynarap_" + tempTableName + "` (`julianTimeAt`,`rowNo`)");
+                        stmt.executeUpdate("create index `idx_dynarap_" + tempTableName + "_preset_row` on `dynarap_" + tempTableName + "` (`presetPack`,`presetSeq`,`presetParamSeq`,`rowNo`)");
                         conn.commit(); // drop 이후 커밋 처리.
 
                         if (presetParams == null) presetParams = new ArrayList<>();
@@ -91,12 +105,12 @@ public class PartImportTask {
                         Map<String, ParamVO> fltpMap = new LinkedHashMap<>();
                         Map<String, ParamVO> fltsMap = new LinkedHashMap<>();
                         for (ParamVO param : presetParams) {
-                            paramMap.put(param.getParamKey() + "_" + param.getParamUnit(), param);
-                            adamsMap.put(param.getAdamsKey() + "_" + param.getParamUnit(), param);
-                            zaeroMap.put(param.getZaeroKey() + "_" + param.getParamUnit(), param);
-                            grtMap.put(param.getGrtKey() + "_" + param.getParamUnit(), param);
-                            fltpMap.put(param.getFltpKey() + "_" + param.getParamUnit(), param);
-                            fltsMap.put(param.getFltsKey() + "_" + param.getParamUnit(), param);
+                            paramMap.put(param.getParamKey() + "_" + param.getPropInfo().getParamUnit(), param);
+                            adamsMap.put(param.getAdamsKey() + "_" + param.getPropInfo().getParamUnit(), param);
+                            zaeroMap.put(param.getZaeroKey() + "_" + param.getPropInfo().getParamUnit(), param);
+                            grtMap.put(param.getGrtKey() + "_" + param.getPropInfo().getParamUnit(), param);
+                            fltpMap.put(param.getFltpKey() + "_" + param.getPropInfo().getParamUnit(), param);
+                            fltsMap.put(param.getFltsKey() + "_" + param.getPropInfo().getParamUnit(), param);
                         }
 
                         // File loading
@@ -278,18 +292,36 @@ public class PartImportTask {
                                     part.setSeq(new CryptoField(rs.getLong(1)));
                                 rs.close();
 
+                                // 기존 오더 삭제
+                                listOps.trim("P" + part.getSeq().originOf(), 0, Integer.MAX_VALUE);
+                                zsetOps.removeRangeByScore("P" + part.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE);
+
+                                for (ParamVO param : presetParams) {
+                                    listOps.rightPush("P" + part.getSeq().originOf(), "P" + param.getPresetParamSeq());
+                                    zsetOps.removeRangeByScore("P" + part.getSeq().originOf() + ".N" + param.getPresetParamSeq(), 0, Integer.MAX_VALUE);
+                                    zsetOps.removeRangeByScore("P" + part.getSeq().originOf() + ".L" + param.getPresetParamSeq(), 0, Integer.MAX_VALUE);
+                                    zsetOps.removeRangeByScore("P" + part.getSeq().originOf() + ".H" + param.getPresetParamSeq(), 0, Integer.MAX_VALUE);
+                                }
+
                                 // dump part raw from raw_temp table
                                 int minRowNo = -1;
                                 int maxRowNo = -1;
-                                rs = stmt.executeQuery("select " +
-                                        "(select rowNo from dynarap_" + tempTableName + " where julianTimeAt = '" + part.getJulianStartAt() + "' limit 0, 1) as minRowNo," +
-                                        "(select rowNo from dynarap_" + tempTableName + " where julianTimeAt = '" + part.getJulianEndAt() + "' limit 0, 1) as maxRowNo limit 0, 1");
+                                String minMaxRowQuery = "select\n" +
+                                        "    (select distinct rowNo from dynarap_" + tempTableName + " where julianTimeAt = (\n" +
+                                        "        select min(julianTimeAt) from dynarap_" + tempTableName + " where julianTimeAt >= '" + part.getJulianStartAt() + "')) as minRowNo,\n" +
+                                        "    (select distinct rowNo from dynarap_" + tempTableName + " where julianTimeAt = (\n" +
+                                        "        select max(julianTimeAt) from dynarap_" + tempTableName + " where julianTimeAt <= '" + part.getJulianEndAt() + "')) as maxRowNo";
+
+                                rs = stmt.executeQuery(minMaxRowQuery);
                                 if (rs.next()) {
                                     minRowNo = rs.getInt("minRowNo");
                                     maxRowNo = rs.getInt("maxRowNo");
                                     rawUpload.setTotalFetchCount(maxRowNo - minRowNo + 1);
                                 }
                                 rs.close();
+
+                                logger.info("[[[[[ part " + part.getSeq().originOf() + " start=" + part.getJulianStartAt() + ", end=" + part.getJulianEndAt());
+                                logger.info("[[[[[ part " + part.getSeq().originOf() + " minRow=" + minRowNo + ", maxRow=" + maxRowNo);
 
                                 if (minRowNo == -1 || maxRowNo == -1)
                                     throw new Exception("기준 데이터에서 ROW를 찾을 수 없습니다.");
@@ -313,7 +345,7 @@ public class PartImportTask {
 
                                 for (ParamVO param : presetParams) {
                                     rawUpload.setStatus("create-part-" + i + "-" + param.getPresetParamSeq());
-                                    rawUpload.setStatusMessage((i + 1) + "번째 분할 구간 데이터를 생성하고 있습니다. [" + param.getParamName().originOf() + "]");
+                                    rawUpload.setStatusMessage((i + 1) + "번째 분할 구간 데이터를 생성하고 있습니다. [" + param.getParamKey() + "]");
 
                                     // raw 데이터에서 param에 해당 하는 내용을 가져와서 part에 넣어주기.
                                     pstmt.setLong(1, param.getPresetPack().originOf());
@@ -321,17 +353,32 @@ public class PartImportTask {
                                     pstmt.setLong(3, param.getPresetParamSeq());
                                     rs = pstmt.executeQuery();
 
+                                    String rowKey = "P" + part.getSeq().originOf() + ".N" + param.getPresetParamSeq();
+                                    String lpfKey = "P" + part.getSeq().originOf() + ".L" + param.getPresetParamSeq();
+                                    String hpfKey = "P" + part.getSeq().originOf() + ".H" + param.getPresetParamSeq();
+
                                     int batchCount = 1;
                                     while (rs.next()) {
+                                        int rowNo = rs.getInt("rowNo");
+                                        String julianTimeAt = rs.getString("julianTimeAt");
+                                        Double dblVal = rs.getDouble("paramVal");
+
+                                        zsetOps.addIfAbsent("P" + part.getSeq().originOf() + ".R", rs.getString("julianTimeAt"), rowNo);
+
                                         pstmt_insert.setLong(1, part.getSeq().originOf());
                                         pstmt_insert.setLong(2, param.getPresetParamSeq());
-                                        pstmt_insert.setInt(3, rs.getInt("rowNo"));
-                                        pstmt_insert.setString(4, rs.getString("julianTimeAt"));
-                                        pstmt_insert.setDouble(5, PartService.getJulianTimeOffset(julianStartFrom, rs.getString("julianTimeAt")));
-                                        pstmt_insert.setDouble(6, rs.getDouble("paramVal"));
+                                        pstmt_insert.setInt(3, rowNo);
+                                        pstmt_insert.setString(4, julianTimeAt);
+                                        pstmt_insert.setDouble(5, PartService.getJulianTimeOffset(julianStartFrom, julianTimeAt));
+                                        pstmt_insert.setDouble(6, dblVal);
                                         pstmt_insert.setString(7, rs.getString("paramValStr"));
-                                        pstmt_insert.setDouble(8, rs.getDouble("paramVal")); // temp lpf
-                                        pstmt_insert.setDouble(9, rs.getDouble("paramVal")); // temp hpf
+
+                                        // FIXME : lpf, hpf
+                                        Double lpfVal = getLpfVal(dblVal);
+                                        Double hpfVal = getHpfVal(dblVal);
+
+                                        pstmt_insert.setDouble(8, lpfVal); // temp lpf
+                                        pstmt_insert.setDouble(9, hpfVal); // temp hpf
                                         pstmt_insert.addBatch();
                                         pstmt_insert.clearParameters();
 
@@ -341,6 +388,14 @@ public class PartImportTask {
                                         }
                                         batchCount++;
                                         rawUpload.setFetchCount(batchCount);
+
+                                        if (dblVal != null) {
+                                            zsetOps.add(rowKey, julianTimeAt + ":" + dblVal, rowNo);
+                                            zsetOps.add(lpfKey, julianTimeAt + ":" + lpfVal, rowNo);
+                                            zsetOps.add(hpfKey, julianTimeAt + ":" + hpfVal, rowNo);
+                                        }
+                                        else
+                                            zsetOps.add(rowKey, julianTimeAt + ":" + rs.getString("paramValStr"), rowNo);
                                     }
                                     if ((batchCount % 1000) > 0) {
                                         pstmt_insert.executeBatch();
@@ -355,8 +410,6 @@ public class PartImportTask {
                                 pstmt_insert.close();
                                 conn.commit();
                                 partList.add(part);
-
-                                // TODO : creation cache data
 
                                 stmt.close();
                                 pstmt.close();
@@ -389,5 +442,39 @@ public class PartImportTask {
                 }
             }
         };
+    }
+
+    private Double getLpfVal(Double dblVal) {
+        if (dblVal == null) return null;
+        Double lpfVal = dblVal;
+        return lpfVal;
+    }
+
+    private Double getHpfVal(Double dblVal) {
+        if (dblVal == null) return null;
+        Double hpfVal = dblVal;
+        return hpfVal;
+    }
+
+    public static class Builder {
+        private ListOperations<String, String> listOps;
+        private ZSetOperations<String, String> zsetOps;
+
+        public Builder setListOps(ListOperations<String, String> listOps) {
+            this.listOps = listOps;
+            return this;
+        }
+
+        public Builder setZsetOps(ZSetOperations<String, String> zsetOps) {
+            this.zsetOps = zsetOps;
+            return this;
+        }
+
+        public PartImportTask createPartImportTask() {
+            PartImportTask task = new PartImportTask();
+            task.setListOps(this.listOps);
+            task.setZsetOps(this.zsetOps);
+            return task;
+        }
     }
 }

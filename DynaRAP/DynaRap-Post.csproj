@@ -132,7 +132,11 @@
   <ItemGroup>
     <Compile Include="Common\DLL_DATA.cs" />
     <Compile Include="Common\DrawTypes.cs" />
+    <Compile Include="Common\ParamProperty.cs" />
     <Compile Include="Common\SeriesPointData.cs" />
+    <Compile Include="Data\PartInfoResponse.cs" />
+    <Compile Include="Data\PropListResponse.cs" />
+    <Compile Include="Data\PresetParamData.cs" />
     <Compile Include="Forms\CreateScenarioProgressForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -160,6 +164,12 @@
     <Compile Include="Data\SplittedInterval.cs" />
     <Compile Include="EventData\LoginResultEventArgs.cs" />
     <Compile Include="EventData\SelectedRangeEventArgs.cs" />
+    <Compile Include="Forms\PropertyConfigForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\PropertyConfigForm.Designer.cs">
+      <DependentUpon>PropertyConfigForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\SBViewForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -289,6 +299,12 @@
     <Compile Include="UControl\BinTableControl.Designer.cs">
       <DependentUpon>BinTableControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="UControl\CreateSBProgressForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UControl\CreateSBProgressForm.Designer.cs">
+      <DependentUpon>CreateSBProgressForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="UControl\ImportProgressForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -328,23 +344,29 @@
     <Compile Include="UControl\ImportParamControl2.Designer.cs">
       <DependentUpon>ImportParamControl2.cs</DependentUpon>
     </Compile>
-    <Compile Include="UControl\MgmtParameterControl.cs">
+    <Compile Include="UControl\MgmtLRPControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UControl\MgmtParameterControl.Designer.cs">
-      <DependentUpon>MgmtParameterControl.cs</DependentUpon>
+    <Compile Include="UControl\MgmtLRPControl.Designer.cs">
+      <DependentUpon>MgmtLRPControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="UControl\MgmtPresetControl.cs">
+    <Compile Include="UControl\MgmtMatchingTabletControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UControl\MgmtPresetControl.Designer.cs">
-      <DependentUpon>MgmtPresetControl.cs</DependentUpon>
+    <Compile Include="UControl\MgmtMatchingTabletControl.Designer.cs">
+      <DependentUpon>MgmtMatchingTabletControl.cs</DependentUpon>
     </Compile>
     <Compile Include="UControl\MgmtPresetGroupControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="UControl\MgmtPresetGroupControl.Designer.cs">
       <DependentUpon>MgmtPresetGroupControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\MgmtLRPExtraControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\MgmtLRPExtraControl.Designer.cs">
+      <DependentUpon>MgmtLRPExtraControl.cs</DependentUpon>
     </Compile>
     <Compile Include="UControl\MgmtPresetParameterControl.cs">
       <SubType>UserControl</SubType>
@@ -465,6 +487,9 @@
     <EmbeddedResource Include="Forms\CreateScenarioProgressForm.resx">
       <DependentUpon>CreateScenarioProgressForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\PropertyConfigForm.resx">
+      <DependentUpon>PropertyConfigForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\SBViewForm.resx">
       <DependentUpon>SBViewForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -559,6 +584,9 @@
     <EmbeddedResource Include="UControl\BinTableControl.resx">
       <DependentUpon>BinTableControl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UControl\CreateSBProgressForm.resx">
+      <DependentUpon>CreateSBProgressForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UControl\ImportProgressForm.resx">
       <DependentUpon>ImportProgressForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -574,17 +602,19 @@
     <EmbeddedResource Include="UControl\ImportParamControl2.resx">
       <DependentUpon>ImportParamControl2.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UControl\MgmtParameterControl.resx">
-      <DependentUpon>MgmtParameterControl.cs</DependentUpon>
+    <EmbeddedResource Include="UControl\MgmtLRPControl.resx">
+      <DependentUpon>MgmtLRPControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UControl\MgmtPresetControl.resx">
-      <DependentUpon>MgmtPresetControl.cs</DependentUpon>
+    <EmbeddedResource Include="UControl\MgmtMatchingTabletControl.resx">
+      <DependentUpon>MgmtMatchingTabletControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\MgmtPresetGroupControl.resx">
       <DependentUpon>MgmtPresetGroupControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\MyChartControl.resx">
       <DependentUpon>MyChartControl.cs</DependentUpon>
+    <EmbeddedResource Include="UControl\MgmtLRPExtraControl.resx">
+      <DependentUpon>MgmtLRPExtraControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\MyLineChart.resx">
       <DependentUpon>MyLineChart.cs</DependentUpon>

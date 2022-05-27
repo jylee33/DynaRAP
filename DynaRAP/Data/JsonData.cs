@@ -62,6 +62,23 @@ namespace DynaRAP.Data
         public string dateTime { get; set; }
     }
 
+    public class Extras
+    {
+        public string paramName { get; set; }
+        public string flightType { get; set; }
+    }
+
+    public class PropInfo
+    {
+        public string seq { get; set; }
+        public string propCode { get; set; }
+        public string propType { get; set; }
+        public string paramUnit { get; set; }
+        public string registerUid { get; set; }
+        public CreatedAt createdAt { get; set; }
+        public bool deleted { get; set; }
+    }
+
     public class Pool
     {
         public int seq { get; set; }
@@ -92,10 +109,8 @@ namespace DynaRAP.Data
     {
         public string seq { get; set; }
         public string paramPack { get; set; }
-        public string paramGroupSeq { get; set; }
-        public string paramName { get; set; }
+        public string propSeq { get; set; }
         public string paramKey { get; set; }
-        public string paramSpec { get; set; }
         public string adamsKey { get; set; }
         public string zaeroKey { get; set; }
         public string grtKey { get; set; }
@@ -106,11 +121,10 @@ namespace DynaRAP.Data
         public double lrpX { get; set; }
         public double lrpY { get; set; }
         public double lrpZ { get; set; }
-        public string paramUnit { get; set; }
-        public double domainMin { get; set; }
-        public double domainMax { get; set; }
-        public double specified { get; set; }
         public string registerUid { get; set; }
+        public Dictionary<string, string> extras { get; set; }
+        public string tags { get; set; }
+        public PropInfo propInfo { get; set; }
     }
 
     public class ResponsePreset

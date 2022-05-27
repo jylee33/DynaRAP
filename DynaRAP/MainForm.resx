@@ -480,6 +480,9 @@
   <data name="btnTestChart.Caption" xml:space="preserve">
     <value>TestChart</value>
   </data>
+  <data name="barButtonItem1.Caption" xml:space="preserve">
+    <value>GridTest</value>
+  </data>
   <data name="btnStart.Caption" xml:space="preserve">
     <value>Start</value>
   </data>
@@ -502,7 +505,7 @@
     <value>LRP 관리</value>
   </data>
   <data name="btnMgmtPreset.Caption" xml:space="preserve">
-    <value>매칭테이블 작성</value>
+    <value>매칭테이블 관리</value>
   </data>
   <data name="btnMgmtPresetGroup.Caption" xml:space="preserve">
     <value>프리셋그룹 관리</value>
@@ -824,6 +827,12 @@
   </data>
   <data name="&gt;&gt;tabbedView1.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.Docking2010.Views.Tabbed.TabbedView, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  </data>
+  <data name="&gt;&gt;barButtonItem1.Name" xml:space="preserve">
+    <value>barButtonItem1</value>
+  </data>
+  <data name="&gt;&gt;barButtonItem1.Type" xml:space="preserve">
+    <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>MainForm</value>
