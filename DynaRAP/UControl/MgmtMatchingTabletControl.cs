@@ -660,7 +660,8 @@ namespace DynaRAP.UControl
 
             gridView1.OptionsView.ShowColumnHeaders = true;
             gridView1.OptionsView.ShowGroupPanel = false;
-            gridView1.OptionsView.ShowIndicator = false;
+            gridView1.OptionsView.ShowIndicator = true;
+            gridView1.IndicatorWidth = 40;
             gridView1.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.False;
             gridView1.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.False;
             gridView1.OptionsView.ColumnAutoWidth = true;
@@ -670,6 +671,8 @@ namespace DynaRAP.UControl
 
             gridView1.OptionsSelection.MultiSelectMode = DevExpress.XtraGrid.Views.Grid.GridMultiSelectMode.RowSelect;
             gridView1.OptionsSelection.EnableAppearanceFocusedCell = false;
+
+            gridView1.CustomDrawRowIndicator += GridView1_CustomDrawRowIndicator;
 
             GridColumn colType = gridView1.Columns["ParamKey"];
             colType.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
@@ -692,6 +695,12 @@ namespace DynaRAP.UControl
             this.repositoryItemImageComboBox1.Buttons[0].Visible = false;
 
             this.repositoryItemImageComboBox1.Click += RepositoryItemImageComboBox1_Click;
+        }
+
+        private void GridView1_CustomDrawRowIndicator(object sender, DevExpress.XtraGrid.Views.Grid.RowIndicatorCustomDrawEventArgs e)
+        {
+            if (e.RowHandle >= 0)
+                e.Info.DisplayText = e.RowHandle.ToString();
         }
 
 
@@ -1138,7 +1147,14 @@ namespace DynaRAP.UControl
 
         private void btnAddParameter_Click(object sender, EventArgs e)
         {
-            AddParameter(null);
+            //AddParameter(null);
+            //gridView1.AddNewRow();
+            //gridView1.SetRowCellValue((gridView1.RowCount, "", "", "", "", "", "", "", 1);
+            //gridViewMappedFileds.UpdateCurrentRow();
+            gridList.Add(new PresetParamData("", "", "", "", "", "", "", "", 1));
+            this.gridControl1.DataSource = gridList;
+            //gridControl1.Update();
+
         }
 
         private void luePresetList_EditValueChanged(object sender, EventArgs e)
@@ -1187,6 +1203,7 @@ namespace DynaRAP.UControl
 
         private void RepositoryItemImageComboBox1_Click(object sender, EventArgs e)
         {
+            gridView1.DeleteRow(gridView1.FocusedRowHandle);
         }
 
 

@@ -89,28 +89,32 @@ namespace DynaRAP.UControl
                 luePresetList.Properties.DataSource = null;
 
                 presetList = GetPresetList();
-                pComboList = new List<PresetData>();
 
-                foreach (ResponsePreset list in presetList)
+                if (presetList != null)
                 {
-                    //Decoding
-                    byte[] byte64 = Convert.FromBase64String(list.presetName);
-                    string decName = Encoding.UTF8.GetString(byte64);
+                    pComboList = new List<PresetData>();
 
-                    pComboList.Add(new PresetData(decName, list.presetPack));
-                }
-                luePresetList.Properties.DataSource = pComboList;
+                    foreach (ResponsePreset list in presetList)
+                    {
+                        //Decoding
+                        byte[] byte64 = Convert.FromBase64String(list.presetName);
+                        string decName = Encoding.UTF8.GetString(byte64);
+
+                        pComboList.Add(new PresetData(decName, list.presetPack));
+                    }
+                    luePresetList.Properties.DataSource = pComboList;
 #if !DEBUG
             luePresetList.Properties.PopulateColumns();
             luePresetList.Properties.ShowHeader = false;
             luePresetList.Properties.Columns["PresetPack"].Visible = false;
             luePresetList.Properties.ShowFooter = false;
 #else
-                luePresetList.Properties.PopulateColumns();
-                luePresetList.Properties.Columns["PresetName"].Width = 800;
+                    luePresetList.Properties.PopulateColumns();
+                    luePresetList.Properties.Columns["PresetName"].Width = 800;
 #endif
 
-                //luePresetList.EditValue = edtParamName.Text;
+                    //luePresetList.EditValue = edtParamName.Text;
+                }
             }
             catch (Exception ex)
             {
