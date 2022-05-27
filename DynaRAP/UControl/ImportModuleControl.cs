@@ -4,6 +4,7 @@ using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Controls;
 using DevExpress.XtraEditors.Repository;
 using DevExpress.XtraGrid.Columns;
+using DevExpress.XtraGrid.Views.Grid;
 using DynaRAP.Data;
 using DynaRAP.EventData;
 using DynaRAP.UTIL;
@@ -80,6 +81,36 @@ namespace DynaRAP.UControl
             
             lblSplitCount.Text = string.Format(Properties.Resources.StringSplitCount, splitList.Count);
 
+            InitializeGridControl();
+        }
+
+        private void InitializeGridControl()
+        {
+
+            //gridView1.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+
+            gridView1.OptionsView.ShowColumnHeaders = true;
+            gridView1.OptionsView.ShowGroupPanel = false;
+            gridView1.OptionsView.ShowIndicator = false;
+            gridView1.IndicatorWidth = 40;
+            gridView1.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.False;
+            gridView1.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.False;
+            gridView1.OptionsView.ColumnAutoWidth = true;
+
+            gridView1.OptionsBehavior.ReadOnly = false;
+            //gridView1.OptionsBehavior.Editable = false;
+
+            gridView1.OptionsSelection.MultiSelectMode = DevExpress.XtraGrid.Views.Grid.GridMultiSelectMode.RowSelect;
+            gridView1.OptionsSelection.EnableAppearanceFocusedCell = false;
+
+            gridView1.CustomDrawRowIndicator += GridView1_CustomDrawRowIndicator;
+
+        }
+
+        private void GridView1_CustomDrawRowIndicator(object sender, RowIndicatorCustomDrawEventArgs e)
+        {
+            if (e.RowHandle >= 0)
+                e.Info.DisplayText = e.RowHandle.ToString();
         }
 
         private void InitializePresetList()

@@ -1193,7 +1193,7 @@ namespace DynaRAP.UControl
                 foreach (ResponseParam param in presetParamList)
                 {
                     //AddParameter(param);
-                    gridList.Add(new PresetParamData(param.paramKey, param.adamsKey, param.zaeroKey, param.grtKey, param.fltpKey, param.fltsKey, param.partInfo, param.partInfoSub, 1));
+                    gridList.Add(new PresetParamData(param.paramKey, param.adamsKey, param.zaeroKey, param.grtKey, param.fltpKey, param.fltsKey, param.propInfo.propType, param.partInfo, 1));
                 }
 
                 this.gridControl1.DataSource = gridList;

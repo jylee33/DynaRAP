@@ -831,7 +831,7 @@ namespace DynaRAP.UControl
         private void AddParameter(ResponseParam param)
         {
             SBParamControl ctrl = new SBParamControl(param);
-            ctrl.Title = "Parameter " + (paramIndex- startParamIndex).ToString();
+            //ctrl.Title = "Parameter " + (paramIndex- startParamIndex).ToString();
             ctrl.DeleteBtnClicked += new EventHandler(SBParam_DeleteBtnClicked);
             flowLayoutPanel1.Controls.Add(ctrl);
             flowLayoutPanel1.Controls.SetChildIndex(ctrl, paramIndex++);

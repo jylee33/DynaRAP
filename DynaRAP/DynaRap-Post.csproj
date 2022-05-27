@@ -269,6 +269,12 @@
     <Compile Include="TEST\TestGridForm.Designer.cs">
       <DependentUpon>TestGridForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="TEST\TestSplitContainerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TEST\TestSplitContainerForm.Designer.cs">
+      <DependentUpon>TestSplitContainerForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="TEST\TestWebForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -562,6 +568,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="TEST\TestGridForm.resx">
       <DependentUpon>TestGridForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TEST\TestSplitContainerForm.resx">
+      <DependentUpon>TestSplitContainerForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TEST\TestWebForm.resx">
       <DependentUpon>TestWebForm.cs</DependentUpon>

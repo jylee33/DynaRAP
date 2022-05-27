@@ -5,6 +5,7 @@ using DevExpress.XtraEditors.Repository;
 using DevExpress.XtraTreeList.Columns;
 using DevExpress.XtraTreeList.Nodes;
 using DevExpress.XtraTreeList.StyleFormatConditions;
+using DynaRAP.Forms;
 using DynaRAP.TEST;
 using DynaRAP.UControl;
 using IronPython.Hosting;
@@ -789,6 +790,18 @@ namespace DynaRAP
             //TestGridForm form4 = new TestGridForm();
             //form4.Show();
 
+        }
+
+        private void barButtonItem2_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            SBViewForm form = new SBViewForm();
+            form.Show();
+        }
+
+        private void barButtonItem3_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            TestSplitContainerForm form = new TestSplitContainerForm();
+            form.Show();
         }
     }
 

@@ -196,7 +196,7 @@
             this.panelControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelControl1.Location = new System.Drawing.Point(0, 0);
             this.panelControl1.Name = "panelControl1";
-            this.panelControl1.Size = new System.Drawing.Size(1122, 865);
+            this.panelControl1.Size = new System.Drawing.Size(1122, 942);
             this.panelControl1.TabIndex = 6;
             // 
             // xtraScrollableControl1
@@ -220,7 +220,7 @@
             this.xtraScrollableControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.xtraScrollableControl1.Location = new System.Drawing.Point(2, 2);
             this.xtraScrollableControl1.Name = "xtraScrollableControl1";
-            this.xtraScrollableControl1.Size = new System.Drawing.Size(1118, 861);
+            this.xtraScrollableControl1.Size = new System.Drawing.Size(1118, 938);
             this.xtraScrollableControl1.TabIndex = 0;
             // 
             // gridControl1
@@ -231,7 +231,7 @@
             this.gridControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemImageComboBox1,
             this.repositoryItemComboBox1});
-            this.gridControl1.Size = new System.Drawing.Size(1008, 439);
+            this.gridControl1.Size = new System.Drawing.Size(1008, 659);
             this.gridControl1.TabIndex = 27;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
@@ -348,7 +348,7 @@
             // 
             // btnSaveAsNewParameter
             // 
-            this.btnSaveAsNewParameter.Location = new System.Drawing.Point(388, 619);
+            this.btnSaveAsNewParameter.Location = new System.Drawing.Point(388, 839);
             this.btnSaveAsNewParameter.Name = "btnSaveAsNewParameter";
             this.btnSaveAsNewParameter.Size = new System.Drawing.Size(110, 23);
             this.btnSaveAsNewParameter.TabIndex = 26;
@@ -357,7 +357,7 @@
             // 
             // btnDeleteParameter
             // 
-            this.btnDeleteParameter.Location = new System.Drawing.Point(247, 619);
+            this.btnDeleteParameter.Location = new System.Drawing.Point(247, 839);
             this.btnDeleteParameter.Name = "btnDeleteParameter";
             this.btnDeleteParameter.Size = new System.Drawing.Size(110, 23);
             this.btnDeleteParameter.TabIndex = 25;
@@ -366,7 +366,7 @@
             // 
             // btnModifyParameter
             // 
-            this.btnModifyParameter.Location = new System.Drawing.Point(107, 619);
+            this.btnModifyParameter.Location = new System.Drawing.Point(107, 839);
             this.btnModifyParameter.Name = "btnModifyParameter";
             this.btnModifyParameter.Size = new System.Drawing.Size(110, 23);
             this.btnModifyParameter.TabIndex = 24;
@@ -468,7 +468,7 @@
             this.treeList1.ImageIndexFieldName = "DirName";
             this.treeList1.Location = new System.Drawing.Point(0, 0);
             this.treeList1.Name = "treeList1";
-            this.treeList1.Size = new System.Drawing.Size(503, 865);
+            this.treeList1.Size = new System.Drawing.Size(503, 942);
             this.treeList1.StateImageList = this.sharedImageCollection1;
             this.treeList1.TabIndex = 2;
             this.treeList1.GetStateImage += new DevExpress.XtraTreeList.GetStateImageEventHandler(this.treeList1_GetStateImage);
@@ -489,7 +489,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.panelControl1);
-            this.splitContainer1.Size = new System.Drawing.Size(1629, 865);
+            this.splitContainer1.Size = new System.Drawing.Size(1629, 942);
             this.splitContainer1.SplitterDistance = 503;
             this.splitContainer1.TabIndex = 1;
             // 
@@ -499,7 +499,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.splitContainer1);
             this.Name = "MgmtMatchingTabletControl";
-            this.Size = new System.Drawing.Size(1629, 865);
+            this.Size = new System.Drawing.Size(1629, 942);
             this.Load += new System.EventHandler(this.MgmtMatchingTableControl_Load);
             ((System.ComponentModel.ISupportInitialize)(this.edtParamName.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.separatorControl1)).EndInit();

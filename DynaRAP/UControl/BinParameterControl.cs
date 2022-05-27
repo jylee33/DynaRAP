@@ -39,9 +39,9 @@ namespace DynaRAP.UControl
 
             cboType.SelectedIndexChanged += cboType_SelectedIndexChanged;
 
-            cboType.Properties.Items.Add("ShortBlock 파라미너 Preset #1");
-            cboType.Properties.Items.Add("ShortBlock 파라미너 Preset #2");
-            cboType.Properties.Items.Add("ShortBlock 파라미너 Preset #3");
+            cboType.Properties.Items.Add("ShortBlock 파라미터 Preset #1");
+            cboType.Properties.Items.Add("ShortBlock 파라미터 Preset #2");
+            cboType.Properties.Items.Add("ShortBlock 파라미터 Preset #3");
 
             cboType.SelectedIndex = 0;
         }

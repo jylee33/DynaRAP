@@ -41,6 +41,8 @@
             this.cboImportType = new DevExpress.XtraEditors.ComboBoxEdit();
             this.labelControl1 = new DevExpress.XtraEditors.LabelControl();
             this.luePresetList = new DevExpress.XtraEditors.LookUpEdit();
+            this.gridControl1 = new DevExpress.XtraGrid.GridControl();
+            this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.labelControl13 = new DevExpress.XtraEditors.LabelControl();
@@ -71,13 +73,13 @@
             this.chkLPF = new DevExpress.XtraEditors.CheckEdit();
             this.chkHPF = new DevExpress.XtraEditors.CheckEdit();
             this.imageCollection1 = new DevExpress.Utils.ImageCollection(this.components);
-            this.gridControl1 = new DevExpress.XtraGrid.GridControl();
-            this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.separatorControl1)).BeginInit();
             this.flowLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cboImportType.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.luePresetList.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
             this.flowLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnViewData.Properties)).BeginInit();
@@ -93,8 +95,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.chkLPF.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chkHPF.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -234,6 +234,21 @@
             this.luePresetList.Size = new System.Drawing.Size(357, 22);
             this.luePresetList.TabIndex = 24;
             this.luePresetList.EditValueChanged += new System.EventHandler(this.luePresetList_EditValueChanged);
+            // 
+            // gridControl1
+            // 
+            this.gridControl1.Location = new System.Drawing.Point(3, 185);
+            this.gridControl1.MainView = this.gridView1;
+            this.gridControl1.Name = "gridControl1";
+            this.gridControl1.Size = new System.Drawing.Size(765, 560);
+            this.gridControl1.TabIndex = 39;
+            this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
+            this.gridView1});
+            // 
+            // gridView1
+            // 
+            this.gridView1.GridControl = this.gridControl1;
+            this.gridView1.Name = "gridView1";
             // 
             // flowLayoutPanel2
             // 
@@ -591,21 +606,6 @@
             this.imageCollection1.Images.SetKeyName(0, "none.png");
             this.imageCollection1.Images.SetKeyName(1, "view.png");
             // 
-            // gridControl1
-            // 
-            this.gridControl1.Location = new System.Drawing.Point(3, 185);
-            this.gridControl1.MainView = this.gridView1;
-            this.gridControl1.Name = "gridControl1";
-            this.gridControl1.Size = new System.Drawing.Size(765, 560);
-            this.gridControl1.TabIndex = 39;
-            this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
-            this.gridView1});
-            // 
-            // gridView1
-            // 
-            this.gridView1.GridControl = this.gridControl1;
-            this.gridView1.Name = "gridView1";
-            // 
             // ImportModuleControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -624,6 +624,8 @@
             this.flowLayoutPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cboImportType.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.luePresetList.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
             this.flowLayoutPanel2.ResumeLayout(false);
             this.flowLayoutPanel2.PerformLayout();
             this.tableLayoutPanel2.ResumeLayout(false);
@@ -642,8 +644,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.chkLPF.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chkHPF.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
