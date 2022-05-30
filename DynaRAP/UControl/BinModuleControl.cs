@@ -24,6 +24,7 @@ namespace DynaRAP.UControl
         Series series1 = new Series();
         ChartArea myChartArea = new ChartArea("LineChartArea");
         DockPanel sbListPanel = null;
+        List<BinParameterControl> paramList = new List<BinParameterControl>();
 
         public BinModuleControl()
         {
@@ -71,15 +72,41 @@ namespace DynaRAP.UControl
             AddParameter();
         }
 
-        int index = 10;
+        const int START_INDEX = 0;
+        const int PARAM_HEIGHT = 24;
+        const int MAX_PARAM_CNT = 10;
+        int index = START_INDEX;
 
         private void AddParameter()
         {
             BinParameterControl ctrl = new BinParameterControl();
             ctrl.Title = "Parameter " + index.ToString();
-            panelData.Controls.Add(ctrl);
-            panelData.Controls.SetChildIndex(ctrl, index++);
+            ctrl.DeleteBtnClicked += new EventHandler(Param_DeleteBtnClicked);
+            flowLayoutPanel1.Controls.Add(ctrl);
+            flowLayoutPanel1.Controls.SetChildIndex(ctrl, index);
+            paramList.Add(ctrl);
 
+            index++;
+            if (index <= MAX_PARAM_CNT)
+            {
+                flowLayoutPanel1.Height += PARAM_HEIGHT;
+            }
+
+        }
+
+        private void Param_DeleteBtnClicked(object sender, EventArgs e)
+        {
+            BinParameterControl ctrl = sender as BinParameterControl;
+            flowLayoutPanel1.Controls.Remove(ctrl);
+            paramList.Remove(ctrl);
+            ctrl.Dispose();
+
+            index--;
+            if (index <= MAX_PARAM_CNT)
+            {
+                flowLayoutPanel1.Height -= PARAM_HEIGHT;
+                flowLayoutPanel1.Height += 2;
+            }
         }
 
         private void hyperlinkBrowseSB_Click(object sender, EventArgs e)

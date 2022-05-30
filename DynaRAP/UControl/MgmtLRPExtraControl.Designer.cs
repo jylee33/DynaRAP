@@ -43,7 +43,7 @@
             this.btnDelete.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.btnDelete.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btnDelete.ImageOptions.Image")));
             this.btnDelete.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleCenter;
-            this.btnDelete.Location = new System.Drawing.Point(524, 1);
+            this.btnDelete.Location = new System.Drawing.Point(498, 1);
             this.btnDelete.Margin = new System.Windows.Forms.Padding(0);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(17, 18);
@@ -60,7 +60,7 @@
             // 
             // edtValue
             // 
-            this.edtValue.Location = new System.Drawing.Point(308, 0);
+            this.edtValue.Location = new System.Drawing.Point(293, 0);
             this.edtValue.Name = "edtValue";
             this.edtValue.Size = new System.Drawing.Size(186, 22);
             this.edtValue.TabIndex = 3;
@@ -75,7 +75,7 @@
             // 
             // labelControl2
             // 
-            this.labelControl2.Location = new System.Drawing.Point(261, 3);
+            this.labelControl2.Location = new System.Drawing.Point(246, 3);
             this.labelControl2.Name = "labelControl2";
             this.labelControl2.Size = new System.Drawing.Size(38, 15);
             this.labelControl2.TabIndex = 5;
@@ -92,7 +92,7 @@
             this.Controls.Add(this.btnDelete);
             this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "MgmtLRPExtraControl";
-            this.Size = new System.Drawing.Size(558, 22);
+            this.Size = new System.Drawing.Size(534, 22);
             this.Load += new System.EventHandler(this.MgmtLRPExtraControl_Load);
             ((System.ComponentModel.ISupportInitialize)(this.edtKey.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtValue.Properties)).EndInit();

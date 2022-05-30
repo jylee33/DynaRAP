@@ -50,6 +50,7 @@
             this.btnCreateBIN = new DevExpress.XtraEditors.SimpleButton();
             this.imageCollection1 = new DevExpress.Utils.ImageCollection(this.components);
             this.imageCollection2 = new DevExpress.Utils.ImageCollection(this.components);
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.separatorControl1)).BeginInit();
             this.panelData.SuspendLayout();
@@ -135,6 +136,7 @@
             this.panelData.Controls.Add(this.labelControl19);
             this.panelData.Controls.Add(this.labelControl12);
             this.panelData.Controls.Add(this.tableLayoutPanel5);
+            this.panelData.Controls.Add(this.flowLayoutPanel1);
             this.panelData.Controls.Add(this.btnCreateBIN);
             this.panelData.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelData.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
@@ -240,14 +242,14 @@
             this.tableLayoutPanel5.Name = "tableLayoutPanel5";
             this.tableLayoutPanel5.RowCount = 1;
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel5.Size = new System.Drawing.Size(595, 28);
+            this.tableLayoutPanel5.Size = new System.Drawing.Size(737, 28);
             this.tableLayoutPanel5.TabIndex = 37;
             // 
             // btnAddParameter
             // 
             this.btnAddParameter.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnAddParameter.EditValue = "파라미터 추가";
-            this.btnAddParameter.Location = new System.Drawing.Point(478, 3);
+            this.btnAddParameter.Location = new System.Drawing.Point(620, 3);
             this.btnAddParameter.Name = "btnAddParameter";
             this.btnAddParameter.Properties.Appearance.Options.UseTextOptions = true;
             this.btnAddParameter.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
@@ -270,7 +272,7 @@
             // btnCreateBIN
             // 
             this.btnCreateBIN.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnCreateBIN.Location = new System.Drawing.Point(241, 245);
+            this.btnCreateBIN.Location = new System.Drawing.Point(312, 273);
             this.btnCreateBIN.Name = "btnCreateBIN";
             this.btnCreateBIN.Size = new System.Drawing.Size(119, 25);
             this.btnCreateBIN.TabIndex = 41;
@@ -288,6 +290,16 @@
             this.imageCollection2.ImageStream = ((DevExpress.Utils.ImageCollectionStreamer)(resources.GetObject("imageCollection2.ImageStream")));
             this.imageCollection2.Images.SetKeyName(0, "none.png");
             this.imageCollection2.Images.SetKeyName(1, "view.png");
+            // 
+            // flowLayoutPanel1
+            // 
+            this.flowLayoutPanel1.AutoScroll = true;
+            this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 245);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(737, 22);
+            this.flowLayoutPanel1.TabIndex = 37;
+            this.flowLayoutPanel1.WrapContents = false;
             // 
             // BinModuleControl
             // 
@@ -333,5 +345,6 @@
         private DevExpress.XtraEditors.LabelControl labelControl18;
         private DevExpress.XtraEditors.LabelControl labelControl19;
         private DevExpress.XtraEditors.SimpleButton btnCreateBIN;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
     }
 }

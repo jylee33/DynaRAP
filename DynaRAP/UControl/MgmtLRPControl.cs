@@ -621,10 +621,11 @@ namespace DynaRAP.UControl
             panelTag.Controls.Add(btn);
         }
 
-        const int startExtraIndex = 0;
-        int extraIndex = startExtraIndex;
-        const int extraHeight = 22;
-        const int flowLayoutPanel1Height = 2;
+        const int START_EXTRA_INDEX = 0;
+        const int EXTRA_HEIGHT = 22;
+        const int FLOWLAYOUTPANEL1_HEIGHT = 22;
+        const int MAX_EXTRA_CNT = 10;
+        int extraIndex = START_EXTRA_INDEX;
 
         private void AddExtra(string extraKey = "", string extraVal = "")
         {
@@ -636,13 +637,16 @@ namespace DynaRAP.UControl
             flowLayoutPanel1.Controls.SetChildIndex(ctrl, extraIndex++);
             extraControlList.Add(ctrl);
 
-            flowLayoutPanel1.Height += extraHeight;
-            lblTag.Location = new Point(lblTag.Location.X, lblTag.Location.Y + extraHeight);
-            edtTag.Location = new Point(edtTag.Location.X, edtTag.Location.Y + extraHeight);
-            panelTag.Location = new Point(panelTag.Location.X, panelTag.Location.Y + extraHeight);
-            btnModifyParameter.Location = new Point(btnModifyParameter.Location.X, btnModifyParameter.Location.Y + extraHeight);
-            btnDeleteParameter.Location = new Point(btnDeleteParameter.Location.X, btnDeleteParameter.Location.Y + extraHeight);
-            btnSaveAsNewParameter.Location = new Point(btnSaveAsNewParameter.Location.X, btnSaveAsNewParameter.Location.Y + extraHeight);
+            if (extraIndex <= MAX_EXTRA_CNT)
+            {
+                flowLayoutPanel1.Height += EXTRA_HEIGHT;
+                lblTag.Location = new Point(lblTag.Location.X, lblTag.Location.Y + EXTRA_HEIGHT);
+                edtTag.Location = new Point(edtTag.Location.X, edtTag.Location.Y + EXTRA_HEIGHT);
+                panelTag.Location = new Point(panelTag.Location.X, panelTag.Location.Y + EXTRA_HEIGHT);
+                btnModifyParameter.Location = new Point(btnModifyParameter.Location.X, btnModifyParameter.Location.Y + EXTRA_HEIGHT);
+                btnDeleteParameter.Location = new Point(btnDeleteParameter.Location.X, btnDeleteParameter.Location.Y + EXTRA_HEIGHT);
+                btnSaveAsNewParameter.Location = new Point(btnSaveAsNewParameter.Location.X, btnSaveAsNewParameter.Location.Y + EXTRA_HEIGHT);
+            }
         }
 
         void ExtraControl_DeleteBtnClicked(object sender, EventArgs e)
@@ -652,14 +656,20 @@ namespace DynaRAP.UControl
             extraControlList.Remove(ctrl);
             ctrl.Dispose();
 
-            flowLayoutPanel1.Height -= extraHeight;
             extraIndex--;
-            lblTag.Location = new Point(lblTag.Location.X, lblTag.Location.Y - extraHeight);
-            edtTag.Location = new Point(edtTag.Location.X, edtTag.Location.Y - extraHeight);
-            panelTag.Location = new Point(panelTag.Location.X, panelTag.Location.Y - extraHeight);
-            btnModifyParameter.Location = new Point(btnModifyParameter.Location.X, btnModifyParameter.Location.Y - extraHeight);
-            btnDeleteParameter.Location = new Point(btnDeleteParameter.Location.X, btnDeleteParameter.Location.Y - extraHeight);
-            btnSaveAsNewParameter.Location = new Point(btnSaveAsNewParameter.Location.X, btnSaveAsNewParameter.Location.Y - extraHeight);
+
+            if (extraIndex < MAX_EXTRA_CNT)
+            {
+                //flowLayoutPanel1.Height -= EXTRA_HEIGHT;
+                flowLayoutPanel1.Height = extraIndex * EXTRA_HEIGHT;
+
+                lblTag.Location = new Point(lblTag.Location.X, lblTag.Location.Y - EXTRA_HEIGHT);
+                edtTag.Location = new Point(edtTag.Location.X, edtTag.Location.Y - EXTRA_HEIGHT);
+                panelTag.Location = new Point(panelTag.Location.X, panelTag.Location.Y - EXTRA_HEIGHT);
+                btnModifyParameter.Location = new Point(btnModifyParameter.Location.X, btnModifyParameter.Location.Y - EXTRA_HEIGHT);
+                btnDeleteParameter.Location = new Point(btnDeleteParameter.Location.X, btnDeleteParameter.Location.Y - EXTRA_HEIGHT);
+                btnSaveAsNewParameter.Location = new Point(btnSaveAsNewParameter.Location.X, btnSaveAsNewParameter.Location.Y - EXTRA_HEIGHT);
+            }
         }
 
         #endregion Method
@@ -681,6 +691,8 @@ namespace DynaRAP.UControl
 
             btnAddExtra.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             btnAddExtra.Properties.AllowFocused = false;
+
+            flowLayoutPanel1.HorizontalScroll.Enabled = false;
 
             InitializeProperty();
 
@@ -1205,16 +1217,16 @@ namespace DynaRAP.UControl
             edtLrpY.Text = lrpY;
             edtLrpZ.Text = lrpZ;
 
-            int height = extraHeight * flowLayoutPanel1.Controls.Count;
+            int height = EXTRA_HEIGHT * flowLayoutPanel1.Controls.Count;
             lblTag.Location = new Point(lblTag.Location.X, lblTag.Location.Y - height);
             edtTag.Location = new Point(edtTag.Location.X, edtTag.Location.Y - height);
             panelTag.Location = new Point(panelTag.Location.X, panelTag.Location.Y - height);
             btnModifyParameter.Location = new Point(btnModifyParameter.Location.X, btnModifyParameter.Location.Y - height);
             btnDeleteParameter.Location = new Point(btnDeleteParameter.Location.X, btnDeleteParameter.Location.Y - height);
             btnSaveAsNewParameter.Location = new Point(btnSaveAsNewParameter.Location.X, btnSaveAsNewParameter.Location.Y - height);
-            flowLayoutPanel1.Height = flowLayoutPanel1Height;
+            flowLayoutPanel1.Height = FLOWLAYOUTPANEL1_HEIGHT;
 
-            extraIndex = startExtraIndex;
+            extraIndex = START_EXTRA_INDEX;
 
             MgmtLRPExtraControl[] controls = new MgmtLRPExtraControl[flowLayoutPanel1.Controls.Count];
             extraControlList.CopyTo(controls);

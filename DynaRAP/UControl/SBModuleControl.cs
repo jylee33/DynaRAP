@@ -638,7 +638,7 @@ namespace DynaRAP.UControl
         {
             sbIntervalList.Clear();
 
-            intervalIndex = startIntervalIndex;
+            intervalIndex = START_INT_INDEX;
             int reducedHeight = (paramHeight * flowLayoutPanel2.Controls.Count);
             flowLayoutPanel2.Height -= reducedHeight;
             flowLayoutPanel2.Controls.Clear();
@@ -851,18 +851,23 @@ namespace DynaRAP.UControl
             intervalIndex--;
         }
 
-        const int startIntervalIndex = 0;
-        int intervalIndex = startIntervalIndex;
+        const int START_INT_INDEX = 0;
+        const int MAX_INT_CNT = 10;
+        int intervalIndex = START_INT_INDEX;
 
         private void AddSplittedInterval(SplittedSB sb)
         {
             SBIntervalControl ctrl = new SBIntervalControl(sb);
             ctrl.ViewBtnClicked += new EventHandler(SB_ViewBtnClicked);
             flowLayoutPanel2.Controls.Add(ctrl);
-            flowLayoutPanel2.Controls.SetChildIndex(ctrl, intervalIndex++);
+            flowLayoutPanel2.Controls.SetChildIndex(ctrl, intervalIndex);
             sbIntervalList.Add(ctrl);
 
-            flowLayoutPanel2.Height += paramHeight;
+            intervalIndex++;
+            if (intervalIndex <= MAX_INT_CNT)
+            {
+                flowLayoutPanel2.Height += paramHeight;
+            }
         }
 
         void SB_ViewBtnClicked(object sender, EventArgs e)
