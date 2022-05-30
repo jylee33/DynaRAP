@@ -208,7 +208,7 @@ namespace DynaRAP
             //}
 
 #if DEBUG
-            tabbedView1.ActivateDocument(mgmtMatchingTableControl);
+            tabbedView1.ActivateDocument(binModuleControl);
 #else
             tabbedView1.RemoveDocument(mgmtMatchingTableControl);
             tabbedView1.RemoveDocument(sbModuleControl);
@@ -231,7 +231,7 @@ namespace DynaRAP
             panelBinTable.Hide();
 
             panelBinSbList.Name = "panelBinSbList";
-            panelBinSbList.Text = "ImportModuleScenarioName";
+            panelBinSbList.Text = "ShortBlockList";
             BinSelectSBControl binSbListCtrl = new BinSelectSBControl();
             binSbListCtrl.Dock = DockStyle.Fill;
             panelBinSbList.Controls.Add(binSbListCtrl);

@@ -43,16 +43,16 @@
             this.cboType.Name = "cboType";
             this.cboType.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.cboType.Size = new System.Drawing.Size(185, 22);
+            this.cboType.Size = new System.Drawing.Size(250, 22);
             this.cboType.TabIndex = 1;
             // 
             // cboName
             // 
-            this.cboName.Location = new System.Drawing.Point(214, 0);
+            this.cboName.Location = new System.Drawing.Point(278, 0);
             this.cboName.Name = "cboName";
             this.cboName.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.cboName.Size = new System.Drawing.Size(211, 22);
+            this.cboName.Size = new System.Drawing.Size(250, 22);
             this.cboName.TabIndex = 1;
             // 
             // chkParameter
@@ -69,7 +69,7 @@
             this.btnDelete.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.btnDelete.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btnDelete.ImageOptions.Image")));
             this.btnDelete.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleCenter;
-            this.btnDelete.Location = new System.Drawing.Point(447, 1);
+            this.btnDelete.Location = new System.Drawing.Point(539, 1);
             this.btnDelete.Margin = new System.Windows.Forms.Padding(0);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(17, 18);
@@ -86,7 +86,7 @@
             this.Controls.Add(this.cboType);
             this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "BinParameterControl";
-            this.Size = new System.Drawing.Size(482, 22);
+            this.Size = new System.Drawing.Size(565, 22);
             this.Load += new System.EventHandler(this.BinParameterControl_Load);
             ((System.ComponentModel.ISupportInitialize)(this.cboType.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cboName.Properties)).EndInit();

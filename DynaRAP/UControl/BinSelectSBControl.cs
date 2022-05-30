@@ -3,12 +3,16 @@ using DevExpress.XtraTreeList;
 using DevExpress.XtraTreeList.Columns;
 using DevExpress.XtraTreeList.Nodes;
 using DynaRAP.Data;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -40,7 +44,7 @@ namespace DynaRAP.UControl
 
             //Specify the data source.
             //treeList1.DataSource = null;
-            treeList1.DataSource = CreateData();
+            treeList1.DataSource = GetSBList();
             //The treelist automatically creates columns for the public fields found in the data source. 
             //You do not need to call the TreeList.PopulateColumns method unless the treeList1.OptionsBehavior.AutoPopulatefColumns option is disabled.
             treeList1.ForceInitialize();
@@ -119,102 +123,79 @@ namespace DynaRAP.UControl
             treeList1.PostEditor();
         }
 
-        private BindingList<FlyingData> CreateData()
+        private BindingList<FlyingData> GetSBList()
         {
             BindingList<FlyingData> list = new BindingList<FlyingData>();
-            //list.Add(new FlyingData(0, -1, "ImportModuleScenarioName", null));
-            list.Add(new FlyingData(1, 0, "비행데이터", null));
-            list.Add(new FlyingData(2, 0, "버펫팅데이터", null));
-            list.Add(new FlyingData(3, 0, "Short Block", null));
+            ////list.Add(new FlyingData(0, -1, "ImportModuleScenarioName", null));
+            //list.Add(new FlyingData(1, 0, "비행데이터", null));
+            //list.Add(new FlyingData(2, 0, "버펫팅데이터", null));
+            //list.Add(new FlyingData(3, 0, "Short Block", null));
+            list.Add(new FlyingData(1, 0, "Short Block", null));
 
-            FlyingData data = new FlyingData();
-            data.ParentID = 1;
-            data.FlyingName = "2022-03-03_형상A_1호기.bin";
-            data.Check = true;
-            list.Add(data);
+            string url = ConfigurationManager.AppSettings["UrlShortBlock"];
 
-            data = new FlyingData();
-            data.ParentID = 1;
-            data.FlyingName = "2022-03-03_형상B_3호기.bin";
-            data.Check = false;
-            list.Add(data);
+            string sendData = string.Format(@"
+            {{
+            ""command"":""list"",
+            ""registerUid"":"""",
+            ""partSeq"":"""",
+            ""pageNo"":1,
+            ""pageSize"":3000
+            }}"
+            );
 
-            data = new FlyingData();
-            data.ParentID = 1;
-            data.FlyingName = "2022-03-03_형상A_2호기.bin";
-            data.Check = false;
-            list.Add(data);
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Method = "POST";
+            request.ContentType = "application/json";
+            request.Timeout = 30 * 1000;
+            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
 
-            data = new FlyingData();
-            data.ParentID = 2;
-            data.FlyingName = "버펫팅_01.bpt";
-            data.Check = true;
-            list.Add(data);
+            // POST할 데이타를 Request Stream에 쓴다
+            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+            request.ContentLength = bytes.Length; // 바이트수 지정
 
-            data = new FlyingData();
-            data.ParentID = 2;
-            data.FlyingName = "버펫팅_02.bpt";
-            data.Check = true;
-            list.Add(data);
+            using (Stream reqStream = request.GetRequestStream())
+            {
+                reqStream.Write(bytes, 0, bytes.Length);
+            }
 
-            data = new FlyingData();
-            data.ParentID = 2;
-            data.FlyingName = "버펫팅_03.bpt";
-            data.Check = true;
-            list.Add(data);
+            // Response 처리
+            string responseText = string.Empty;
+            using (WebResponse resp = request.GetResponse())
+            {
+                Stream respStream = resp.GetResponseStream();
+                using (StreamReader sr = new StreamReader(respStream))
+                {
+                    responseText = sr.ReadToEnd();
+                }
+            }
 
-            data = new FlyingData();
-            data.ParentID = 2;
-            data.FlyingName = "버펫팅_04.bpt";
-            data.Check = false;
-            list.Add(data);
+            //Console.WriteLine(responseText);
+            SBListResponse result = JsonConvert.DeserializeObject<SBListResponse>(responseText);
 
-            data = new FlyingData();
-            data.ParentID = 3;
-            data.FlyingName = "ShortBlock_01.sbl";
-            data.Check = true;
-            list.Add(data);
+            if (result != null)
+            {
+                if (result.code != 200)
+                {
+                    return null;
+                }
+                else
+                {
+                    foreach(ResponseSBList sbList in result.response)
+                    {
+                        FlyingData data = new FlyingData();
+                        data.ParentID = 1;
 
-            data = new FlyingData();
-            data.ParentID = 3;
-            data.FlyingName = "ShortBlock_02.sbl";
-            data.Check = true;
-            list.Add(data);
+                        //Decoding
+                        byte[] byte64 = Convert.FromBase64String(sbList.blockName);
+                        string decName = Encoding.UTF8.GetString(byte64);
 
-            data = new FlyingData();
-            data.ParentID = 3;
-            data.FlyingName = "ShortBlock_03.sbl";
-            data.Check = true;
-            list.Add(data);
-
-            data = new FlyingData();
-            data.ParentID = 3;
-            data.FlyingName = "ShortBlock_04.sbl";
-            data.Check = true;
-            list.Add(data);
-
-            data = new FlyingData();
-            data.ParentID = 3;
-            data.FlyingName = "ShortBlock_05.sbl";
-            data.Check = false;
-            list.Add(data);
-
-            int pid = data.ID;
-
-            data = new FlyingData();
-            data.ParentID = pid;
-            data.FlyingName = "ShortBlock_06.sbl";
-            data.Check = false;
-            list.Add(data);
-
-            pid = data.ID;
-
-            data = new FlyingData();
-            data.ParentID = pid;
-            data.FlyingName = "ShortBlock_07.sbl";
-            data.Check = false;
-            list.Add(data);
-
+                        data.FlyingName = decName;
+                        data.Check = false;
+                        list.Add(data);
+                    }
+                }
+            }
 
             return list;
         }

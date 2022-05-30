@@ -50,6 +50,12 @@ namespace DynaRAP.UControl
 
         private void SBParamControl_Load(object sender, EventArgs e)
         {
+            cboParamName.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+            cboParamType.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+
+            cboParamName.SelectedIndexChanged += CboParamName_SelectedIndexChanged;
+            cboParamType.SelectedIndexChanged += CboParamType_SelectedIndexChanged;
+          
             InitializeParamTypeCombo();
             InitializeParamNameCombo();
 
@@ -68,17 +74,13 @@ namespace DynaRAP.UControl
 
         private void InitializeParamNameCombo()
         {
-            cboParamName.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
 
-            cboParamName.SelectedIndexChanged += CboParamName_SelectedIndexChanged;
 
         }
 
         private void InitializeParamTypeCombo()
         {
-            cboParamType.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
 
-            cboParamType.SelectedIndexChanged += CboParamType_SelectedIndexChanged;
         }
 
         private void CboParamType_SelectedIndexChanged(object sender, EventArgs e)

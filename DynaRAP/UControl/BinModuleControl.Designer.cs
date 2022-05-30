@@ -34,7 +34,7 @@
             this.separatorControl1 = new DevExpress.XtraEditors.SeparatorControl();
             this.labelControl2 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl1 = new DevExpress.XtraEditors.LabelControl();
-            this.panelData = new System.Windows.Forms.FlowLayoutPanel();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.labelControl3 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl5 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl7 = new DevExpress.XtraEditors.LabelControl();
@@ -43,20 +43,37 @@
             this.labelControl13 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl18 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl19 = new DevExpress.XtraEditors.LabelControl();
-            this.labelControl12 = new DevExpress.XtraEditors.LabelControl();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             this.btnAddParameter = new DevExpress.XtraEditors.ButtonEdit();
             this.cboSBParameter = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.gridControl1 = new DevExpress.XtraGrid.GridControl();
+            this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
+            this.gridColumn1 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.repositoryItemComboBox1 = new DevExpress.XtraEditors.Repository.RepositoryItemComboBox();
+            this.gridColumn2 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.gridColumn3 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.gridColumn4 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.gridColumn5 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.gridColumn6 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.gridColumn7 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.gridColumn8 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.gridColumn9 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.repositoryItemImageComboBox1 = new DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox();
+            this.imageCollection3 = new DevExpress.Utils.ImageCollection(this.components);
             this.btnCreateBIN = new DevExpress.XtraEditors.SimpleButton();
             this.imageCollection1 = new DevExpress.Utils.ImageCollection(this.components);
             this.imageCollection2 = new DevExpress.Utils.ImageCollection(this.components);
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.separatorControl1)).BeginInit();
-            this.panelData.SuspendLayout();
+            this.flowLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnAddParameter.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cboSBParameter.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemComboBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemImageComboBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.imageCollection3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection2)).BeginInit();
             this.SuspendLayout();
@@ -73,7 +90,7 @@
             this.tableLayoutPanel1.Controls.Add(this.separatorControl1, 2, 1);
             this.tableLayoutPanel1.Controls.Add(this.labelControl2, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.labelControl1, 1, 3);
-            this.tableLayoutPanel1.Controls.Add(this.panelData, 4, 1);
+            this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel1, 4, 1);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -124,28 +141,27 @@
             this.labelControl1.TabIndex = 1;
             this.labelControl1.Text = "비행데이터";
             // 
-            // panelData
+            // flowLayoutPanel1
             // 
-            this.panelData.Controls.Add(this.labelControl3);
-            this.panelData.Controls.Add(this.labelControl5);
-            this.panelData.Controls.Add(this.labelControl7);
-            this.panelData.Controls.Add(this.labelControl9);
-            this.panelData.Controls.Add(this.hyperlinkBrowseSB);
-            this.panelData.Controls.Add(this.labelControl13);
-            this.panelData.Controls.Add(this.labelControl18);
-            this.panelData.Controls.Add(this.labelControl19);
-            this.panelData.Controls.Add(this.labelControl12);
-            this.panelData.Controls.Add(this.tableLayoutPanel5);
-            this.panelData.Controls.Add(this.flowLayoutPanel1);
-            this.panelData.Controls.Add(this.btnCreateBIN);
-            this.panelData.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelData.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.panelData.Location = new System.Drawing.Point(297, 24);
-            this.panelData.Name = "panelData";
-            this.tableLayoutPanel1.SetRowSpan(this.panelData, 3);
-            this.panelData.Size = new System.Drawing.Size(831, 1692);
-            this.panelData.TabIndex = 4;
-            this.panelData.WrapContents = false;
+            this.flowLayoutPanel1.Controls.Add(this.labelControl3);
+            this.flowLayoutPanel1.Controls.Add(this.labelControl5);
+            this.flowLayoutPanel1.Controls.Add(this.labelControl7);
+            this.flowLayoutPanel1.Controls.Add(this.labelControl9);
+            this.flowLayoutPanel1.Controls.Add(this.hyperlinkBrowseSB);
+            this.flowLayoutPanel1.Controls.Add(this.labelControl13);
+            this.flowLayoutPanel1.Controls.Add(this.labelControl18);
+            this.flowLayoutPanel1.Controls.Add(this.labelControl19);
+            this.flowLayoutPanel1.Controls.Add(this.tableLayoutPanel5);
+            this.flowLayoutPanel1.Controls.Add(this.gridControl1);
+            this.flowLayoutPanel1.Controls.Add(this.btnCreateBIN);
+            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(297, 24);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.tableLayoutPanel1.SetRowSpan(this.flowLayoutPanel1, 3);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(831, 1692);
+            this.flowLayoutPanel1.TabIndex = 4;
+            this.flowLayoutPanel1.WrapContents = false;
             // 
             // labelControl3
             // 
@@ -222,14 +238,6 @@
             this.labelControl19.TabIndex = 1;
             this.labelControl19.Text = "미리 구성된 파라미터 셋을 선택합니다. 선택 후 BIN을 구성할 파라미터를 선별합니다.";
             // 
-            // labelControl12
-            // 
-            this.labelControl12.Location = new System.Drawing.Point(3, 190);
-            this.labelControl12.Name = "labelControl12";
-            this.labelControl12.Size = new System.Drawing.Size(153, 15);
-            this.labelControl12.TabIndex = 8;
-            this.labelControl12.Text = "                                                   ";
-            // 
             // tableLayoutPanel5
             // 
             this.tableLayoutPanel5.ColumnCount = 2;
@@ -237,19 +245,18 @@
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 120F));
             this.tableLayoutPanel5.Controls.Add(this.btnAddParameter, 1, 0);
             this.tableLayoutPanel5.Controls.Add(this.cboSBParameter, 0, 0);
-            this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel5.Location = new System.Drawing.Point(3, 211);
+            this.tableLayoutPanel5.Location = new System.Drawing.Point(3, 190);
             this.tableLayoutPanel5.Name = "tableLayoutPanel5";
             this.tableLayoutPanel5.RowCount = 1;
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel5.Size = new System.Drawing.Size(737, 28);
+            this.tableLayoutPanel5.Size = new System.Drawing.Size(595, 28);
             this.tableLayoutPanel5.TabIndex = 37;
             // 
             // btnAddParameter
             // 
             this.btnAddParameter.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnAddParameter.EditValue = "파라미터 추가";
-            this.btnAddParameter.Location = new System.Drawing.Point(620, 3);
+            this.btnAddParameter.Location = new System.Drawing.Point(478, 3);
             this.btnAddParameter.Name = "btnAddParameter";
             this.btnAddParameter.Properties.Appearance.Options.UseTextOptions = true;
             this.btnAddParameter.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
@@ -269,10 +276,133 @@
             this.cboSBParameter.Size = new System.Drawing.Size(308, 22);
             this.cboSBParameter.TabIndex = 34;
             // 
+            // gridControl1
+            // 
+            this.gridControl1.Location = new System.Drawing.Point(3, 224);
+            this.gridControl1.MainView = this.gridView1;
+            this.gridControl1.Name = "gridControl1";
+            this.gridControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
+            this.repositoryItemImageComboBox1,
+            this.repositoryItemComboBox1});
+            this.gridControl1.Size = new System.Drawing.Size(1008, 659);
+            this.gridControl1.TabIndex = 27;
+            this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
+            this.gridView1});
+            // 
+            // gridView1
+            // 
+            this.gridView1.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
+            this.gridColumn1,
+            this.gridColumn2,
+            this.gridColumn3,
+            this.gridColumn4,
+            this.gridColumn5,
+            this.gridColumn6,
+            this.gridColumn7,
+            this.gridColumn8,
+            this.gridColumn9});
+            this.gridView1.GridControl = this.gridControl1;
+            this.gridView1.Name = "gridView1";
+            // 
+            // gridColumn1
+            // 
+            this.gridColumn1.Caption = "Parameter Name";
+            this.gridColumn1.ColumnEdit = this.repositoryItemComboBox1;
+            this.gridColumn1.FieldName = "ParamKey";
+            this.gridColumn1.Name = "gridColumn1";
+            this.gridColumn1.Visible = true;
+            this.gridColumn1.VisibleIndex = 0;
+            // 
+            // repositoryItemComboBox1
+            // 
+            this.repositoryItemComboBox1.AutoHeight = false;
+            this.repositoryItemComboBox1.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.repositoryItemComboBox1.Name = "repositoryItemComboBox1";
+            // 
+            // gridColumn2
+            // 
+            this.gridColumn2.Caption = "해석데이터(ADAMS)";
+            this.gridColumn2.FieldName = "AdamsKey";
+            this.gridColumn2.Name = "gridColumn2";
+            this.gridColumn2.Visible = true;
+            this.gridColumn2.VisibleIndex = 1;
+            // 
+            // gridColumn3
+            // 
+            this.gridColumn3.Caption = "해석데이터(ZAERO)";
+            this.gridColumn3.FieldName = "ZaeroKey";
+            this.gridColumn3.Name = "gridColumn3";
+            this.gridColumn3.Visible = true;
+            this.gridColumn3.VisibleIndex = 2;
+            // 
+            // gridColumn4
+            // 
+            this.gridColumn4.Caption = "지상시험(GRT)";
+            this.gridColumn4.FieldName = "GrtKey";
+            this.gridColumn4.Name = "gridColumn4";
+            this.gridColumn4.Visible = true;
+            this.gridColumn4.VisibleIndex = 3;
+            // 
+            // gridColumn5
+            // 
+            this.gridColumn5.Caption = "비행시험(FLTP)";
+            this.gridColumn5.FieldName = "FltpKey";
+            this.gridColumn5.Name = "gridColumn5";
+            this.gridColumn5.Visible = true;
+            this.gridColumn5.VisibleIndex = 4;
+            // 
+            // gridColumn6
+            // 
+            this.gridColumn6.Caption = "비행시험(FLTS)";
+            this.gridColumn6.FieldName = "FltsKey";
+            this.gridColumn6.Name = "gridColumn6";
+            this.gridColumn6.Visible = true;
+            this.gridColumn6.VisibleIndex = 5;
+            // 
+            // gridColumn7
+            // 
+            this.gridColumn7.Caption = "특성정보";
+            this.gridColumn7.FieldName = "PartInfo";
+            this.gridColumn7.Name = "gridColumn7";
+            this.gridColumn7.Visible = true;
+            this.gridColumn7.VisibleIndex = 6;
+            // 
+            // gridColumn8
+            // 
+            this.gridColumn8.Caption = "파트정보";
+            this.gridColumn8.FieldName = "PartInfoSub";
+            this.gridColumn8.Name = "gridColumn8";
+            this.gridColumn8.Visible = true;
+            this.gridColumn8.VisibleIndex = 7;
+            // 
+            // gridColumn9
+            // 
+            this.gridColumn9.Caption = "삭제";
+            this.gridColumn9.ColumnEdit = this.repositoryItemImageComboBox1;
+            this.gridColumn9.FieldName = "Del";
+            this.gridColumn9.Name = "gridColumn9";
+            this.gridColumn9.Visible = true;
+            this.gridColumn9.VisibleIndex = 8;
+            // 
+            // repositoryItemImageComboBox1
+            // 
+            this.repositoryItemImageComboBox1.AutoHeight = false;
+            this.repositoryItemImageComboBox1.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.repositoryItemImageComboBox1.Name = "repositoryItemImageComboBox1";
+            this.repositoryItemImageComboBox1.SmallImages = this.imageCollection3;
+            // 
+            // imageCollection3
+            // 
+            this.imageCollection3.ImageStream = ((DevExpress.Utils.ImageCollectionStreamer)(resources.GetObject("imageCollection3.ImageStream")));
+            this.imageCollection3.Images.SetKeyName(0, "NONE");
+            this.imageCollection3.Images.SetKeyName(1, "DELETE");
+            // 
             // btnCreateBIN
             // 
             this.btnCreateBIN.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnCreateBIN.Location = new System.Drawing.Point(312, 273);
+            this.btnCreateBIN.Location = new System.Drawing.Point(447, 889);
             this.btnCreateBIN.Name = "btnCreateBIN";
             this.btnCreateBIN.Size = new System.Drawing.Size(119, 25);
             this.btnCreateBIN.TabIndex = 41;
@@ -291,16 +421,6 @@
             this.imageCollection2.Images.SetKeyName(0, "none.png");
             this.imageCollection2.Images.SetKeyName(1, "view.png");
             // 
-            // flowLayoutPanel1
-            // 
-            this.flowLayoutPanel1.AutoScroll = true;
-            this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 245);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(737, 22);
-            this.flowLayoutPanel1.TabIndex = 37;
-            this.flowLayoutPanel1.WrapContents = false;
-            // 
             // BinModuleControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -312,11 +432,16 @@
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.separatorControl1)).EndInit();
-            this.panelData.ResumeLayout(false);
-            this.panelData.PerformLayout();
+            this.flowLayoutPanel1.ResumeLayout(false);
+            this.flowLayoutPanel1.PerformLayout();
             this.tableLayoutPanel5.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.btnAddParameter.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cboSBParameter.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemComboBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemImageComboBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.imageCollection3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection2)).EndInit();
             this.ResumeLayout(false);
@@ -330,11 +455,9 @@
         private DevExpress.XtraEditors.LabelControl labelControl2;
         private DevExpress.XtraEditors.LabelControl labelControl1;
         private DevExpress.XtraEditors.LabelControl labelControl3;
-        private System.Windows.Forms.FlowLayoutPanel panelData;
         private DevExpress.XtraEditors.LabelControl labelControl5;
         private DevExpress.XtraEditors.LabelControl labelControl7;
         private DevExpress.XtraEditors.LabelControl labelControl9;
-        private DevExpress.XtraEditors.LabelControl labelControl12;
         private DevExpress.XtraEditors.ButtonEdit btnAddParameter;
         private DevExpress.Utils.ImageCollection imageCollection1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
@@ -346,5 +469,19 @@
         private DevExpress.XtraEditors.LabelControl labelControl19;
         private DevExpress.XtraEditors.SimpleButton btnCreateBIN;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private DevExpress.XtraGrid.GridControl gridControl1;
+        private DevExpress.XtraGrid.Views.Grid.GridView gridView1;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn1;
+        private DevExpress.XtraEditors.Repository.RepositoryItemComboBox repositoryItemComboBox1;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn2;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn3;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn4;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn5;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn6;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn7;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn8;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn9;
+        private DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox repositoryItemImageComboBox1;
+        private DevExpress.Utils.ImageCollection imageCollection3;
     }
 }

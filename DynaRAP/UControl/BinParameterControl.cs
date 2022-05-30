@@ -1,5 +1,6 @@
 ﻿using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Controls;
+using DynaRAP.Data;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,6 +17,8 @@ namespace DynaRAP.UControl
     {
         public event EventHandler DeleteBtnClicked;
 
+        ResponseParam param = null;
+
         public string Title
         {
             set
@@ -24,22 +27,48 @@ namespace DynaRAP.UControl
             }
         }
 
+        public ResponseParam Param
+        {
+            get { return this.param; }
+        }
+
         public BinParameterControl()
         {
             InitializeComponent();
         }
 
+        public BinParameterControl(ResponseParam param) : this()
+        {
+            this.param = param;
+        }
+
         private void BinParameterControl_Load(object sender, EventArgs e)
         {
+            cboType.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+            cboName.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+          
+            cboType.SelectedIndexChanged += cboType_SelectedIndexChanged;
+            cboName.SelectedIndexChanged += cboName_SelectedIndexChanged;
+
             InitializeTypeCombo();
             InitializeNameCombo();
+
+            string paramType = string.Empty;
+            string paramName = string.Empty;
+
+            if (param != null)
+            {
+                paramType = "";// param.paramKey;
+                paramName = param.paramKey;
+            }
+
+            cboType.Text = paramType;
+            cboName.Text = paramName;
         }
 
         private void InitializeTypeCombo()
         {
-            cboType.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
 
-            cboType.SelectedIndexChanged += cboType_SelectedIndexChanged;
 
             cboType.Properties.Items.Add("ShortBlock 파라미터 Preset #1");
             cboType.Properties.Items.Add("ShortBlock 파라미터 Preset #2");
@@ -54,9 +83,7 @@ namespace DynaRAP.UControl
 
         private void InitializeNameCombo()
         {
-            cboName.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
 
-            cboName.SelectedIndexChanged += cboName_SelectedIndexChanged;
 
             cboName.Properties.Items.Add("SW903P_NM");
             cboName.Properties.Items.Add("SW903P_NM");
