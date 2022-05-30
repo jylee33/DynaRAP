@@ -42,19 +42,19 @@
             // 
             this.edtSbName.Location = new System.Drawing.Point(1, 0);
             this.edtSbName.Name = "edtSbName";
-            this.edtSbName.Size = new System.Drawing.Size(219, 22);
+            this.edtSbName.Size = new System.Drawing.Size(210, 22);
             this.edtSbName.TabIndex = 0;
             // 
             // edtStartTime
             // 
-            this.edtStartTime.Location = new System.Drawing.Point(228, 0);
+            this.edtStartTime.Location = new System.Drawing.Point(215, 0);
             this.edtStartTime.Name = "edtStartTime";
             this.edtStartTime.Size = new System.Drawing.Size(168, 22);
             this.edtStartTime.TabIndex = 0;
             // 
             // edtEndTime
             // 
-            this.edtEndTime.Location = new System.Drawing.Point(403, 0);
+            this.edtEndTime.Location = new System.Drawing.Point(390, 0);
             this.edtEndTime.Name = "edtEndTime";
             this.edtEndTime.Size = new System.Drawing.Size(168, 22);
             this.edtEndTime.TabIndex = 0;
@@ -64,7 +64,7 @@
             this.btnView.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.btnView.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btnView.ImageOptions.Image")));
             this.btnView.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleCenter;
-            this.btnView.Location = new System.Drawing.Point(587, 1);
+            this.btnView.Location = new System.Drawing.Point(565, 1);
             this.btnView.Margin = new System.Windows.Forms.Padding(0);
             this.btnView.Name = "btnView";
             this.btnView.Size = new System.Drawing.Size(17, 18);
@@ -81,7 +81,7 @@
             this.Controls.Add(this.edtSbName);
             this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "SBIntervalControl";
-            this.Size = new System.Drawing.Size(621, 22);
+            this.Size = new System.Drawing.Size(592, 22);
             this.Load += new System.EventHandler(this.SBIntervalControl_Load);
             ((System.ComponentModel.ISupportInitialize)(this.edtSbName.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtStartTime.Properties)).EndInit();

@@ -1151,9 +1151,14 @@ namespace DynaRAP.UControl
             //gridView1.AddNewRow();
             //gridView1.SetRowCellValue((gridView1.RowCount, "", "", "", "", "", "", "", 1);
             //gridViewMappedFileds.UpdateCurrentRow();
+            if(gridList == null)
+            {
+                gridList = new List<PresetParamData>();
+            }
             gridList.Add(new PresetParamData("", "", "", "", "", "", "", "", 1));
             this.gridControl1.DataSource = gridList;
             //gridControl1.Update();
+            gridView1.RefreshData();
 
         }
 

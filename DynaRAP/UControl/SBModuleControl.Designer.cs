@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea5 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SBModuleControl));
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.separatorControl1 = new DevExpress.XtraEditors.SeparatorControl();
@@ -571,8 +571,8 @@
             // 
             // chart1
             // 
-            chartArea1.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea1);
+            chartArea5.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea5);
             this.chart1.Location = new System.Drawing.Point(3, 566);
             this.chart1.Name = "chart1";
             this.chart1.Size = new System.Drawing.Size(623, 132);
@@ -628,10 +628,10 @@
             // tableLayoutPanel6
             // 
             this.tableLayoutPanel6.ColumnCount = 4;
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 240F));
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 200F));
             this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 56F));
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
             this.tableLayoutPanel6.Controls.Add(this.labelControl29, 2, 0);
             this.tableLayoutPanel6.Controls.Add(this.labelControl30, 0, 0);
             this.tableLayoutPanel6.Controls.Add(this.labelControl31, 1, 0);
@@ -649,9 +649,9 @@
             this.labelControl29.Appearance.Options.UseTextOptions = true;
             this.labelControl29.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
             this.labelControl29.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelControl29.Location = new System.Drawing.Point(408, 3);
+            this.labelControl29.Location = new System.Drawing.Point(366, 3);
             this.labelControl29.Name = "labelControl29";
-            this.labelControl29.Size = new System.Drawing.Size(159, 28);
+            this.labelControl29.Size = new System.Drawing.Size(157, 28);
             this.labelControl29.TabIndex = 2;
             this.labelControl29.Text = "종료 시간";
             // 
@@ -662,7 +662,7 @@
             this.labelControl30.Dock = System.Windows.Forms.DockStyle.Fill;
             this.labelControl30.Location = new System.Drawing.Point(3, 3);
             this.labelControl30.Name = "labelControl30";
-            this.labelControl30.Size = new System.Drawing.Size(234, 28);
+            this.labelControl30.Size = new System.Drawing.Size(194, 28);
             this.labelControl30.TabIndex = 0;
             this.labelControl30.Text = "구간 이름";
             // 
@@ -671,9 +671,9 @@
             this.labelControl31.Appearance.Options.UseTextOptions = true;
             this.labelControl31.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
             this.labelControl31.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelControl31.Location = new System.Drawing.Point(243, 3);
+            this.labelControl31.Location = new System.Drawing.Point(203, 3);
             this.labelControl31.Name = "labelControl31";
-            this.labelControl31.Size = new System.Drawing.Size(159, 28);
+            this.labelControl31.Size = new System.Drawing.Size(157, 28);
             this.labelControl31.TabIndex = 1;
             this.labelControl31.Text = "시작 시간";
             // 
@@ -682,9 +682,9 @@
             this.labelControl13.Appearance.Options.UseTextOptions = true;
             this.labelControl13.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
             this.labelControl13.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelControl13.Location = new System.Drawing.Point(573, 3);
+            this.labelControl13.Location = new System.Drawing.Point(529, 3);
             this.labelControl13.Name = "labelControl13";
-            this.labelControl13.Size = new System.Drawing.Size(50, 28);
+            this.labelControl13.Size = new System.Drawing.Size(94, 28);
             this.labelControl13.TabIndex = 2;
             this.labelControl13.Text = "보기";
             // 
