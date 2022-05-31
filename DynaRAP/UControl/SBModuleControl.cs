@@ -639,7 +639,7 @@ namespace DynaRAP.UControl
             sbIntervalList.Clear();
 
             intervalIndex = START_INT_INDEX;
-            int reducedHeight = (paramHeight * flowLayoutPanel2.Controls.Count);
+            int reducedHeight = (PARAM_HEIGHT * flowLayoutPanel2.Controls.Count);
             flowLayoutPanel2.Height -= reducedHeight;
             flowLayoutPanel2.Controls.Clear();
 
@@ -824,9 +824,10 @@ namespace DynaRAP.UControl
             AddParameter(null);
         }
 
-        const int startParamIndex = 0;
-        int paramIndex = startParamIndex;
-        const int paramHeight = 22;
+        const int START_PARAM_INDEX = 0;
+        const int MAX_PARAM_CNT = 10;
+        const int PARAM_HEIGHT = 22;
+        int paramIndex = START_PARAM_INDEX;
 
         private void AddParameter(ResponseParam param)
         {
@@ -837,7 +838,10 @@ namespace DynaRAP.UControl
             flowLayoutPanel1.Controls.SetChildIndex(ctrl, paramIndex++);
             sbParamList.Add(ctrl);
 
-            flowLayoutPanel1.Height += paramHeight;
+            if (paramIndex <= MAX_PARAM_CNT)
+            {
+                flowLayoutPanel1.Height += PARAM_HEIGHT;
+            }
         }
 
         private void SBParam_DeleteBtnClicked(object sender, EventArgs e)
@@ -847,8 +851,11 @@ namespace DynaRAP.UControl
             sbParamList.Remove(ctrl);
             ctrl.Dispose();
 
-            flowLayoutPanel1.Height -= paramHeight;
-            intervalIndex--;
+            paramIndex--;
+            if (paramIndex <= MAX_PARAM_CNT)
+            {
+                flowLayoutPanel1.Height -= PARAM_HEIGHT;
+            }
         }
 
         const int START_INT_INDEX = 0;
@@ -866,7 +873,7 @@ namespace DynaRAP.UControl
             intervalIndex++;
             if (intervalIndex <= MAX_INT_CNT)
             {
-                flowLayoutPanel2.Height += paramHeight;
+                flowLayoutPanel2.Height += PARAM_HEIGHT;
             }
         }
 
@@ -1118,8 +1125,8 @@ namespace DynaRAP.UControl
 
         private void luePresetList_EditValueChanged(object sender, EventArgs e)
         {
-            paramIndex = startParamIndex;
-            int reducedHeight = (paramHeight * flowLayoutPanel1.Controls.Count);
+            paramIndex = START_PARAM_INDEX;
+            int reducedHeight = (PARAM_HEIGHT * flowLayoutPanel1.Controls.Count);
             flowLayoutPanel1.Height -= reducedHeight;
             flowLayoutPanel1.Controls.Clear();
 
