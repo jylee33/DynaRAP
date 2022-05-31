@@ -61,7 +61,7 @@ namespace DynaRAP.UControl
             treeList1.RowHeight = 23;
             treeList1.OptionsView.ShowHorzLines = false;
             treeList1.OptionsView.ShowVertLines = false;
-            treeList1.OptionsView.ShowIndicator = false;
+            treeList1.OptionsView.ShowIndicator = true;
             treeList1.OptionsView.ShowTreeLines = DevExpress.Utils.DefaultBoolean.False;
             treeList1.OptionsView.ShowFilterPanelMode = ShowFilterPanelMode.Never;
             treeList1.OptionsView.ShowSummaryFooter = false;
@@ -144,7 +144,7 @@ namespace DynaRAP.UControl
             treeList2.RowHeight = 23;
             treeList2.OptionsView.ShowHorzLines = false;
             treeList2.OptionsView.ShowVertLines = false;
-            treeList2.OptionsView.ShowIndicator = false;
+            treeList2.OptionsView.ShowIndicator = true;
             treeList2.OptionsView.ShowTreeLines = DevExpress.Utils.DefaultBoolean.False;
             treeList2.OptionsView.ShowFilterPanelMode = ShowFilterPanelMode.Never;
             treeList2.OptionsView.ShowSummaryFooter = false;

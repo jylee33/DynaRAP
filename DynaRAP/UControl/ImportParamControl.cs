@@ -23,6 +23,7 @@ namespace DynaRAP.UControl
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
        
         private Dictionary<string, List<string>> dicData;
+        DataTable dt = null;
         string selKey = String.Empty;
         List<double> listData = new List<double>();
 
@@ -55,6 +56,8 @@ namespace DynaRAP.UControl
                 cboParameter.SelectedIndex = 0;
             }
         }
+
+        public DataTable Dt { get => dt; set => dt = value; }
 
         public ImportParamControl()
         {
@@ -109,7 +112,8 @@ namespace DynaRAP.UControl
             Series series = new Series("Series1", ViewType.Line);
             chartControl.Series.Add(series);
 
-            series.DataSource = GetChartValues(strKey);
+            dt = GetChartValues(strKey);
+            series.DataSource = dt;
 
             series.ArgumentScaleType = ScaleType.DateTime;
             series.ArgumentDataMember = "Argument";

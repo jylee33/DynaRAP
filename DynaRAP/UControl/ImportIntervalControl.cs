@@ -19,6 +19,7 @@ namespace DynaRAP.UControl
 
         object min;
         object max;
+        int recordCnt;
 
         public string PartName
         {
@@ -52,13 +53,15 @@ namespace DynaRAP.UControl
             InitializeComponent();
         }
 
-        public ImportIntervalControl(object min, object max) : this()
+        public ImportIntervalControl(object min, object max, int recordCnt) : this()
         {
             this.min = min;
             this.max = max;
+            this.recordCnt = recordCnt;
 
             edtStartTime.Text = min.ToString();
             edtEndTime.Text = max.ToString();
+            edtCount.Text = recordCnt.ToString();
         }
 
         private void ImportIntervalControl_Load(object sender, EventArgs e)

@@ -34,10 +34,12 @@
             this.btnDelete = new DevExpress.XtraEditors.SimpleButton();
             this.cboType = new DevExpress.XtraEditors.ComboBoxEdit();
             this.edtName = new DevExpress.XtraEditors.TextEdit();
+            this.edtCount = new DevExpress.XtraEditors.TextEdit();
             ((System.ComponentModel.ISupportInitialize)(this.edtStartTime.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtEndTime.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cboType.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtName.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.edtCount.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // edtStartTime
@@ -59,7 +61,7 @@
             this.btnDelete.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.btnDelete.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("btnDelete.ImageOptions.Image")));
             this.btnDelete.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleCenter;
-            this.btnDelete.Location = new System.Drawing.Point(682, 1);
+            this.btnDelete.Location = new System.Drawing.Point(672, 1);
             this.btnDelete.Margin = new System.Windows.Forms.Padding(0);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(17, 18);
@@ -82,23 +84,34 @@
             this.edtName.Size = new System.Drawing.Size(160, 22);
             this.edtName.TabIndex = 1;
             // 
+            // edtCount
+            // 
+            this.edtCount.Enabled = false;
+            this.edtCount.Location = new System.Drawing.Point(697, 0);
+            this.edtCount.Name = "edtCount";
+            this.edtCount.Properties.ReadOnly = true;
+            this.edtCount.Size = new System.Drawing.Size(64, 22);
+            this.edtCount.TabIndex = 2;
+            // 
             // ImportIntervalControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.cboType);
             this.Controls.Add(this.btnDelete);
+            this.Controls.Add(this.edtCount);
             this.Controls.Add(this.edtEndTime);
             this.Controls.Add(this.edtName);
             this.Controls.Add(this.edtStartTime);
             this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "ImportIntervalControl";
-            this.Size = new System.Drawing.Size(711, 22);
+            this.Size = new System.Drawing.Size(767, 22);
             this.Load += new System.EventHandler(this.ImportIntervalControl_Load);
             ((System.ComponentModel.ISupportInitialize)(this.edtStartTime.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtEndTime.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cboType.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtName.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.edtCount.Properties)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -109,5 +122,6 @@
         private DevExpress.XtraEditors.SimpleButton btnDelete;
         private DevExpress.XtraEditors.ComboBoxEdit cboType;
         private DevExpress.XtraEditors.TextEdit edtName;
+        private DevExpress.XtraEditors.TextEdit edtCount;
     }
 }

@@ -73,6 +73,7 @@
             this.chkLPF = new DevExpress.XtraEditors.CheckEdit();
             this.chkHPF = new DevExpress.XtraEditors.CheckEdit();
             this.imageCollection1 = new DevExpress.Utils.ImageCollection(this.components);
+            this.labelControl5 = new DevExpress.XtraEditors.LabelControl();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.separatorControl1)).BeginInit();
             this.flowLayoutPanel1.SuspendLayout();
@@ -289,7 +290,7 @@
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 1;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(737, 26);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(791, 26);
             this.tableLayoutPanel2.TabIndex = 28;
             // 
             // labelControl13
@@ -306,7 +307,7 @@
             // 
             this.btnViewData.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnViewData.EditValue = "데이터 보기";
-            this.btnViewData.Location = new System.Drawing.Point(630, 3);
+            this.btnViewData.Location = new System.Drawing.Point(684, 3);
             this.btnViewData.Name = "btnViewData";
             this.btnViewData.Properties.Appearance.Options.UseTextOptions = true;
             this.btnViewData.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
@@ -342,7 +343,7 @@
             // 
             this.btnAddParameter.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnAddParameter.EditValue = "파라미터 추가";
-            this.btnAddParameter.Location = new System.Drawing.Point(630, 75);
+            this.btnAddParameter.Location = new System.Drawing.Point(684, 75);
             this.btnAddParameter.Name = "btnAddParameter";
             this.btnAddParameter.Properties.Appearance.Options.UseTextOptions = true;
             this.btnAddParameter.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
@@ -359,7 +360,7 @@
             this.flowLayoutPanel3.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel3.Location = new System.Drawing.Point(3, 103);
             this.flowLayoutPanel3.Name = "flowLayoutPanel3";
-            this.flowLayoutPanel3.Size = new System.Drawing.Size(737, 22);
+            this.flowLayoutPanel3.Size = new System.Drawing.Size(788, 22);
             this.flowLayoutPanel3.TabIndex = 36;
             this.flowLayoutPanel3.WrapContents = false;
             // 
@@ -386,7 +387,7 @@
             // 
             this.btnAddSplittedInterval.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnAddSplittedInterval.EditValue = "분할구간 추가";
-            this.btnAddSplittedInterval.Location = new System.Drawing.Point(630, 190);
+            this.btnAddSplittedInterval.Location = new System.Drawing.Point(684, 190);
             this.btnAddSplittedInterval.Name = "btnAddSplittedInterval";
             this.btnAddSplittedInterval.Properties.Appearance.Options.UseTextOptions = true;
             this.btnAddSplittedInterval.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
@@ -403,28 +404,30 @@
             this.separatorControl2.Location = new System.Drawing.Point(3, 218);
             this.separatorControl2.Name = "separatorControl2";
             this.separatorControl2.Padding = new System.Windows.Forms.Padding(9, 10, 9, 10);
-            this.separatorControl2.Size = new System.Drawing.Size(737, 1);
+            this.separatorControl2.Size = new System.Drawing.Size(788, 1);
             this.separatorControl2.TabIndex = 35;
             // 
             // tableLayoutPanel4
             // 
-            this.tableLayoutPanel4.ColumnCount = 5;
+            this.tableLayoutPanel4.ColumnCount = 8;
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 170F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 170F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 170F));
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 160F));
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 160F));
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 160F));
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 160F));
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel4.Controls.Add(this.labelControl25, 4, 0);
             this.tableLayoutPanel4.Controls.Add(this.labelControl24, 3, 0);
             this.tableLayoutPanel4.Controls.Add(this.labelControl22, 1, 0);
             this.tableLayoutPanel4.Controls.Add(this.labelControl23, 2, 0);
             this.tableLayoutPanel4.Controls.Add(this.labelControl3, 0, 0);
+            this.tableLayoutPanel4.Controls.Add(this.labelControl5, 6, 0);
             this.tableLayoutPanel4.Location = new System.Drawing.Point(0, 222);
             this.tableLayoutPanel4.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
             this.tableLayoutPanel4.RowCount = 1;
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(743, 34);
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(794, 34);
             this.tableLayoutPanel4.TabIndex = 34;
             // 
             // labelControl25
@@ -434,7 +437,7 @@
             this.labelControl25.Dock = System.Windows.Forms.DockStyle.Fill;
             this.labelControl25.Location = new System.Drawing.Point(643, 3);
             this.labelControl25.Name = "labelControl25";
-            this.labelControl25.Size = new System.Drawing.Size(97, 28);
+            this.labelControl25.Size = new System.Drawing.Size(44, 28);
             this.labelControl25.TabIndex = 3;
             this.labelControl25.Text = "삭제";
             // 
@@ -488,7 +491,7 @@
             this.separatorControl3.Location = new System.Drawing.Point(3, 259);
             this.separatorControl3.Name = "separatorControl3";
             this.separatorControl3.Padding = new System.Windows.Forms.Padding(9, 10, 9, 10);
-            this.separatorControl3.Size = new System.Drawing.Size(737, 1);
+            this.separatorControl3.Size = new System.Drawing.Size(788, 1);
             this.separatorControl3.TabIndex = 35;
             // 
             // flowLayoutPanel4
@@ -497,7 +500,7 @@
             this.flowLayoutPanel4.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel4.Location = new System.Drawing.Point(3, 266);
             this.flowLayoutPanel4.Name = "flowLayoutPanel4";
-            this.flowLayoutPanel4.Size = new System.Drawing.Size(737, 22);
+            this.flowLayoutPanel4.Size = new System.Drawing.Size(788, 22);
             this.flowLayoutPanel4.TabIndex = 37;
             this.flowLayoutPanel4.WrapContents = false;
             // 
@@ -538,7 +541,7 @@
             this.panelTag.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelTag.Location = new System.Drawing.Point(3, 373);
             this.panelTag.Name = "panelTag";
-            this.panelTag.Size = new System.Drawing.Size(734, 96);
+            this.panelTag.Size = new System.Drawing.Size(788, 96);
             this.panelTag.TabIndex = 28;
             // 
             // tableLayoutPanel3
@@ -557,13 +560,13 @@
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 1;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(737, 26);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(788, 26);
             this.tableLayoutPanel3.TabIndex = 33;
             // 
             // btnSaveSplittedInterval
             // 
             this.btnSaveSplittedInterval.EditValue = "분할구간 저장";
-            this.btnSaveSplittedInterval.Location = new System.Drawing.Point(630, 3);
+            this.btnSaveSplittedInterval.Location = new System.Drawing.Point(681, 3);
             this.btnSaveSplittedInterval.Name = "btnSaveSplittedInterval";
             this.btnSaveSplittedInterval.Properties.Appearance.Options.UseTextOptions = true;
             this.btnSaveSplittedInterval.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
@@ -576,7 +579,7 @@
             // 
             // chkForcedImport
             // 
-            this.chkForcedImport.Location = new System.Drawing.Point(520, 3);
+            this.chkForcedImport.Location = new System.Drawing.Point(571, 3);
             this.chkForcedImport.Name = "chkForcedImport";
             this.chkForcedImport.Properties.Caption = "강제 Import";
             this.chkForcedImport.Size = new System.Drawing.Size(104, 19);
@@ -605,6 +608,17 @@
             this.imageCollection1.ImageStream = ((DevExpress.Utils.ImageCollectionStreamer)(resources.GetObject("imageCollection1.ImageStream")));
             this.imageCollection1.Images.SetKeyName(0, "none.png");
             this.imageCollection1.Images.SetKeyName(1, "view.png");
+            // 
+            // labelControl5
+            // 
+            this.labelControl5.Appearance.Options.UseTextOptions = true;
+            this.labelControl5.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.labelControl5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.labelControl5.Location = new System.Drawing.Point(693, 3);
+            this.labelControl5.Name = "labelControl5";
+            this.labelControl5.Size = new System.Drawing.Size(98, 28);
+            this.labelControl5.TabIndex = 3;
+            this.labelControl5.Text = "DATA 수";
             // 
             // ImportModuleControl
             // 
@@ -694,5 +708,6 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
         private DevExpress.XtraGrid.GridControl gridControl1;
         private DevExpress.XtraGrid.Views.Grid.GridView gridView1;
+        private DevExpress.XtraEditors.LabelControl labelControl5;
     }
 }

@@ -311,8 +311,20 @@ namespace DynaRAP.UControl
                 MessageBox.Show(Properties.Resources.StringNoSelectedRegion);
                 return;
             }
-            
-            ImportIntervalControl ctrl = new ImportIntervalControl(minValue, maxValue);
+
+            DataTable dt = null;
+            int recordCnt = 0;
+
+            if(paramList != null && paramList.Count > 0)
+            {
+                DateTime sTime = Convert.ToDateTime(minValue.ToString());
+                DateTime eTime = Convert.ToDateTime(maxValue.ToString());
+
+                dt = GetIntervalData(paramList[0].Dt, sTime, eTime);
+                recordCnt = dt.Rows.Count;
+            }
+
+            ImportIntervalControl ctrl = new ImportIntervalControl(minValue, maxValue, recordCnt);
             //ctrl.Title = "flight#" + (paramIndex + intervalIndex).ToString();
             ctrl.DeleteBtnClicked += new EventHandler(Interval_DeleteBtnClicked);
             flowLayoutPanel4.Controls.Add(ctrl);
@@ -325,6 +337,21 @@ namespace DynaRAP.UControl
                 flowLayoutPanel4.Height += SPLIT_HEIGHT;
             }
 
+        }
+
+        private DataTable GetIntervalData(DataTable curDataTable, DateTime sTime, DateTime eTime)
+        {
+            DataRow[] result = curDataTable.Select(String.Format("Argument >= #{0}# AND Argument <= #{1}#", sTime.ToString("yyyy-MM-dd HH:mm:ss.ffffff"), eTime.ToString("yyyy-MM-dd HH:mm:ss.ffffff")));
+
+            DataTable table = new DataTable("Table1");
+            table.Columns.Add("Argument", typeof(DateTime));
+            table.Columns.Add("Value", typeof(double));
+
+            foreach (DataRow row in result)
+            {
+                table.ImportRow(row);
+            }
+            return table;
         }
 
         void Interval_DeleteBtnClicked(object sender, EventArgs e)
