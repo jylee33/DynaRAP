@@ -162,7 +162,7 @@ namespace DynaRAP.UControl
         #region public methods
         public void DrawChart(DataTable table, string seriesName = "Series1")
         {
-            if(null == table)
+            if(null != table)
                 m_table = table;
 
             this.pnPaging.Visible = true;

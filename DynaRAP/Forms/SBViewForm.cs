@@ -20,8 +20,8 @@ namespace DynaRAP.Forms
         private void SBViewForm_Load(object sender, EventArgs e)
         {
             // Form Test
-            //dt = SetData();
-            //this.dxChartControl1.DrawChart(dt);
+            dt = SetData();
+            this.dxChartControl1.DrawChart(dt);
         }
 
 
