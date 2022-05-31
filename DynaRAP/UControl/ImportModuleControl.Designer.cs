@@ -409,19 +409,21 @@
             // 
             // tableLayoutPanel4
             // 
-            this.tableLayoutPanel4.ColumnCount = 8;
+            this.tableLayoutPanel4.ColumnCount = 6;
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 170F));
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 170F));
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 170F));
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 160F));
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel4.Controls.Add(this.labelControl25, 4, 0);
             this.tableLayoutPanel4.Controls.Add(this.labelControl24, 3, 0);
             this.tableLayoutPanel4.Controls.Add(this.labelControl22, 1, 0);
             this.tableLayoutPanel4.Controls.Add(this.labelControl23, 2, 0);
             this.tableLayoutPanel4.Controls.Add(this.labelControl3, 0, 0);
-            this.tableLayoutPanel4.Controls.Add(this.labelControl5, 6, 0);
+            this.tableLayoutPanel4.Controls.Add(this.labelControl5, 5, 0);
             this.tableLayoutPanel4.Location = new System.Drawing.Point(0, 222);
             this.tableLayoutPanel4.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
@@ -435,9 +437,9 @@
             this.labelControl25.Appearance.Options.UseTextOptions = true;
             this.labelControl25.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
             this.labelControl25.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelControl25.Location = new System.Drawing.Point(643, 3);
+            this.labelControl25.Location = new System.Drawing.Point(673, 3);
             this.labelControl25.Name = "labelControl25";
-            this.labelControl25.Size = new System.Drawing.Size(44, 28);
+            this.labelControl25.Size = new System.Drawing.Size(24, 28);
             this.labelControl25.TabIndex = 3;
             this.labelControl25.Text = "삭제";
             // 
@@ -446,7 +448,7 @@
             this.labelControl24.Appearance.Options.UseTextOptions = true;
             this.labelControl24.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
             this.labelControl24.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelControl24.Location = new System.Drawing.Point(483, 3);
+            this.labelControl24.Location = new System.Drawing.Point(513, 3);
             this.labelControl24.Name = "labelControl24";
             this.labelControl24.Size = new System.Drawing.Size(154, 28);
             this.labelControl24.TabIndex = 2;
@@ -457,9 +459,9 @@
             this.labelControl22.Appearance.Options.UseTextOptions = true;
             this.labelControl22.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
             this.labelControl22.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelControl22.Location = new System.Drawing.Point(163, 3);
+            this.labelControl22.Location = new System.Drawing.Point(173, 3);
             this.labelControl22.Name = "labelControl22";
-            this.labelControl22.Size = new System.Drawing.Size(154, 28);
+            this.labelControl22.Size = new System.Drawing.Size(164, 28);
             this.labelControl22.TabIndex = 0;
             this.labelControl22.Text = "구간 이름";
             // 
@@ -468,9 +470,9 @@
             this.labelControl23.Appearance.Options.UseTextOptions = true;
             this.labelControl23.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
             this.labelControl23.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelControl23.Location = new System.Drawing.Point(323, 3);
+            this.labelControl23.Location = new System.Drawing.Point(343, 3);
             this.labelControl23.Name = "labelControl23";
-            this.labelControl23.Size = new System.Drawing.Size(154, 28);
+            this.labelControl23.Size = new System.Drawing.Size(164, 28);
             this.labelControl23.TabIndex = 1;
             this.labelControl23.Text = "시작 시간";
             // 
@@ -481,7 +483,7 @@
             this.labelControl3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.labelControl3.Location = new System.Drawing.Point(3, 3);
             this.labelControl3.Name = "labelControl3";
-            this.labelControl3.Size = new System.Drawing.Size(154, 28);
+            this.labelControl3.Size = new System.Drawing.Size(164, 28);
             this.labelControl3.TabIndex = 0;
             this.labelControl3.Text = "기동 이름";
             // 
@@ -614,9 +616,9 @@
             this.labelControl5.Appearance.Options.UseTextOptions = true;
             this.labelControl5.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
             this.labelControl5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelControl5.Location = new System.Drawing.Point(693, 3);
+            this.labelControl5.Location = new System.Drawing.Point(703, 3);
             this.labelControl5.Name = "labelControl5";
-            this.labelControl5.Size = new System.Drawing.Size(98, 28);
+            this.labelControl5.Size = new System.Drawing.Size(88, 28);
             this.labelControl5.TabIndex = 3;
             this.labelControl5.Text = "DATA 수";
             // 
