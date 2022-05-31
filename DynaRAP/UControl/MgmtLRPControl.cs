@@ -113,7 +113,7 @@ namespace DynaRAP.UControl
 
         private void InitializeParamList()
         {
-            cboParamList.Properties.Items.Clear();
+            /*cboParamList.Properties.Items.Clear();
 
             paramList = GetParamList();
 
@@ -121,7 +121,71 @@ namespace DynaRAP.UControl
             {
                 cboParamList.Properties.Items.Add(list.paramKey);
             }
-            cboParamList.SelectedIndex = -1;
+            cboParamList.SelectedIndex = -1;*/
+
+            paramList = GetParamList();
+
+            //TreeList treeList2 = new TreeList();
+            //treeList2.Parent = this.splitContainer1.Panel1;
+            //treeList2.Dock = DockStyle.Fill;
+            //Specify the fields that arrange underlying data as a hierarchy.
+            treeList2.KeyFieldName = "ID";
+            treeList2.ParentFieldName = "ParentID";
+            //Allow the treelist to create columns bound to the fields the KeyFieldName and ParentFieldName properties specify.
+            treeList2.OptionsBehavior.PopulateServiceColumns = true;
+
+            //Specify the data source.
+            //treeList2.DataSource = null;
+            treeList2.DataSource = paramList; //GetDirList();
+            //The treelist automatically creates columns for the public fields found in the data source. 
+            //You do not need to call the TreeList.PopulateColumns method unless the treeList2.OptionsBehavior.AutoPopulatefColumns option is disabled.
+            treeList2.ForceInitialize();
+
+            treeList2.RowHeight = 23;
+            treeList2.OptionsView.ShowHorzLines = false;
+            treeList2.OptionsView.ShowVertLines = false;
+            treeList2.OptionsView.ShowIndicator = false;
+            treeList2.OptionsView.ShowTreeLines = DevExpress.Utils.DefaultBoolean.False;
+            treeList2.OptionsView.ShowFilterPanelMode = ShowFilterPanelMode.Never;
+            treeList2.OptionsView.ShowSummaryFooter = false;
+            treeList2.OptionsView.AutoWidth = true;
+            treeList2.OptionsView.ShowAutoFilterRow = true;
+
+            treeList2.OptionsFilter.AllowFilterEditor = false;
+
+            treeList2.OptionsSelection.MultiSelect = false;
+
+            treeList2.OptionsNavigation.AutoFocusNewNode = true;
+            treeList2.OptionsNavigation.AutoMoveRowFocus = true;
+
+#if !DEBUG
+            treeList2.OptionsView.ShowColumns = false;
+            //Hide the key columns. An end-user can access them from the Customization Form.
+            treeList2.Columns[treeList2.KeyFieldName].Visible = false;
+            treeList2.Columns[treeList2.ParentFieldName].Visible = false;
+#endif
+            //Access the automatically created columns.
+            TreeListColumn colName = treeList2.Columns["paramKey"];
+
+            colName.MinWidth = 200;
+
+            //Make the Project column read-only.
+            colName.OptionsColumn.ReadOnly = true;
+            colName.OptionsColumn.AllowEdit = false;
+
+            //Sort data against the Project column
+            colName.SortIndex = -1;// 0;
+
+            //treeList2.OptionsView.ShowCheckBoxes = true; // 제일 앞에 checkBox 붙이는 옵션
+            //treeList2.PopupMenuShowing += treeList2_PopupMenuShowing;
+
+            treeList2.ExpandAll();
+
+            //Calculate the optimal column widths after the treelist is shown.
+            this.BeginInvoke(new MethodInvoker(delegate
+            {
+                treeList2.BestFitColumns();
+            }));
 
         }
 
@@ -987,10 +1051,14 @@ namespace DynaRAP.UControl
 
                 ResponseParam param = paramList.Find(x => x.paramPack.Equals(node.GetValue("RefSeq").ToString()));
                 if (param == null)
-                    this.cboParamList.SelectedIndex = -1;
+                {
+                    //this.cboParamList.SelectedIndex = -1;
+                    treeList2.FocusedNode = null;
+                }
                 else
                 {
-                    this.cboParamList.Text = param.paramKey;
+                    //this.cboParamList.Text = param.paramKey;
+                    treeList2.FocusedNode = treeList2.FindNodeByFieldValue("paramKey", param.paramKey);
                 }
             }
         }
@@ -1013,17 +1081,22 @@ namespace DynaRAP.UControl
 
                 ResponseParam param = paramList.Find(x => x.paramPack.Equals(node.GetValue("RefSeq").ToString()));
                 if (param == null)
-                    this.cboParamList.SelectedIndex = -1;
+                {
+                    //this.cboParamList.SelectedIndex = -1;
+                    treeList2.FocusedNode = null;
+                }
                 else
                 {
-                    this.cboParamList.Text = param.paramKey;
+                    //this.cboParamList.Text = param.paramKey;
+                    treeList2.FocusedNode = treeList2.FindNodeByFieldValue("paramKey", param.paramKey);
                 }
             }
         }
 
         private void btnModifyParameter_Click(object sender, EventArgs e)
         {
-            string paramKey = cboParamList.Text;
+            //string paramKey = cboParamList.Text;
+            string paramKey = treeList2.FocusedNode.GetValue("paramKey").ToString();
             ResponseParam param = paramList.Find(x => x.paramKey.Equals(paramKey));
 
             if (param != null)
@@ -1067,13 +1140,14 @@ namespace DynaRAP.UControl
 
         private void btnDeleteParameter_Click(object sender, EventArgs e)
         {
-            string msg = string.Format(Properties.Resources.StringDeleteParameter, cboParamList.Text);
+            string paramKey = treeList2.FocusedNode.GetValue("paramKey").ToString();
+            string msg = string.Format(Properties.Resources.StringDeleteParameter, paramKey);
             if (MessageBox.Show(msg, Properties.Resources.StringConfirmation, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
             {
                 return;
             }
 
-            ResponseParam param = paramList.Find(x => x.paramKey.Equals(cboParamList.Text));
+            ResponseParam param = paramList.Find(x => x.paramKey.Equals(paramKey));
 
             if(param != null)
             {
@@ -1083,7 +1157,8 @@ namespace DynaRAP.UControl
                 {
                     MessageBox.Show(Properties.Resources.SuccessRemove, Properties.Resources.StringSuccess, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     InitializeParamList();
-                    cboParamList_SelectedIndexChanged(cboParamList, null);
+                    //cboParamList_SelectedIndexChanged(cboParamList, null);
+                    //treeList2_RowClick(treeList2, null);
                 }
             }
 
@@ -1142,8 +1217,9 @@ namespace DynaRAP.UControl
             string pid = focusedNode.GetValue("ParentID").ToString();
             string paramPack = string.Empty;
             string seq = string.Empty;
+            string paramKey = treeList2.FocusedNode.GetValue("paramKey").ToString();
 
-            ResponseParam param = paramList.Find(x => x.paramKey.Equals(cboParamList.Text));
+            ResponseParam param = paramList.Find(x => x.paramKey.Equals(paramKey));
             if (param != null)
             {
                 paramPack = param.paramPack;
@@ -1308,6 +1384,224 @@ namespace DynaRAP.UControl
         private void btnAddExtra_ButtonClick(object sender, EventArgs e)
         {
             AddExtra();
+        }
+        private void treeList2_FocusedNodeChanged(object sender, FocusedNodeChangedEventArgs e)
+        {
+            TreeListNode node = e.Node;
+            lblDuplicateKey.Visible = false;
+
+            if (node != null && node.GetValue("paramKey") != null)
+            {
+                string paramKey = node.GetValue("paramKey").ToString();
+                edtParamKey.Text = paramKey;
+                ResponseParam param = paramList.Find(x => x.paramKey.Equals(paramKey));
+
+                string adamsKey = String.Empty;
+                string zaeroKey = String.Empty;
+                string grtKey = String.Empty;
+                string fltpKey = String.Empty;
+                string fltsKey = String.Empty;
+                string propType = String.Empty;
+                string propCode = String.Empty;
+                string paramUnit = String.Empty;
+                string partInfo = String.Empty;
+                string partInfoSub = String.Empty;
+                string lrpX = String.Empty;
+                string lrpY = String.Empty;
+                string lrpZ = String.Empty;
+
+                if (param != null)
+                {
+                    adamsKey = param.adamsKey;
+                    zaeroKey = param.zaeroKey;
+                    grtKey = param.grtKey;
+                    fltpKey = param.fltpKey;
+                    fltsKey = param.fltsKey;
+                    if (param.propInfo != null)
+                    {
+                        propType = param.propInfo.propType;
+                        propCode = param.propInfo.propCode;
+                        paramUnit = param.propInfo.paramUnit;
+                    }
+                    partInfo = param.partInfo;
+                    partInfoSub = param.partInfoSub;
+                    lrpX = param.lrpX.ToString();
+                    lrpY = param.lrpY.ToString();
+                    lrpZ = param.lrpZ.ToString();
+                }
+                edtAdams.Text = adamsKey;
+                edtZaero.Text = zaeroKey;
+                edtGrt.Text = grtKey;
+                edtFltp.Text = fltpKey;
+                edtFlts.Text = fltsKey;
+                cboPropertyType.Text = propType;
+                cboPropertyCode.Text = propCode;
+                cboUnit.Text = paramUnit;
+                cboPart.Text = partInfo;
+                cboPartLocation.Text = partInfoSub;
+                edtLrpX.Text = lrpX;
+                edtLrpY.Text = lrpY;
+                edtLrpZ.Text = lrpZ;
+
+                int height = EXTRA_HEIGHT * flowLayoutPanel1.Controls.Count;
+                lblTag.Location = new Point(lblTag.Location.X, lblTag.Location.Y - height);
+                edtTag.Location = new Point(edtTag.Location.X, edtTag.Location.Y - height);
+                panelTag.Location = new Point(panelTag.Location.X, panelTag.Location.Y - height);
+                btnModifyParameter.Location = new Point(btnModifyParameter.Location.X, btnModifyParameter.Location.Y - height);
+                btnDeleteParameter.Location = new Point(btnDeleteParameter.Location.X, btnDeleteParameter.Location.Y - height);
+                btnSaveAsNewParameter.Location = new Point(btnSaveAsNewParameter.Location.X, btnSaveAsNewParameter.Location.Y - height);
+                flowLayoutPanel1.Height = FLOWLAYOUTPANEL1_HEIGHT;
+
+                extraIndex = START_EXTRA_INDEX;
+
+                MgmtLRPExtraControl[] controls = new MgmtLRPExtraControl[flowLayoutPanel1.Controls.Count];
+                extraControlList.CopyTo(controls);
+                foreach (MgmtLRPExtraControl ctrl in controls)
+                {
+                    flowLayoutPanel1.Controls.Remove(ctrl);
+                    ctrl.Dispose();
+                    extraControlList.Remove(ctrl);
+                }
+
+                if (param != null)
+                {
+                    foreach (KeyValuePair<string, string> pair in param.extras)
+                    {
+                        AddExtra(pair.Key, pair.Value);
+                    }
+                }
+
+                ButtonEdit[] controlArray = new ButtonEdit[panelTag.Controls.Count];
+                panelTag.Controls.CopyTo(controlArray, 0);
+
+                foreach (ButtonEdit btn in controlArray)
+                {
+                    panelTag.Controls.Remove(btn);
+                }
+
+                if (param != null)
+                {
+                    //Decoding
+                    byte[] byte64 = Convert.FromBase64String(param.tags);
+                    string decName = Encoding.UTF8.GetString(byte64);
+
+                    string[] tags = decName.Split('|');
+                    foreach (string tag in tags)
+                    {
+                        addTag(tag);
+                    }
+                }
+            }
+        }
+
+        private void treeList2_RowClick(object sender, RowClickEventArgs e)
+        {
+            TreeListNode node = e.Node;
+            lblDuplicateKey.Visible = false;
+
+            if (node != null && node.GetValue("paramKey") != null)
+            {
+                string paramKey = node.GetValue("paramKey").ToString();
+                edtParamKey.Text = paramKey;
+                ResponseParam param = paramList.Find(x => x.paramKey.Equals(paramKey));
+           
+                string adamsKey = String.Empty;
+                string zaeroKey = String.Empty;
+                string grtKey = String.Empty;
+                string fltpKey = String.Empty;
+                string fltsKey = String.Empty;
+                string propType = String.Empty;
+                string propCode = String.Empty;
+                string paramUnit = String.Empty;
+                string partInfo = String.Empty;
+                string partInfoSub = String.Empty;
+                string lrpX = String.Empty;
+                string lrpY = String.Empty;
+                string lrpZ = String.Empty;
+
+                if (param != null)
+                {
+                    adamsKey = param.adamsKey;
+                    zaeroKey = param.zaeroKey;
+                    grtKey = param.grtKey;
+                    fltpKey = param.fltpKey;
+                    fltsKey = param.fltsKey;
+                    if (param.propInfo != null)
+                    {
+                        propType = param.propInfo.propType;
+                        propCode = param.propInfo.propCode;
+                        paramUnit = param.propInfo.paramUnit;
+                    }
+                    partInfo = param.partInfo;
+                    partInfoSub = param.partInfoSub;
+                    lrpX = param.lrpX.ToString();
+                    lrpY = param.lrpY.ToString();
+                    lrpZ = param.lrpZ.ToString();
+                }
+                edtAdams.Text = adamsKey;
+                edtZaero.Text = zaeroKey;
+                edtGrt.Text = grtKey;
+                edtFltp.Text = fltpKey;
+                edtFlts.Text = fltsKey;
+                cboPropertyType.Text = propType;
+                cboPropertyCode.Text = propCode;
+                cboUnit.Text = paramUnit;
+                cboPart.Text = partInfo;
+                cboPartLocation.Text = partInfoSub;
+                edtLrpX.Text = lrpX;
+                edtLrpY.Text = lrpY;
+                edtLrpZ.Text = lrpZ;
+
+                int height = EXTRA_HEIGHT * flowLayoutPanel1.Controls.Count;
+                lblTag.Location = new Point(lblTag.Location.X, lblTag.Location.Y - height);
+                edtTag.Location = new Point(edtTag.Location.X, edtTag.Location.Y - height);
+                panelTag.Location = new Point(panelTag.Location.X, panelTag.Location.Y - height);
+                btnModifyParameter.Location = new Point(btnModifyParameter.Location.X, btnModifyParameter.Location.Y - height);
+                btnDeleteParameter.Location = new Point(btnDeleteParameter.Location.X, btnDeleteParameter.Location.Y - height);
+                btnSaveAsNewParameter.Location = new Point(btnSaveAsNewParameter.Location.X, btnSaveAsNewParameter.Location.Y - height);
+                flowLayoutPanel1.Height = FLOWLAYOUTPANEL1_HEIGHT;
+
+                extraIndex = START_EXTRA_INDEX;
+
+                MgmtLRPExtraControl[] controls = new MgmtLRPExtraControl[flowLayoutPanel1.Controls.Count];
+                extraControlList.CopyTo(controls);
+                foreach (MgmtLRPExtraControl ctrl in controls)
+                {
+                    flowLayoutPanel1.Controls.Remove(ctrl);
+                    ctrl.Dispose();
+                    extraControlList.Remove(ctrl);
+                }
+
+                if (param != null)
+                {
+                    foreach (KeyValuePair<string, string> pair in param.extras)
+                    {
+                        AddExtra(pair.Key, pair.Value);
+                    }
+                }
+
+                ButtonEdit[] controlArray = new ButtonEdit[panelTag.Controls.Count];
+                panelTag.Controls.CopyTo(controlArray, 0);
+
+                foreach (ButtonEdit btn in controlArray)
+                {
+                    panelTag.Controls.Remove(btn);
+                }
+
+                if (param != null)
+                {
+                    //Decoding
+                    byte[] byte64 = Convert.FromBase64String(param.tags);
+                    string decName = Encoding.UTF8.GetString(byte64);
+
+                    string[] tags = decName.Split('|');
+                    foreach (string tag in tags)
+                    {
+                        addTag(tag);
+                    }
+                }
+            }
+
         }
 
         #endregion EventHandler
