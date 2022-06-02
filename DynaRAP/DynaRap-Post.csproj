@@ -134,6 +134,7 @@
     <Compile Include="Common\DrawTypes.cs" />
     <Compile Include="Common\ParamProperty.cs" />
     <Compile Include="Common\SeriesPointData.cs" />
+    <Compile Include="Data\ImportIntervalData.cs" />
     <Compile Include="Data\SBListResponse.cs" />
     <Compile Include="Data\PartInfoResponse.cs" />
     <Compile Include="Data\PropListResponse.cs" />

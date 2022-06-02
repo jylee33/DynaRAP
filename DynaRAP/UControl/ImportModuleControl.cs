@@ -30,9 +30,10 @@ namespace DynaRAP.UControl
         string selectedFuselage = string.Empty;
         Dictionary<string, List<string>> dicData = new Dictionary<string, List<string>>();
         List<ImportParamControl> paramList = new List<ImportParamControl>();
-        List<ImportIntervalControl> splitList = new List<ImportIntervalControl>();
+        //List<ImportIntervalControl> splitList = new List<ImportIntervalControl>();
         List<ResponsePreset> presetList = null;
         List<PresetData> pComboList = null;
+        List<ImportIntervalData> intervalList = null;
 
         string csvFilePath = string.Empty;
         object minValue = null;
@@ -79,12 +80,17 @@ namespace DynaRAP.UControl
 
             btnAddParameter.Enabled = false;
             
-            lblSplitCount.Text = string.Format(Properties.Resources.StringSplitCount, splitList.Count);
+            if(intervalList == null)
+            {
+                intervalList = new List<ImportIntervalData>();
+            }
+            lblSplitCount.Text = string.Format(Properties.Resources.StringSplitCount, intervalList.Count);
 
-            InitializeGridControl();
+            InitializeGridControl1();
+            InitializeGridControl2();
         }
 
-        private void InitializeGridControl()
+        private void InitializeGridControl1()
         {
 
             //gridView1.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
@@ -107,7 +113,85 @@ namespace DynaRAP.UControl
 
         }
 
+        private void InitializeGridControl2()
+        {
+
+            //gridView2.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+
+            repositoryItemComboBox1.TextEditStyle = TextEditStyles.DisableTextEditor;
+            repositoryItemComboBox1.SelectedIndexChanged += RepositoryItemComboBox1_SelectedIndexChanged;
+            repositoryItemComboBox1.BeforePopup += RepositoryItemComboBox1_BeforePopup;
+
+            string importType = ConfigurationManager.AppSettings["ImportType"];
+
+            string[] types = importType.Split(',');
+
+            repositoryItemComboBox1.Items.Clear();
+            foreach (string type in types)
+            {
+                repositoryItemComboBox1.Items.Add(type);
+            }
+
+            gridView2.OptionsView.ShowColumnHeaders = true;
+            gridView2.OptionsView.ShowGroupPanel = false;
+            gridView2.OptionsView.ShowIndicator = false;
+            gridView2.IndicatorWidth = 40;
+            gridView2.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.False;
+            gridView2.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.False;
+            gridView2.OptionsView.ColumnAutoWidth = true;
+
+            gridView2.OptionsBehavior.ReadOnly = false;
+            //gridView2.OptionsBehavior.Editable = false;
+
+            gridView2.OptionsSelection.MultiSelectMode = DevExpress.XtraGrid.Views.Grid.GridMultiSelectMode.RowSelect;
+            gridView2.OptionsSelection.EnableAppearanceFocusedCell = false;
+
+            gridView2.CustomDrawRowIndicator += GridView2_CustomDrawRowIndicator;
+
+            GridColumn colType = gridView2.Columns["ImportType"];
+            colType.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
+            colType.OptionsColumn.FixedWidth = true;
+            colType.Width = 240;
+            colType.Caption = "기동 이름";
+
+            GridColumn colDel = gridView2.Columns["Del"];
+            colDel.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
+            colDel.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
+            colDel.OptionsColumn.FixedWidth = true;
+            colDel.Width = 40;
+            colDel.Caption = "삭제";
+            colDel.OptionsColumn.ReadOnly = true;
+
+            this.repositoryItemImageComboBox1.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(0, 0));
+            this.repositoryItemImageComboBox1.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(1, 1));
+
+            this.repositoryItemImageComboBox1.GlyphAlignment = HorzAlignment.Center;
+            this.repositoryItemImageComboBox1.Buttons[0].Visible = false;
+
+            this.repositoryItemImageComboBox1.Click += RepositoryItemImageComboBox1_Click;
+        }
+
+        private void RepositoryItemImageComboBox1_Click(object sender, EventArgs e)
+        {
+            gridView2.DeleteRow(gridView2.FocusedRowHandle);
+            lblSplitCount.Text = string.Format(Properties.Resources.StringSplitCount, intervalList.Count);
+        }
+
+        private void RepositoryItemComboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void RepositoryItemComboBox1_BeforePopup(object sender, EventArgs e)
+        {
+        }
+
         private void GridView1_CustomDrawRowIndicator(object sender, RowIndicatorCustomDrawEventArgs e)
+        {
+            if (e.RowHandle >= 0)
+                e.Info.DisplayText = e.RowHandle.ToString();
+        }
+
+        private void GridView2_CustomDrawRowIndicator(object sender, RowIndicatorCustomDrawEventArgs e)
         {
             if (e.RowHandle >= 0)
                 e.Info.DisplayText = e.RowHandle.ToString();
@@ -282,7 +366,7 @@ namespace DynaRAP.UControl
         {
             AddSplittedInterval();
 
-            lblSplitCount.Text = string.Format(Properties.Resources.StringSplitCount, splitList.Count);
+            lblSplitCount.Text = string.Format(Properties.Resources.StringSplitCount, intervalList.Count);
         }
 
         const int START_SPLIT_INDEX = 0;
@@ -324,7 +408,7 @@ namespace DynaRAP.UControl
                 recordCnt = dt.Rows.Count;
             }
 
-            ImportIntervalControl ctrl = new ImportIntervalControl(minValue, maxValue, recordCnt);
+            /*ImportIntervalControl ctrl = new ImportIntervalControl(minValue, maxValue, recordCnt);
             //ctrl.Title = "flight#" + (paramIndex + intervalIndex).ToString();
             ctrl.DeleteBtnClicked += new EventHandler(Interval_DeleteBtnClicked);
             flowLayoutPanel4.Controls.Add(ctrl);
@@ -335,7 +419,14 @@ namespace DynaRAP.UControl
             if (intervalIndex <= MAX_SPLIT_CNT)
             {
                 flowLayoutPanel4.Height += SPLIT_HEIGHT;
+            }*/
+            if(intervalList == null)
+            {
+                intervalList = new List<ImportIntervalData>();
             }
+            intervalList.Add(new ImportIntervalData("", "", minValue.ToString(), maxValue.ToString(), recordCnt.ToString(), 1));
+            this.gridControl2.DataSource = intervalList;
+            gridView2.RefreshData();
 
         }
 
@@ -356,7 +447,7 @@ namespace DynaRAP.UControl
 
         void Interval_DeleteBtnClicked(object sender, EventArgs e)
         {
-            ImportIntervalControl ctrl = sender as ImportIntervalControl;
+            /*ImportIntervalControl ctrl = sender as ImportIntervalControl;
             flowLayoutPanel1.Controls.Remove(ctrl);
             splitList.Remove(ctrl);
             ctrl.Dispose();
@@ -367,7 +458,7 @@ namespace DynaRAP.UControl
                 flowLayoutPanel4.Height -= SPLIT_HEIGHT;
             }
 
-            lblSplitCount.Text = string.Format(Properties.Resources.StringSplitCount, splitList.Count);
+            lblSplitCount.Text = string.Format(Properties.Resources.StringSplitCount, splitList.Count);*/
         }
 
         private void btnSaveSplittedInterval_ButtonClick(object sender, EventArgs e)
@@ -396,14 +487,17 @@ namespace DynaRAP.UControl
 
             import.presetPack = presetPack;
 
-            foreach (ImportIntervalControl ctrl in splitList)
+            for(int i = 0; i < gridView2.RowCount; i++)
             {
+                string splitName = gridView2.GetRowCellValue(i, "SplitName") == null ? "" : gridView2.GetRowCellValue(i, "SplitName").ToString();
+                string startTime = gridView2.GetRowCellValue(i, "StartTime") == null ? "" : gridView2.GetRowCellValue(i, "StartTime").ToString();
+                string endTime = gridView2.GetRowCellValue(i, "EndTime") == null ? "" : gridView2.GetRowCellValue(i, "EndTime").ToString();
                 //Encoding
-                byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(ctrl.PartName);
+                byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(splitName);
                 string partName = Convert.ToBase64String(basebyte);
 
-                string t1 = Utils.GetJulianFromDate(ctrl.Min);
-                string t2 = Utils.GetJulianFromDate(ctrl.Max);
+                string t1 = Utils.GetJulianFromDate(startTime);
+                string t2 = Utils.GetJulianFromDate(endTime);
 
                 import.parts.Add(new Part(partName, t1, t2));
             }
