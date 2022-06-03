@@ -400,6 +400,12 @@
     <Compile Include="UControl\MyPotatoChart.Designer.cs">
       <DependentUpon>MyPotatoChart.cs</DependentUpon>
     </Compile>
+    <Compile Include="UControl\PlotModuleControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\PlotModuleControl.Designer.cs">
+      <DependentUpon>PlotModuleControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="UControl\SBParamControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -633,6 +639,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\MyPotatoChart.resx">
       <DependentUpon>MyPotatoChart.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\PlotModuleControl.resx">
+      <DependentUpon>PlotModuleControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\SBParamControl.resx">
       <DependentUpon>SBParamControl.cs</DependentUpon>

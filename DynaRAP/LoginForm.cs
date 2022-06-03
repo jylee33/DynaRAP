@@ -93,7 +93,7 @@ namespace DynaRAP
         private void LoginForm_Load(object sender, EventArgs e)
         {
             edtId.Text = "a";
-            edtPassword.Text = "a";
+            //edtPassword.Text = "a";
         }
 
         private void btnLogin_Click(object sender, EventArgs e)

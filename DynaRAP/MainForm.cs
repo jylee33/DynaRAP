@@ -44,6 +44,7 @@ namespace DynaRAP
         MgmtLRPControl mgmtLRPControl = null;
         MgmtMatchingTabletControl mgmtMatchingTableControl = null;
         //MgmtPresetGroupControl mgmtPresetGroupControl = null;
+        PlotModuleControl plotModuleControl = null;
 
         CsvTableControl csvTableControl = null;
 
@@ -96,6 +97,8 @@ namespace DynaRAP
         public BinModuleControl BinModuleControl { get => binModuleControl; set => binModuleControl = value; }
         public MgmtLRPControl MgmtLRPControl { get => mgmtLRPControl; set => mgmtLRPControl = value; }
         public MgmtMatchingTabletControl MgmtMatchingTabletControl { get => mgmtMatchingTableControl; set => mgmtMatchingTableControl = value; }
+        public PlotModuleControl PlotModuleControl { get => plotModuleControl; set => plotModuleControl = value; }
+
         //public MgmtPresetGroupControl MgmtPresetGroupControl { get => mgmtPresetGroupControl; set => mgmtPresetGroupControl = value; }
 
         public MainForm()
@@ -195,6 +198,18 @@ namespace DynaRAP
                 tabbedView1.ActivateDocument(mgmtMatchingTableControl);
             }
 
+            if (plotModuleControl == null)
+            {
+                plotModuleControl = new PlotModuleControl();
+                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(plotModuleControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
+                doc.Caption = "PLOT";
+                tabbedView1.ActivateDocument(plotModuleControl);
+            }
+            else
+            {
+                tabbedView1.ActivateDocument(plotModuleControl);
+            }
+
             //if (mgmtPresetGroupControl == null)
             //{
             //    mgmtPresetGroupControl = new MgmtPresetGroupControl();
@@ -214,8 +229,8 @@ namespace DynaRAP
             tabbedView1.RemoveDocument(sbModuleControl);
             tabbedView1.RemoveDocument(binModuleControl);
             tabbedView1.RemoveDocument(mgmtLRPControl);
-            tabbedView1.RemoveDocument(mgmtMatchingTableControl);
             tabbedView1.RemoveDocument(importModuleControl);
+            tabbedView1.RemoveDocument(plotModuleControl);
             tabbedView1.ActivateDocument(startControl);
 #endif
 
@@ -285,6 +300,9 @@ namespace DynaRAP
             //else if (e.Document == mgmtPresetGroupControl)
             //{
             //    e.Control = mgmtPresetGroupControl;
+            //else if (e.Document == plotModuleControl)
+            //{
+            //    e.Control = plotModuleControl;
             //}
             if (e.Control == null)
             {
@@ -318,6 +336,11 @@ namespace DynaRAP
             {
                 mgmtMatchingTableControl = null;
             }
+            else if (e.Document.Control is PlotModuleControl)
+            {
+                plotModuleControl = null;
+            }
+            
             //else if (e.Document.Control is MgmtPresetGroupControl)
             //{
             //    mgmtPresetGroupControl = null;
@@ -579,24 +602,34 @@ namespace DynaRAP
 
         private void btnChartLine2d_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
+            tabbedView1.ActivateDocument(plotModuleControl);
+            plotModuleControl.AddDocument(new MyLineChart());
+
+            return;
+
             TestChartLine form = new TestChartLine();
             form.Show();
             return;
 
-            ChartControl chartControl = null;
+            //ChartControl chartControl = null;
 
-            chartControl = GetLine2DChartControl();
-            if (chartControl != null)
-            {
-                XtraForm chartForm = GetChartForm(chartControl);
-                chartForm.Text = "Line 2D";
+            //chartControl = GetLine2DChartControl();
+            //if (chartControl != null)
+            //{
+            //    XtraForm chartForm = GetChartForm(chartControl);
+            //    chartForm.Text = "Line 2D";
 
-                chartForm.Show();
-            }
+            //    chartForm.Show();
+            //}
         }
 
         private void btnChartMinMax_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
+            tabbedView1.ActivateDocument(plotModuleControl);
+            plotModuleControl.AddDocument(new MyLineChart());
+
+            return;
+
             TestChartLine form = new TestChartLine();
             form.Show();
             return;
@@ -615,6 +648,11 @@ namespace DynaRAP
 
         private void btnChartPotato_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
+            tabbedView1.ActivateDocument(plotModuleControl);
+            plotModuleControl.AddDocument(new MyPotatoChart());
+
+            return;
+
             TestChartPotato form = new TestChartPotato();
             form.Show();
             return;

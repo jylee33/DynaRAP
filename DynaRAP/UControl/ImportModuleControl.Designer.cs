@@ -406,7 +406,7 @@
             this.gridControl2.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemImageComboBox1,
             this.repositoryItemComboBox1});
-            this.gridControl2.Size = new System.Drawing.Size(785, 347);
+            this.gridControl2.Size = new System.Drawing.Size(785, 282);
             this.gridControl2.TabIndex = 27;
             this.gridControl2.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView2});
@@ -498,7 +498,7 @@
             // 
             this.lblSplitCount.Appearance.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold);
             this.lblSplitCount.Appearance.Options.UseFont = true;
-            this.lblSplitCount.Location = new System.Drawing.Point(3, 571);
+            this.lblSplitCount.Location = new System.Drawing.Point(3, 506);
             this.lblSplitCount.Name = "lblSplitCount";
             this.lblSplitCount.Size = new System.Drawing.Size(110, 17);
             this.lblSplitCount.TabIndex = 0;
@@ -508,7 +508,7 @@
             // 
             this.lblTag.Appearance.Font = new System.Drawing.Font("Tahoma", 13F, System.Drawing.FontStyle.Bold);
             this.lblTag.Appearance.Options.UseFont = true;
-            this.lblTag.Location = new System.Drawing.Point(3, 594);
+            this.lblTag.Location = new System.Drawing.Point(3, 529);
             this.lblTag.Name = "lblTag";
             this.lblTag.Size = new System.Drawing.Size(26, 22);
             this.lblTag.TabIndex = 3;
@@ -516,7 +516,7 @@
             // 
             // edtTag
             // 
-            this.edtTag.Location = new System.Drawing.Point(3, 622);
+            this.edtTag.Location = new System.Drawing.Point(3, 557);
             this.edtTag.Name = "edtTag";
             this.edtTag.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Plus)});
@@ -529,7 +529,7 @@
             // 
             this.panelTag.AutoScroll = true;
             this.panelTag.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelTag.Location = new System.Drawing.Point(3, 650);
+            this.panelTag.Location = new System.Drawing.Point(3, 585);
             this.panelTag.Name = "panelTag";
             this.panelTag.Size = new System.Drawing.Size(788, 96);
             this.panelTag.TabIndex = 28;
@@ -546,7 +546,7 @@
             this.tableLayoutPanel3.Controls.Add(this.chkForcedImport, 3, 0);
             this.tableLayoutPanel3.Controls.Add(this.chkLPF, 0, 0);
             this.tableLayoutPanel3.Controls.Add(this.chkHPF, 1, 0);
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 752);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 687);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 1;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
