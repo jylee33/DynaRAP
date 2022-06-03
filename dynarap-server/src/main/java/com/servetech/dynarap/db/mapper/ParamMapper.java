@@ -15,6 +15,14 @@ public interface ParamMapper {
             "<script>" +
                     "select a.* from dynarap_param a " +
                     "where a.appliedEndAt = 0 " +
+                    "<if test='@com.servetech.dynarap.db.type.MybatisEmptyChecker@isNotEmpty(keyword)'>" +
+                    " and (paramKey like concat('%', #{keyword}, '%') " +
+                    " or adamsKey like concat('%', #{keyword}, '%') " +
+                    " or zaeroKey like concat('%', #{keyword}, '%') " +
+                    " or grtKey like concat('%', #{keyword}, '%') " +
+                    " or fltpKey like concat('%', #{keyword}, '%') " +
+                    " or fltsKey like concat('%', #{keyword}, '%')) " +
+                    "</if>" +
                     "order by a.appliedAt desc " +
                     "limit #{startIndex}, #{pageSize}" +
                     "</script>"
@@ -25,6 +33,14 @@ public interface ParamMapper {
             "<script>" +
                     "select count(*) from dynarap_param a " +
                     "where a.appliedEndAt = 0 " +
+                    "<if test='@com.servetech.dynarap.db.type.MybatisEmptyChecker@isNotEmpty(keyword)'>" +
+                    " and (paramKey like concat('%', #{keyword}, '%') " +
+                    " or adamsKey like concat('%', #{keyword}, '%') " +
+                    " or zaeroKey like concat('%', #{keyword}, '%') " +
+                    " or grtKey like concat('%', #{keyword}, '%') " +
+                    " or fltpKey like concat('%', #{keyword}, '%') " +
+                    " or fltsKey like concat('%', #{keyword}, '%')) " +
+                    "</if>" +
                     "</script>"
     })
     int selectParamCount(Map<String, Object> params) throws Exception;
@@ -53,6 +69,24 @@ public interface ParamMapper {
 
     @Select({
             "<script>" +
+                    "select seq from dynarap_preset_param " +
+                    "where presetPack = #{presetPack,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "and presetSeq = #{presetSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "and paramPack = #{paramPack,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "and paramSeq = #{paramSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "union " +
+                    "select seq from dynarap_notmapped_param " +
+                    "where uploadSeq = #{uploadSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "and paramPack = #{paramPack,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "and paramSeq = #{paramSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "order by seq desc " +
+                    "limit 0, 1" +
+                    "</script>"
+    })
+    Long selectReferenceSeq(Map<String, Object> params) throws Exception;
+
+    @Select({
+            "<script>" +
                     "select * from dynarap_param " +
                     "where paramPack = #{paramPack,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
                     "order by appliedAt desc " +
@@ -68,6 +102,16 @@ public interface ParamMapper {
                     "</script>"
     })
     ParamVO selectParamBySeq(Map<String, Object> params) throws Exception;
+
+    @Select({
+            "<script>" +
+                    "select * from dynarap_param " +
+                    "where ${dataTypeKey} = #{paramKey} " +
+                    "order by seq desc " +
+                    "limit 0, 1" +
+                    "</script>"
+    })
+    ParamVO selectParamByParamKey(Map<String, Object> params) throws Exception;
 
     @Insert({
             "<script>" +
@@ -335,7 +379,8 @@ public interface ParamMapper {
 
     @Select({
             "<script>" +
-                    "select c.*, a.presetPack, a.presetSeq, a.seq as presetParamSeq from dynarap_preset_param a, dynarap_preset b, dynarap_param c " +
+                    "select c.*, a.presetPack, a.presetSeq, a.seq as referenceSeq " +
+                    "from dynarap_preset_param a, dynarap_preset b, dynarap_param c " +
                     "where a.presetPack = b.presetPack " +
                     "and b.presetPack = #{presetPack,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
                     "<choose> " +
@@ -366,7 +411,8 @@ public interface ParamMapper {
 
     @Select({
             "<script>" +
-                    "select count(*) from dynarap_preset_param a, dynarap_preset b, dynarap_param c " +
+                    "select count(*) " +
+                    "from dynarap_preset_param a, dynarap_preset b, dynarap_param c " +
                     "where a.presetPack = b.presetPack " +
                     "and b.presetPack = #{presetPack,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
                     "<choose> " +
@@ -392,6 +438,18 @@ public interface ParamMapper {
                     "</script>"
     })
     int selectPresetParamCount(Map<String, Object> params) throws Exception;
+
+    @Select({
+            "<script>" +
+                    "select c.*, a.seq as referenceSeq " +
+                    "from dynarap_notmapped_param a, dynarap_param c " +
+                    "where a.uploadSeq = #{uploadSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "and a.paramPack = c.paramPack " +
+                    "and a.paramSeq = c.seq " +
+                    "order by c.appliedAt desc " +
+                    "</script>"
+    })
+    List<ParamVO> selectNotMappedParamList(Map<String, Object> params) throws Exception;
 
     @Select({
             "<script>" +

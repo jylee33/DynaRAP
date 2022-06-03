@@ -17,6 +17,9 @@ public class PartVO {
     private Double offsetEndAt;
     private CryptoField.NAuth registerUid;
 
+    private boolean lpfDone;
+    private boolean hpfDone;
+
     private PresetVO presetInfo;
 
     @Data

@@ -4,11 +4,15 @@ import com.google.gson.JsonObject;
 import com.servetech.dynarap.config.ServerConstants;
 import com.servetech.dynarap.controller.ApiController;
 import com.servetech.dynarap.db.mapper.ParamMapper;
+import com.servetech.dynarap.db.mapper.PartMapper;
+import com.servetech.dynarap.db.mapper.RawMapper;
 import com.servetech.dynarap.db.type.CryptoField;
 import com.servetech.dynarap.db.type.LongDate;
 import com.servetech.dynarap.ext.HandledServiceException;
 import com.servetech.dynarap.vo.ParamVO;
+import com.servetech.dynarap.vo.PartVO;
 import com.servetech.dynarap.vo.PresetVO;
+import com.servetech.dynarap.vo.RawVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,12 +25,20 @@ public class ParamService {
     @Autowired
     private ParamMapper paramMapper;
 
+    @Autowired
+    private PartMapper partMapper;
+
+    @Autowired
+    private RawMapper rawMapper;
+
     // 활성 파라미터 페이징 리스트
-    public List<ParamVO> getParamList(int pageNo, int pageSize) throws HandledServiceException {
+    public List<ParamVO> getParamList(String keyword, int pageNo, int pageSize) throws HandledServiceException {
         try {
             Map<String, Object> params = new HashMap<>();
             params.put("startIndex", (pageNo - 1) * pageSize);
             params.put("pageSize", pageSize);
+            params.put("keyword", keyword);
+
             List<ParamVO> paramList = paramMapper.selectParamList(params);
             if (paramList == null) paramList = new ArrayList<>();
             for (ParamVO param : paramList) {
@@ -41,9 +53,10 @@ public class ParamService {
         }
     }
 
-    public int getParamCount() throws HandledServiceException {
+    public int getParamCount(String keyword) throws HandledServiceException {
         try {
             Map<String, Object> params = new HashMap<>();
+            params.put("keyword", keyword);
             int paramCount = paramMapper.selectParamCount(params);
             return paramCount;
         } catch(Exception e) {
@@ -110,6 +123,24 @@ public class ParamService {
             Map<String, Object> params = new HashMap<>();
             params.put("seq", paramSeq);
             ParamVO paramInfo = paramMapper.selectParamBySeq(params);
+            if (paramInfo != null) {
+                params.put("propSeq", paramInfo.getPropSeq());
+                paramInfo.setPropInfo(paramMapper.selectParamPropBySeq(params));
+                paramInfo.setExtras(getParamExtraMap(paramInfo.getParamPack()));
+            }
+            return paramInfo;
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    public ParamVO getParamByParamKey(String dataType, String paramKey) throws HandledServiceException {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("dataTypeKey", dataType + "Key");
+            params.put("paramKey", paramKey);
+
+            ParamVO paramInfo = paramMapper.selectParamByParamKey(params);
             if (paramInfo != null) {
                 params.put("propSeq", paramInfo.getPropSeq());
                 paramInfo.setPropInfo(paramMapper.selectParamPropBySeq(params));
@@ -544,7 +575,22 @@ public class ParamService {
             if (preset == null || preset.getPresetPack() == null || preset.getPresetPack().isEmpty())
                 throw new HandledServiceException(411, "요청 내용이 프리셋 형식에 맞지 않습니다.");
 
+            CryptoField oldSeq = preset.getSeq();
+
             preset = insertPreset(preset);
+            if (!preset.getSeq().equals(oldSeq)) {
+                // parameter copy
+                List<ParamVO> presetParams = getPresetParamList(preset.getPresetPack(), oldSeq, null, null, 1, 999999);
+                if (presetParams == null) presetParams = new ArrayList<>();
+                for (ParamVO p : presetParams) {
+                    PresetVO.Param pparam = new PresetVO.Param();
+                    pparam.setPresetPack(preset.getPresetPack());
+                    pparam.setPresetSeq(preset.getSeq());
+                    pparam.setParamPack(p.getParamPack());
+                    pparam.setParamSeq(p.getSeq());
+                    paramMapper.insertPresetParam(pparam);
+                }
+            }
 
             return preset;
         } catch(Exception e) {
@@ -581,6 +627,39 @@ public class ParamService {
 
             paramMapper.updatePresetNoRenew(preset);
             return preset;
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    public ParamVO getParamByReference(CryptoField partSeq, CryptoField paramPack, CryptoField paramSeq) throws HandledServiceException {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("seq", partSeq);
+            PartVO part = partMapper.selectPartBySeq(params);
+
+            params.clear();
+            params.put("uploadSeq", part.getUploadSeq());
+            RawVO.Upload uploadInfo = rawMapper.selectRawUploadBySeq(params);
+
+            params.put("presetPack", uploadInfo.getPresetPack());
+            params.put("presetSeq", uploadInfo.getPresetSeq());
+            params.put("paramPack", paramPack);
+
+            ParamVO current = paramMapper.selectActiveParam(params);
+            if (paramSeq == null || paramSeq.isEmpty()) {
+                paramSeq = current.getSeq();
+            }
+            params.put("paramSeq", paramSeq);
+
+            Long referenceSeq = paramMapper.selectReferenceSeq(params);
+            current.setReferenceSeq(referenceSeq);
+
+            params.put("propSeq", current.getPropSeq());
+            current.setPropInfo(paramMapper.selectParamPropBySeq(params));
+            current.setExtras(getParamExtraMap(current.getParamPack()));
+
+            return current;
         } catch(Exception e) {
             throw new HandledServiceException(410, e.getMessage());
         }
@@ -707,4 +786,13 @@ public class ParamService {
         }
     }
 
+    public List<ParamVO> getNotMappedParams(CryptoField uploadSeq) throws HandledServiceException {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("uploadSeq", uploadSeq);
+            return paramMapper.selectNotMappedParamList(params);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
 }

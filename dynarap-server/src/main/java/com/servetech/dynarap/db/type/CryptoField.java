@@ -289,6 +289,7 @@ public class CryptoField {
     }
 
     public static void main(String[] args) {
-        System.out.println((Long) decode("740b9a23300faec5e43d2ecf1af41e18d36252481a393af5e7ebb39bf7f1f0a1", 0L).originOf());
+        System.out.println(new CryptoField(69L));
+        System.out.println(new CryptoField(71L));
     }
 }

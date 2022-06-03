@@ -30,7 +30,7 @@ public class ParamVO {
     private Map<String, Object> extras;
     private String64 tags;
 
-    private Long presetParamSeq;
+    private Long referenceSeq;
     private CryptoField presetPack;
     private CryptoField presetSeq;
 
