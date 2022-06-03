@@ -47,6 +47,8 @@
             this.mnuFileRead = new System.Windows.Forms.ToolStripMenuItem();
             this.pnPaging = new System.Windows.Forms.Panel();
             this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
+            this.mnuSaveChart = new System.Windows.Forms.ToolStripMenuItem();
             this.pnPaging.SuspendLayout();
             this.contextMenuStrip.SuspendLayout();
             this.SuspendLayout();
@@ -239,9 +241,23 @@
             this.mnuDrawChart1D,
             this.mnuDrawChart2D,
             this.mnuDrawChartMinMax,
-            this.mnuDrawPotato});
+            this.mnuDrawPotato,
+            this.toolStripMenuItem2,
+            this.mnuSaveChart});
             this.contextMenuStrip.Name = "contextMenuStrip";
-            this.contextMenuStrip.Size = new System.Drawing.Size(190, 120);
+            this.contextMenuStrip.Size = new System.Drawing.Size(190, 170);
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(186, 6);
+            // 
+            // mnuSaveChart
+            // 
+            this.mnuSaveChart.Name = "mnuSaveChart";
+            this.mnuSaveChart.Size = new System.Drawing.Size(189, 22);
+            this.mnuSaveChart.Text = "Save Chart";
+            this.mnuSaveChart.Click += new System.EventHandler(this.mnuSaveChart_Click);
             // 
             // DXChartControl
             // 
@@ -277,5 +293,7 @@
         private System.Windows.Forms.ToolStripMenuItem mnuFileRead;
         private System.Windows.Forms.Panel pnPaging;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
+        private System.Windows.Forms.ToolStripMenuItem mnuSaveChart;
     }
 }

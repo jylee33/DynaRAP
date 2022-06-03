@@ -688,6 +688,17 @@ namespace DynaRAP.UControl
             DrawChart(this.m_drawTypes, this.cbSeries.Text, this.cbSeries.Text, ReadDataList(m_filename), "", "", 0, 50000);
         }
 
+        private void mnuSaveChart_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Title = "저장경로를 지정하세요.";
+            sfd.OverwritePrompt = true;
+            sfd.Filter = "SVG File(*.svg)|*.svg";
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+                this.m_chart.ExportToSvg(sfd.FileName);
+        }
+
         private void ReadDataTable(string filename)
         {
             int index = 1;
@@ -827,6 +838,7 @@ namespace DynaRAP.UControl
             return data;
         }
 
+        
     }
 
     #region 1D SeriesPoint Data
