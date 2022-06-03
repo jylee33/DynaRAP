@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -54,6 +55,9 @@ public class RawService {
     @Resource(name = "redisTemplate")
     private ZSetOperations<String, String> zsetOps;
 
+    @Value("${static.resource.location}")
+    private String staticLocation;
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -73,7 +77,7 @@ public class RawService {
             Map<String, Object> params = new HashMap<>();
             params.put("uploadSeq", uploadSeq);
             return rawMapper.selectRawData(params);
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new HandledServiceException(410, e.getMessage());
         }
     }
@@ -87,7 +91,7 @@ public class RawService {
 
             rawMapper.insertRawData(raw);
             return raw;
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new HandledServiceException(410, e.getMessage());
         }
     }
@@ -101,7 +105,7 @@ public class RawService {
 
             rawMapper.updateRawData(raw);
             return raw;
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new HandledServiceException(410, e.getMessage());
         }
     }
@@ -126,7 +130,7 @@ public class RawService {
 
             rawMapper.deleteRawDataByRow(params);
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new HandledServiceException(410, e.getMessage());
         }
     }
@@ -151,7 +155,7 @@ public class RawService {
 
             rawMapper.deleteRawDataByParam(params);
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new HandledServiceException(410, e.getMessage());
         }
     }
@@ -159,7 +163,7 @@ public class RawService {
     public List<RawVO.Upload> getUploadList() throws HandledServiceException {
         try {
             return rawMapper.selectRawUploadList();
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new HandledServiceException(410, e.getMessage());
         }
     }
@@ -169,7 +173,7 @@ public class RawService {
             Map<String, Object> params = new HashMap<>();
             params.put("uploadSeq", uploadSeq);
             return rawMapper.selectRawUploadBySeq(params);
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new HandledServiceException(410, e.getMessage());
         }
     }
@@ -179,7 +183,7 @@ public class RawService {
             Map<String, Object> params = new HashMap<>();
             params.put("uploadId", uploadId);
             return rawMapper.selectRawUploadById(params);
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new HandledServiceException(410, e.getMessage());
         }
     }
@@ -187,7 +191,7 @@ public class RawService {
     public RawVO.Upload getUploadByParams(Map<String, Object> params) throws HandledServiceException {
         try {
             return rawMapper.selectRawUploadByParam(params);
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new HandledServiceException(410, e.getMessage());
         }
     }
@@ -197,7 +201,7 @@ public class RawService {
         try {
             rawMapper.insertRawUpload(rawUpload);
             return rawUpload;
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new HandledServiceException(410, e.getMessage());
         }
     }
@@ -207,7 +211,7 @@ public class RawService {
         try {
             rawMapper.updateRawUpload(rawUpload);
             return rawUpload;
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new HandledServiceException(410, e.getMessage());
         }
     }
@@ -227,7 +231,7 @@ public class RawService {
             rawMapper.deleteRawDataByParam(params);
             rawMapper.deleteRawUpload(params);
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new HandledServiceException(410, e.getMessage());
         }
     }
@@ -251,7 +255,7 @@ public class RawService {
                 cacheColumn.setTimes(new ArrayList<>());
                 cacheColumn.setColumnData(new ArrayList<>());
                 cacheColumn.setColumnStrData(new ArrayList<>());
-                cacheColumnMap.put(new CryptoField(pp.getPresetParamSeq()).valueOf(), cacheColumn);
+                cacheColumnMap.put(new CryptoField(pp.getReferenceSeq()).valueOf(), cacheColumn);
             }
 
             Map<String, Object> params = new HashMap<>();
@@ -284,7 +288,7 @@ public class RawService {
             jobjResult.add("columns", ServerConstants.GSON.toJsonTree(cacheColumnMap));
 
             return jobjResult;
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new HandledServiceException(410, e.getMessage());
         }
     }
@@ -298,8 +302,7 @@ public class RawService {
 
             if (uploadReq.getSourcePath().contains("C:\\")) {
                 uploadReq.setSourcePath(uploadReq.getSourcePath().replaceAll("\\\\", "/"));
-                //uploadReq.setSourcePath(uploadReq.getSourcePath().replaceAll("C:/", "/Users/aloepigeon/"));
-                uploadReq.setSourcePath(uploadReq.getSourcePath().replaceAll("C:/", "/home/ubuntu/"));
+                uploadReq.setSourcePath(uploadReq.getSourcePath().replaceAll("C:/", staticLocation.substring("file:".length())));
             }
 
             File fStatic = new File(uploadReq.getSourcePath());
@@ -326,8 +329,7 @@ public class RawService {
                 if (uploadReq.getPresetSeq() == null || uploadReq.getPresetSeq().isEmpty()) {
                     PresetVO preset = paramService.getActivePreset(uploadReq.getPresetPack());
                     rawUpload.setPresetSeq(preset.getSeq());
-                }
-                else {
+                } else {
                     rawUpload.setPresetSeq(uploadReq.getPresetSeq());
                 }
                 rawUpload.setFlightSeq(uploadReq.getFlightSeq() == null ? CryptoField.LZERO : uploadReq.getFlightSeq());
@@ -342,10 +344,9 @@ public class RawService {
                 rawUpload.setStatusMessage("요청 파일을 데이터베이스에 저장하고 있습니다.");
                 rawUpload.setTotalFetchCount(lineCount);
                 rawUpload.setFetchCount(0);
-            }
-            else {
+            } else {
                 if (!uploadStat.containsKey(rawUpload.getSeq().valueOf())
-                    || uploadReq.isForcedImport()) {
+                        || uploadReq.isForcedImport() || rawUpload.getStatus().equals("error")) {
                     rawUpload.setImportDone(false);
                     uploadStat.put(rawUpload.getSeq().valueOf(), rawUpload);
 
@@ -353,8 +354,7 @@ public class RawService {
                     rawUpload.setStatusMessage("요청 파일을 데이터베이스에 저장하고 있습니다.");
                     rawUpload.setTotalFetchCount(lineCount);
                     rawUpload.setFetchCount(0);
-                }
-                else
+                } else
                     rawUpload = uploadStat.get(rawUpload.getSeq().valueOf());
                 rawUpload.setUploadRequest(uploadReq);
             }
@@ -367,7 +367,7 @@ public class RawService {
 
             return rawUpload;
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new HandledServiceException(410, e.getMessage());
         }
     }
@@ -382,19 +382,24 @@ public class RawService {
                 throw new HandledServiceException(411, "요청 파라미터 오류입니다. [필수 파라미터 누락]");
 
             RawVO.Upload rawUpload = uploadStat.get(uploadSeq.valueOf());
-            if (rawUpload == null)
-                throw new HandledServiceException(411, "진행중인 업로드 요청이 없습니다.");
+            if (rawUpload == null) {
+                Map<String, Object> params = new HashMap<>();
+                params.put("uploadSeq", uploadSeq);
+                rawUpload = rawMapper.selectRawUploadBySeq(params);
+                if (rawUpload == null)
+                    throw new HandledServiceException(411, "진행중인 업로드 요청이 없습니다.");
+            }
 
             return rawUpload;
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new HandledServiceException(411, e.getMessage());
         }
     }
 
     @Transactional
     public JsonObject runImport(CryptoField.NAuth uid, CryptoField uploadSeq,
-                          CryptoField presetPack, CryptoField presetSeq,
-                          CryptoField flightSeq, String flightAt, String dataType) throws HandledServiceException {
+                                CryptoField presetPack, CryptoField presetSeq,
+                                CryptoField flightSeq, String flightAt, String dataType) throws HandledServiceException {
         Connection conn = null;
 
         try {
@@ -406,8 +411,7 @@ public class RawService {
             if (presetSeq == null || presetSeq.isEmpty()) {
                 PresetVO preset = paramService.getActivePreset(presetPack);
                 rawUpload.setPresetSeq(preset.getSeq());
-            }
-            else {
+            } else {
                 rawUpload.setPresetSeq(presetSeq);
             }
             rawUpload.setFlightSeq(flightSeq == null ? CryptoField.LZERO : flightSeq);
@@ -535,13 +539,13 @@ public class RawService {
 
                     pstmt.setLong(1, pi.getPresetPack().originOf());
                     pstmt.setLong(2, pi.getPresetSeq().originOf());
-                    pstmt.setLong(3, pi.getPresetParamSeq());
+                    pstmt.setLong(3, pi.getReferenceSeq());
 
                     String paramValStr = splitData[spi];
                     try {
                         pstmt.setDouble(4, Double.parseDouble(paramValStr));
                         pstmt.setString(5, null);
-                    } catch(NumberFormatException nfe) {
+                    } catch (NumberFormatException nfe) {
                         pstmt.setDouble(4, 0);
                         pstmt.setString(5, paramValStr);
                     }
@@ -588,13 +592,13 @@ public class RawService {
             }
 
             return jobjResult;
-        } catch(Exception e) {
+        } catch (Exception e) {
             try {
                 if (conn != null && !conn.isClosed()) {
                     conn.rollback();
                     conn.close();
                 }
-            } catch(Exception ex) {
+            } catch (Exception ex) {
                 // nothing to log
             }
 

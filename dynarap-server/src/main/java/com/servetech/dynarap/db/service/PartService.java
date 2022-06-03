@@ -4,7 +4,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.servetech.dynarap.config.ServerConstants;
 import com.servetech.dynarap.db.mapper.PartMapper;
-import com.servetech.dynarap.db.service.task.PartImportTask;
 import com.servetech.dynarap.db.service.task.ShortBlockCreateTask;
 import com.servetech.dynarap.db.type.CryptoField;
 import com.servetech.dynarap.db.type.LongDate;
@@ -197,13 +196,13 @@ public class PartService {
                 // raw 데이터에서 param에 해당 하는 내용을 가져와서 part에 넣어주기.
                 pstmt.setLong(1, param.getPresetPack().originOf());
                 pstmt.setLong(2, param.getPresetSeq().originOf());
-                pstmt.setLong(3, param.getPresetParamSeq());
+                pstmt.setLong(3, param.getReferenceSeq());
                 rs = pstmt.executeQuery();
 
                 int batchCount = 1;
                 while (rs.next()) {
                     pstmt_insert.setLong(1, part.getSeq().originOf());
-                    pstmt_insert.setLong(2, param.getPresetParamSeq());
+                    pstmt_insert.setLong(2, param.getReferenceSeq());
                     pstmt_insert.setInt(3, rs.getInt("rowNo"));
                     pstmt_insert.setString(4, rs.getString("julianTimeAt"));
                     pstmt_insert.setDouble(5, getJulianTimeOffset(julianStartFrom, rs.getString("julianTimeAt")));
@@ -514,6 +513,26 @@ public class PartService {
     public void updateShortBlockMeta(ShortBlockVO.Meta shortBlockMeta) throws HandledServiceException {
         try {
             partMapper.updateShortBlockMeta(shortBlockMeta);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    @Transactional
+    public PartVO.Raw updatePartValueByParams(Map<String, Object> params) throws  HandledServiceException {
+        try {
+            partMapper.updatePartRaw(params);
+            PartVO.Raw rawData = partMapper.selectPartRaw(params);
+            return rawData;
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    @Transactional
+    public void updatePart(PartVO part) throws HandledServiceException {
+        try {
+            partMapper.updatePart(part);
         } catch(Exception e) {
             throw new HandledServiceException(410, e.getMessage());
         }

@@ -6,6 +6,7 @@ import com.servetech.dynarap.db.type.String64;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Map;
 
 @Data
 public class RawVO implements IFlexibleValue {
@@ -74,6 +75,8 @@ public class RawVO implements IFlexibleValue {
         private String dataType;
         private List<UploadPart> parts;
         private boolean forcedImport;
+
+        private Map<String, String> tempMappingParams;
 
         @Data
         public static class UploadPart {

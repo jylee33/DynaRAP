@@ -77,11 +77,13 @@ public interface PartMapper {
     @Update({
             "<script>" +
                     " update dynarap_part set " +
-                    " partName = #{partName,} " +
+                    " partName = #{partName,javaType=java.lang.String,jdbcType=VARCHAR,typeHandler=String64} " +
                     ",julianStartAt = #{julianStartAt} " +
                     ",julianEndAt = #{julianEndAt} " +
                     ",offsetStartAt = #{offsetStartAt} " +
                     ",offsetEndAt = #{offsetEndAt} " +
+                    ",lpfDone = #{lpfDone} " +
+                    ",hpfDone = #{hpfDone} " +
                     " where seq = #{seq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
                     "</script>"
     })
@@ -323,5 +325,27 @@ public interface PartMapper {
     })
     void updateShortBlock(ShortBlockVO shortBlock) throws Exception;
 
+
+    @Update({
+            "<script>" +
+                    " update dynarap_part_raw set " +
+                    " paramVal = #{dblVal} " +
+                    " where partSeq = #{partSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    " and presetParamSeq = #{referenceSeq} " +
+                    " and julianTimeAt = #{julianTimeAt} " +
+                    "</script>"
+    })
+    void updatePartRaw(Map<String, Object> params) throws Exception;
+
+    @Select({
+            "<script>" +
+                    " select * from dynarap_part_raw " +
+                    " where partSeq = #{partSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    " and presetParamSeq = #{referenceSeq} " +
+                    " and julianTimeAt = #{julianTimeAt} " +
+                    " limit 0, 1 " +
+                    "</script>"
+    })
+    PartVO.Raw selectPartRaw(Map<String, Object> params) throws Exception;
 
 }

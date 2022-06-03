@@ -3,25 +3,21 @@ package com.servetech.dynarap.controller;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.servetech.dynarap.config.ServerConstants;
-import com.servetech.dynarap.db.mapper.DirMapper;
 import com.servetech.dynarap.db.service.*;
+import com.servetech.dynarap.db.service.task.PartImportTask;
 import com.servetech.dynarap.db.type.CryptoField;
 import com.servetech.dynarap.db.type.String64;
 import com.servetech.dynarap.ext.HandledServiceException;
 import com.servetech.dynarap.ext.ResponseHelper;
 import com.servetech.dynarap.vo.*;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.servlet.error.ErrorController;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
@@ -33,6 +29,9 @@ public class ServiceApiController extends ApiController {
 
     @Value("${neoulsoft.auth.client-secret}")
     private String authClientSecret;
+
+    @Value("${dynarap.process.path}")
+    private String processPath;
 
     @RequestMapping(value = "/dir")
     @ResponseBody
@@ -143,8 +142,24 @@ public class ServiceApiController extends ApiController {
             if (!checkJsonEmpty(payload, "pageSize"))
                 pageSize = payload.get("pageSize").getAsInt();
 
-            List<ParamVO> params = getService(ParamService.class).getParamList(pageNo, pageSize);
-            int paramCount = getService(ParamService.class).getParamCount();
+            String keyword = "";
+            if (!checkJsonEmpty(payload, "keyword"))
+                keyword = payload.get("keyword").getAsString();
+
+            String resultDataType = "array";
+            if (!checkJsonEmpty(payload, "resultDataType"))
+                resultDataType = payload.get("resultDataType").getAsString();
+
+            List<ParamVO> params = getService(ParamService.class).getParamList(keyword, pageNo, pageSize);
+            int paramCount = getService(ParamService.class).getParamCount(keyword);
+
+            Map<String, ParamVO> resultMap = new LinkedHashMap<>();
+            if (resultDataType.equalsIgnoreCase("map")) {
+                for (ParamVO p : params) {
+                    resultMap.put(p.getParamKey(), p);
+                }
+                return ResponseHelper.response(200, "Success - Param List", paramCount, resultMap);
+            }
 
             return ResponseHelper.response(200, "Success - Param List", paramCount, params);
         }
@@ -617,6 +632,60 @@ public class ServiceApiController extends ApiController {
             return ResponseHelper.response(200, "Success - Get Create ShortBlock Progress", shortBlockMeta);
         }
 
+        if (command.equals("edit")) {
+            CryptoField partSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "partSeq"))
+                partSeq = CryptoField.decode(payload.get("partSeq").getAsString(), 0L);
+
+            CryptoField paramPack = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "paramPack"))
+                paramPack = CryptoField.decode(payload.get("paramPack").getAsString(), 0L);
+
+            CryptoField paramSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "paramSeq"))
+                paramSeq = CryptoField.decode(payload.get("paramSeq").getAsString(), 0L);
+
+            String julianTimeAt = "";
+            if (!checkJsonEmpty(payload, "julianTimeAt"))
+                julianTimeAt = payload.get("julianTimeAt").getAsString();
+
+            if (paramSeq == null || paramSeq.isEmpty()
+                    || paramPack == null || paramPack.isEmpty()
+                    || paramSeq == null || paramSeq.isEmpty()
+                    || julianTimeAt.isEmpty()) {
+                throw new HandledServiceException(411, "값을 수정하기 위한 기초정보가 없습니다.");
+            }
+
+            Double dblVal = null;
+            if (!checkJsonEmpty(payload, "value"))
+                dblVal = payload.get("value").getAsDouble();
+
+            if (dblVal == null)
+                throw new HandledServiceException(411, "변경할 값이 없습니다.");
+
+            ParamVO param = getService(ParamService.class).getParamByReference(partSeq, paramPack, paramSeq);
+            if (param == null || param.getReferenceSeq() == null)
+                throw new HandledServiceException(411, "미관여 파라미터입니다.");
+
+            Map<String, Object> params = new HashMap<>();
+            params.put("partSeq", partSeq);
+            params.put("referenceSeq", param.getReferenceSeq());
+            params.put("julianTimeAt", julianTimeAt);
+            params.put("dblVal", dblVal.doubleValue());
+            PartVO.Raw rawData = getService(PartService.class).updatePartValueByParams(params);
+            if (rawData == null)
+                throw new HandledServiceException(404, "변경하려는 정보를 찾지 못했습니다.");
+
+            // 정상 수정 되면 lpf, hpf 새로 생성해야함. => 개별로 처리되지 않기 때문에.. 전체 필터 적용 후 업데이트
+            try {
+                updateFilterData(partSeq);
+            } catch(Exception e) {
+                throw new HandledServiceException(411, e.getMessage());
+            }
+
+            return ResponseHelper.response(200, "Success - Updated part cell value", rawData);
+        }
+
         if (command.equals("row-data")) {
             CryptoField partSeq = CryptoField.LZERO;
             if (!checkJsonEmpty(payload, "partSeq"))
@@ -674,7 +743,7 @@ public class ServiceApiController extends ApiController {
             LinkedHashMap<String, List<Double>> rowData = new LinkedHashMap<>();
             for (ParamVO p : params) {
                 Set<String> listSet = zsetOps.rangeByScore(
-                        "P" + partInfo.getSeq().originOf() + ".N" + p.getPresetParamSeq(), startRowAt + rankFrom, startRowAt + rankTo);
+                        "P" + partInfo.getSeq().originOf() + ".N" + p.getReferenceSeq(), startRowAt + rankFrom, startRowAt + rankTo);
 
                 Iterator<String> iterListSet = listSet.iterator();
                 while (iterListSet.hasNext()) {
@@ -733,7 +802,7 @@ public class ServiceApiController extends ApiController {
             LinkedHashMap<String, List<Double>> paramData = new LinkedHashMap<>();
             for (ParamVO p : params) {
                 Set<String> listSet = zsetOps.rangeByScore(
-                        "P" + partInfo.getSeq().originOf() + ".N" + p.getPresetParamSeq(), 0, Integer.MAX_VALUE);
+                        "P" + partInfo.getSeq().originOf() + ".N" + p.getReferenceSeq(), 0, Integer.MAX_VALUE);
                 List<Double> rowData = new ArrayList<>();
                 paramData.put(p.getParamKey(), rowData);
 
@@ -876,7 +945,7 @@ public class ServiceApiController extends ApiController {
             LinkedHashMap<String, List<Double>> rowData = new LinkedHashMap<>();
             for (ParamVO p : params) {
                 Set<String> listSet = zsetOps.rangeByScore(
-                        "S" + blockInfo.getSeq().originOf() + ".N" + p.getPresetParamSeq(), startRowAt + rankFrom, startRowAt + rankTo);
+                        "S" + blockInfo.getSeq().originOf() + ".N" + p.getReferenceSeq(), startRowAt + rankFrom, startRowAt + rankTo);
 
                 Iterator<String> iterListSet = listSet.iterator();
                 while (iterListSet.hasNext()) {
@@ -935,7 +1004,7 @@ public class ServiceApiController extends ApiController {
             LinkedHashMap<String, List<Double>> paramData = new LinkedHashMap<>();
             for (ParamVO p : params) {
                 Set<String> listSet = zsetOps.rangeByScore(
-                        "S" + blockInfo.getSeq().originOf() + ".N" + p.getPresetParamSeq(), 0, Integer.MAX_VALUE);
+                        "S" + blockInfo.getSeq().originOf() + ".N" + p.getReferenceSeq(), 0, Integer.MAX_VALUE);
                 List<Double> rowData = new ArrayList<>();
                 paramData.put(p.getParamKey(), rowData);
 
@@ -957,5 +1026,64 @@ public class ServiceApiController extends ApiController {
         }
 
         throw new HandledServiceException(411, "명령이 정의되지 않았습니다.");
+    }
+
+    private void updateFilterData(CryptoField partSeq) throws Exception {
+        PartVO part = getService(PartService.class).getPartBySeq(partSeq);
+
+        String julianFrom = "";
+        if (julianFrom == null || julianFrom.isEmpty())
+            julianFrom = zsetOps.rangeByScore("P" + part.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE).iterator().next();
+        String julianTo = "";
+        if (julianTo == null || julianTo.isEmpty())
+            julianTo = zsetOps.reverseRangeByScore("P" + part.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE).iterator().next();
+
+        String julianStart = zsetOps.rangeByScore("P" + part.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE).iterator().next();
+        Long startRowAt = zsetOps.score("P" + part.getSeq().originOf() + ".R", julianStart).longValue();
+
+        Long rankFrom = zsetOps.rank("P" + part.getSeq().originOf() + ".R", julianFrom);
+        if (rankFrom == null) {
+            julianFrom = zsetOps.rangeByScore("P" + part.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE).iterator().next();
+            rankFrom = zsetOps.rank("P" + part.getSeq().originOf() + ".R", julianFrom);
+        }
+        Long rankTo = zsetOps.rank("P" + part.getSeq().originOf() + ".R", julianTo);
+        if (rankTo == null) {
+            julianTo = zsetOps.reverseRangeByScore("P" + part.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE).iterator().next();
+            rankTo = zsetOps.rank("P" + part.getSeq().originOf() + ".R", julianTo);
+        }
+
+        List<ParamVO> mappedParams = new ArrayList<>();
+        List<ParamVO> presetParams = getService(ParamService.class).getPresetParamList(
+                part.getPresetPack(), part.getPresetSeq(), null, null, 1, 999999);
+        if (presetParams != null) mappedParams.addAll(presetParams);
+
+        List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(part.getUploadSeq());
+        if (notMappedParams != null) mappedParams.addAll(notMappedParams);
+
+        for (ParamVO param : mappedParams) {
+            String rowKey = "P" + part.getSeq().originOf() + ".N" + param.getReferenceSeq();
+
+            Set<String> listSet = zsetOps.rangeByScore(
+                    rowKey, startRowAt + rankFrom, startRowAt + rankTo);
+            Iterator<String> iterListSet = listSet.iterator();
+
+            List<String> jts = new ArrayList<>();
+            List<Double> pvs = new ArrayList<>();
+
+            while (iterListSet.hasNext()) {
+                String rowVal = iterListSet.next();
+                String julianTime = rowVal.substring(0, rowVal.lastIndexOf(":"));
+                jts.add(julianTime);
+                Double dblVal = Double.parseDouble(rowVal.substring(rowVal.lastIndexOf(":") + 1));
+                pvs.add(dblVal);
+            }
+
+            PartImportTask.applyFilterData(processPath, zsetOps, "lpf", "10", "0.4", "", part, param, jts, pvs, startRowAt + rankFrom);
+            PartImportTask.applyFilterData(processPath, zsetOps, "hpf", "10", "0.02", "high", part, param, jts, pvs, startRowAt + rankFrom);
+        }
+
+        part.setLpfDone(true);
+        part.setHpfDone(true);
+        getService(PartService.class).updatePart(part);
     }
 }
