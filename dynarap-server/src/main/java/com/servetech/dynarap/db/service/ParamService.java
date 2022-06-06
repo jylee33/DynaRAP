@@ -735,6 +735,24 @@ public class ParamService {
         }
     }
 
+    public ParamVO getNotMappedParamBySeq(CryptoField notMappedParamSeq) throws HandledServiceException {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("seq", notMappedParamSeq);
+
+            ParamVO paramInfo = paramMapper.selectNotMappedParamBySeq(params);
+            if (paramInfo != null) {
+                params.put("paramPack", paramInfo.getParamPack());
+                params.put("propSeq", paramInfo.getPropSeq());
+                paramInfo.setPropInfo(paramMapper.selectParamPropBySeq(params));
+                paramInfo.setExtras(getParamExtraMap(paramInfo.getParamPack()));
+            }
+            return paramInfo;
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
     @Transactional
     public void insertPresetParam(JsonObject payload) throws HandledServiceException {
         try {
