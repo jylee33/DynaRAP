@@ -35,7 +35,7 @@ namespace DynaRAP.UControl
         }
 
         WidgetView view;
-        StackGroup group1, group2, group3;//
+        StackGroup group1, group2, group3;
         void AddDocumentManager()
         {
             DocumentManager dM = new DocumentManager(components);
