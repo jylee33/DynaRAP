@@ -49,6 +49,8 @@
             this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuSaveChart = new System.Windows.Forms.ToolStripMenuItem();
+            this.drawChartToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.propertyShowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pnPaging.SuspendLayout();
             this.contextMenuStrip.SuspendLayout();
             this.SuspendLayout();
@@ -172,23 +174,26 @@
             // 
             this.mnuDrawPotato.Enabled = false;
             this.mnuDrawPotato.Name = "mnuDrawPotato";
-            this.mnuDrawPotato.Size = new System.Drawing.Size(189, 22);
+            this.mnuDrawPotato.Size = new System.Drawing.Size(180, 22);
             this.mnuDrawPotato.Text = "DrawPotato";
             this.mnuDrawPotato.Click += new System.EventHandler(this.mnuDrawPotato_Click);
             // 
             // mnuDrawChartMinMax
             // 
+            this.mnuDrawChartMinMax.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.drawChartToolStripMenuItem,
+            this.propertyShowToolStripMenuItem});
             this.mnuDrawChartMinMax.Enabled = false;
             this.mnuDrawChartMinMax.Name = "mnuDrawChartMinMax";
-            this.mnuDrawChartMinMax.Size = new System.Drawing.Size(189, 22);
-            this.mnuDrawChartMinMax.Text = "DrawChart MIN/MAX";
+            this.mnuDrawChartMinMax.Size = new System.Drawing.Size(180, 22);
+            this.mnuDrawChartMinMax.Text = "MIN/MAX";
             this.mnuDrawChartMinMax.Click += new System.EventHandler(this.mnuDrawChartMinMax_Click);
             // 
             // mnuDrawChart2D
             // 
             this.mnuDrawChart2D.Enabled = false;
             this.mnuDrawChart2D.Name = "mnuDrawChart2D";
-            this.mnuDrawChart2D.Size = new System.Drawing.Size(189, 22);
+            this.mnuDrawChart2D.Size = new System.Drawing.Size(180, 22);
             this.mnuDrawChart2D.Text = "DrawChart 2D";
             this.mnuDrawChart2D.Click += new System.EventHandler(this.mnuDrawChart2D_Click);
             // 
@@ -196,19 +201,19 @@
             // 
             this.mnuDrawChart1D.Enabled = false;
             this.mnuDrawChart1D.Name = "mnuDrawChart1D";
-            this.mnuDrawChart1D.Size = new System.Drawing.Size(189, 22);
+            this.mnuDrawChart1D.Size = new System.Drawing.Size(180, 22);
             this.mnuDrawChart1D.Text = "DrawChart 1D";
             this.mnuDrawChart1D.Click += new System.EventHandler(this.mnuDrawChart1D_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(186, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(177, 6);
             // 
             // mnuFileRead
             // 
             this.mnuFileRead.Name = "mnuFileRead";
-            this.mnuFileRead.Size = new System.Drawing.Size(189, 22);
+            this.mnuFileRead.Size = new System.Drawing.Size(180, 22);
             this.mnuFileRead.Text = "File Read";
             this.mnuFileRead.Click += new System.EventHandler(this.mnuFileRead_Click);
             // 
@@ -245,19 +250,33 @@
             this.toolStripMenuItem2,
             this.mnuSaveChart});
             this.contextMenuStrip.Name = "contextMenuStrip";
-            this.contextMenuStrip.Size = new System.Drawing.Size(190, 170);
+            this.contextMenuStrip.Size = new System.Drawing.Size(181, 170);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(186, 6);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(177, 6);
             // 
             // mnuSaveChart
             // 
             this.mnuSaveChart.Name = "mnuSaveChart";
-            this.mnuSaveChart.Size = new System.Drawing.Size(189, 22);
+            this.mnuSaveChart.Size = new System.Drawing.Size(180, 22);
             this.mnuSaveChart.Text = "Save Chart";
             this.mnuSaveChart.Click += new System.EventHandler(this.mnuSaveChart_Click);
+            // 
+            // drawChartToolStripMenuItem
+            // 
+            this.drawChartToolStripMenuItem.Name = "drawChartToolStripMenuItem";
+            this.drawChartToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.drawChartToolStripMenuItem.Text = "Chart Draw";
+            this.drawChartToolStripMenuItem.Click += new System.EventHandler(this.drawChartToolStripMenuItem_Click);
+            // 
+            // propertyShowToolStripMenuItem
+            // 
+            this.propertyShowToolStripMenuItem.Name = "propertyShowToolStripMenuItem";
+            this.propertyShowToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.propertyShowToolStripMenuItem.Text = "Property Show";
+            this.propertyShowToolStripMenuItem.Click += new System.EventHandler(this.propertyShowToolStripMenuItem_Click);
             // 
             // DXChartControl
             // 
@@ -295,5 +314,7 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem mnuSaveChart;
+        private System.Windows.Forms.ToolStripMenuItem drawChartToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem propertyShowToolStripMenuItem;
     }
 }
