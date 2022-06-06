@@ -20,6 +20,7 @@ namespace DynaRAP.TEST
 
         private void TestSplitContainerForm_Load(object sender, EventArgs e)
         {
+            splitContainerControl1.FixedPanel = SplitFixedPanel.Panel2;
             splitContainerControl1.CollapsePanel = SplitCollapsePanel.Panel2;
         }
 
