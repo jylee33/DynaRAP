@@ -10,6 +10,7 @@ using DynaRAP.Common;
 using System.Drawing;
 using DevExpress.Utils.Drawing;
 using System.Drawing.Drawing2D;
+using System.Diagnostics;
 
 namespace DynaRAP.UControl
 {
@@ -30,10 +31,14 @@ namespace DynaRAP.UControl
         private int m_pageSize;
         private int m_totalPages;
         private DataTable m_table;
-        private DrawTypes m_drawTypes;
-        private List<DLL_DATA> m_dllDatas;
+        private DrawTypes m_drawTypes;        
         private List<Cluster> m_clusters = new List<Cluster>();
-        #endregion
+#if DEBUG
+        private List<DLL_DATA> m_dllDatas;
+        private List<SeriesPointData> m_seriesPointDatas;
+        private Dictionary<string, List<SeriesPointData>> m_dicData;
+#endif
+#endregion
 
         public DXChartControl()
         {
@@ -55,9 +60,6 @@ namespace DynaRAP.UControl
             m_pageIndex = 0;
             m_pageSize = 100000;
             m_totalPages = 0;
-
-            m_dllDatas = new List<DLL_DATA>();
-            SetDllDatas();
         }
 
         protected override void OnLoad(EventArgs e)
@@ -80,8 +82,6 @@ namespace DynaRAP.UControl
             propertyGrid.Visible = false;
 
             this.Controls.Add(propertyGrid);
-            //this.m_chart.Dock = DockStyle.Fill;
-            //this.Controls.Add(this.m_chart);
             this.m_chart.BringToFront();
         }
 
@@ -94,12 +94,15 @@ namespace DynaRAP.UControl
             }
         }
 
+#if DEBUG
         /// <summary>
         /// 개발을 위하여 샘플로 사용한 데이터
         /// 실 데이터는 파일을 읽어 오도록 작업 함.
         /// </summary>
         private void SetDllDatas()
         {
+            m_dllDatas = new List<DLL_DATA>();
+
             var data = new DLL_DATA();
             data.Name = "LH Wing BL1870";
             data.ButtockLine = "1870";
@@ -155,56 +158,96 @@ namespace DynaRAP.UControl
             };
             m_dllDatas.Add(data);
 
-            ReadDataTable(m_filename);
-        }
+            //ReadDataTable(m_filename);
 
+
+
+            foreach (DLL_DATA dll in m_dllDatas)
+            {
+                foreach (DLL_DATA.Parameter param in dll.parameters)
+                {
+                    foreach(string key in this.m_dicData.Keys)
+                    {
+                        if (key.Contains(param.Name))
+                        {
+                            List<SeriesPointData> spData;
+                            this.m_dicData.TryGetValue(key, out spData);
+
+                            if (null == param.data)
+                            {
+                                param.data = new DataTable();
+                                param.data.Columns.Add("Series", typeof(string));
+                                param.data.Columns.Add("Argument", typeof(DateTime));
+                                param.data.Columns.Add("Value", typeof(double));
+                            }
+
+                            foreach (SeriesPointData d in spData)
+                            {
+                                DataRow row = param.data.NewRow();
+                                row["Series"] = d.SeriesName;
+                                row["Argument"] = d.Argument;
+                                row["Value"] = d.Value;
+                                param.data.Rows.Add(row);
+
+                                if (param.MinVal == 0)
+                                    param.MinVal = d.Value;
+                                else if (param.MinVal > d.Value)
+                                    param.MinVal = d.Value;
+
+                                if (param.MaxVal == 0)
+                                    param.MaxVal = d.Value;
+                                else if (param.MaxVal < d.Value)
+                                    param.MaxVal = d.Value;
+                            }
+
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+#endif
         #region public methods
-        public void DrawChart(DataTable table, string seriesName = "Series1")
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dt">데이터 테이블</param>
+        /// <param name="drawTypes">그래프 타입/param>
+        /// <param name="seriesName">시리즈명(1D, 2D만 해당 됨)</param>
+        /// <param name="axisX">X축 타이틀</param>
+        /// <param name="axisY">Y축 타이틀</param>
+        /// <param name="pageIndex">Page 번호</param>
+        /// <param name="pageSize">Page 당 표출 사이즈</param>
+        public void DrawChart(
+            DataTable dt, 
+            DrawTypes drawTypes = DrawTypes.DT_UNKNOWN, 
+            string seriesName = "", 
+            string axisX = "", 
+            string axisY = "",
+            int pageIndex = 0,
+            int pageSize = 50000)
         {
-            if(null != table)
-                m_table = table;
-
-            this.pnPaging.Visible = true;
+            this.m_table = dt;
 
             if (this.m_chart.Series.Count > 0)
-                this.m_chart.Series.Clear();
+                this.m_chart.Series.Clear();           
 
-            this.m_chart.Series.Add(new Series(seriesName, ViewType.Line));
-            this.m_chart.Legend.Visibility = DevExpress.Utils.DefaultBoolean.False;
-            DrawChart_1D();
-        }
+            this.pnPaging.Visible = drawTypes.Equals(DrawTypes.DT_1D) || drawTypes.Equals(DrawTypes.DT_2D);
 
-        public void DrawChart(DrawTypes type, string seriesStr, string chartTitle, List<SeriesPointData> points, string titleX = "", string titleY = "", int pageIndex = 0, int pageSize = 50000)
-        {
-            this.pnPaging.Visible = false;
-
-            //RefreshUI();
-
-            if (this.m_chart.Series.Count > 0)
-                this.m_chart.Series.Clear();
-
-            DrawChart(MakeTableData(points));
-
-            //return;
-
-            switch (type)
+            switch (drawTypes)
             {
                 case DrawTypes.DT_1D:
                     {
-                        this.pnPaging.Visible = true;
-                        this.m_chart.Series.Add(new Series(seriesStr, ViewType.Line));
-
                         DrawChart_1D();
                     }
                     break;
+
                 case DrawTypes.DT_2D:
                     {
-                        this.pnPaging.Visible = true;
-                        this.m_chart.Series.Add(new Series(seriesStr, ViewType.Line));
-
                         DrawChart_2D();
                     }
                     break;
+
                 case DrawTypes.DT_MINMAX:
                     {
                         DrawChart_MinMax();
@@ -218,6 +261,67 @@ namespace DynaRAP.UControl
                     break;
             }
         }
+
+        //public void DrawChart(DataTable table, string seriesName = "Series1")
+        //{
+        //    if(null != table)
+        //        m_table = table;
+
+        //    this.pnPaging.Visible = true;
+
+        //    if (this.m_chart.Series.Count > 0)
+        //        this.m_chart.Series.Clear();
+
+        //    this.m_chart.Series.Add(new Series(seriesName, ViewType.Line));
+        //    this.m_chart.Legend.Visibility = DevExpress.Utils.DefaultBoolean.False;
+
+        //    DrawChart_1D();
+        //}
+
+        //public void DrawChart(DrawTypes type, string seriesStr, string chartTitle, List<SeriesPointData> points, string titleX = "", string titleY = "", int pageIndex = 0, int pageSize = 50000)
+        //{
+        //    this.pnPaging.Visible = false;
+
+        //    //RefreshUI();
+
+        //    if (this.m_chart.Series.Count > 0)
+        //        this.m_chart.Series.Clear();
+
+        //    //DrawChart(MakeTableData(points));
+
+        //    //return;
+
+        //    switch (type)
+        //    {
+        //        case DrawTypes.DT_1D:
+        //            {
+        //                this.pnPaging.Visible = true;
+        //                this.m_chart.Series.Add(new Series(seriesStr, ViewType.Line));
+
+        //                DrawChart_1D();
+        //            }
+        //            break;
+        //        case DrawTypes.DT_2D:
+        //            {
+        //                this.pnPaging.Visible = true;
+        //                this.m_chart.Series.Add(new Series(seriesStr, ViewType.Line));
+
+        //                DrawChart_2D();
+        //            }
+        //            break;
+        //        case DrawTypes.DT_MINMAX:
+        //            {
+        //                DrawChart_MinMax();
+        //            }
+        //            break;
+
+        //        case DrawTypes.DT_POTATO:
+        //            {
+        //                DrawChart_Potato();
+        //            }
+        //            break;
+        //    }
+        //}
         #endregion
 
         #region 1D/2D
@@ -253,6 +357,8 @@ namespace DynaRAP.UControl
 
         private void DrawChart_1D(string axisTitleX = "", int pageIndex = 0, int pageSize = 50000)
         {
+            this.m_chart.Series.Add(new Series("Series", ViewType.Line));
+
             var dataSource = this.m_table.AsEnumerable().Skip(m_pageSize * m_pageIndex).Take(this.m_pageSize);
 
             foreach (DataRow row in dataSource)
@@ -288,11 +394,12 @@ namespace DynaRAP.UControl
 
             m_pageIndex = pageIndex;
             m_pageSize = pageSize;
-        }
-        
+        }        
 
         private void DrawChart_2D(string axisTitleX = "", string axisTitleY = "", int pageIndex = 0, int pageSize = 50000)
         {
+            this.m_chart.Series.Add(new Series("Series", ViewType.Line));
+
             var dataSource = this.m_table.AsEnumerable().Skip(m_pageSize * m_pageIndex).Take(this.m_pageSize);
 
             foreach (DataRow row in dataSource)
@@ -328,6 +435,7 @@ namespace DynaRAP.UControl
             m_pageIndex = pageIndex;
             m_pageSize = pageSize;
         }
+
         private void btnReset_Click(object sender, EventArgs e)
         {
             if (this.m_drawTypes == DrawTypes.DT_1D)
@@ -418,13 +526,9 @@ namespace DynaRAP.UControl
         }
         private void DrawChart_MinMax(string title = "", string axisTitleX = "", string axisTitleY = "")
         {
-            this.m_chart.Series.Clear();
-
-            DataTable dt = MakeMinMaxData();
-
             Dictionary<string, Series> seriesInfo = new Dictionary<string, Series>();
             Series series;
-            foreach (DataRow row in dt.Rows)
+            foreach (DataRow row in m_table.Rows)
             {
                 string operation = row["Operation"].ToString();
                 if (seriesInfo.TryGetValue(operation, out series) == false)
@@ -466,6 +570,9 @@ namespace DynaRAP.UControl
         #region Potatao
         private void M_chart_CustomPaint(object sender, CustomPaintEventArgs e)
         {
+            if (this.m_drawTypes != DrawTypes.DT_POTATO)
+                return;
+
             DXCustomPaintEventArgs args = e as DXCustomPaintEventArgs;
             if (args == null)
                 return;
@@ -505,15 +612,12 @@ namespace DynaRAP.UControl
 
             return table;
         }
+
         private void DrawChart_Potato(string title = "", string axisTitleX = "", string axisTitleY = "")
         {
-            this.m_chart.Series.Clear();
-
-            var dataSource = MakePotatoData("2955");
-
             Dictionary<string, Series> seriesInfo = new Dictionary<string, Series>();
             Series series;
-            foreach (DataRow row in dataSource.Rows)
+            foreach (DataRow row in m_table.Rows)
             {
                 string operation = row["Operation"].ToString();
                 if (seriesInfo.TryGetValue(operation, out series) == false)
@@ -637,10 +741,25 @@ namespace DynaRAP.UControl
         }
         #endregion
 
+
+        private void cbSeries_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (this.cbSeries.Enabled == false || this.m_drawTypes == DrawTypes.DT_UNKNOWN)
+                return;
+
+            List<SeriesPointData> spDatas;
+            this.m_dicData.TryGetValue(this.cbSeries.Text, out spDatas);
+
+            DataTable dt = MakeTableData(spDatas);
+
+            DrawChart(dt, this.m_drawTypes);
+        }
+
         private void mnuFileRead_Click(object sender, EventArgs e)
         {
             this.cbSeries.Enabled = false;
-            ReadDataList(m_filename, true);
+            this.m_dicData = ReadDataList3(m_filename);
+            SetDllDatas();
             this.cbSeries.Enabled = true;
 
             mnuDrawChart1D.Enabled =
@@ -656,16 +775,14 @@ namespace DynaRAP.UControl
             mnuDrawChart2D.Checked = false;
             mnuDrawChartMinMax.Checked = false;
             mnuDrawPotato.Checked = false;
-            DrawChart(this.m_drawTypes, this.cbSeries.Text, this.cbSeries.Text, ReadDataList(m_filename), "", "", 0, 50000);
-        }
 
-        private void cbSeries_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (this.cbSeries.Enabled == false || this.m_drawTypes == DrawTypes.DT_UNKNOWN)
-                return;
+            List<SeriesPointData> spDatas;
+            this.m_dicData.TryGetValue(this.cbSeries.Text, out spDatas);
 
-            DrawChart(this.m_drawTypes, this.cbSeries.Text, this.cbSeries.Text, ReadDataList(m_filename), "", "", 0, 50000);
-        }
+            DataTable dt = MakeTableData(spDatas);
+
+            DrawChart(dt, this.m_drawTypes);
+        }        
 
         private void mnuDrawChart2D_Click(object sender, EventArgs e)
         {
@@ -674,11 +791,36 @@ namespace DynaRAP.UControl
             mnuDrawChart2D.Checked = true;
             mnuDrawChartMinMax.Checked = false;
             mnuDrawPotato.Checked = false;
-            DrawChart(this.m_drawTypes, this.cbSeries.Text, this.cbSeries.Text, ReadDataList(m_filename), "", "", 0, 50000);
+
+            List<SeriesPointData> spDatas;
+            this.m_dicData.TryGetValue(this.cbSeries.Text, out spDatas);
+
+            DataTable dt = MakeTableData(spDatas);
+
+            DrawChart(dt, this.m_drawTypes);
+        }        
+
+        private void drawChartToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.m_drawTypes = DrawTypes.DT_MINMAX;
+            mnuDrawChart1D.Checked = false;
+            mnuDrawChart2D.Checked = false;
+            mnuDrawChartMinMax.Checked = true;
+            mnuDrawPotato.Checked = false;
+
+            DataTable dt = MakeMinMaxData();
+
+            DrawChart(dt, this.m_drawTypes);
         }
 
-        private void mnuDrawChartMinMax_Click(object sender, EventArgs e)
-        {            
+        private void propertyShowToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (this.m_drawTypes != DrawTypes.DT_MINMAX)
+                return;
+
+            propertyShowToolStripMenuItem.Checked = !propertyShowToolStripMenuItem.Checked;
+
+            RefreshUI();
         }
 
         private void mnuDrawPotato_Click(object sender, EventArgs e)
@@ -688,7 +830,10 @@ namespace DynaRAP.UControl
             mnuDrawChart2D.Checked = false;
             mnuDrawChartMinMax.Checked = false;
             mnuDrawPotato.Checked = true;
-            DrawChart(this.m_drawTypes, this.cbSeries.Text, this.cbSeries.Text, ReadDataList(m_filename), "", "", 0, 50000);
+
+            DataTable dt = MakePotatoData("2955");
+
+            DrawChart(dt, m_drawTypes);
         }
 
         private void mnuSaveChart_Click(object sender, EventArgs e)
@@ -841,22 +986,116 @@ namespace DynaRAP.UControl
             return data;
         }
 
-        private void drawChartToolStripMenuItem_Click(object sender, EventArgs e)
+        private List<SeriesPointData> ReadDataList2(string filename)
         {
-            this.m_drawTypes = DrawTypes.DT_MINMAX;
-            mnuDrawChart1D.Checked = false;
-            mnuDrawChart2D.Checked = false;
-            mnuDrawChartMinMax.Checked = true;
-            mnuDrawPotato.Checked = false;
-            DrawChart(this.m_drawTypes, this.cbSeries.Text, this.cbSeries.Text, ReadDataList(m_filename), "", "", 0, 50000);
+            List<SeriesPointData> data = new List<SeriesPointData>();
+            try
+            {
+                using (FileStream fs = new FileStream(filename, FileMode.Open))
+                using (StreamReader reader = new StreamReader(fs, Encoding.UTF8, false))
+                {
+                    if (null == m_series)
+                        m_series = new List<string>();
+                    m_series.Clear();
+
+                    while (!reader.EndOfStream)
+                    {
+                        string line = reader.ReadLine();
+                        var values = line.Split(',');
+
+                        if (string.IsNullOrEmpty(values[0]))
+                            continue;
+
+                        if (values[0].Equals("DATE"))
+                        {
+                            for (int i = 1; i < values.Length; i++)
+                            {
+                                if (!string.IsNullOrEmpty(values[i]))
+                                {
+                                    m_series.Add(values[i]);
+                                }
+                            }
+                            this.cbSeries.Items.AddRange(m_series.ToArray());
+                            this.cbSeries.SelectedIndex = 0;
+                            continue;
+                        }
+
+                        for (int i = 0; i < m_series.Count; i++)
+                        {
+                            string[] splits = values[0].Split(':');
+                            var arg = string.Format("{0} {1}:{2}:{3}", new DateTime().AddYears(DateTime.Now.Year - 1).AddDays(double.Parse(splits[0])).ToString("yyyy-MM-dd"), splits[1], splits[2], splits[3]);
+                            var argument = DateTime.ParseExact(arg, "yyyy-MM-dd HH:mm:ss.ffffff", null);
+                            var value = double.Parse(string.IsNullOrEmpty(values[i + 1]) ? "0" : values[i + 1]);
+                            var series = m_series[i];
+
+                            //Debug.Print(string.Format("arg = {0}, value = {1}, series = {2}", argument, value, series));
+                            data.Add(new SeriesPointData(series, argument, value));
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message + Environment.NewLine + ex.StackTrace);
+            }
+
+            return data;
         }
 
-        private void propertyShowToolStripMenuItem_Click(object sender, EventArgs e)
+        private Dictionary<string, List<SeriesPointData>> ReadDataList3(string filename)
         {
-            propertyShowToolStripMenuItem.Checked = !propertyShowToolStripMenuItem.Checked;
+            Dictionary<string, List<SeriesPointData>> dicData = new Dictionary<string, List<SeriesPointData>>();
+            try
+            {
+                using (FileStream fs = new FileStream(filename, FileMode.Open))
+                using (StreamReader reader = new StreamReader(fs, Encoding.UTF8, false))
+                {
+                    while (!reader.EndOfStream)
+                    {
+                        string line = reader.ReadLine();
+                        var values = line.Split(',');
 
-            RefreshUI();
-        }
+                        if (string.IsNullOrEmpty(values[0]))
+                            continue;
+
+                        int i;
+                        if (values[0].Equals("DATE"))
+                        {
+                            for (i = 1; i < values.Length; i++)
+                            {
+                                if (!string.IsNullOrEmpty(values[i]))
+                                {
+                                    dicData.Add(values[i], new List<SeriesPointData>());
+                                }
+                            }
+                            this.cbSeries.Items.AddRange(dicData.Keys.ToArray());
+                            this.cbSeries.SelectedIndex = 0;
+                            continue;
+                        }
+
+                        i = 0;
+                        foreach(string key in dicData.Keys)
+                        {
+                            if (!string.IsNullOrEmpty(values[i]))
+                            {
+                                string[] splits = values[0].Split(':');
+                                var temp = string.Format("{0} {1}:{2}:{3}", new DateTime().AddYears(DateTime.Now.Year - 1).AddDays(double.Parse(splits[0])).ToString("yyyy-MM-dd"), splits[1], splits[2], splits[3]);
+                                var arg = DateTime.ParseExact(temp, "yyyy-MM-dd HH:mm:ss.ffffff", null);
+                                var value = double.Parse(string.IsNullOrEmpty(values[i + 1]) ? "0" : values[i + 1]);
+                                dicData[key].Add(new SeriesPointData(key, arg, value));
+                                i++;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message + Environment.NewLine + ex.StackTrace);
+            }
+
+            return dicData;
+        }        
     }
 
     #region 1D SeriesPoint Data
