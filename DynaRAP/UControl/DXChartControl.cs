@@ -655,6 +655,7 @@ namespace DynaRAP.UControl
             mnuDrawChart1D.Checked = true;
             mnuDrawChart2D.Checked = false;
             mnuDrawChartMinMax.Checked = false;
+            mnuDrawPotato.Checked = false;
             DrawChart(this.m_drawTypes, this.cbSeries.Text, this.cbSeries.Text, ReadDataList(m_filename), "", "", 0, 50000);
         }
 
@@ -672,6 +673,7 @@ namespace DynaRAP.UControl
             mnuDrawChart1D.Checked = false;
             mnuDrawChart2D.Checked = true;
             mnuDrawChartMinMax.Checked = false;
+            mnuDrawPotato.Checked = false;
             DrawChart(this.m_drawTypes, this.cbSeries.Text, this.cbSeries.Text, ReadDataList(m_filename), "", "", 0, 50000);
         }
 
@@ -845,6 +847,7 @@ namespace DynaRAP.UControl
             mnuDrawChart1D.Checked = false;
             mnuDrawChart2D.Checked = false;
             mnuDrawChartMinMax.Checked = true;
+            mnuDrawPotato.Checked = false;
             DrawChart(this.m_drawTypes, this.cbSeries.Text, this.cbSeries.Text, ReadDataList(m_filename), "", "", 0, 50000);
         }
 
