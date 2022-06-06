@@ -63,7 +63,7 @@ namespace DynaRAP.UControl
         {
             Document document = view.AddDocument(ctrl) as Document;
             //document.MaximizedControl = new MyLineChart();
-            document.Caption = count.ToString();
+            document.Caption = "PLOT #" + count.ToString();
 
             switch (count % view.StackGroups.Count)
             {

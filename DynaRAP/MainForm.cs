@@ -602,7 +602,18 @@ namespace DynaRAP
 
         private void btnChartLine2d_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            tabbedView1.ActivateDocument(plotModuleControl);
+            if (plotModuleControl == null)
+            {
+                plotModuleControl = new PlotModuleControl();
+                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(plotModuleControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
+                doc.Caption = "PLOT";
+                tabbedView1.ActivateDocument(plotModuleControl);
+            }
+            else
+            {
+                tabbedView1.ActivateDocument(plotModuleControl);
+            }
+
             plotModuleControl.AddDocument(new MyLineChart());
 
             return;
@@ -625,7 +636,18 @@ namespace DynaRAP
 
         private void btnChartMinMax_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            tabbedView1.ActivateDocument(plotModuleControl);
+            if (plotModuleControl == null)
+            {
+                plotModuleControl = new PlotModuleControl();
+                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(plotModuleControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
+                doc.Caption = "PLOT";
+                tabbedView1.ActivateDocument(plotModuleControl);
+            }
+            else
+            {
+                tabbedView1.ActivateDocument(plotModuleControl);
+            }
+
             plotModuleControl.AddDocument(new MyLineChart());
 
             return;
@@ -648,7 +670,18 @@ namespace DynaRAP
 
         private void btnChartPotato_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            tabbedView1.ActivateDocument(plotModuleControl);
+            if (plotModuleControl == null)
+            {
+                plotModuleControl = new PlotModuleControl();
+                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(plotModuleControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
+                doc.Caption = "PLOT";
+                tabbedView1.ActivateDocument(plotModuleControl);
+            }
+            else
+            {
+                tabbedView1.ActivateDocument(plotModuleControl);
+            }
+
             plotModuleControl.AddDocument(new MyPotatoChart());
 
             return;
