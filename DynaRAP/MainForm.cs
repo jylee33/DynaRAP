@@ -614,7 +614,7 @@ namespace DynaRAP
                 tabbedView1.ActivateDocument(plotModuleControl);
             }
 
-            plotModuleControl.AddDocument(new MyLineChart());
+            plotModuleControl.AddDocument(new DXChartControl());
 
             return;
 
@@ -648,7 +648,7 @@ namespace DynaRAP
                 tabbedView1.ActivateDocument(plotModuleControl);
             }
 
-            plotModuleControl.AddDocument(new MyLineChart());
+            plotModuleControl.AddDocument(new DXChartControl());
 
             return;
 
@@ -682,7 +682,7 @@ namespace DynaRAP
                 tabbedView1.ActivateDocument(plotModuleControl);
             }
 
-            plotModuleControl.AddDocument(new MyPotatoChart());
+            plotModuleControl.AddDocument(new DXChartControl());
 
             return;
 
