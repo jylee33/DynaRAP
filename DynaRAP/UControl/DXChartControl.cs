@@ -18,7 +18,7 @@ namespace DynaRAP.UControl
         #region enums
         public enum DrawTypes
         {
-            DT_1D, DT_2D, DT_MINMAX, DT_POTATO
+            DT_1D, DT_2D, DT_MINMAX, DT_POTATO, DT_UNKNOWN
         }
         #endregion
 
@@ -45,8 +45,8 @@ namespace DynaRAP.UControl
             this.m_chart.ContextMenuStrip = this.contextMenuStrip;
             this.m_chart.CustomPaint += M_chart_CustomPaint;
 
-            m_drawTypes = DrawTypes.DT_1D;
-            mnuDrawChart1D.Checked = true;
+            m_drawTypes = DrawTypes.DT_UNKNOWN;
+            //mnuDrawChart1D.Checked = true;
 
             InitPropertyControl();
 
@@ -89,9 +89,8 @@ namespace DynaRAP.UControl
         {
             foreach (Control c in this.Controls)
             {
-                if (c.GetType() == typeof(Splitter) ||
-                    c.GetType() == typeof(PropertyGrid))
-                    c.Visible = m_drawTypes.Equals(DrawTypes.DT_MINMAX);
+                if (c.GetType() == typeof(Splitter) || c.GetType() == typeof(PropertyGrid))
+                    c.Visible = m_drawTypes.Equals(DrawTypes.DT_MINMAX) && propertyShowToolStripMenuItem.Checked;
             }
         }
 
@@ -179,7 +178,7 @@ namespace DynaRAP.UControl
         {
             this.pnPaging.Visible = false;
 
-            RefreshUI();
+            //RefreshUI();
 
             if (this.m_chart.Series.Count > 0)
                 this.m_chart.Series.Clear();
@@ -191,13 +190,19 @@ namespace DynaRAP.UControl
             switch (type)
             {
                 case DrawTypes.DT_1D:
+                    {
+                        this.pnPaging.Visible = true;
+                        this.m_chart.Series.Add(new Series(seriesStr, ViewType.Line));
+
+                        DrawChart_1D();
+                    }
+                    break;
                 case DrawTypes.DT_2D:
                     {
                         this.pnPaging.Visible = true;
                         this.m_chart.Series.Add(new Series(seriesStr, ViewType.Line));
 
-                        if (type == DrawTypes.DT_1D) DrawChart_1D();
-                        else DrawChart_2D();
+                        DrawChart_2D();
                     }
                     break;
                 case DrawTypes.DT_MINMAX:
@@ -263,7 +268,8 @@ namespace DynaRAP.UControl
 
             XYDiagram diagram = this.m_chart.Diagram as XYDiagram;
 
-            //diagram.AxisY.Visibility = DevExpress.Utils.DefaultBoolean.False;
+            diagram.AxisY.Visibility = DevExpress.Utils.DefaultBoolean.False;
+            //diagram.AxisY.NumericScaleOptions.AutoGrid = false;
 
             diagram.EnableAxisXScrolling = true;
             diagram.EnableAxisXZooming = true;
@@ -654,7 +660,7 @@ namespace DynaRAP.UControl
 
         private void cbSeries_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (this.cbSeries.Enabled == false)
+            if (this.cbSeries.Enabled == false || this.m_drawTypes == DrawTypes.DT_UNKNOWN)
                 return;
 
             DrawChart(this.m_drawTypes, this.cbSeries.Text, this.cbSeries.Text, ReadDataList(m_filename), "", "", 0, 50000);
@@ -670,12 +676,7 @@ namespace DynaRAP.UControl
         }
 
         private void mnuDrawChartMinMax_Click(object sender, EventArgs e)
-        {
-            this.m_drawTypes = DrawTypes.DT_MINMAX;
-            mnuDrawChart1D.Checked = false;
-            mnuDrawChart2D.Checked = false;
-            mnuDrawChartMinMax.Checked = true;
-            DrawChart(this.m_drawTypes, this.cbSeries.Text, this.cbSeries.Text, ReadDataList(m_filename), "", "", 0, 50000);
+        {            
         }
 
         private void mnuDrawPotato_Click(object sender, EventArgs e)
@@ -838,7 +839,21 @@ namespace DynaRAP.UControl
             return data;
         }
 
-        
+        private void drawChartToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.m_drawTypes = DrawTypes.DT_MINMAX;
+            mnuDrawChart1D.Checked = false;
+            mnuDrawChart2D.Checked = false;
+            mnuDrawChartMinMax.Checked = true;
+            DrawChart(this.m_drawTypes, this.cbSeries.Text, this.cbSeries.Text, ReadDataList(m_filename), "", "", 0, 50000);
+        }
+
+        private void propertyShowToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            propertyShowToolStripMenuItem.Checked = !propertyShowToolStripMenuItem.Checked;
+
+            RefreshUI();
+        }
     }
 
     #region 1D SeriesPoint Data
