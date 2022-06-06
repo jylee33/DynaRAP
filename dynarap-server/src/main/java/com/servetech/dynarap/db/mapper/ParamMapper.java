@@ -453,7 +453,7 @@ public interface ParamMapper {
 
     @Select({
             "<script>" +
-                    "select a.*, b.seq as presetParamSeq, b.presetPack, b.presetSeq from dynarap_param a, dynarap_preset_param b " +
+                    "select a.*, b.seq as referenceSeq, b.presetPack, b.presetSeq from dynarap_param a, dynarap_preset_param b " +
                     "where a.seq = b.paramSeq " +
                     "and a.paramPack = b.paramPack " +
                     "and b.seq = #{seq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
@@ -461,6 +461,17 @@ public interface ParamMapper {
                     "</script>"
     })
     ParamVO selectPresetParamBySeq(Map<String, Object> params) throws Exception;
+
+    @Select({
+            "<script>" +
+                    "select a.*, b.seq as referenceSeq, 0 as presetPack, 0 as presetSeq from dynarap_param a, dynarap_notmapped_param b " +
+                    "where a.seq = b.paramSeq " +
+                    "and a.paramPack = b.paramPack " +
+                    "and b.seq = #{seq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "limit 0, 1" +
+                    "</script>"
+    })
+    ParamVO selectNotMappedParamBySeq(Map<String, Object> params) throws Exception;
 
     @Insert({
             "<script>" +
