@@ -31,7 +31,6 @@
             this.components = new System.ComponentModel.Container();
             this.label2 = new System.Windows.Forms.Label();
             this.cbSeries = new System.Windows.Forms.ComboBox();
-            this.btnReset = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.txtPageSize = new System.Windows.Forms.TextBox();
             this.lblPages = new System.Windows.Forms.Label();
@@ -48,6 +47,7 @@
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuFileRead = new System.Windows.Forms.ToolStripMenuItem();
             this.pnPaging = new System.Windows.Forms.Panel();
+            this.btnReset = new System.Windows.Forms.Button();
             this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuSaveChart = new System.Windows.Forms.ToolStripMenuItem();
@@ -79,23 +79,12 @@
             this.cbSeries.TabIndex = 3;
             this.cbSeries.SelectedIndexChanged += new System.EventHandler(this.cbSeries_SelectedIndexChanged);
             // 
-            // btnReset
-            // 
-            this.btnReset.Location = new System.Drawing.Point(325, 22);
-            this.btnReset.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.btnReset.Name = "btnReset";
-            this.btnReset.Size = new System.Drawing.Size(55, 28);
-            this.btnReset.TabIndex = 7;
-            this.btnReset.Text = "Reset";
-            this.btnReset.UseVisualStyleBackColor = true;
-            this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
-            // 
             // label1
             // 
             this.label1.AutoEllipsis = true;
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.label1.Location = new System.Drawing.Point(216, 3);
+            this.label1.Location = new System.Drawing.Point(194, 3);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(60, 15);
             this.label1.TabIndex = 6;
@@ -105,12 +94,12 @@
             // txtPageSize
             // 
             this.txtPageSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.txtPageSize.Location = new System.Drawing.Point(219, 22);
+            this.txtPageSize.Location = new System.Drawing.Point(197, 24);
             this.txtPageSize.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.txtPageSize.Multiline = true;
             this.txtPageSize.Name = "txtPageSize";
-            this.txtPageSize.Size = new System.Drawing.Size(100, 28);
+            this.txtPageSize.Size = new System.Drawing.Size(119, 26);
             this.txtPageSize.TabIndex = 5;
+            this.txtPageSize.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtPageSize_KeyDown);
             // 
             // lblPages
             // 
@@ -125,49 +114,57 @@
             // btnMoveFirst
             // 
             this.btnMoveFirst.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnMoveFirst.Location = new System.Drawing.Point(423, 22);
+            this.btnMoveFirst.BackColor = System.Drawing.Color.Transparent;
+            this.btnMoveFirst.ForeColor = System.Drawing.Color.Black;
+            this.btnMoveFirst.Location = new System.Drawing.Point(408, 22);
             this.btnMoveFirst.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnMoveFirst.Name = "btnMoveFirst";
-            this.btnMoveFirst.Size = new System.Drawing.Size(33, 28);
+            this.btnMoveFirst.Size = new System.Drawing.Size(43, 28);
             this.btnMoveFirst.TabIndex = 3;
             this.btnMoveFirst.Text = "<<";
-            this.btnMoveFirst.UseVisualStyleBackColor = true;
+            this.btnMoveFirst.UseVisualStyleBackColor = false;
             this.btnMoveFirst.Click += new System.EventHandler(this.btnMoveFirst_Click);
             // 
             // btnMoveLeft
             // 
             this.btnMoveLeft.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnMoveLeft.Location = new System.Drawing.Point(462, 22);
+            this.btnMoveLeft.BackColor = System.Drawing.Color.Transparent;
+            this.btnMoveLeft.ForeColor = System.Drawing.Color.Black;
+            this.btnMoveLeft.Location = new System.Drawing.Point(457, 22);
             this.btnMoveLeft.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnMoveLeft.Name = "btnMoveLeft";
-            this.btnMoveLeft.Size = new System.Drawing.Size(33, 28);
+            this.btnMoveLeft.Size = new System.Drawing.Size(43, 28);
             this.btnMoveLeft.TabIndex = 2;
             this.btnMoveLeft.Text = "<";
-            this.btnMoveLeft.UseVisualStyleBackColor = true;
+            this.btnMoveLeft.UseVisualStyleBackColor = false;
             this.btnMoveLeft.Click += new System.EventHandler(this.btnMoveLeft_Click);
             // 
             // btnMoveRight
             // 
             this.btnMoveRight.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnMoveRight.Location = new System.Drawing.Point(526, 22);
+            this.btnMoveRight.BackColor = System.Drawing.Color.Transparent;
+            this.btnMoveRight.ForeColor = System.Drawing.Color.Black;
+            this.btnMoveRight.Location = new System.Drawing.Point(506, 22);
             this.btnMoveRight.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnMoveRight.Name = "btnMoveRight";
-            this.btnMoveRight.Size = new System.Drawing.Size(33, 28);
+            this.btnMoveRight.Size = new System.Drawing.Size(43, 28);
             this.btnMoveRight.TabIndex = 1;
             this.btnMoveRight.Text = ">";
-            this.btnMoveRight.UseVisualStyleBackColor = true;
+            this.btnMoveRight.UseVisualStyleBackColor = false;
             this.btnMoveRight.Click += new System.EventHandler(this.btnMoveRight_Click);
             // 
             // btnMoveLast
             // 
             this.btnMoveLast.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnMoveLast.Location = new System.Drawing.Point(565, 22);
+            this.btnMoveLast.BackColor = System.Drawing.Color.Transparent;
+            this.btnMoveLast.ForeColor = System.Drawing.Color.Black;
+            this.btnMoveLast.Location = new System.Drawing.Point(555, 22);
             this.btnMoveLast.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnMoveLast.Name = "btnMoveLast";
-            this.btnMoveLast.Size = new System.Drawing.Size(33, 28);
+            this.btnMoveLast.Size = new System.Drawing.Size(43, 28);
             this.btnMoveLast.TabIndex = 0;
             this.btnMoveLast.Text = ">>";
-            this.btnMoveLast.UseVisualStyleBackColor = true;
+            this.btnMoveLast.UseVisualStyleBackColor = false;
             this.btnMoveLast.Click += new System.EventHandler(this.btnMoveLast_Click);
             // 
             // mnuDrawPotato
@@ -235,9 +232,9 @@
             // 
             this.pnPaging.BackColor = System.Drawing.Color.Transparent;
             this.pnPaging.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnPaging.Controls.Add(this.btnReset);
             this.pnPaging.Controls.Add(this.label2);
             this.pnPaging.Controls.Add(this.cbSeries);
-            this.pnPaging.Controls.Add(this.btnReset);
             this.pnPaging.Controls.Add(this.label1);
             this.pnPaging.Controls.Add(this.txtPageSize);
             this.pnPaging.Controls.Add(this.lblPages);
@@ -251,6 +248,19 @@
             this.pnPaging.Name = "pnPaging";
             this.pnPaging.Size = new System.Drawing.Size(603, 56);
             this.pnPaging.TabIndex = 6;
+            // 
+            // btnReset
+            // 
+            this.btnReset.BackColor = System.Drawing.Color.Transparent;
+            this.btnReset.ForeColor = System.Drawing.Color.Black;
+            this.btnReset.Location = new System.Drawing.Point(322, 23);
+            this.btnReset.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.btnReset.Name = "btnReset";
+            this.btnReset.Size = new System.Drawing.Size(75, 28);
+            this.btnReset.TabIndex = 9;
+            this.btnReset.Text = "Reset";
+            this.btnReset.UseVisualStyleBackColor = false;
+            this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
             // 
             // contextMenuStrip
             // 
@@ -296,7 +306,6 @@
 
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox cbSeries;
-        private System.Windows.Forms.Button btnReset;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txtPageSize;
         private System.Windows.Forms.Label lblPages;
@@ -316,5 +325,6 @@
         private System.Windows.Forms.ToolStripMenuItem mnuSaveChart;
         private System.Windows.Forms.ToolStripMenuItem drawChartToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem propertyShowToolStripMenuItem;
+        private System.Windows.Forms.Button btnReset;
     }
 }

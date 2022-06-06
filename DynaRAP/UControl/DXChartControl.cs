@@ -394,9 +394,12 @@ namespace DynaRAP.UControl
 
         private void DrawChart_1D(string axisTitleX = "", int pageIndex = 0, int pageSize = 50000)
         {
-            this.m_chart.Series.Add(new Series("Series", ViewType.Line));
+            if(this.m_chart.Series.Count == 0)
+                this.m_chart.Series.Add(new Series("Series", ViewType.Line));
 
             var dataSource = this.m_table.AsEnumerable().Skip(m_pageSize * m_pageIndex).Take(this.m_pageSize);
+
+            this.m_chart.Series[0].Points.Clear();
 
             foreach (DataRow row in dataSource)
                 this.m_chart.Series[0].Points.Add(new SeriesPoint(row["Argument"], row["Value"]));
@@ -424,20 +427,23 @@ namespace DynaRAP.UControl
             diagram.AxisX.DateTimeScaleOptions.GridAlignment = DateTimeGridAlignment.Second;
             diagram.AxisX.Label.TextPattern = "{A:HH:mm:ss.ffff}";
 
-            this.btnMoveFirst.Enabled = this.btnMoveLeft.Enabled = (this.m_pageIndex > 0);
-            this.btnMoveLast.Enabled = this.btnMoveRight.Enabled = (this.m_pageIndex < this.m_totalPages);
+            //this.btnMoveFirst.Enabled = this.btnMoveLeft.Enabled = (this.m_pageIndex > 0);
+            //this.btnMoveLast.Enabled = this.btnMoveRight.Enabled = (this.m_pageIndex < this.m_totalPages);
 
             this.lblPages.Text = string.Format("{0} page of {1} pages.", this.m_pageIndex + 1, this.m_totalPages + 1);
 
-            m_pageIndex = pageIndex;
-            m_pageSize = pageSize;
+            //m_pageIndex = pageIndex;
+            //m_pageSize = pageSize;
         }
 
         private void DrawChart_2D(string axisTitleX = "", string axisTitleY = "", int pageIndex = 0, int pageSize = 50000)
         {
-            this.m_chart.Series.Add(new Series("Series", ViewType.Line));
+            if (this.m_chart.Series.Count == 0)
+                this.m_chart.Series.Add(new Series("Series", ViewType.Line));
 
             var dataSource = this.m_table.AsEnumerable().Skip(m_pageSize * m_pageIndex).Take(this.m_pageSize);
+
+            this.m_chart.Series[0].Points.Clear();
 
             foreach (DataRow row in dataSource)
                 this.m_chart.Series[0].Points.Add(new SeriesPoint(row["Argument"], row["Value"]));
@@ -464,13 +470,13 @@ namespace DynaRAP.UControl
             diagram.AxisX.DateTimeScaleOptions.GridAlignment = DateTimeGridAlignment.Second;
             diagram.AxisX.Label.TextPattern = "{A:HH:mm:ss.ffff}";
 
-            this.btnMoveFirst.Enabled = this.btnMoveLeft.Enabled = (this.m_pageIndex > 0);
-            this.btnMoveLast.Enabled = this.btnMoveRight.Enabled = (this.m_pageIndex < this.m_totalPages);
+            //this.btnMoveFirst.Enabled = this.btnMoveLeft.Enabled = (this.m_pageIndex > 0);
+            //this.btnMoveLast.Enabled = this.btnMoveRight.Enabled = (this.m_pageIndex < this.m_totalPages);
 
             this.lblPages.Text = string.Format("{0} page of {1} pages.", this.m_pageIndex + 1, this.m_totalPages + 1);
 
-            m_pageIndex = pageIndex;
-            m_pageSize = pageSize;
+            //m_pageIndex = pageIndex;
+            //m_pageSize = pageSize;
         }
 
         private void btnReset_Click(object sender, EventArgs e)
@@ -481,52 +487,61 @@ namespace DynaRAP.UControl
                 {
                     this.txtPageSize.Focus();
                     return;
-                }
+                }                
+
+                List<SeriesPointData> spDatas;
+                this.m_dicData.TryGetValue(this.cbSeries.Text, out spDatas);
+
+                DataTable dt = MakeTableData(spDatas);
 
                 this.m_pageIndex = 0;
                 this.m_pageSize = Convert.ToInt32(this.txtPageSize.Text);
-                this.m_totalPages = this.m_table.Rows.Count / this.m_pageSize;
+                this.m_totalPages = dt.Rows.Count / this.m_pageSize;
 
-                DrawChart_1D();
+                DrawChart(dt, this.m_drawTypes);
             }
         }
 
         private void btnMoveFirst_Click(object sender, EventArgs e)
         {
+            this.m_pageIndex = 0;
+
             if (this.m_drawTypes == DrawTypes.DT_1D)
-            {
-                this.m_pageIndex = 0;
                 DrawChart_1D();
-            }
+            else if (m_drawTypes == DrawTypes.DT_2D)
+                DrawChart_2D();
         }
 
         private void btnMoveLeft_Click(object sender, EventArgs e)
         {
+            if (this.m_pageIndex > 0)
+                this.m_pageIndex--;
+
             if (this.m_drawTypes == DrawTypes.DT_1D)
-            {
-                if (this.m_pageIndex > 0)
-                    this.m_pageIndex--;
                 DrawChart_1D();
-            }
+            else if (m_drawTypes == DrawTypes.DT_2D)
+                DrawChart_2D();
         }
 
         private void btnMoveRight_Click(object sender, EventArgs e)
         {
+            if (this.m_pageIndex < this.m_totalPages)
+                this.m_pageIndex++;
+
             if (this.m_drawTypes == DrawTypes.DT_1D)
-            {
-                if (this.m_pageIndex < this.m_totalPages)
-                    this.m_pageIndex++;
                 DrawChart_1D();
-            }
+            else if (m_drawTypes == DrawTypes.DT_2D)
+                DrawChart_2D();
         }
 
         private void btnMoveLast_Click(object sender, EventArgs e)
         {
+            this.m_pageIndex = this.m_totalPages;
+
             if (this.m_drawTypes == DrawTypes.DT_1D)
-            {
-                this.m_pageIndex = this.m_totalPages;
                 DrawChart_1D();
-            }
+            else if (m_drawTypes == DrawTypes.DT_2D)
+                DrawChart_2D();
         }
         #endregion
 
@@ -1132,6 +1147,14 @@ namespace DynaRAP.UControl
             }
 
             return dicData;
+        }
+
+        private void txtPageSize_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.KeyCode == Keys.Enter)
+            {
+                btnReset_Click(null, null);
+            }
         }
     }
 
