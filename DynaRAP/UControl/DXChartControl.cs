@@ -11,6 +11,7 @@ using System.Drawing;
 using DevExpress.Utils.Drawing;
 using System.Drawing.Drawing2D;
 using System.Diagnostics;
+using DevExpress.XtraEditors;
 
 namespace DynaRAP.UControl
 {
@@ -24,6 +25,8 @@ namespace DynaRAP.UControl
         #endregion
 
         #region private variables
+        private SplitContainerControl m_spliter;
+        private PropertyGrid m_propertyGrid;
         private ChartControl m_chart;
         private List<string> m_series;
         private string m_filename;
@@ -31,58 +34,92 @@ namespace DynaRAP.UControl
         private int m_pageSize;
         private int m_totalPages;
         private DataTable m_table;
-        private DrawTypes m_drawTypes;        
+        private DrawTypes m_drawTypes;
         private List<Cluster> m_clusters = new List<Cluster>();
+
+        private int m_propertyGridWidth;
 #if DEBUG
         private List<DLL_DATA> m_dllDatas;
-        private List<SeriesPointData> m_seriesPointDatas;
         private Dictionary<string, List<SeriesPointData>> m_dicData;
 #endif
-#endregion
+        #endregion
 
         public DXChartControl()
         {
             InitializeComponent();
 
-            this.m_chart = new ChartControl();
-            this.Controls.Add(this.m_chart);
-            this.m_chart.Dock = DockStyle.Fill;
-            this.m_chart.ContextMenuStrip = this.contextMenuStrip;
-            this.m_chart.CustomPaint += M_chart_CustomPaint;
-
             m_drawTypes = DrawTypes.DT_UNKNOWN;
-            //mnuDrawChart1D.Checked = true;
-
-            InitPropertyControl();
 
             m_series = new List<string>();
             m_filename = @"sampledata.xls";
             m_pageIndex = 0;
             m_pageSize = 100000;
             m_totalPages = 0;
+
+            m_propertyGridWidth = 0;
         }
 
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+
+            m_spliter = new SplitContainerControl();
+            m_spliter.MouseClick += Spliter_MouseClick;
+            m_spliter.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
+            m_spliter.Location = new Point(0, this.pnPaging.Location.Y + this.pnPaging.Height);
+            m_spliter.Size = new Size(this.ClientRectangle.Width, this.ClientRectangle.Height - this.pnPaging.Height);
+            m_spliter.CollapsePanel = SplitCollapsePanel.Panel2;
+            m_spliter.FixedPanel = SplitFixedPanel.Panel2;
+            m_spliter.SetPanelCollapsed(true);
+            m_spliter.SplitterPosition = 0;
+            this.Controls.Add(m_spliter);
+
+
+            this.m_chart = new ChartControl();
+            this.m_chart.Dock = DockStyle.Fill;
+            this.m_chart.ContextMenuStrip = this.contextMenuStrip;
+            this.m_chart.CustomPaint += Chart_CustomPaint;
+            m_spliter.Panel1.Controls.Add(this.m_chart);
+
+
+            m_propertyGrid = new PropertyGrid();
+            m_propertyGrid.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
+            m_propertyGrid.Location = new Point(0, 0);
+            m_propertyGrid.Size = new Size(m_spliter.Panel2.Width, m_spliter.Panel2.Height);
+            m_propertyGrid.SelectedObject = this.m_chart;            
+            m_spliter.Panel2.Controls.Add(m_propertyGrid);
+        }
+
+        private void Spliter_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (m_spliter.SplitterPosition == 0)
+                m_spliter.SplitterPosition = m_spliter.Width * 2 / 3;
+        }
+
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+
+            if (null == m_spliter || null == m_propertyGrid)
+                return;
         }
 
         private void InitPropertyControl()
         {
-            Splitter splitter = new Splitter();
-            splitter.Width = 10;
-            splitter.Dock = DockStyle.Right;
-            splitter.Visible = false;
-            this.Controls.Add(splitter);
+            //Splitter splitter = new Splitter();
+            //splitter.Width = 10;
+            //splitter.Dock = DockStyle.Right;
+            //splitter.Visible = false;
+            //this.Controls.Add(splitter);
 
-            PropertyGrid propertyGrid = new PropertyGrid();
-            propertyGrid.SelectedObject = this.m_chart;
-            propertyGrid.Dock = DockStyle.Right;
-            propertyGrid.Width = 300;
-            propertyGrid.Visible = false;
+            //PropertyGrid propertyGrid = new PropertyGrid();
+            //propertyGrid.SelectedObject = this.m_chart;
+            //propertyGrid.Dock = DockStyle.Right;
+            //propertyGrid.Width = 300;
+            //propertyGrid.Visible = false;
 
-            this.Controls.Add(propertyGrid);
-            this.m_chart.BringToFront();
+            //this.Controls.Add(propertyGrid);
+            //this.m_chart.BringToFront();
         }
 
         private void RefreshUI()
@@ -166,7 +203,7 @@ namespace DynaRAP.UControl
             {
                 foreach (DLL_DATA.Parameter param in dll.parameters)
                 {
-                    foreach(string key in this.m_dicData.Keys)
+                    foreach (string key in this.m_dicData.Keys)
                     {
                         if (key.Contains(param.Name))
                         {
@@ -219,10 +256,10 @@ namespace DynaRAP.UControl
         /// <param name="pageIndex">Page 번호</param>
         /// <param name="pageSize">Page 당 표출 사이즈</param>
         public void DrawChart(
-            DataTable dt, 
-            DrawTypes drawTypes = DrawTypes.DT_UNKNOWN, 
-            string seriesName = "", 
-            string axisX = "", 
+            DataTable dt,
+            DrawTypes drawTypes = DrawTypes.DT_UNKNOWN,
+            string seriesName = "",
+            string axisX = "",
             string axisY = "",
             int pageIndex = 0,
             int pageSize = 50000)
@@ -230,7 +267,7 @@ namespace DynaRAP.UControl
             this.m_table = dt;
 
             if (this.m_chart.Series.Count > 0)
-                this.m_chart.Series.Clear();           
+                this.m_chart.Series.Clear();
 
             this.pnPaging.Visible = drawTypes.Equals(DrawTypes.DT_1D) || drawTypes.Equals(DrawTypes.DT_2D);
 
@@ -394,7 +431,7 @@ namespace DynaRAP.UControl
 
             m_pageIndex = pageIndex;
             m_pageSize = pageSize;
-        }        
+        }
 
         private void DrawChart_2D(string axisTitleX = "", string axisTitleY = "", int pageIndex = 0, int pageSize = 50000)
         {
@@ -456,7 +493,7 @@ namespace DynaRAP.UControl
 
         private void btnMoveFirst_Click(object sender, EventArgs e)
         {
-            if(this.m_drawTypes == DrawTypes.DT_1D)
+            if (this.m_drawTypes == DrawTypes.DT_1D)
             {
                 this.m_pageIndex = 0;
                 DrawChart_1D();
@@ -568,7 +605,7 @@ namespace DynaRAP.UControl
         #endregion
 
         #region Potatao
-        private void M_chart_CustomPaint(object sender, CustomPaintEventArgs e)
+        private void Chart_CustomPaint(object sender, CustomPaintEventArgs e)
         {
             if (this.m_drawTypes != DrawTypes.DT_POTATO)
                 return;
@@ -589,7 +626,7 @@ namespace DynaRAP.UControl
                 DrawCluster(m_clusters[i], g, paletteEntries[i].Color, paletteEntries[i].Color);
             }
         }
-        
+
         private DataTable MakePotatoData(string seriesName)
         {
             var data = m_dllDatas.Find(f => f.ButtockLine.Equals(seriesName));
@@ -782,7 +819,7 @@ namespace DynaRAP.UControl
             DataTable dt = MakeTableData(spDatas);
 
             DrawChart(dt, this.m_drawTypes);
-        }        
+        }
 
         private void mnuDrawChart2D_Click(object sender, EventArgs e)
         {
@@ -798,7 +835,7 @@ namespace DynaRAP.UControl
             DataTable dt = MakeTableData(spDatas);
 
             DrawChart(dt, this.m_drawTypes);
-        }        
+        }
 
         private void drawChartToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -1074,7 +1111,7 @@ namespace DynaRAP.UControl
                         }
 
                         i = 0;
-                        foreach(string key in dicData.Keys)
+                        foreach (string key in dicData.Keys)
                         {
                             if (!string.IsNullOrEmpty(values[i]))
                             {
@@ -1095,7 +1132,7 @@ namespace DynaRAP.UControl
             }
 
             return dicData;
-        }        
+        }
     }
 
     #region 1D SeriesPoint Data
