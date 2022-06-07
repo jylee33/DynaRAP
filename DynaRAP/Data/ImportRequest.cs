@@ -16,7 +16,25 @@ namespace DynaRAP.Data
         public string flightAt { get; set; }
         public string dataType { get; set; }
         public bool forcedImport { get; set; }
+        public LpfOption lpfOption { get; set; }
+        public HpfOption hpfOption { get; set; }
+        public Dictionary<string, string> tempMappingParams { get; set; }
+        //public TempMappingParams tempMappingParams { get; set; }
         public List<Part> parts { get; set; }
+    }
+
+    public class HpfOption
+    {
+        public string n { get; set; }
+        public string cutoff { get; set; }
+        public string btype { get; set; }
+    }
+
+    public class LpfOption
+    {
+        public string n { get; set; }
+        public string cutoff { get; set; }
+        public string btype { get; set; }
     }
 
     public class Part

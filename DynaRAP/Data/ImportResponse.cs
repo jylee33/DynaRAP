@@ -93,7 +93,7 @@ namespace DynaRAP.Data
         public int totalFetchCount { get; set; }
         public List<string> notMappedParams { get; set; }
         public List<MappedParam> mappedParams { get; set; }
-        public List<PartList> partList { get; set; }
+        //public List<PartList> partList { get; set; }
     }
 
     public class ResponseAtImport
@@ -113,8 +113,11 @@ namespace DynaRAP.Data
     public class UploadRequest
     {
         public string sourcePath { get; set; }
+        public string presetPack { get; set; }
         public string flightAt { get; set; }
         public string dataType { get; set; }
         public List<PartImport> parts { get; set; }
+        public bool forcedImport { get; set; }
+        public Dictionary<string, string> tempMappingParams { get; set; }
     }
 }

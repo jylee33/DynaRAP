@@ -176,7 +176,7 @@
     <value>선택된 영역이 없습니다.</value>
   </data>
   <data name="StringSplitCount" xml:space="preserve">
-    <value>유효비행구간 : {0}구간</value>
+    <value>유효구간 : {0}구간</value>
     <comment>S</comment>
   </data>
   <data name="StringSuccess" xml:space="preserve">

@@ -26,6 +26,9 @@ namespace DynaRAP.UControl
         int fetchCount = 0;
         int totalFetchCount = 0;
         bool bFirst = true;
+        List<string> notMappedParams = new List<string>();
+
+        public List<string> NotMappedParams { get => notMappedParams; set => notMappedParams = value; }
 
         public ImportProgressForm()
         {
@@ -48,7 +51,7 @@ namespace DynaRAP.UControl
             if (isCompleted)
             {
                 timer.Stop();
-                MessageBox.Show("완료");
+                //MessageBox.Show("완료");
                 this.Close();
             }
 
@@ -145,6 +148,17 @@ namespace DynaRAP.UControl
                         
                         if(bFirst)
                             MessageBox.Show(result.response.statusMessage);
+                        this.Close();
+                    }
+                    else if (result.response.status.Equals("error"))
+                    {
+                        isCompleted = true;
+                        timer.Stop();
+
+                        MessageBox.Show(result.response.statusMessage);
+
+                        this.notMappedParams = result.response.notMappedParams;
+                        DialogResult = DialogResult.Cancel;
                         this.Close();
                     }
                     else

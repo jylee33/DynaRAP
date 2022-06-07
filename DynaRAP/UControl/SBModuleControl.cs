@@ -265,7 +265,7 @@ namespace DynaRAP.UControl
                 cboFlying.Properties.Items.Add(decName);
             }
 
-            cboFlying.SelectedIndex = 0;
+            cboFlying.SelectedIndex = -1;
 
         }
 
@@ -296,7 +296,7 @@ namespace DynaRAP.UControl
                 cboPart.Properties.Items.Add(decName);
             }
 
-            cboPart.SelectedIndex = 0;
+            cboPart.SelectedIndex = -1;
 
         }
 

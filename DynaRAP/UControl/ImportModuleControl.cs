@@ -5,6 +5,7 @@ using DevExpress.XtraEditors.Controls;
 using DevExpress.XtraEditors.Repository;
 using DevExpress.XtraGrid.Columns;
 using DevExpress.XtraGrid.Views.Grid;
+using DynaRAP.Common;
 using DynaRAP.Data;
 using DynaRAP.EventData;
 using DynaRAP.UTIL;
@@ -39,17 +40,33 @@ namespace DynaRAP.UControl
         object minValue = null;
         object maxValue = null;
 
+        ImportType importType = ImportType.FLYING;
+
         public ImportModuleControl()
         {
             InitializeComponent();
         }
 
+        public ImportModuleControl(ImportType importType) : this()
+        {
+            this.importType = importType;
+        }
+
         private void ImportModuleControl_Load(object sender, EventArgs e)
         {
             cboImportType.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
-            cboImportType.Properties.Items.Add("GRT");
-            cboImportType.Properties.Items.Add("FLTP");
-            cboImportType.Properties.Items.Add("FLTS");
+
+            if (importType == ImportType.FLYING)
+            {
+                cboImportType.Properties.Items.Add("GRT");
+                cboImportType.Properties.Items.Add("FLTP");
+                cboImportType.Properties.Items.Add("FLTS");
+            }
+            else
+            {
+                cboImportType.Properties.Items.Add("ADAMS");
+                cboImportType.Properties.Items.Add("ZAERO");
+            }
 
             //InitializeSplittedRegionList();
 
@@ -88,6 +105,22 @@ namespace DynaRAP.UControl
 
             InitializeGridControl1();
             InitializeGridControl2();
+
+            edtLPFn.Text = "10";
+            edtLPFcutoff.Text = "0.4";
+            cboLPFbtype.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+            cboLPFbtype.Properties.Items.Add("");
+            cboLPFbtype.Properties.Items.Add("low");
+            cboLPFbtype.Properties.Items.Add("high");
+            cboLPFbtype.SelectedIndex = 0;
+
+            edtHPFn.Text = "10";
+            edtHPFcutoff.Text = "0.02";
+            cboHPFbtype.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+            cboHPFbtype.Properties.Items.Add("");
+            cboHPFbtype.Properties.Items.Add("low");
+            cboHPFbtype.Properties.Items.Add("high");
+            cboHPFbtype.SelectedIndex = 2;
         }
 
         private void InitializeGridControl1()
@@ -95,9 +128,22 @@ namespace DynaRAP.UControl
 
             //gridView1.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
 
+            repositoryItemComboBox1.TextEditStyle = TextEditStyles.DisableTextEditor;
+            repositoryItemComboBox1.SelectedIndexChanged += RepositoryItemComboBox1_SelectedIndexChanged;
+            repositoryItemComboBox1.BeforePopup += RepositoryItemComboBox1_BeforePopup;
+            repositoryItemComboBox1.PopupFormMinSize = new System.Drawing.Size(0, 500);
+
+            List<ResponseParam> paramList = GetParamList();
+
+            repositoryItemComboBox1.Items.Clear();
+            foreach (ResponseParam param in paramList)
+            {
+                repositoryItemComboBox1.Items.Add(param.paramKey);
+            }
+
             gridView1.OptionsView.ShowColumnHeaders = true;
             gridView1.OptionsView.ShowGroupPanel = false;
-            gridView1.OptionsView.ShowIndicator = false;
+            gridView1.OptionsView.ShowIndicator = true;
             gridView1.IndicatorWidth = 40;
             gridView1.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.False;
             gridView1.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.False;
@@ -111,6 +157,63 @@ namespace DynaRAP.UControl
 
             gridView1.CustomDrawRowIndicator += GridView1_CustomDrawRowIndicator;
 
+            GridColumn colName = gridView1.Columns["UnmappedParamName"];
+            //colName.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
+            //colName.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
+            colName.OptionsColumn.FixedWidth = true;
+            colName.Width = 240;
+            colName.Caption = "UnmappedParamName";
+            colName.OptionsColumn.ReadOnly = true;
+        }
+
+        private List<ResponseParam> GetParamList()
+        {
+            string url = ConfigurationManager.AppSettings["UrlParam"];
+            //string sendData = @"
+            //{
+            //""command"":""list"",
+            //""pageNo"":1,
+            //""pageSize"":3000,
+            //""resultDataType"": ""map""
+            //}";
+            string sendData = @"
+            {
+            ""command"":""list"",
+            ""pageNo"":1,
+            ""pageSize"":3000
+            }";
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Method = "POST";
+            request.ContentType = "application/json";
+            request.Timeout = 30 * 1000;
+            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+
+            // POST할 데이타를 Request Stream에 쓴다
+            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+            request.ContentLength = bytes.Length; // 바이트수 지정
+
+            using (Stream reqStream = request.GetRequestStream())
+            {
+                reqStream.Write(bytes, 0, bytes.Length);
+            }
+
+            // Response 처리
+            string responseText = string.Empty;
+            using (WebResponse resp = request.GetResponse())
+            {
+                Stream respStream = resp.GetResponseStream();
+                using (StreamReader sr = new StreamReader(respStream))
+                {
+                    responseText = sr.ReadToEnd();
+                }
+            }
+
+            //Console.WriteLine(responseText);
+            ListParamJsonData result = JsonConvert.DeserializeObject<ListParamJsonData>(responseText);
+
+            return result.response;
+
         }
 
         private void InitializeGridControl2()
@@ -118,18 +221,18 @@ namespace DynaRAP.UControl
 
             //gridView2.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
 
-            repositoryItemComboBox1.TextEditStyle = TextEditStyles.DisableTextEditor;
-            repositoryItemComboBox1.SelectedIndexChanged += RepositoryItemComboBox1_SelectedIndexChanged;
-            repositoryItemComboBox1.BeforePopup += RepositoryItemComboBox1_BeforePopup;
+            repositoryItemComboBox2.TextEditStyle = TextEditStyles.DisableTextEditor;
+            repositoryItemComboBox2.SelectedIndexChanged += RepositoryItemComboBox2_SelectedIndexChanged;
+            repositoryItemComboBox2.BeforePopup += RepositoryItemComboBox2_BeforePopup;
 
             string importType = ConfigurationManager.AppSettings["ImportType"];
 
             string[] types = importType.Split(',');
 
-            repositoryItemComboBox1.Items.Clear();
+            repositoryItemComboBox2.Items.Clear();
             foreach (string type in types)
             {
-                repositoryItemComboBox1.Items.Add(type);
+                repositoryItemComboBox2.Items.Add(type);
             }
 
             gridView2.OptionsView.ShowColumnHeaders = true;
@@ -182,6 +285,14 @@ namespace DynaRAP.UControl
         }
 
         private void RepositoryItemComboBox1_BeforePopup(object sender, EventArgs e)
+        {
+        }
+
+        private void RepositoryItemComboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void RepositoryItemComboBox2_BeforePopup(object sender, EventArgs e)
         {
         }
 
@@ -463,6 +574,24 @@ namespace DynaRAP.UControl
 
         private void btnSaveSplittedInterval_ButtonClick(object sender, EventArgs e)
         {
+            if(cboImportType.SelectedIndex < 0)
+            {
+                MessageBox.Show("입력타입을 선택하세요.");
+                return;
+            }
+
+            if (luePresetList.GetColumnValue("PresetPack") == null)
+            {
+                MessageBox.Show("매칭테이블을 선택하세요.");
+                return;
+            }
+
+            if (gridView2.RowCount <= 0)
+            {
+                MessageBox.Show("분할 구간이 없습니다.");
+                return;
+            }
+
             bool bResult = Import();
 
             if (bResult)
@@ -477,8 +606,11 @@ namespace DynaRAP.UControl
             import.command = "upload";
             import.sourcePath = csvFilePath;
             import.flightAt = string.Format("{0:yyyy-MM-dd}", DateTime.Now);
-            import.dataType = "flight";
+            import.dataType = cboImportType.Text.ToLower();
             import.forcedImport = chkForcedImport.Checked;
+            import.lpfOption = new LpfOption();
+            import.hpfOption = new HpfOption();
+            import.tempMappingParams = new Dictionary<string, string>();
             import.parts = new List<Part>();
 
             string presetPack = String.Empty;
@@ -487,7 +619,26 @@ namespace DynaRAP.UControl
 
             import.presetPack = presetPack;
 
-            for(int i = 0; i < gridView2.RowCount; i++)
+            import.lpfOption.n = edtLPFn.Text;
+            import.lpfOption.cutoff = edtLPFcutoff.Text;
+            import.lpfOption.btype = cboLPFbtype.Text;
+
+            import.hpfOption.n = edtHPFn.Text;
+            import.hpfOption.cutoff = edtHPFcutoff.Text;
+            import.hpfOption.btype = cboHPFbtype.Text;
+
+            for (int i = 0; i < gridView1.RowCount; i++)
+            {
+                string paramName = gridView1.GetRowCellValue(i, "UnmappedParamName") == null ? "" : gridView1.GetRowCellValue(i, "UnmappedParamName").ToString();
+                string paramKey = gridView1.GetRowCellValue(i, "ParamKey") == null ? "" : gridView1.GetRowCellValue(i, "ParamKey").ToString();
+                if (string.IsNullOrEmpty(paramKey))
+                {
+                    paramKey = "skip";
+                }
+                import.tempMappingParams.Add(paramName, paramKey);
+            }
+
+            for (int i = 0; i < gridView2.RowCount; i++)
             {
                 string splitName = gridView2.GetRowCellValue(i, "SplitName") == null ? "" : gridView2.GetRowCellValue(i, "SplitName").ToString();
                 string startTime = gridView2.GetRowCellValue(i, "StartTime") == null ? "" : gridView2.GetRowCellValue(i, "StartTime").ToString();
@@ -545,9 +696,19 @@ namespace DynaRAP.UControl
                 }
                 else
                 {
-                // progress 확인
-                ImportProgressForm form = new ImportProgressForm(result.response.seq);
-                form.ShowDialog();
+                    // progress 확인
+                    //ImportProgressForm form = new ImportProgressForm("116a1460354a7065cb1393aa94a529e14221be82a5bae3bbccc8b1a5b6b59680"); // test
+                    ImportProgressForm form = new ImportProgressForm(result.response.seq);
+                    if (form.ShowDialog() == DialogResult.Cancel)
+                    {
+                        List<UnmappedParamData> unmappedList = new List<UnmappedParamData>();
+                        foreach (string type in form.NotMappedParams)
+                        {
+                            unmappedList.Add(new UnmappedParamData(type, ""));
+                        }
+                        this.gridControl1.DataSource = unmappedList;
+                        gridView1.RefreshData();
+                    }
                 }
             }
             return true;
@@ -567,8 +728,8 @@ namespace DynaRAP.UControl
 #endif
             {
 #if DEBUG
-                csvFilePath = @"C:\temp\a.xls";
-                lblFlyingData.Text = @"C:\temp\a.xls";
+                csvFilePath = @"C:\temp\a_test.xls";
+                lblFlyingData.Text = @"C:\temp\a_test.xls";
                 StreamReader sr = new StreamReader(csvFilePath);
 #else
                 csvFilePath = dlg.FileName;

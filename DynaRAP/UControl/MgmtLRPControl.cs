@@ -416,6 +416,13 @@ namespace DynaRAP.UControl
         private List<ResponseParam> GetParamList()
         {
             string url = ConfigurationManager.AppSettings["UrlParam"];
+            //string sendData = @"
+            //{
+            //""command"":""list"",
+            //""pageNo"":1,
+            //""pageSize"":3000,
+            //""resultDataType"": ""map""
+            //}";
             string sendData = @"
             {
             ""command"":""list"",

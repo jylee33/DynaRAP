@@ -131,9 +131,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\DLL_DATA.cs" />
+    <Compile Include="Common\ImportType.cs" />
     <Compile Include="Common\DrawTypes.cs" />
     <Compile Include="Common\ParamProperty.cs" />
     <Compile Include="Common\SeriesPointData.cs" />
+    <Compile Include="Data\UnmappedParamData.cs" />
     <Compile Include="Data\ImportIntervalData.cs" />
     <Compile Include="Data\SBListResponse.cs" />
     <Compile Include="Data\PartInfoResponse.cs" />

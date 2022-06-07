@@ -5,6 +5,7 @@ using DevExpress.XtraEditors.Repository;
 using DevExpress.XtraTreeList.Columns;
 using DevExpress.XtraTreeList.Nodes;
 using DevExpress.XtraTreeList.StyleFormatConditions;
+using DynaRAP.Common;
 using DynaRAP.Forms;
 using DynaRAP.TEST;
 using DynaRAP.UControl;
@@ -38,7 +39,8 @@ namespace DynaRAP
         DockPanel panelBottom = null;
 
         StartScreenControl startControl = null;
-        ImportModuleControl importModuleControl = null;
+        ImportModuleControl flyingImportModuleControl = null;
+        ImportModuleControl analysisImportModuleControl = null;
         SBModuleControl sbModuleControl = null;
         BinModuleControl binModuleControl = null;
         MgmtLRPControl mgmtLRPControl = null;
@@ -92,7 +94,8 @@ namespace DynaRAP
             set => csvTableControl = value; 
         }
         public StartScreenControl StartControl { get => startControl; set => startControl = value; }
-        public ImportModuleControl ImportModuleControl { get => importModuleControl; set => importModuleControl = value; }
+        public ImportModuleControl FlyingImportModuleControl { get => flyingImportModuleControl; set => flyingImportModuleControl = value; }
+        public ImportModuleControl AnalysisImportModuleControl { get => analysisImportModuleControl; set => analysisImportModuleControl = value; }
         public SBModuleControl SbModuleControl { get => sbModuleControl; set => sbModuleControl = value; }
         public BinModuleControl BinModuleControl { get => binModuleControl; set => binModuleControl = value; }
         public MgmtLRPControl MgmtLRPControl { get => mgmtLRPControl; set => mgmtLRPControl = value; }
@@ -138,16 +141,30 @@ namespace DynaRAP
                 tabbedView1.ActivateDocument(startControl);
             }
 
-            if (importModuleControl == null)
+            if (flyingImportModuleControl == null)
             {
-                importModuleControl = new ImportModuleControl();
-                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(importModuleControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
-                doc.Caption = "Import Module";
-                tabbedView1.ActivateDocument(importModuleControl);
+                flyingImportModuleControl = new ImportModuleControl(ImportType.FLYING);
+                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(flyingImportModuleControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
+                doc.Tag = "Flying";
+                doc.Caption = "비행데이터 Import";
+                tabbedView1.ActivateDocument(flyingImportModuleControl);
             }
             else
             {
-                tabbedView1.ActivateDocument(importModuleControl);
+                tabbedView1.ActivateDocument(flyingImportModuleControl);
+            }
+
+            if (analysisImportModuleControl == null)
+            {
+                analysisImportModuleControl = new ImportModuleControl(ImportType.ANALYSIS);
+                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(analysisImportModuleControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
+                doc.Tag = "Analysis";
+                doc.Caption = "해석데이터 Import";
+                tabbedView1.ActivateDocument(analysisImportModuleControl);
+            }
+            else
+            {
+                tabbedView1.ActivateDocument(analysisImportModuleControl);
             }
 
             if (sbModuleControl == null)
@@ -223,13 +240,14 @@ namespace DynaRAP
             //}
 
 #if DEBUG
-            tabbedView1.ActivateDocument(binModuleControl);
+            tabbedView1.ActivateDocument(flyingImportModuleControl);
 #else
+            tabbedView1.RemoveDocument(flyingImportModuleControl);
+            tabbedView1.RemoveDocument(analysisImportModuleControl);
             tabbedView1.RemoveDocument(mgmtMatchingTableControl);
             tabbedView1.RemoveDocument(sbModuleControl);
             tabbedView1.RemoveDocument(binModuleControl);
             tabbedView1.RemoveDocument(mgmtLRPControl);
-            tabbedView1.RemoveDocument(importModuleControl);
             tabbedView1.RemoveDocument(plotModuleControl);
             tabbedView1.ActivateDocument(startControl);
 #endif
@@ -318,7 +336,10 @@ namespace DynaRAP
             }
             else if (e.Document.Control is ImportModuleControl)
             {
-                importModuleControl = null;
+                if(e.Document.Tag.ToString().Equals("Flying"))
+                    flyingImportModuleControl = null;
+                else if(e.Document.Tag.ToString().Equals("Analysis"))
+                    analysisImportModuleControl = null;
             }
             else if (e.Document.Control is SBModuleControl)
             {
@@ -475,16 +496,17 @@ namespace DynaRAP
 
         private void btnImportModule_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            if (importModuleControl == null)
+            if (flyingImportModuleControl == null)
             {
-                importModuleControl = new ImportModuleControl();
-                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(importModuleControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
+                flyingImportModuleControl = new ImportModuleControl(ImportType.FLYING);
+                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(flyingImportModuleControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
+                doc.Tag = "Flying";
                 doc.Caption = "비행데이터 Import";
-                tabbedView1.ActivateDocument(importModuleControl);
+                tabbedView1.ActivateDocument(flyingImportModuleControl);
             }
             else
             {
-                tabbedView1.ActivateDocument(importModuleControl);
+                tabbedView1.ActivateDocument(flyingImportModuleControl);
             }
 
         }
@@ -534,7 +556,18 @@ namespace DynaRAP
 
         private void btnImportAnalysis_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-
+            if (analysisImportModuleControl == null)
+            {
+                analysisImportModuleControl = new ImportModuleControl(ImportType.ANALYSIS);
+                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(analysisImportModuleControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
+                doc.Tag = "Analysis";
+                doc.Caption = "해석데이터 Import";
+                tabbedView1.ActivateDocument(analysisImportModuleControl);
+            }
+            else
+            {
+                tabbedView1.ActivateDocument(analysisImportModuleControl);
+            }
         }
 
         private void btnLPF_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
