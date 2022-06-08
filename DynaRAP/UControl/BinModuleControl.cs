@@ -102,6 +102,9 @@ namespace DynaRAP.UControl
         {
             //paramList
             repositoryItemComboBox1.TextEditStyle = TextEditStyles.DisableTextEditor;
+            repositoryItemComboBox1.SelectedIndexChanged += RepositoryItemComboBox1_SelectedIndexChanged;
+            repositoryItemComboBox1.BeforePopup += RepositoryItemComboBox1_BeforePopup;
+            repositoryItemComboBox1.PopupFormMinSize = new System.Drawing.Size(0, 500);
 
             foreach (ResponseParam param in paramList)
             {
@@ -147,6 +150,79 @@ namespace DynaRAP.UControl
             this.repositoryItemImageComboBox1.Buttons[0].Visible = false;
 
             this.repositoryItemImageComboBox1.Click += RepositoryItemImageComboBox1_Click;
+        }
+
+        private void RepositoryItemComboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var combo = sender as ComboBoxEdit;
+            if (combo.SelectedIndex != -1)
+            {
+                string paramKey = combo.SelectedItem as string;
+                if (string.IsNullOrEmpty(paramKey) == false)
+                {
+                    //ResponsePreset preset = presetList.Find(x => x.presetPack.Equals(presetPack));
+                    ResponseParam param = paramList.Find(x => x.paramKey.Equals(paramKey));
+                    if (param != null)
+                    {
+                        string adamsKey = param.adamsKey;
+                        string zaeroKey = param.zaeroKey;
+                        string grtKey = param.grtKey;
+                        string fltpKey = param.fltpKey;
+                        string fltsKey = param.fltsKey;
+                        string partInfo = param.partInfo;
+                        string partInfoSub = param.partInfoSub;
+
+                        bool bFind = false;
+
+                        for (int i = 0; i < gridView1.RowCount; i++)
+                        {
+                            string adams = gridView1.GetRowCellValue(i, "AdamsKey") == null ? "" : gridView1.GetRowCellValue(i, "AdamsKey").ToString();
+                            string zaero = gridView1.GetRowCellValue(i, "ZaeroKey") == null ? "" : gridView1.GetRowCellValue(i, "ZaeroKey").ToString();
+                            string grt = gridView1.GetRowCellValue(i, "GrtKey") == null ? "" : gridView1.GetRowCellValue(i, "GrtKey").ToString();
+                            string fltp = gridView1.GetRowCellValue(i, "FltpKey") == null ? "" : gridView1.GetRowCellValue(i, "FltpKey").ToString();
+                            string flts = gridView1.GetRowCellValue(i, "FltsKey") == null ? "" : gridView1.GetRowCellValue(i, "FltsKey").ToString();
+                            //string part1 = gridView1.GetRowCellValue(i, "PartInfo") == null ? "" : gridView1.GetRowCellValue(i, "PartInfo").ToString();
+                            //string part2 = gridView1.GetRowCellValue(i, "PartInfoSub") == null ? "" : gridView1.GetRowCellValue(i, "PartInfoSub").ToString();
+
+                            if ((string.IsNullOrEmpty(adams) == false && adams.Equals(adamsKey))
+                                || (string.IsNullOrEmpty(zaero) == false && zaero.Equals(zaeroKey))
+                                || (string.IsNullOrEmpty(grt) == false && grt.Equals(grtKey))
+                                || (string.IsNullOrEmpty(fltp) == false && fltp.Equals(fltpKey))
+                                || (string.IsNullOrEmpty(flts) == false && flts.Equals(fltsKey))
+                                //|| (string.IsNullOrEmpty(part1) == false && part1.Equals(partInfo))
+                                //|| (string.IsNullOrEmpty(part2) == false && part2.Equals(partInfoSub))
+                                )
+                            {
+                                bFind = true;
+                                break;
+                            }
+                        }
+
+                        if (bFind)
+                        {
+                            combo.SelectedIndex = prevSelected;
+                        }
+                        else
+                        {
+                            gridView1.SetRowCellValue(gridView1.FocusedRowHandle, "AdamsKey", adamsKey);
+                            gridView1.SetRowCellValue(gridView1.FocusedRowHandle, "ZaeroKey", zaeroKey);
+                            gridView1.SetRowCellValue(gridView1.FocusedRowHandle, "GrtKey", grtKey);
+                            gridView1.SetRowCellValue(gridView1.FocusedRowHandle, "FltpKey", fltpKey);
+                            gridView1.SetRowCellValue(gridView1.FocusedRowHandle, "FltsKey", fltsKey);
+                            gridView1.SetRowCellValue(gridView1.FocusedRowHandle, "PartInfo", partInfo);
+                            gridView1.SetRowCellValue(gridView1.FocusedRowHandle, "PartInfoSub", partInfoSub);
+                        }
+
+                    }
+                }
+            }
+        }
+
+        int prevSelected = -1;
+        private void RepositoryItemComboBox1_BeforePopup(object sender, EventArgs e)
+        {
+            var combo = sender as ComboBoxEdit;
+            prevSelected = combo.SelectedIndex;
         }
 
         private void RepositoryItemImageComboBox1_Click(object sender, EventArgs e)

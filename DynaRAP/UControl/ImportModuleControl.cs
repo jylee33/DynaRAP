@@ -30,12 +30,12 @@ namespace DynaRAP.UControl
     {
         string selectedFuselage = string.Empty;
         Dictionary<string, List<string>> dicData = new Dictionary<string, List<string>>();
-        List<ImportParamControl> paramList = new List<ImportParamControl>();
+        List<ImportParamControl> paramControlList = new List<ImportParamControl>();
+        List<ResponseParam> paramList = new List<ResponseParam>();
         //List<ImportIntervalControl> splitList = new List<ImportIntervalControl>();
         List<ResponsePreset> presetList = null;
         List<PresetData> pComboList = null;
         List<ImportIntervalData> intervalList = null;
-
         string csvFilePath = string.Empty;
         object minValue = null;
         object maxValue = null;
@@ -133,9 +133,10 @@ namespace DynaRAP.UControl
             repositoryItemComboBox1.BeforePopup += RepositoryItemComboBox1_BeforePopup;
             repositoryItemComboBox1.PopupFormMinSize = new System.Drawing.Size(0, 500);
 
-            List<ResponseParam> paramList = GetParamList();
+            paramList = GetParamList();
 
             repositoryItemComboBox1.Items.Clear();
+            repositoryItemComboBox1.Items.Add("skip");
             foreach (ResponseParam param in paramList)
             {
                 repositoryItemComboBox1.Items.Add(param.paramKey);
@@ -282,10 +283,44 @@ namespace DynaRAP.UControl
 
         private void RepositoryItemComboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            var combo = sender as ComboBoxEdit;
+            if (combo.SelectedIndex != -1)
+            {
+                string paramKey = combo.SelectedItem as string;
+                if (string.IsNullOrEmpty(paramKey) == false)
+                {
+                    bool bFind = false;
+
+                    for (int i = 0; i < gridView1.RowCount; i++)
+                    {
+                        string paramKey2 = gridView1.GetRowCellValue(i, "ParamKey") == null ? "" : gridView1.GetRowCellValue(i, "ParamKey").ToString();
+
+                        if (i == gridView1.FocusedRowHandle || paramKey.Equals("skip"))
+                        {
+                            continue;
+                        }
+
+                        if (string.IsNullOrEmpty(paramKey2) == false && paramKey2.Equals("skip") == false && paramKey2.Equals(paramKey))
+                        {
+                            bFind = true;
+                            break;
+                        }
+                    }
+
+                    if (bFind)
+                    {
+                        combo.SelectedIndex = prevSelected;
+                    }
+
+                }
+            }
         }
 
+        int prevSelected = -1;
         private void RepositoryItemComboBox1_BeforePopup(object sender, EventArgs e)
         {
+            var combo = sender as ComboBoxEdit;
+            prevSelected = combo.SelectedIndex;
         }
 
         private void RepositoryItemComboBox2_SelectedIndexChanged(object sender, EventArgs e)
@@ -433,7 +468,7 @@ namespace DynaRAP.UControl
             //ctrl.Dock = DockStyle.Fill;
             flowLayoutPanel3.Controls.Add(ctrl);
             flowLayoutPanel3.Controls.SetChildIndex(ctrl, paramIndex);
-            paramList.Add(ctrl);
+            paramControlList.Add(ctrl);
 
             paramIndex++;
             if (paramIndex <= MAX_CHART_CNT)
@@ -446,7 +481,7 @@ namespace DynaRAP.UControl
         {
             ImportParamControl ctrl = sender as ImportParamControl;
             flowLayoutPanel3.Controls.Remove(ctrl);
-            paramList.Remove(ctrl);
+            paramControlList.Remove(ctrl);
             ctrl.Dispose();
 
             paramIndex--;
@@ -464,7 +499,7 @@ namespace DynaRAP.UControl
 
             Debug.Print(string.Format("-----> MinValue : {0}, MaxValue : {1}", minValue, maxValue));
 
-            foreach(ImportParamControl ctrl in paramList)
+            foreach(ImportParamControl ctrl in paramControlList)
             {
                 if (ctrl == me)
                     continue;
@@ -489,14 +524,14 @@ namespace DynaRAP.UControl
         {
             if(minValue == null || maxValue == null)
             {
-                if(paramList.Count == 0)
+                if(paramControlList.Count == 0)
                 {
                     MessageBox.Show(Properties.Resources.StringAddParameter);
                     return;
                 }
                 else
                 {
-                    ImportParamControl paramCtrl =  paramList[0] as ImportParamControl;
+                    ImportParamControl paramCtrl =  paramControlList[0] as ImportParamControl;
                     paramCtrl.Sync();
                 }
             }
@@ -510,12 +545,12 @@ namespace DynaRAP.UControl
             DataTable dt = null;
             int recordCnt = 0;
 
-            if(paramList != null && paramList.Count > 0)
+            if(paramControlList != null && paramControlList.Count > 0)
             {
                 DateTime sTime = Convert.ToDateTime(minValue.ToString());
                 DateTime eTime = Convert.ToDateTime(maxValue.ToString());
 
-                dt = GetIntervalData(paramList[0].Dt, sTime, eTime);
+                dt = GetIntervalData(paramControlList[0].Dt, sTime, eTime);
                 recordCnt = dt.Rows.Count;
             }
 
@@ -630,7 +665,7 @@ namespace DynaRAP.UControl
             for (int i = 0; i < gridView1.RowCount; i++)
             {
                 string paramName = gridView1.GetRowCellValue(i, "UnmappedParamName") == null ? "" : gridView1.GetRowCellValue(i, "UnmappedParamName").ToString();
-                string paramKey = gridView1.GetRowCellValue(i, "ParamKey") == null ? "" : gridView1.GetRowCellValue(i, "ParamKey").ToString();
+                string paramKey = gridView1.GetRowCellValue(i, "ParamKey") == null ? "skip" : gridView1.GetRowCellValue(i, "ParamKey").ToString();
                 if (string.IsNullOrEmpty(paramKey))
                 {
                     paramKey = "skip";
@@ -704,7 +739,7 @@ namespace DynaRAP.UControl
                         List<UnmappedParamData> unmappedList = new List<UnmappedParamData>();
                         foreach (string type in form.NotMappedParams)
                         {
-                            unmappedList.Add(new UnmappedParamData(type, ""));
+                            unmappedList.Add(new UnmappedParamData(type, "skip"));
                         }
                         this.gridControl1.DataSource = unmappedList;
                         gridView1.RefreshData();

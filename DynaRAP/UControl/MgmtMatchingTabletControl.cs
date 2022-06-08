@@ -652,6 +652,7 @@ namespace DynaRAP.UControl
             repositoryItemComboBox1.TextEditStyle = TextEditStyles.DisableTextEditor;
             repositoryItemComboBox1.SelectedIndexChanged += RepositoryItemComboBox1_SelectedIndexChanged;
             repositoryItemComboBox1.BeforePopup += RepositoryItemComboBox1_BeforePopup;
+            repositoryItemComboBox1.PopupFormMinSize = new System.Drawing.Size(0, 500);
 
             foreach (ResponseParam param in paramList)
             {
