@@ -172,6 +172,10 @@
   <data name="StringDeletePreset" xml:space="preserve">
     <value>{0} 프리셋을 삭제하시겠습니까?</value>
   </data>
+  <data name="StringDLLCount" xml:space="preserve">
+    <value>기준데이터 : {0}세트</value>
+    <comment>S</comment>
+  </data>
   <data name="StringNoSelectedRegion" xml:space="preserve">
     <value>선택된 영역이 없습니다.</value>
   </data>

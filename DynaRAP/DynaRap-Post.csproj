@@ -135,12 +135,29 @@
     <Compile Include="Common\DrawTypes.cs" />
     <Compile Include="Common\ParamProperty.cs" />
     <Compile Include="Common\SeriesPointData.cs" />
+    <Compile Include="Data\DllParamDataListResponse.cs" />
+    <Compile Include="Data\DllParamListResponse.cs" />
+    <Compile Include="Data\DllParamResponse.cs" />
+    <Compile Include="Data\DllResponse.cs" />
+    <Compile Include="Data\DllListResponse.cs" />
     <Compile Include="Data\UnmappedParamData.cs" />
     <Compile Include="Data\ImportIntervalData.cs" />
     <Compile Include="Data\SBListResponse.cs" />
     <Compile Include="Data\PartInfoResponse.cs" />
     <Compile Include="Data\PropListResponse.cs" />
     <Compile Include="Data\PresetParamData.cs" />
+    <Compile Include="Forms\AddDllParamForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AddDllParamForm.Designer.cs">
+      <DependentUpon>AddDllParamForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\AddDllForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AddDllForm.Designer.cs">
+      <DependentUpon>AddDllForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\CreateScenarioProgressForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -279,6 +296,12 @@
     <Compile Include="TEST\TestSplitContainerForm.Designer.cs">
       <DependentUpon>TestSplitContainerForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="TEST\TestTab1Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TEST\TestTab1Form.Designer.cs">
+      <DependentUpon>TestTab1Form.cs</DependentUpon>
+    </Compile>
     <Compile Include="TEST\TestWebForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -314,6 +337,18 @@
     </Compile>
     <Compile Include="UControl\CreateSBProgressForm.Designer.cs">
       <DependentUpon>CreateSBProgressForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\DllParamControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\DllParamControl.Designer.cs">
+      <DependentUpon>DllParamControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\ImportDLLControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\ImportDLLControl.Designer.cs">
+      <DependentUpon>ImportDLLControl.cs</DependentUpon>
     </Compile>
     <Compile Include="UControl\ImportProgressForm.cs">
       <SubType>Form</SubType>
@@ -500,6 +535,12 @@
     <Compile Include="XtraForm1.Designer.cs">
       <DependentUpon>XtraForm1.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Forms\AddDllParamForm.resx">
+      <DependentUpon>AddDllParamForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AddDllForm.resx">
+      <DependentUpon>AddDllForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\CreateScenarioProgressForm.resx">
       <DependentUpon>CreateScenarioProgressForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -582,6 +623,9 @@
     <EmbeddedResource Include="TEST\TestSplitContainerForm.resx">
       <DependentUpon>TestSplitContainerForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="TEST\TestTab1Form.resx">
+      <DependentUpon>TestTab1Form.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="TEST\TestWebForm.resx">
       <DependentUpon>TestWebForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -605,6 +649,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\CreateSBProgressForm.resx">
       <DependentUpon>CreateSBProgressForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\DllParamControl.resx">
+      <DependentUpon>DllParamControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\ImportDLLControl.resx">
+      <DependentUpon>ImportDLLControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\ImportProgressForm.resx">
       <DependentUpon>ImportProgressForm.cs</DependentUpon>

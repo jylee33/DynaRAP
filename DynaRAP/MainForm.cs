@@ -41,6 +41,7 @@ namespace DynaRAP
         StartScreenControl startControl = null;
         ImportModuleControl flyingImportModuleControl = null;
         ImportModuleControl analysisImportModuleControl = null;
+        ImportDLLControl dllImportModuleControl = null;
         SBModuleControl sbModuleControl = null;
         BinModuleControl binModuleControl = null;
         MgmtLRPControl mgmtLRPControl = null;
@@ -96,6 +97,7 @@ namespace DynaRAP
         public StartScreenControl StartControl { get => startControl; set => startControl = value; }
         public ImportModuleControl FlyingImportModuleControl { get => flyingImportModuleControl; set => flyingImportModuleControl = value; }
         public ImportModuleControl AnalysisImportModuleControl { get => analysisImportModuleControl; set => analysisImportModuleControl = value; }
+        public ImportDLLControl DllImportModuleControl { get => dllImportModuleControl; set => dllImportModuleControl = value; }
         public SBModuleControl SbModuleControl { get => sbModuleControl; set => sbModuleControl = value; }
         public BinModuleControl BinModuleControl { get => binModuleControl; set => binModuleControl = value; }
         public MgmtLRPControl MgmtLRPControl { get => mgmtLRPControl; set => mgmtLRPControl = value; }
@@ -165,6 +167,19 @@ namespace DynaRAP
             else
             {
                 tabbedView1.ActivateDocument(analysisImportModuleControl);
+            }
+
+            if (dllImportModuleControl == null)
+            {
+                dllImportModuleControl = new ImportDLLControl();
+                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(dllImportModuleControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
+                doc.Tag = "DLL";
+                doc.Caption = "DLL Import";
+                tabbedView1.ActivateDocument(dllImportModuleControl);
+            }
+            else
+            {
+                tabbedView1.ActivateDocument(dllImportModuleControl);
             }
 
             if (sbModuleControl == null)
@@ -240,10 +255,11 @@ namespace DynaRAP
             //}
 
 #if DEBUG
-            tabbedView1.ActivateDocument(flyingImportModuleControl);
+            tabbedView1.ActivateDocument(dllImportModuleControl);
 #else
             tabbedView1.RemoveDocument(flyingImportModuleControl);
             tabbedView1.RemoveDocument(analysisImportModuleControl);
+            tabbedView1.RemoveDocument(dllImportModuleControl);
             tabbedView1.RemoveDocument(mgmtMatchingTableControl);
             tabbedView1.RemoveDocument(sbModuleControl);
             tabbedView1.RemoveDocument(binModuleControl);
@@ -340,6 +356,10 @@ namespace DynaRAP
                     flyingImportModuleControl = null;
                 else if(e.Document.Tag.ToString().Equals("Analysis"))
                     analysisImportModuleControl = null;
+            }
+            else if (e.Document.Control is ImportDLLControl)
+            {
+                dllImportModuleControl = null;
             }
             else if (e.Document.Control is SBModuleControl)
             {
@@ -542,18 +562,6 @@ namespace DynaRAP
 
         }
 
-        private void btnDLLImport_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            //OpenFileDialog dlg = new OpenFileDialog();
-            //dlg.InitialDirectory = "C:\\";
-            //dlg.Filter = "Excel files (*.xls, *.xlsx)|*.xls; *.xlsx|Comma Separated Value files (CSV)|*.csv|모든 파일 (*.*)|*.*";
-
-            //if (dlg.ShowDialog() == DialogResult.OK)
-            //{
-            //    //dlg.FileName;
-            //}
-        }
-
         private void btnImportAnalysis_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             if (analysisImportModuleControl == null)
@@ -569,6 +577,23 @@ namespace DynaRAP
                 tabbedView1.ActivateDocument(analysisImportModuleControl);
             }
         }
+
+        private void btnDLLImport_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            if (dllImportModuleControl == null)
+            {
+                dllImportModuleControl = new ImportDLLControl();
+                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(dllImportModuleControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
+                doc.Tag = "DLL";
+                doc.Caption = "DLL Import";
+                tabbedView1.ActivateDocument(dllImportModuleControl);
+            }
+            else
+            {
+                tabbedView1.ActivateDocument(dllImportModuleControl);
+            }
+        }
+
 
         private void btnLPF_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
@@ -885,14 +910,14 @@ namespace DynaRAP
             //GridGroupingForm form = new GridGroupingForm();
             //form.Show();
 
-            TestGrid2Form form2 = new TestGrid2Form();
-            form2.Show();
-
             //TestGrid3Form form3 = new TestGrid3Form();
             //form3.Show();
 
             //TestGridForm form4 = new TestGridForm();
             //form4.Show();
+
+            TestGrid2Form form2 = new TestGrid2Form();
+            form2.Show();
 
         }
 
@@ -905,6 +930,12 @@ namespace DynaRAP
         private void barButtonItem3_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             TestSplitContainerForm form = new TestSplitContainerForm();
+            form.Show();
+        }
+
+        private void barButtonItem4_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            TestTab1Form form = new TestTab1Form();
             form.Show();
         }
     }

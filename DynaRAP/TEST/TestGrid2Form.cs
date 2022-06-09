@@ -3,6 +3,7 @@ using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Controls;
 using DevExpress.XtraEditors.Repository;
 using DevExpress.XtraGrid.Columns;
+using DevExpress.XtraGrid.Views.Grid;
 using DynaRAP.Data;
 using System;
 using System.Collections.Generic;
@@ -70,7 +71,7 @@ namespace DynaRAP.TEST
 
             gridView1.OptionsView.ShowColumnHeaders = true;
             gridView1.OptionsView.ShowGroupPanel = false;
-            gridView1.OptionsView.ShowIndicator = false;
+            gridView1.OptionsView.ShowIndicator = true;
             gridView1.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.False;
             gridView1.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.False;
             gridView1.OptionsView.ColumnAutoWidth = true;
