@@ -4,6 +4,7 @@ using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Columns;
 using DevExpress.XtraGrid.Views.Grid;
 using DynaRAP.Data;
+using DynaRAP.UTIL;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,7 @@ namespace DynaRAP.UControl
     {
         string dllSeq = string.Empty;
         string dllParamSeq = string.Empty;
+        string paramType = string.Empty;
 
         List<ResponseDLLParamData> dllParamDataList = new List<ResponseDLLParamData>();
         List<DllParamData> dllDataGridList = new List<DllParamData>();
@@ -33,10 +35,11 @@ namespace DynaRAP.UControl
             InitializeComponent();
         }
 
-        public DllParamControl(string dllSeq, string dllParamSeq) : this()
+        public DllParamControl(string dllSeq, string dllParamSeq, string paramType) : this()
         {
             this.dllSeq = dllSeq;
             this.dllParamSeq = dllParamSeq;
+            this.paramType = paramType;
         }
 
         private void DllParamControl_Load(object sender, EventArgs e)
@@ -54,13 +57,22 @@ namespace DynaRAP.UControl
             dllDataGridList.Clear();
             foreach (ResponseDLLParamData data in dllParamDataList)
             {
-                dllDataGridList.Add(new DllParamData(data.seq, data.paramVal.ToString()));
+                if (this.paramType.Equals("data"))
+                {
+                    dllDataGridList.Add(new DllParamData(data.seq, data.paramVal.ToString(), 1));
+                }
+                else
+                {
+                    dllDataGridList.Add(new DllParamData(data.seq, data.paramValStr.ToString(), 1));
+                }
             }
             gridControl1.DataSource = dllDataGridList;
 
             //gridControl1.UseEmbeddedNavigator = true;
-            gridControl1.PreviewKeyDown += GridControl1_PreviewKeyDown;
 
+            //gridView1.OptionsView.NewItemRowPosition = NewItemRowPosition.Top;
+            //gridView1.InitNewRow += GridView1_InitNewRow;
+            
             gridView1.OptionsView.ShowColumnHeaders = true;
             gridView1.OptionsView.ShowGroupPanel = false;
             gridView1.OptionsView.ShowIndicator = true;
@@ -76,7 +88,7 @@ namespace DynaRAP.UControl
             gridView1.OptionsSelection.EnableAppearanceFocusedCell = false;
 
             gridView1.CustomDrawRowIndicator += GridView1_CustomDrawRowIndicator;
-            gridView1.OptionsBehavior.AllowAddRows = DefaultBoolean.True;
+            //gridView1.OptionsBehavior.AllowAddRows = DefaultBoolean.True;
 
             GridColumn colData = gridView1.Columns["Data"];
             colData.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
@@ -84,24 +96,146 @@ namespace DynaRAP.UControl
             //colData.OptionsColumn.FixedWidth = true;
             //colData.Width = 240;
             //colData.Caption = "UnmappedParamName";
-            //colData.OptionsColumn.ReadOnly = true;
+            colData.OptionsColumn.ReadOnly = true;
 
-            //gridView1.OptionsView.NewItemRowPosition = NewItemRowPosition.Bottom;
-            //gridView1.InitNewRow += GridView1_InitNewRow;
+            GridColumn colDel = gridView1.Columns["Del"];
+            colDel.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
+            colDel.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
+            colDel.OptionsColumn.FixedWidth = true;
+            colDel.Width = 40;
+            colDel.Caption = "삭제";
+            colDel.OptionsColumn.ReadOnly = true;
 
+            this.repositoryItemImageComboBox1.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(0, 0));
+            this.repositoryItemImageComboBox1.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(1, 1));
+            this.repositoryItemImageComboBox1.GlyphAlignment = HorzAlignment.Center;
+            this.repositoryItemImageComboBox1.Buttons[0].Visible = false;
+            this.repositoryItemImageComboBox1.Click += RepositoryItemImageComboBox1_Click;
+
+            //gridView1.BestFitColumns();
+        }
+
+        private void RepositoryItemImageComboBox1_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show(Properties.Resources.StringDelete, Properties.Resources.StringConfirmation, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+            {
+                return;
+            }
+
+            //dllSeq = gridView1.GetRowCellValue(gridView1.FocusedRowHandle, "Seq").ToString();
+            //DllResponse result = RemoveDll(dllSeq);
+            //if (result.code == 200)
+            //{
+            //    gridView1.DeleteRow(gridView1.FocusedRowHandle);
+            //    lblDLLCount.Text = string.Format(Properties.Resources.StringSplitCount, dllDataList.Count);
+            //}
+            //else
+            //{
+            //    MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //}
         }
 
         private void btnAddNewRow_Click(object sender, EventArgs e)
         {
-            gridView1.AddNewRow();
+            string dataName = string.Empty;
+            if (this.paramType.Equals("data"))
+            {
+                dataName = Prompt.ShowDialog("데이터 이름", "데이터 추가", true);
+            }
+            else
+            {
+                dataName = Prompt.ShowDialog("데이터 이름", "데이터 추가");
+            }
+
+            if (string.IsNullOrEmpty(dataName))
+            {
+                //MessageBox.Show("데이터를 입력하세요", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            DllParamDataResponse result = AddDllParamData(dataName);
+            if (result != null)
+            {
+                if (result.code == 200)
+                {
+                    if (this.paramType.Equals("data"))
+                    {
+                        dllDataGridList.Add(new DllParamData(result.response.seq, result.response.paramVal.ToString(), 1));
+                    }
+                    else
+                    {
+                        dllDataGridList.Add(new DllParamData(result.response.seq, result.response.paramVal.ToString(), 1));
+                    }
+                    gridControl1.DataSource = dllDataGridList;
+                    //gridControl1.Update();
+                    gridView1.RefreshData();
+                }
+                else
+                {
+                    MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
 
-        private void GridControl1_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        private DllParamDataResponse AddDllParamData(string dataName)
         {
-            //if (e.KeyCode == Keys.Enter && gridView1.ActiveEditor != null && gridView1.FocusedRowHandle == GridControl.NewItemRowHandle)
-            //{
-            //    gridView1..CommitEditing();
-            //}
+            string url = ConfigurationManager.AppSettings["UrlDLL"];
+            string sendData = string.Empty;
+
+            if (this.paramType.Equals("data"))
+            {
+                sendData = string.Format(@"
+                {{
+                ""command"":""data-add"",
+                ""dllSeq"":""{0}"",
+                ""paramSeq"":""{1}"",
+                ""paramVal"":{2}
+                }}"
+                , dllSeq, dllParamSeq, dataName);
+            }
+            else
+            {
+                sendData = string.Format(@"
+                {{
+                ""command"":""data-add"",
+                ""dllSeq"":""{0}"",
+                ""paramSeq"":""{1}"",
+                ""paramValStr"":{2}
+                }}"
+                 , dllSeq, dllParamSeq, dataName);
+            }
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Method = "POST";
+            request.ContentType = "application/json";
+            request.Timeout = 30 * 1000;
+            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+
+            // POST할 데이타를 Request Stream에 쓴다
+            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+            request.ContentLength = bytes.Length; // 바이트수 지정
+
+            using (Stream reqStream = request.GetRequestStream())
+            {
+                reqStream.Write(bytes, 0, bytes.Length);
+            }
+
+            // Response 처리
+            string responseText = string.Empty;
+            using (WebResponse resp = request.GetResponse())
+            {
+                Stream respStream = resp.GetResponseStream();
+                using (StreamReader sr = new StreamReader(respStream))
+                {
+                    responseText = sr.ReadToEnd();
+                }
+            }
+
+            //Console.WriteLine(responseText);
+            DllParamDataResponse result = JsonConvert.DeserializeObject<DllParamDataResponse>(responseText);
+
+            return result;
+
         }
 
         private void GridView1_InitNewRow(object sender, InitNewRowEventArgs e)
@@ -109,7 +243,7 @@ namespace DynaRAP.UControl
             GridView view = sender as GridView;
             // Set the new row cell value
             view.SetRowCellValue(e.RowHandle, view.Columns["Seq"], "");
-            view.SetRowCellValue(e.RowHandle, view.Columns["Data"], "asdfasdf");
+            view.SetRowCellValue(e.RowHandle, view.Columns["Data"], "test");
         }
 
         private void GridView1_CustomDrawRowIndicator(object sender, RowIndicatorCustomDrawEventArgs e)

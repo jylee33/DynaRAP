@@ -38,10 +38,9 @@ namespace DynaRAP.UControl
         private List<Cluster> m_clusters = new List<Cluster>();
 
         private int m_propertyGridWidth;
-#if DEBUG
+
         private List<DLL_DATA> m_dllDatas;
         private Dictionary<string, List<SeriesPointData>> m_dicData;
-#endif
         #endregion
 
         public DXChartControl()
@@ -131,7 +130,6 @@ namespace DynaRAP.UControl
             }
         }
 
-#if DEBUG
         /// <summary>
         /// 개발을 위하여 샘플로 사용한 데이터
         /// 실 데이터는 파일을 읽어 오도록 작업 함.
@@ -243,7 +241,7 @@ namespace DynaRAP.UControl
                 }
             }
         }
-#endif
+
         #region public methods
         /// <summary>
         /// 

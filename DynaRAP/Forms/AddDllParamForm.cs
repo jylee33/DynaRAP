@@ -1,4 +1,5 @@
 ﻿using DevExpress.XtraEditors;
+using DevExpress.XtraEditors.Controls;
 using DynaRAP.Data;
 using Newtonsoft.Json;
 using System;
@@ -35,11 +36,18 @@ namespace DynaRAP.Forms
 
         private void AddDllParamForm_Load(object sender, EventArgs e)
         {
-            
+            cboParameterType.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
+            cboParameterType.Properties.Items.AddRange(new string[] { "string", "data" });
+            cboParameterType.SelectedIndex = -1;
         }
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
+            if(string.IsNullOrEmpty(edtParamName.Text) ||  cboParameterType.SelectedIndex < 0)
+            {
+                MessageBox.Show("파라미터 이름과 타입을 입력하세요.");
+                return;
+            }
             response = AddDllParam();
 
             if (response.code == 200)
@@ -73,7 +81,7 @@ namespace DynaRAP.Forms
             ""paramName"":""{1}"",
             ""paramType"":""{2}""
             }}"
-            , seq, encName, edtParamType.Text);
+            , seq, encName, cboParameterType.Text);
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "POST";

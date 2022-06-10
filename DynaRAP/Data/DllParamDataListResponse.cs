@@ -20,16 +20,19 @@ namespace DynaRAP.Data
         public string paramSeq { get; set; }
         public int rowNo { get; set; }
         public double paramVal { get; set; }
+        public string paramValStr { get; set; }
     }
 
     public class DllParamData
     {
-        public DllParamData(string seq, string data)
+        public DllParamData(string seq, string data, int del)
         {
             Seq = seq;
             Data = data;
+            Del = del;
         }
         public string Seq { get; set; }
         public string Data { get; set; }
+        public int Del { get; set; }
     }
 }

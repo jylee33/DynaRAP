@@ -56,15 +56,79 @@ namespace DynaRAP.UControl
 
             xtraTabControl1.ClosePageButtonShowMode = ClosePageButtonShowMode.InActiveTabPageHeaderAndOnMouseHover;
             xtraTabControl1.CloseButtonClick += XtraTabControl1_CloseButtonClick;
+
+            btnAddDllParam.Properties.TextEditStyle |= DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            btnAddDllParam.Properties.AllowFocused = false;
+            btnAddDllParam.Enabled = false;
         }
 
         private void XtraTabControl1_CloseButtonClick(object sender, EventArgs e)
         {
+            if (MessageBox.Show(Properties.Resources.StringDelete, Properties.Resources.StringConfirmation, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+            {
+                return;
+            }
+
             ClosePageButtonEventArgs arg = e as ClosePageButtonEventArgs;
-            (arg.Page as XtraTabPage).PageVisible = false;
+            XtraTabPage tabPage = arg.Page as XtraTabPage;
+
+            DllParamResponse result = RemoveDllParam(tabPage.Name);
+
+            if (result.code == 200)
+            {
+                tabPage.PageVisible = false;
+            }
+            else
+            {
+                MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
-        private void AddTabPage(string tabName, string paramSeq)
+        private DllParamResponse RemoveDllParam(string paramSeq)
+        {
+            string url = ConfigurationManager.AppSettings["UrlDLL"];
+
+            string sendData = string.Format(@"
+            {{
+            ""command"":""param-remove"",
+            ""seq"":""{0}""
+            }}"
+            , paramSeq);
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Method = "POST";
+            request.ContentType = "application/json";
+            request.Timeout = 30 * 1000;
+            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+
+            // POST할 데이타를 Request Stream에 쓴다
+            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+            request.ContentLength = bytes.Length; // 바이트수 지정
+
+            using (Stream reqStream = request.GetRequestStream())
+            {
+                reqStream.Write(bytes, 0, bytes.Length);
+            }
+
+            // Response 처리
+            string responseText = string.Empty;
+            using (WebResponse resp = request.GetResponse())
+            {
+                Stream respStream = resp.GetResponseStream();
+                using (StreamReader sr = new StreamReader(respStream))
+                {
+                    responseText = sr.ReadToEnd();
+                }
+            }
+
+            //Console.WriteLine(responseText);
+            DllParamResponse result = JsonConvert.DeserializeObject<DllParamResponse>(responseText);
+
+            return result;
+
+        }
+
+        private void AddTabPage(string tabName, string paramSeq, string paramType)
         {
             XtraTabPage tabPage = new XtraTabPage();
             this.xtraTabControl1.TabPages.Add(tabPage);
@@ -72,7 +136,7 @@ namespace DynaRAP.UControl
             tabPage.Text = tabName;
             //tabPage.ShowCloseButton = DevExpress.Utils.DefaultBoolean.True;
 
-            DllParamControl paramControl = new DllParamControl(dllSeq, paramSeq);
+            DllParamControl paramControl = new DllParamControl(dllSeq, paramSeq, paramType);
             paramControl.Dock = DockStyle.Fill;
             tabPage.Controls.Add(paramControl);
         }
@@ -220,8 +284,9 @@ namespace DynaRAP.UControl
                 byte[] byte64 = Convert.FromBase64String(param.paramName);
                 string decName = Encoding.UTF8.GetString(byte64);
 
-                AddTabPage(decName, param.seq);
+                AddTabPage(decName, param.seq, param.paramType);
             }
+            btnAddDllParam.Enabled = true;
         }
 
         private List<ResponseDLLParam> GetDllParamList(string seq)
@@ -269,6 +334,11 @@ namespace DynaRAP.UControl
 
         private void RepositoryItemImageComboBox2_Click(object sender, EventArgs e)
         {
+            if (MessageBox.Show(Properties.Resources.StringDelete, Properties.Resources.StringConfirmation, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+            {
+                return;
+            }
+
             dllSeq = gridView1.GetRowCellValue(gridView1.FocusedRowHandle, "Seq").ToString();
             DllResponse result = RemoveDll(dllSeq);
             if (result.code == 200)
@@ -373,7 +443,7 @@ namespace DynaRAP.UControl
                 byte[] byte64 = Convert.FromBase64String(resp.paramName);
                 string decName = Encoding.UTF8.GetString(byte64);
 
-                AddTabPage(decName, resp.seq);
+                AddTabPage(decName, resp.seq, resp.paramType);
             }
         }
     }

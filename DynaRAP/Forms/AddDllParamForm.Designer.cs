@@ -31,11 +31,11 @@
             this.labelControl1 = new DevExpress.XtraEditors.LabelControl();
             this.edtParamName = new DevExpress.XtraEditors.TextEdit();
             this.labelControl2 = new DevExpress.XtraEditors.LabelControl();
-            this.edtParamType = new DevExpress.XtraEditors.TextEdit();
             this.btnAdd = new DevExpress.XtraEditors.SimpleButton();
             this.btnCancel = new DevExpress.XtraEditors.SimpleButton();
+            this.cboParameterType = new DevExpress.XtraEditors.ComboBoxEdit();
             ((System.ComponentModel.ISupportInitialize)(this.edtParamName.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.edtParamType.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cboParameterType.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // labelControl1
@@ -61,13 +61,6 @@
             this.labelControl2.TabIndex = 0;
             this.labelControl2.Text = "파라미터 타입";
             // 
-            // edtParamType
-            // 
-            this.edtParamType.Location = new System.Drawing.Point(110, 41);
-            this.edtParamType.Name = "edtParamType";
-            this.edtParamType.Size = new System.Drawing.Size(288, 22);
-            this.edtParamType.TabIndex = 1;
-            // 
             // btnAdd
             // 
             this.btnAdd.Location = new System.Drawing.Point(110, 80);
@@ -87,6 +80,15 @@
             this.btnCancel.Text = "취소";
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
+            // cboParameterType
+            // 
+            this.cboParameterType.Location = new System.Drawing.Point(110, 41);
+            this.cboParameterType.Name = "cboParameterType";
+            this.cboParameterType.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.cboParameterType.Size = new System.Drawing.Size(288, 22);
+            this.cboParameterType.TabIndex = 5;
+            // 
             // AddDllParamForm
             // 
             this.AcceptButton = this.btnAdd;
@@ -94,9 +96,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(407, 112);
+            this.Controls.Add(this.cboParameterType);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnAdd);
-            this.Controls.Add(this.edtParamType);
             this.Controls.Add(this.labelControl2);
             this.Controls.Add(this.edtParamName);
             this.Controls.Add(this.labelControl1);
@@ -104,7 +106,7 @@
             this.Text = "DLL 파라미터 추가";
             this.Load += new System.EventHandler(this.AddDllParamForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.edtParamName.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.edtParamType.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cboParameterType.Properties)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -115,8 +117,8 @@
         private DevExpress.XtraEditors.LabelControl labelControl1;
         private DevExpress.XtraEditors.TextEdit edtParamName;
         private DevExpress.XtraEditors.LabelControl labelControl2;
-        private DevExpress.XtraEditors.TextEdit edtParamType;
         private DevExpress.XtraEditors.SimpleButton btnAdd;
         private DevExpress.XtraEditors.SimpleButton btnCancel;
+        private DevExpress.XtraEditors.ComboBoxEdit cboParameterType;
     }
 }
