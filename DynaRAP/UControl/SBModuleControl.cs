@@ -1,4 +1,6 @@
 ﻿using DevExpress.Utils;
+using DevExpress.XtraBars.Docking;
+using DevExpress.XtraCharts;
 using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Controls;
 using DevExpress.XtraEditors.Repository;
@@ -556,7 +558,7 @@ namespace DynaRAP.UControl
         {
             chart1.Series.Clear();
 
-            Series series1 = new Series("Series1");
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series("Series1");
             series1.ChartType = SeriesChartType.Line;
             series1.Name = strParam;
             series1.XValueType = ChartValueType.DateTime;
@@ -691,7 +693,7 @@ namespace DynaRAP.UControl
                 return;
 
             //Axis ax = chart1.ChartAreas[0].AxisX;
-            Axis ax = myChartArea.AxisX;
+            System.Windows.Forms.DataVisualization.Charting.Axis ax = myChartArea.AxisX;
             List<Color> colors = new List<Color>()  {   Color.FromArgb(75, 44, 44), Color.FromArgb(98, 41, 41)
                                                         , Color.FromArgb(64, Color.LightSeaGreen), Color.FromArgb(64, Color.LightGoldenrodYellow)};
 
@@ -864,8 +866,8 @@ namespace DynaRAP.UControl
 
         private void AddSplittedInterval(SplittedSB sb)
         {
-            SBIntervalControl ctrl = new SBIntervalControl(sb);
-            ctrl.ViewBtnClicked += new EventHandler(SB_ViewBtnClicked);
+            SBIntervalControl ctrl = new SBIntervalControl(sb, curDataTable);
+            //ctrl.ViewBtnClicked += new EventHandler(SB_ViewBtnClicked);
             flowLayoutPanel2.Controls.Add(ctrl);
             flowLayoutPanel2.Controls.SetChildIndex(ctrl, intervalIndex);
             sbIntervalList.Add(ctrl);
@@ -898,6 +900,11 @@ namespace DynaRAP.UControl
             //form2.Text = strKey;
             //form2.Show();
 
+        }
+
+        private void PanelChart_ClosedPanel(object sender, DockPanelEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private DataTable GetShortBlockData(string strKey, DateTime sTime, DateTime eTime)

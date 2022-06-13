@@ -13,7 +13,7 @@ namespace DynaRAP.Data
         }
         public SplittedSB(string sbName, string startTime, string endTime, int view)
         {
-            SbName = "";// sbName;
+            SbName = sbName;
             StartTime = startTime;
             EndTime = endTime;
             View = view;

@@ -166,6 +166,7 @@ namespace DynaRAP.UControl
                 chartControl.Dock = DockStyle.Fill;
                 panelChart.Controls.Add(chartControl);
                 panelChart.Show();
+                panelChart.Focus();
             }
         }
 
@@ -256,6 +257,7 @@ namespace DynaRAP.UControl
             if (panelChart != null)
             {
                 panelChart.Show();
+                panelChart.Focus();
             }
         }
     }
