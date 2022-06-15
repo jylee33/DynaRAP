@@ -52,6 +52,12 @@ public class RawVO implements IFlexibleValue {
         private LongDate flightAt;
         private CryptoField.NAuth registerUid;
         private boolean importDone;
+        private String lpfN;
+        private String lpfCutoff;
+        private String lpfBtype;
+        private String hpfN;
+        private String hpfCutoff;
+        private String hpfBtype;
 
         private PresetVO presetInfo;
         private transient UploadRequest uploadRequest;
