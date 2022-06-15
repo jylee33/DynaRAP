@@ -1011,6 +1011,10 @@ public class ServiceApiController extends ApiController {
             if (!checkJsonEmpty(payload, "partSeq"))
                 partSeq = CryptoField.decode(payload.get("partSeq").getAsString(), 0L);
 
+            String filterType = "N";
+            if (!checkJsonEmpty(payload, "filterType"))
+                filterType = payload.get("filterType").getAsString();
+
             PartVO partInfo = getService(PartService.class).getPartBySeq(partSeq);
 
             // 요청 파라미터 셋.
@@ -1051,7 +1055,7 @@ public class ServiceApiController extends ApiController {
             LinkedHashMap<String, List<Double>> paramData = new LinkedHashMap<>();
             for (ParamVO p : params) {
                 Set<String> listSet = zsetOps.rangeByScore(
-                        "P" + partInfo.getSeq().originOf() + ".N" + p.getReferenceSeq(), 0, Integer.MAX_VALUE);
+                        "P" + partInfo.getSeq().originOf() + "." + filterType + p.getReferenceSeq(), 0, Integer.MAX_VALUE);
                 List<Double> rowData = new ArrayList<>();
                 paramData.put(p.getParamKey(), rowData);
 

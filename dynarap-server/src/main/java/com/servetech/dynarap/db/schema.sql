@@ -320,6 +320,8 @@ create table `dynarap_sblock`
     `offsetEndAt` double default 0.0                comment '상새시간값(종료)',
     `blockNo` int default 0                         comment '블록 번호',
     `registerUid` bigint default 0                  comment '등록자',
+
+    `rms`
     constraint pk_dynarap_sblock primary key (`seq`)
 ) $$
 
@@ -339,8 +341,8 @@ create table `dynarap_sblock_raw`
     `paramValStr` varchar(128) default ''           comment '파라미터 값 (문자)',
     `julianTimeAt` varchar(32) not null             comment '절대시간값',
     `offsetTimeAt` double default 0.0               comment '상대시간값',
-    `lpf` double default 0.0                        comment 'LPF',
-    `hpf` double default 0.0                        comment 'HPF',
+    `lpf` double default 0.0                        comment 'lpf',
+    `hpf` double default 0.0                        comment 'hpf',
     constraint pk_dynarap_sblock_raw primary key (`seq`)
 ) $$
 
@@ -352,7 +354,7 @@ drop table if exists `dynarap_sblock_param` cascade $$
 create table `dynarap_sblock_param`
 (
     `seq` bigint auto_increment not null            comment '일련번호',
-    `blockMetaSeq` bigint not null                      comment '숏블록 일련번호',
+    `blockMetaSeq` bigint not null                  comment '숏블록 일련번호',
     `paramNo` smallint default 0                    comment '설정 파라미터 순서',
     `paramPack` bigint default 0                    comment '설정 파라미터 관리 일련번호',
     `paramSeq` bigint default 0                     comment '설정 파라미터 일련번호',
@@ -367,8 +369,34 @@ create table `dynarap_sblock_param`
     `fltsKey` varchar(64)                           comment 'FLTS 고유키',
     `paramUnit` varchar(32)                         comment '파라미터 단위',
 
+    `unionParamSeq` bigint default 0                comment '파라미터 믹스 일련번호', -- 유니크
+    `propType` varchar(32)                          comment '속성 타입',
+    `propCode` varchar(32)                          comment '속성 코드',
+
     constraint pk_dynarap_sblock_param primary key (`seq`)
 ) $$
+
+-- 숏블록 파라미터 별 특성치
+drop table if exists `dynarap_sblock_param_val` cascade $$
+
+create table `dynarap_sblock_param_val`
+(
+    `seq` bigint auto_increment not null            comment '일련번호',
+    `blockMetaSeq` bigint not null                  comment '숏블록 메타 일련번호',
+    `blockSeq` bigint not null                      comment '숏블록 일련번호',
+    `unionParamSeq` bigint default 0                comment '파라미터 믹스 일련번호',
+    `blockMin` double default 0                     comment '해당 파라미터의 블록에서의 최소값', -- 가속도, 하중의 경우
+    `blockMax` double default 0                     comment '해당 파라미터의 블록에서의 최대값', -- 가속도, 하중의 경우
+    `blockAvg` double default 0                     comment '해당 파라미터의 블록에서의 평균값', -- 비행 파라미터 일 경우
+    `psd` double default 0                          comment 'power spectral density',
+    `rms` double default 0                          comment 'rms',
+    `n0` double default 0                           comment 'n0',
+    `zarray` text                                   comment 'z-array',
+    `zPeak` double default 0                        comment 'z peak over rms',
+    `zValley` double default 0                      comment 'z valley over rms',
+    constraint pk_dynarap_sblock_param_val primary key (`seq`)
+) $$
+
 
 
 
