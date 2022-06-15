@@ -547,8 +547,11 @@ namespace DynaRAP.UControl
 
             if(paramControlList != null && paramControlList.Count > 0)
             {
-                DateTime sTime = Convert.ToDateTime(minValue.ToString());
-                DateTime eTime = Convert.ToDateTime(maxValue.ToString());
+                //DateTime sTime = Convert.ToDateTime(minValue.ToString());
+                //DateTime eTime = Convert.ToDateTime(maxValue.ToString());
+
+                DateTime sTime = (DateTime)minValue;
+                DateTime eTime = (DateTime)maxValue;
 
                 dt = GetIntervalData(paramControlList[0].Dt, sTime, eTime);
                 recordCnt = dt.Rows.Count;
@@ -763,6 +766,26 @@ namespace DynaRAP.UControl
 #endif
             {
 #if DEBUG
+                // screen init
+                luePresetList.EditValue = "";
+                
+                gridControl1.DataSource = null;
+                gridView1.RefreshData();
+
+                gridControl2.DataSource = null;
+                gridView2.RefreshData();
+                intervalList.Clear();
+                lblSplitCount.Text = string.Format(Properties.Resources.StringSplitCount, intervalList.Count);
+
+                paramIndex = START_PARAM_INDEX;
+                flowLayoutPanel3.Height -= PARAM_HEIGHT * flowLayoutPanel3.Controls.Count;
+                flowLayoutPanel3.Controls.Clear();
+
+                edtTag.Text = "";
+                panelTag.Controls.Clear();
+
+                // screen init
+
                 csvFilePath = @"C:\temp\a_test.xls";
                 lblFlyingData.Text = @"C:\temp\a_test.xls";
                 StreamReader sr = new StreamReader(csvFilePath);
