@@ -337,6 +337,7 @@ public class RawService {
                     rawUpload.setFlightAt(LongDate.parse(uploadReq.getFlightAt(), "yyyy-MM-dd"));
                 rawUpload.setDataType(uploadReq.getDataType());
                 rawUpload.setUploadRequest(uploadReq);
+                rawUpload.setUploadPayload(new String64(ServerConstants.GSON.toJson(uploadReq)));
                 insertRawUpload(rawUpload);
                 uploadStat.put(rawUpload.getSeq().valueOf(), rawUpload);
 
@@ -357,6 +358,7 @@ public class RawService {
                 } else
                     rawUpload = uploadStat.get(rawUpload.getSeq().valueOf());
                 rawUpload.setUploadRequest(uploadReq);
+                rawUpload.setUploadPayload(new String64(ServerConstants.GSON.toJson(uploadReq)));
             }
 
             // create thread worker start

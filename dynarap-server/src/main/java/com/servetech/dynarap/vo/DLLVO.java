@@ -13,6 +13,7 @@ public class DLLVO {
     private String dataVersion;
     private CryptoField.NAuth registerUid;
     private LongDate createdAt;
+    private String64 tags;
 
     @Data
     public static class Param {
@@ -32,6 +33,7 @@ public class DLLVO {
         private Integer rowNo;
         private Double paramVal;
         private String paramValStr;
+        private Object value;
 
         @Override
         public <T> T getValue() {

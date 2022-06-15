@@ -54,7 +54,8 @@ public class RawVO implements IFlexibleValue {
         private boolean importDone;
 
         private PresetVO presetInfo;
-        private UploadRequest uploadRequest;
+        private transient UploadRequest uploadRequest;
+        private String64 uploadPayload;
 
         private String status;
         private String statusMessage;
@@ -78,11 +79,21 @@ public class RawVO implements IFlexibleValue {
 
         private Map<String, String> tempMappingParams;
 
+        private FilterOption lpfOption;
+        private FilterOption hpfOption;
+
         @Data
         public static class UploadPart {
             private String64 partName;
             private String julianStartAt;
             private String julianEndAt;
+        }
+
+        @Data
+        public static class FilterOption {
+            private String n;
+            private String cutoff;
+            private String btype;
         }
     }
 

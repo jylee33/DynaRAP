@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -113,12 +114,23 @@ public class DLLService {
     public DLLVO.Param insertDLLParam(CryptoField.NAuth uid, JsonObject payload) throws HandledServiceException {
         try {
             DLLVO.Param dllParam = ServerConstants.GSON.fromJson(payload, DLLVO.Param.class);
-            if (dllParam == null)
+            if (dllParam == null || dllParam.getDllSeq() == null || dllParam.getDllSeq().isEmpty())
                 throw new HandledServiceException(411, "요청 내용이 DLL 파라미터 형식에 맞지 않습니다.");
 
+            dllParam.setParamNo(127);
             dllParam.setRegisterUid(uid);
-
             dllMapper.insertDLLParam(dllParam);
+
+            List<DLLVO.Param> dllParams = getDLLParamList(dllParam.getDllSeq());
+            if (dllParams == null) dllParams = new ArrayList<>();
+            int paramNo = 1;
+            for (DLLVO.Param dp : dllParams) {
+                dp.setParamNo(paramNo++);
+                dllMapper.updateDLLParam(dp);
+                if (dp.getSeq().equals(dllParam.getSeq()))
+                    dllParam.setParamNo(dp.getParamNo());
+            }
+
             return dllParam;
         } catch(Exception e) {
             throw new HandledServiceException(410, e.getMessage());
@@ -132,9 +144,19 @@ public class DLLService {
             if (dllParam == null || dllParam.getSeq() == null || dllParam.getSeq().isEmpty())
                 throw new HandledServiceException(411, "요청 파라미터 오류입니다. [필수 파라미터 누락]");
 
-            dllMapper.updateDLLParam(dllParam);
+            Map<String, Object> params = new HashMap<>();
+            params.put("dllSeq", dllParam.getDllSeq());
+            params.put("seq", dllParam.getSeq());
+            DLLVO.Param currentDllParam = dllMapper.selectDLLParamBySeq(params);
 
-            return dllParam;
+            if (dllParam.getParamName() != null && !dllParam.getParamName().isEmpty())
+                currentDllParam.setParamName(dllParam.getParamName());
+            if (dllParam.getParamType() != null && !dllParam.getParamType().isEmpty())
+                currentDllParam.setParamType(dllParam.getParamType());
+
+            dllMapper.updateDLLParam(currentDllParam);
+
+            return currentDllParam;
         } catch(Exception e) {
             throw new HandledServiceException(410, e.getMessage());
         }
@@ -159,8 +181,19 @@ public class DLLService {
 
             // param에 해당하는 data 지우기.
             dllMapper.deleteDLLDataByParam(params);
-
             dllMapper.deleteDLLParam(params);
+
+            // 파라미터 정보 재조정
+            List<DLLVO.Param> dllParams = getDLLParamList(dllParam.getDllSeq());
+            if (dllParams == null) dllParams = new ArrayList<>();
+            int paramNo = 1;
+            for (DLLVO.Param dp : dllParams) {
+                dp.setParamNo(paramNo++);
+                dllMapper.updateDLLParam(dp);
+                if (dp.getSeq().equals(dllParam.getSeq()))
+                    dllParam.setParamNo(dp.getParamNo());
+            }
+
         } catch(Exception e) {
             throw new HandledServiceException(410, e.getMessage());
         }
@@ -198,16 +231,77 @@ public class DLLService {
         }
     }
 
+    public int getDLLDataMaxRow(CryptoField dllSeq, CryptoField paramSeq) throws HandledServiceException {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("dllSeq", dllSeq);
+            params.put("paramSeq", paramSeq == null || paramSeq.isEmpty() ? null : paramSeq);
+            return dllMapper.selectDLLDataMaxRow(params);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
     @Transactional
     public DLLVO.Raw insertDLLData(CryptoField.NAuth uid, JsonObject payload) throws HandledServiceException {
         try {
             DLLVO.Raw dllRaw = ServerConstants.GSON.fromJson(payload, DLLVO.Raw.class);
-            if (dllRaw == null)
+            if (dllRaw == null || dllRaw.getDllSeq() == null || dllRaw.getDllSeq().isEmpty() || dllRaw.getParamSeq() == null || dllRaw.getParamSeq().isEmpty())
                 throw new HandledServiceException(411, "요청 내용이 DLL 데이터 형식에 맞지 않습니다.");
 
+            int maxRowNo = getDLLDataMaxRow(dllRaw.getDllSeq(), dllRaw.getParamSeq());
+            dllRaw.setRowNo(maxRowNo + 1);
             dllMapper.insertDLLData(dllRaw);
 
+            List<DLLVO.Raw> dllRaws = getDLLData(dllRaw.getDllSeq(), dllRaw.getParamSeq());
+            if (dllRaws == null) dllRaws = new ArrayList<>();
+
+            int rowNo = 1;
+            for (DLLVO.Raw dr : dllRaws) {
+                dr.setRowNo(rowNo++);
+                dllMapper.updateDLLDataBySeq(dr);
+                if (dr.getSeq().equals(dllRaw.getSeq()))
+                    dllRaw.setRowNo(dr.getRowNo());
+            }
+
+            // check another params
+            List<DLLVO.Param> dllParams = getDLLParamList(dllRaw.getDllSeq());
+            if (dllParams == null) dllParams = new ArrayList<>();
+            for (DLLVO.Param dp : dllParams) {
+                if (dp.getSeq().equals(dllRaw.getParamSeq())) continue;
+
+                dllRaws = getDLLData(dllRaw.getDllSeq(), dp.getSeq());
+                if (dllRaws == null) dllRaws = new ArrayList<>();
+                if (dllRaws.size() != (rowNo - 1)) {
+                    int paramRowNo = 1;
+                    for (DLLVO.Raw dr : dllRaws) {
+                        dr.setRowNo(paramRowNo++);
+                        dllMapper.updateDLLDataBySeq(dr);
+                    }
+                    for (; paramRowNo < rowNo;) {
+                        DLLVO.Raw ndr = new DLLVO.Raw();
+                        ndr.setDllSeq(dllRaw.getDllSeq());
+                        ndr.setRowNo(paramRowNo++);
+                        ndr.setParamSeq(dp.getSeq());
+                        if (dp.getParamType().equalsIgnoreCase("string"))
+                            ndr.setParamValStr("");
+                        else
+                            ndr.setParamVal(0.0);
+                        dllMapper.insertDLLData(ndr);
+                    }
+                }
+            }
+
             return dllRaw;
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    @Transactional
+    public void updateDLLData(DLLVO.Raw dllRaw) throws HandledServiceException {
+        try {
+            dllMapper.updateDLLDataBySeq(dllRaw);
         } catch(Exception e) {
             throw new HandledServiceException(410, e.getMessage());
         }
@@ -217,12 +311,23 @@ public class DLLService {
     public DLLVO.Raw updateDLLData(CryptoField.NAuth uid, JsonObject payload) throws HandledServiceException {
         try {
             DLLVO.Raw dllRaw = ServerConstants.GSON.fromJson(payload, DLLVO.Raw.class);
-            if (dllRaw == null || dllRaw.getSeq() == null || dllRaw.getSeq().isEmpty())
+            if (dllRaw == null || dllRaw.getParamSeq() == null || dllRaw.getParamSeq().isEmpty())
                 throw new HandledServiceException(411, "요청 내용이 DLL 데이터 형식에 맞지 않습니다.");
 
             dllMapper.updateDLLData(dllRaw);
 
             return dllRaw;
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    @Transactional
+    public void deleteDLLData(CryptoField dllSeq) throws HandledServiceException {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("dllSeq", dllSeq);
+            dllMapper.deleteDLLData(params);
         } catch(Exception e) {
             throw new HandledServiceException(410, e.getMessage());
         }
@@ -246,6 +351,19 @@ public class DLLService {
             params.put("dllSeq", dllSeq);
             params.put("rowNo", rowNo);
             dllMapper.deleteDLLDataByRow(params);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    @Transactional
+    public void deleteDLLDataByRow(CryptoField dllSeq, int fromRowNo, int toRowNo) throws HandledServiceException {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("dllSeq", dllSeq);
+            params.put("fromRowNo", fromRowNo);
+            params.put("toRowNo", toRowNo);
+            dllMapper.deleteDLLDataByRowNo(params);
         } catch(Exception e) {
             throw new HandledServiceException(410, e.getMessage());
         }

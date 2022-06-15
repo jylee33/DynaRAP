@@ -538,7 +538,7 @@ public class PartImportTask {
         String pline = null;
         while ((pline = reader.readLine()) != null) {
             if (pline.startsWith("result1=")) {
-                filterResult = pline;
+                filterResult = pline.substring("result1=".length());
                 if (filterResult.endsWith(","))
                     filterResult = filterResult.substring(0, filterResult.length() - 1);
             }
