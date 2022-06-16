@@ -337,6 +337,17 @@ public class RawService {
                     rawUpload.setFlightAt(LongDate.parse(uploadReq.getFlightAt(), "yyyy-MM-dd"));
                 rawUpload.setDataType(uploadReq.getDataType());
                 rawUpload.setUploadRequest(uploadReq);
+                rawUpload.setUploadPayload(new String64(ServerConstants.GSON.toJson(uploadReq)));
+                if (uploadReq.getLpfOption() != null) {
+                    rawUpload.setLpfN(uploadReq.getLpfOption().getN());
+                    rawUpload.setLpfCutoff(uploadReq.getLpfOption().getCutoff());
+                    rawUpload.setLpfBtype(uploadReq.getLpfOption().getBtype());
+                }
+                if (uploadReq.getHpfOption() != null) {
+                    rawUpload.setHpfN(uploadReq.getHpfOption().getN());
+                    rawUpload.setHpfCutoff(uploadReq.getHpfOption().getCutoff());
+                    rawUpload.setHpfBtype(uploadReq.getHpfOption().getBtype());
+                }
                 insertRawUpload(rawUpload);
                 uploadStat.put(rawUpload.getSeq().valueOf(), rawUpload);
 
@@ -357,6 +368,18 @@ public class RawService {
                 } else
                     rawUpload = uploadStat.get(rawUpload.getSeq().valueOf());
                 rawUpload.setUploadRequest(uploadReq);
+                rawUpload.setUploadPayload(new String64(ServerConstants.GSON.toJson(uploadReq)));
+
+                if (uploadReq.getLpfOption() != null) {
+                    rawUpload.setLpfN(uploadReq.getLpfOption().getN());
+                    rawUpload.setLpfCutoff(uploadReq.getLpfOption().getCutoff());
+                    rawUpload.setLpfBtype(uploadReq.getLpfOption().getBtype());
+                }
+                if (uploadReq.getHpfOption() != null) {
+                    rawUpload.setHpfN(uploadReq.getHpfOption().getN());
+                    rawUpload.setHpfCutoff(uploadReq.getHpfOption().getCutoff());
+                    rawUpload.setHpfBtype(uploadReq.getHpfOption().getBtype());
+                }
             }
 
             // create thread worker start

@@ -2,6 +2,7 @@ package com.servetech.dynarap.controller;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.servetech.dynarap.config.ServerConstants;
 import com.servetech.dynarap.db.service.*;
 import com.servetech.dynarap.db.service.task.PartImportTask;
@@ -438,12 +439,75 @@ public class ServiceApiController extends ApiController {
             if (dllSeq == null || dllSeq.isEmpty())
                 throw new HandledServiceException(411, "요청 파라미터 오류입니다. [필수 파라미터 누락]");
 
-            CryptoField dllParamSeq = CryptoField.LZERO;
-            if (!checkJsonEmpty(payload, "dllParamSeq"))
-                dllParamSeq = CryptoField.decode(payload.get("dllParamSeq").getAsString(), 0L);
+            String resultDataType = "map";
+            if (!checkJsonEmpty(payload, "resultDataType"))
+                resultDataType = payload.get("resultDataType").getAsString();
 
-            List<DLLVO.Raw> rawData = getService(DLLService.class).getDLLData(dllSeq, dllParamSeq);
-            return ResponseHelper.response(200, "Success - DLL Data List", rawData);
+            // paramSeq array
+            Map<String, DLLVO.Param> paramMap = new HashMap<>();
+            List<DLLVO.Param> dllParams = getService(DLLService.class).getDLLParamList(dllSeq);
+            if (dllParams == null) dllParams = new ArrayList<>();
+            for (DLLVO.Param dp : dllParams)
+                paramMap.put(dp.getSeq().valueOf(), dp);
+
+            JsonArray jarrParams = null;
+            if (!checkJsonEmpty(payload, "dllParamSet"))
+                jarrParams = payload.get("dllParamSet").getAsJsonArray();
+
+            if (jarrParams == null || jarrParams.size() == 0) {
+                jarrParams = new JsonArray();
+                for (DLLVO.Param dp : dllParams)
+                    jarrParams.add(dp.getSeq().valueOf());
+            }
+
+            JsonArray jarrRows = null;
+            if (!checkJsonEmpty(payload, "dllRowRange"))
+                jarrRows = payload.get("dllRowRange").getAsJsonArray();
+
+            if (jarrRows == null || jarrRows.size() == 0) {
+                jarrRows = new JsonArray();
+                jarrRows.add(0);
+                jarrRows.add(Integer.MAX_VALUE);
+            }
+            else if (jarrRows.size() < 2) {
+                jarrRows.add(Integer.MAX_VALUE);
+            }
+
+            if (jarrRows.get(1).getAsInt() == 0)
+                jarrRows.set(1, new JsonPrimitive(Integer.MAX_VALUE));
+
+            LinkedHashMap<String, List<Object>> paramValueMap = new LinkedHashMap<>();
+            List<List<Object>> paramValueArray = new ArrayList<>();
+
+            for (int i = 0; i < jarrParams.size(); i++) {
+                DLLVO.Param dllParam = paramMap.get(jarrParams.get(i).getAsString());
+                List<DLLVO.Raw> rawData = getService(DLLService.class).getDLLData(dllSeq, dllParam.getSeq());
+                List<Object> filteredData = new ArrayList<>();
+                for (DLLVO.Raw dr : rawData) {
+                    if (dr.getRowNo() >= jarrRows.get(0).getAsInt()
+                        && dr.getRowNo() <= jarrRows.get(1).getAsInt()) {
+                        if (dllParam.getParamType().equalsIgnoreCase("string"))
+                            filteredData.add(dr.getParamValStr());
+                        else
+                            filteredData.add(dr.getParamVal());
+                    }
+                }
+                paramValueMap.put(dllParam.getSeq().valueOf(), filteredData);
+                paramValueArray.add(filteredData);
+            }
+
+            JsonObject jobjResult = new JsonObject();
+            jobjResult.add("dllParamSet", jarrParams);
+            jobjResult.add("dllRowRange", jarrRows);
+
+            if (resultDataType.equals("map")) {
+                jobjResult.add("data", ServerConstants.GSON.toJsonTree(paramValueMap));
+            }
+            else {
+                jobjResult.add("data", ServerConstants.GSON.toJsonTree(paramValueArray));
+            }
+
+            return ResponseHelper.response(200, "Success - DLL Data List", jobjResult);
         }
 
         if (command.equals("data-add")) {
@@ -456,14 +520,96 @@ public class ServiceApiController extends ApiController {
             return ResponseHelper.response(200, "Success - DLL Data Modify", dllRaw);
         }
 
-        if (command.equals("data-remove-row")) {
-            getService(DLLService.class).deleteDLLDataByRow(payload);
-            return ResponseHelper.response(200, "Success - DLL Data Remove By Row", "");
-        }
+        if (command.equals("data-remove")) {
+            CryptoField dllSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "dllSeq"))
+                dllSeq = CryptoField.decode(payload.get("dllSeq").getAsString(), 0L);
 
-        if (command.equals("data-remove-param")) {
-            getService(DLLService.class).deleteDLLDataByParam(payload);
-            return ResponseHelper.response(200, "Success - DLL Data Remove By Param or All", "");
+            if (dllSeq == null || dllSeq.isEmpty())
+                throw new HandledServiceException(411, "요청 파라미터 오류입니다. [필수 파라미터 누락]");
+
+            // paramSeq array
+            Map<String, DLLVO.Param> paramMap = new HashMap<>();
+            List<DLLVO.Param> dllParams = getService(DLLService.class).getDLLParamList(dllSeq);
+            if (dllParams == null) dllParams = new ArrayList<>();
+            for (DLLVO.Param dp : dllParams)
+                paramMap.put(dp.getSeq().valueOf(), dp);
+
+            JsonArray jarrParams = null;
+            if (!checkJsonEmpty(payload, "dllParamSet"))
+                jarrParams = payload.get("dllParamSet").getAsJsonArray();
+
+            JsonArray jarrRows = null;
+            if (!checkJsonEmpty(payload, "dllRowRange"))
+                jarrRows = payload.get("dllRowRange").getAsJsonArray();
+
+            if (jarrParams != null && jarrParams.size() > 0) {
+                // 파라미터 하나 이상 정해서 삭제
+                if (jarrParams.size() == dllParams.size()) {
+                    // row 조건에 따라서 지우기, 해당 row 전체 삭제만 있음.
+                    if (jarrRows != null && jarrRows.size() == 2) {
+                        if (jarrRows.get(1).getAsInt() == 0)
+                            jarrRows.set(1, new JsonPrimitive(Integer.MAX_VALUE));
+
+                        getService(DLLService.class).deleteDLLDataByRow(dllSeq, jarrRows.get(0).getAsInt(), jarrRows.get(1).getAsInt());
+                    }
+                    else {
+                        // 모두 삭제
+                        getService(DLLService.class).deleteDLLData(dllSeq);
+                    }
+                }
+                else {
+                    // 일부 내용만 삭제 (사실상 업데이트)
+                    for (int i = 0; i < jarrParams.size(); i++) {
+                        DLLVO.Param dp = paramMap.get(jarrParams.get(i).getAsString());
+                        if (dp == null) continue;
+
+                        List<DLLVO.Raw> dllRaws = getService(DLLService.class).getDLLData(dllSeq, dp.getSeq());
+                        if (dllRaws == null) continue;
+
+                        for (DLLVO.Raw dr : dllRaws) {
+                            if (jarrRows != null && jarrRows.size() == 2) {
+                                if (jarrRows.get(1).getAsInt() == 0)
+                                    jarrRows.set(1, new JsonPrimitive(Integer.MAX_VALUE));
+
+                                if (dr.getRowNo() >= jarrRows.get(0).getAsInt()
+                                        && dr.getRowNo() <= jarrRows.get(1).getAsInt()) {
+                                    dr.setParamVal(0.0);
+                                    dr.setParamValStr("");
+                                    getService(DLLService.class).updateDLLData(dr);
+                                }
+                            }
+                            else {
+                                dr.setParamVal(0.0);
+                                dr.setParamValStr("");
+                                getService(DLLService.class).updateDLLData(dr);
+                            }
+                        }
+                    }
+                }
+            }
+            else {
+                // row 조건에 따라서 지우기, 해당 row 전체 삭제만 있음.
+                if (jarrRows != null && jarrRows.size() == 2) {
+                    if (jarrRows.get(1).getAsInt() == 0)
+                        jarrRows.set(1, new JsonPrimitive(Integer.MAX_VALUE));
+
+                    getService(DLLService.class).deleteDLLDataByRow(dllSeq, jarrRows.get(0).getAsInt(), jarrRows.get(1).getAsInt());
+                }
+            }
+
+            // arrange rowNo
+            for (DLLVO.Param dp : dllParams) {
+                int rowNo = 1;
+                List<DLLVO.Raw> dllRaws = getService(DLLService.class).getDLLData(dllSeq, dp.getSeq());
+                if (dllRaws == null) continue;
+                for (DLLVO.Raw dr : dllRaws) {
+                    dr.setRowNo(rowNo++);
+                    getService(DLLService.class).updateDLLData(dr);
+                }
+            }
+
+            return ResponseHelper.response(200, "Success - DLL Data Remove By Row", "");
         }
 
         throw new HandledServiceException(411, "명령이 정의되지 않았습니다.");
@@ -548,6 +694,87 @@ public class ServiceApiController extends ApiController {
         if (command.equals("upload")) {
             RawVO.Upload rawUpload = getService(RawService.class).doUpload(user.getUid(), payload);
             return ResponseHelper.response(200, "Success - Upload Raw Data", rawUpload);
+        }
+
+        if (command.equals("check-param")) {
+            CryptoField presetPack = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "presetPack"))
+                presetPack = CryptoField.decode(payload.get("presetPack").getAsString(), 0L);
+
+            if (presetPack == null || presetPack.isEmpty())
+                throw new HandledServiceException(404, "파라미터를 확인하세요.");
+
+            String headerRow = "";
+            if (!checkJsonEmpty(payload, "headerRow"))
+                headerRow = payload.get("headerRow").getAsString();
+
+            if (headerRow == null || headerRow.isEmpty())
+                throw new HandledServiceException(404, "파라미터를 확인하세요.");
+
+            CryptoField presetSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "presetSeq"))
+                presetSeq = CryptoField.decode(payload.get("presetSeq").getAsString(), 0L);
+
+            PresetVO preset = null;
+            if (presetSeq == null || presetSeq.isEmpty())
+                preset = getService(ParamService.class).getActivePreset(presetPack);
+            else
+                preset = getService(ParamService.class).getPresetBySeq(presetSeq);
+
+            String dataType = "fltp";
+            if (!checkJsonEmpty(payload, "dataType"))
+                dataType = payload.get("dataType").getAsString();
+
+            List<ParamVO> presetParams = getService(ParamService.class).getPresetParamList(
+                    preset.getPresetPack(), preset.getSeq(), CryptoField.LZERO, CryptoField.LZERO,
+                    1, 99999);
+
+            if (presetParams == null) presetParams = new ArrayList<>();
+            Map<String, ParamVO> adamsMap = new LinkedHashMap<>();
+            Map<String, ParamVO> zaeroMap = new LinkedHashMap<>();
+            Map<String, ParamVO> grtMap = new LinkedHashMap<>();
+            Map<String, ParamVO> fltpMap = new LinkedHashMap<>();
+            Map<String, ParamVO> fltsMap = new LinkedHashMap<>();
+            for (ParamVO param : presetParams) {
+                adamsMap.put(param.getAdamsKey() + "_" + param.getPropInfo().getParamUnit(), param);
+                zaeroMap.put(param.getZaeroKey() + "_" + param.getPropInfo().getParamUnit(), param);
+                grtMap.put(param.getGrtKey() + "_" + param.getPropInfo().getParamUnit(), param);
+                fltpMap.put(param.getFltpKey() + "_" + param.getPropInfo().getParamUnit(), param);
+                fltsMap.put(param.getFltsKey() + "_" + param.getPropInfo().getParamUnit(), param);
+            }
+
+            String[] splitParam = headerRow.trim().split(",");
+
+            // data 0 is date
+            List<String> notMappedParams = new ArrayList<>();
+            List<Integer> mappedIndexes = new ArrayList<>();
+            List<ParamVO> mappedParams = new ArrayList<>();
+
+            for (int i = 0; i < splitParam.length; i++) {
+                String p = splitParam[i];
+                if (p.equalsIgnoreCase("date")) continue;
+
+                ParamVO pi = null;
+                if (dataType.equals("adams") && adamsMap.containsKey(p)) pi = adamsMap.get(p);
+                if (dataType.equals("zaero") && zaeroMap.containsKey(p)) pi = zaeroMap.get(p);
+                if (dataType.equals("grt") && grtMap.containsKey(p)) pi = grtMap.get(p);
+                if (dataType.equals("fltp") && fltpMap.containsKey(p)) pi = fltpMap.get(p);
+                if (dataType.equals("flts") && fltsMap.containsKey(p)) pi = fltsMap.get(p);
+
+                if (pi == null) {
+                    notMappedParams.add(p);
+                }
+                else {
+                    mappedParams.add(pi);
+                    mappedIndexes.add(i);
+                }
+            }
+
+            JsonObject jobjResult = new JsonObject();
+            jobjResult.add("notMappedParams", ServerConstants.GSON.toJsonTree(notMappedParams));
+            jobjResult.add("mappedParams", ServerConstants.GSON.toJsonTree(mappedParams));
+
+            return ResponseHelper.response(200, "Success - Check matching params", jobjResult);
         }
 
         if (command.equals("progress")) {
@@ -691,6 +918,10 @@ public class ServiceApiController extends ApiController {
             if (!checkJsonEmpty(payload, "partSeq"))
                 partSeq = CryptoField.decode(payload.get("partSeq").getAsString(), 0L);
 
+            String filterType = "N";
+            if (!checkJsonEmpty(payload, "filterType"))
+                filterType = payload.get("filterType").getAsString();
+
             PartVO partInfo = getService(PartService.class).getPartBySeq(partSeq);
 
             // 요청 파라미터 셋.
@@ -752,7 +983,7 @@ public class ServiceApiController extends ApiController {
             LinkedHashMap<String, List<Double>> rowData = new LinkedHashMap<>();
             for (ParamVO p : params) {
                 Set<String> listSet = zsetOps.rangeByScore(
-                        "P" + partInfo.getSeq().originOf() + ".N" + p.getReferenceSeq(), startRowAt + rankFrom, startRowAt + rankTo);
+                        "P" + partInfo.getSeq().originOf() + "." + filterType + p.getReferenceSeq(), startRowAt + rankFrom, startRowAt + rankTo);
 
                 Iterator<String> iterListSet = listSet.iterator();
                 while (iterListSet.hasNext()) {
@@ -779,6 +1010,10 @@ public class ServiceApiController extends ApiController {
             CryptoField partSeq = CryptoField.LZERO;
             if (!checkJsonEmpty(payload, "partSeq"))
                 partSeq = CryptoField.decode(payload.get("partSeq").getAsString(), 0L);
+
+            String filterType = "N";
+            if (!checkJsonEmpty(payload, "filterType"))
+                filterType = payload.get("filterType").getAsString();
 
             PartVO partInfo = getService(PartService.class).getPartBySeq(partSeq);
 
@@ -820,7 +1055,7 @@ public class ServiceApiController extends ApiController {
             LinkedHashMap<String, List<Double>> paramData = new LinkedHashMap<>();
             for (ParamVO p : params) {
                 Set<String> listSet = zsetOps.rangeByScore(
-                        "P" + partInfo.getSeq().originOf() + ".N" + p.getReferenceSeq(), 0, Integer.MAX_VALUE);
+                        "P" + partInfo.getSeq().originOf() + "." + filterType + p.getReferenceSeq(), 0, Integer.MAX_VALUE);
                 List<Double> rowData = new ArrayList<>();
                 paramData.put(p.getParamKey(), rowData);
 

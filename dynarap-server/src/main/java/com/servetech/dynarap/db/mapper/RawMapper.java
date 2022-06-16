@@ -131,7 +131,9 @@ public interface RawMapper {
     @Insert({
             "<script>" +
                     "insert into dynarap_raw_upload (" +
-                    "uploadName,dataType,storePath,fileSize,flightSeq,presetPack,presetSeq,uploadedAt,flightAt,registerUid,uploadId,importDone" +
+                    "uploadName,dataType,storePath,fileSize,flightSeq,presetPack,presetSeq," +
+                    "uploadedAt,flightAt,registerUid,uploadId,importDone," +
+                    "lpfN,lpfCutoff,lpfBtype,hpfN,hpfCutoff,hpfBtype,uploadPayload" +
                     ") values (" +
                     "#{uploadName,javaType=java.lang.String,jdbcType=VARCHAR,typeHandler=String64}" +
                     ",#{dataType}" +
@@ -145,6 +147,9 @@ public interface RawMapper {
                     ",#{registerUid,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField_NAuth}" +
                     ",#{uploadId}" +
                     ",#{importDone}" +
+                    ",#{lpfN},#{lpfCutoff},#{lpfBtype}" +
+                    ",#{hpfN},#{hpfCutoff},#{hpfBtype}" +
+                    ",#{uploadPayload,javaType=java.lang.String,jdbcType=VARCHAR,typeHandler=String64}" +
                     ")" +
                     "</script>"
     })
@@ -163,6 +168,9 @@ public interface RawMapper {
                     ",presetSeq = #{presetSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
                     ",flightAt = #{flightAt,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=LongDate} " +
                     ",importDone = #{importDone} " +
+                    ",lpfN = #{lpfN}, lpfCutoff = #{lpfCutoff}, lpfBtype = #{lpfBtype} " +
+                    ",hpfN = #{hpfN}, hpfCutoff = #{hpfCutoff}, hpfBtype = #{hpfBtype} " +
+                    ",uploadPayload = #{uploadPayload,javaType=java.lang.String,jdbcType=VARCHAR,typeHandler=String64} " +
                     " where seq = #{seq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
                     "</script>"
     })
