@@ -8,7 +8,7 @@ namespace DynaRAP.Data
 {
     public class DllParamDataListResponse : JsonData
     {
-        public List<ResponseDLLParamData> response { get; set; }
+        public ResponseDLLParamData response { get; set; }
 
         public DllParamDataListResponse(int code, string message) : base(code, message) { }
     }
@@ -21,17 +21,19 @@ namespace DynaRAP.Data
         public int rowNo { get; set; }
         public double paramVal { get; set; }
         public string paramValStr { get; set; }
+
+        public List<string> dllParamSet { get; set; }
+        public List<long> dllRowRange { get; set; }
+        public Dictionary<string, List<string>> data { get; set; }
     }
 
     public class DllParamData
     {
-        public DllParamData(string seq, string data, int del)
+        public DllParamData(string data, int del)
         {
-            Seq = seq;
             Data = data;
             Del = del;
         }
-        public string Seq { get; set; }
         public string Data { get; set; }
         public int Del { get; set; }
     }

@@ -36,6 +36,8 @@ namespace DynaRAP.UControl
         List<ResponseDLLParam> dllParamList = new List<ResponseDLLParam>();
         string dllSeq = string.Empty;
 
+        List<DllParamControl> paramControlList = new List<DllParamControl>();
+
         public ImportDLLControl()
         {
             InitializeComponent();
@@ -137,8 +139,23 @@ namespace DynaRAP.UControl
             //tabPage.ShowCloseButton = DevExpress.Utils.DefaultBoolean.True;
 
             DllParamControl paramControl = new DllParamControl(dllSeq, paramSeq, paramType);
+            paramControl.AddDel_Succeeded += ParamControl_DataAddDel_Succeeded;
             paramControl.Dock = DockStyle.Fill;
+            paramControlList.Add(paramControl);
             tabPage.Controls.Add(paramControl);
+        }
+
+        private void ParamControl_DataAddDel_Succeeded(object sender, EventArgs e)
+        {
+            DllParamControl me = sender as DllParamControl;
+
+            foreach (DllParamControl ctrl in paramControlList)
+            {
+                if (ctrl == me)
+                    continue;
+
+                ctrl.RefreshGridControl();
+            }
         }
 
         private void InitializeGridControl1()
@@ -276,9 +293,10 @@ namespace DynaRAP.UControl
             lblDllName.Text = dllName;
 
             this.xtraTabControl1.TabPages.Clear();
+            this.paramControlList.Clear();
             dllSeq = gridView1.GetRowCellValue(gridView1.FocusedRowHandle, "Seq").ToString();
             dllParamList = GetDllParamList(dllSeq);
-            foreach(ResponseDLLParam param in dllParamList)
+            foreach (ResponseDLLParam param in dllParamList)
             {
                 //Decoding
                 byte[] byte64 = Convert.FromBase64String(param.paramName);

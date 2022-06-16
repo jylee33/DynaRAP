@@ -27,8 +27,10 @@ namespace DynaRAP.UControl
         string dllParamSeq = string.Empty;
         string paramType = string.Empty;
 
-        List<ResponseDLLParamData> dllParamDataList = new List<ResponseDLLParamData>();
+        ResponseDLLParamData dllParamDataList = new ResponseDLLParamData();
         List<DllParamData> dllDataGridList = new List<DllParamData>();
+
+        public event EventHandler AddDel_Succeeded;
 
         public DllParamControl()
         {
@@ -51,22 +53,6 @@ namespace DynaRAP.UControl
         {
 
             //gridView1.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
-
-            dllParamDataList = GetDllParamDataList();
-
-            dllDataGridList.Clear();
-            foreach (ResponseDLLParamData data in dllParamDataList)
-            {
-                if (this.paramType.Equals("data"))
-                {
-                    dllDataGridList.Add(new DllParamData(data.seq, data.paramVal.ToString(), 1));
-                }
-                else
-                {
-                    dllDataGridList.Add(new DllParamData(data.seq, data.paramValStr.ToString(), 1));
-                }
-            }
-            gridControl1.DataSource = dllDataGridList;
 
             //gridControl1.UseEmbeddedNavigator = true;
 
@@ -112,7 +98,28 @@ namespace DynaRAP.UControl
             this.repositoryItemImageComboBox1.Buttons[0].Visible = false;
             this.repositoryItemImageComboBox1.Click += RepositoryItemImageComboBox1_Click;
 
+            RefreshGridControl();
             //gridView1.BestFitColumns();
+        }
+
+        public void RefreshGridControl()
+        {
+            dllParamDataList = GetDllParamDataList();
+
+            dllDataGridList.Clear();
+            foreach (string key in dllParamDataList.data.Keys)
+            {
+                if (key.Equals(this.dllParamSeq))
+                {
+                    foreach (string val in dllParamDataList.data[key])
+                    {
+                        dllDataGridList.Add(new DllParamData(val, 1));
+                    }
+                }
+            }
+            gridControl1.DataSource = dllDataGridList;
+            gridView1.RefreshData();
+
         }
 
         private void RepositoryItemImageComboBox1_Click(object sender, EventArgs e)
@@ -122,17 +129,66 @@ namespace DynaRAP.UControl
                 return;
             }
 
-            //dllSeq = gridView1.GetRowCellValue(gridView1.FocusedRowHandle, "Seq").ToString();
-            //DllResponse result = RemoveDll(dllSeq);
-            //if (result.code == 200)
-            //{
-            //    gridView1.DeleteRow(gridView1.FocusedRowHandle);
-            //    lblDLLCount.Text = string.Format(Properties.Resources.StringSplitCount, dllDataList.Count);
-            //}
-            //else
-            //{
-            //    MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            //}
+            DllParamDataResponse result = RemoveDll(dllSeq);
+            if (result.code == 200)
+            {
+                gridView1.DeleteRow(gridView1.FocusedRowHandle);
+                gridView1.RefreshData();
+
+                if (this.AddDel_Succeeded != null)
+                {
+                    this.AddDel_Succeeded(this, new EventArgs());
+                }
+            }
+            else
+            {
+                MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private DllParamDataResponse RemoveDll(string dllSeq)
+        {
+            string url = ConfigurationManager.AppSettings["UrlDLL"];
+            string sendData = string.Format(@"
+                {{
+                ""command"":""data-remove"",
+                ""dllSeq"":""{0}"",
+                ""dllRowRange"":[{1}, {1}]
+                }}"
+                , dllSeq, gridView1.FocusedRowHandle + 1);
+
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Method = "POST";
+            request.ContentType = "application/json";
+            request.Timeout = 30 * 1000;
+            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+
+            // POST할 데이타를 Request Stream에 쓴다
+            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+            request.ContentLength = bytes.Length; // 바이트수 지정
+
+            using (Stream reqStream = request.GetRequestStream())
+            {
+                reqStream.Write(bytes, 0, bytes.Length);
+            }
+
+            // Response 처리
+            string responseText = string.Empty;
+            using (WebResponse resp = request.GetResponse())
+            {
+                Stream respStream = resp.GetResponseStream();
+                using (StreamReader sr = new StreamReader(respStream))
+                {
+                    responseText = sr.ReadToEnd();
+                }
+            }
+
+            //Console.WriteLine(responseText);
+            DllParamDataResponse result = JsonConvert.DeserializeObject<DllParamDataResponse>(responseText);
+
+            return result;
+
         }
 
         private void btnAddNewRow_Click(object sender, EventArgs e)
@@ -160,15 +216,20 @@ namespace DynaRAP.UControl
                 {
                     if (this.paramType.Equals("data"))
                     {
-                        dllDataGridList.Add(new DllParamData(result.response.seq, result.response.paramVal.ToString(), 1));
+                        dllDataGridList.Add(new DllParamData(result.response.paramVal.ToString(), 1));
                     }
                     else
                     {
-                        dllDataGridList.Add(new DllParamData(result.response.seq, result.response.paramVal.ToString(), 1));
+                        dllDataGridList.Add(new DllParamData(result.response.paramValStr.ToString(), 1));
                     }
                     gridControl1.DataSource = dllDataGridList;
                     //gridControl1.Update();
                     gridView1.RefreshData();
+
+                    if(this.AddDel_Succeeded != null)
+                    {
+                        this.AddDel_Succeeded(this, new EventArgs());
+                    }
                 }
                 else
                 {
@@ -252,7 +313,7 @@ namespace DynaRAP.UControl
                 e.Info.DisplayText = e.RowHandle.ToString();
         }
 
-        private List<ResponseDLLParamData> GetDllParamDataList()
+        private ResponseDLLParamData GetDllParamDataList()
         {
             string url = ConfigurationManager.AppSettings["UrlDLL"];
             string sendData = string.Format(@"
