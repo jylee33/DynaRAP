@@ -786,8 +786,16 @@ namespace DynaRAP.UControl
 
                 // screen init
 
-                csvFilePath = @"C:\temp\a_test.xls";
-                lblFlyingData.Text = @"C:\temp\a_test.xls";
+                if (importType == ImportType.FLYING)
+                {
+                    csvFilePath = @"C:\temp\a_test.xls";
+                    lblFlyingData.Text = @"C:\temp\a_test.xls";
+                }
+                else
+                {
+                    csvFilePath = @"C:\temp\a.dat";
+                    lblFlyingData.Text = @"C:\temp\a.dat";
+                }
                 StreamReader sr = new StreamReader(csvFilePath);
 #else
                 csvFilePath = dlg.FileName;
@@ -795,40 +803,114 @@ namespace DynaRAP.UControl
                 StreamReader sr = new StreamReader(dlg.FileName);
 #endif
 
-                int idx = 0;
-
-                // 스트림의 끝까지 읽기
-                while (!sr.EndOfStream)
+                if (importType == ImportType.FLYING)
                 {
-                    string line = sr.ReadLine();
-                    string[] data = line.Split(',');
+                    int idx = 0;
 
-                    if (string.IsNullOrEmpty(data[0]))
-                        continue;
-
-                    int i = 0;
-                    if (idx == 0)
+                    // 스트림의 끝까지 읽기
+                    while (!sr.EndOfStream)
                     {
-                        dicData.Clear();
-                        for (i = 0; i < data.Length; i++)
+                        string line = sr.ReadLine();
+                        string[] data = line.Split(',');
+
+                        if (string.IsNullOrEmpty(data[0]))
+                            continue;
+
+                        int i = 0;
+                        if (idx == 0)
                         {
-                            if (dicData.ContainsKey(data[i]) == false)
+                            dicData.Clear();
+                            for (i = 0; i < data.Length; i++)
+                            {
+                                if (dicData.ContainsKey(data[i]) == false)
+                                {
+                                    if (string.IsNullOrEmpty(data[i]) == false)
+                                        dicData.Add(data[i], new List<string>());
+                                }
+                            }
+                            idx++;
+                            continue;
+                        }
+
+                        i = 0;
+                        foreach (string key in dicData.Keys)
+                        {
+                            if (dicData.ContainsKey(key))
                             {
                                 if (string.IsNullOrEmpty(data[i]) == false)
-                                    dicData.Add(data[i], new List<string>());
+                                    dicData[key].Add(data[i++]);
                             }
                         }
-                        idx++;
-                        continue;
                     }
+                }
+                else
+                {
+                    int idx = 0;
+                    dicData.Clear();
 
-                    i = 0;
-                    foreach (string key in dicData.Keys)
+                    Dictionary<string, List<string>> tempData = new Dictionary<string, List<string>>();
+
+                    // 스트림의 끝까지 읽기
+                    while (!sr.EndOfStream)
                     {
-                        if (dicData.ContainsKey(key))
+                        string line = sr.ReadLine();
+                        line = line.Trim();
+                        string[] data = line.Split(' ');
+
+                        if (string.IsNullOrEmpty(data[0]))
+                            continue;
+
+                        double dVal;
+                        bool isNumber = double.TryParse(data[0], out dVal);
+                        int i = 0;
+
+                        if (isNumber == false)
                         {
-                            if (string.IsNullOrEmpty(data[i]) == false)
-                                dicData[key].Add(data[i++]);
+                            foreach (string key in tempData.Keys)
+                            {
+                                if (dicData.ContainsKey(key) == false)
+                                {
+                                    dicData.Add(key, tempData[key]);
+                                }
+                            }
+
+                            if (data[0].Equals("UNITS"))
+                            {
+                                tempData.Clear();
+
+                                if (tempData.ContainsKey("DATE") == false)
+                                {
+                                    tempData.Add("DATE", new List<string>());
+                                }
+                                for (i = 1; i < data.Length; i++)
+                                {
+                                    if (tempData.ContainsKey(data[i]) == false)
+                                    {
+                                        if (string.IsNullOrEmpty(data[i]) == false)
+                                        {
+                                            tempData.Add(data[i], new List<string>());
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                continue;
+                            }
+                        }
+                        else
+                        {
+                            data = data.Where((source, index) => string.IsNullOrEmpty(source) == false).ToArray();
+
+                            i = 0;
+                            foreach (string key in tempData.Keys)
+                            {
+                                if (tempData.ContainsKey(key))
+                                {
+                                    if (string.IsNullOrEmpty(data[i]) == false)
+                                        tempData[key].Add(data[i++]);
+                                }
+                            }
                         }
                     }
                 }

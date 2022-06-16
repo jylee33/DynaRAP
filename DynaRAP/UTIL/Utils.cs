@@ -23,21 +23,34 @@ namespace DynaRAP.UTIL
 
         public static DateTime GetDateFromJulian(string julianDate)
         {
-            int year = 21;
-            int day = Convert.ToInt32(julianDate.Substring(0, 3));
-            DateTime dt = new DateTime(1999 + year, 12, 18, new JulianCalendar());
+            DateTime dt = DateTime.Now;
+            if (julianDate.Contains(":")) // 비행데이터
+            {
+                // 예시 352:12:36:20.941466
+                int year = 21;
+                int day = Convert.ToInt32(julianDate.Substring(0, 3));
+                dt = new DateTime(1999 + year, 12, 18, new JulianCalendar());
 
-            dt = dt.AddDays(day);
-            dt = dt.AddHours(Convert.ToInt32(julianDate.Substring(4, 2)));
-            dt = dt.AddMinutes(Convert.ToInt32(julianDate.Substring(7, 2)));
-            dt = dt.AddSeconds(Convert.ToInt32(julianDate.Substring(10, 2)));
-            dt = dt.AddMilliseconds(Convert.ToInt32(julianDate.Substring(13, 3)));
-            dt = dt.AddTicks(Convert.ToInt32(julianDate.Substring(13, 6)) % TimeSpan.TicksPerMillisecond / 100);
-            //dt = dt.AddTicks(-Convert.ToInt32(julianDate.Substring(13, 6)) % TimeSpan.TicksPerMillisecond / 100);
-            ////myDateTime.AddTicks(-(myDateTime.Ticks % TimeSpan.TicksPerMillisecond) / 100);
+                dt = dt.AddDays(day);
+                dt = dt.AddHours(Convert.ToInt32(julianDate.Substring(4, 2)));
+                dt = dt.AddMinutes(Convert.ToInt32(julianDate.Substring(7, 2)));
+                dt = dt.AddSeconds(Convert.ToInt32(julianDate.Substring(10, 2)));
+                dt = dt.AddMilliseconds(Convert.ToInt32(julianDate.Substring(13, 3)));
+                dt = dt.AddTicks(Convert.ToInt32(julianDate.Substring(13, 6)) % TimeSpan.TicksPerMillisecond / 100);
+                //dt = dt.AddTicks(-Convert.ToInt32(julianDate.Substring(13, 6)) % TimeSpan.TicksPerMillisecond / 100);
+                ////myDateTime.AddTicks(-(myDateTime.Ticks % TimeSpan.TicksPerMillisecond) / 100);
 
-            dt = DateTime.Parse(string.Format("{0}-{1}-{2} {3}:{4}:{5}.{6}", dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, dt.Second, julianDate.Substring(13, 6)));
+                dt = DateTime.Parse(string.Format("{0}-{1}-{2} {3}:{4}:{5}.{6}", dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, dt.Second, julianDate.Substring(13, 6)));
 
+            }
+            else // 해석데이터
+            {
+                // 예시 1.98200
+                dt = new DateTime(DateTime.Now.Year, 1, 1);
+                dt = dt.AddSeconds(Convert.ToInt32(julianDate.Substring(0, 1)));
+                dt = dt.AddMilliseconds(Convert.ToInt32(julianDate.Substring(2, 3)));
+                //dt = dt.AddTicks(Convert.ToInt32(julianDate.Substring(2, 5)) % TimeSpan.TicksPerMillisecond / 100);
+            }
             return dt;
 
         }
