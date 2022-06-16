@@ -39,6 +39,7 @@ namespace DynaRAP.UControl
         string csvFilePath = string.Empty;
         object minValue = null;
         object maxValue = null;
+        string headerRow = string.Empty;
 
         ImportType importType = ImportType.FLYING;
 
@@ -755,7 +756,8 @@ namespace DynaRAP.UControl
         private void lblFlyingData_Click(object sender, EventArgs e)
         {
             btnAddParameter.Enabled = false;
-            
+            headerRow = string.Empty;
+
             OpenFileDialog dlg = new OpenFileDialog();
             dlg.InitialDirectory = "C:\\";
             dlg.Filter = "Excel files (*.xls, *.xlsx)|*.xls; *.xlsx|Comma Separated Value files (CSV)|*.csv|모든 파일 (*.*)|*.*";
@@ -803,7 +805,7 @@ namespace DynaRAP.UControl
                 StreamReader sr = new StreamReader(dlg.FileName);
 #endif
 
-                if (importType == ImportType.FLYING)
+                if (importType == ImportType.FLYING) // 비행데이터 import
                 {
                     int idx = 0;
 
@@ -819,6 +821,8 @@ namespace DynaRAP.UControl
                         int i = 0;
                         if (idx == 0)
                         {
+                            this.headerRow = line;
+                            headerRow = headerRow.Substring(0, headerRow.LastIndexOf(','));
                             dicData.Clear();
                             for (i = 0; i < data.Length; i++)
                             {
@@ -843,7 +847,7 @@ namespace DynaRAP.UControl
                         }
                     }
                 }
-                else
+                else // 해석데이터 import
                 {
                     int idx = 0;
                     dicData.Clear();
@@ -926,12 +930,91 @@ namespace DynaRAP.UControl
                 //}
 
                 btnAddParameter.Enabled = true;
+
+                CheckParam();
             }
+        }
+
+        private bool CheckParam()
+        {
+            string presetPack = String.Empty;
+            string dataType = cboImportType.Text.ToLower();
+
+            if (luePresetList.GetColumnValue("PresetPack") != null)
+                presetPack = luePresetList.GetColumnValue("PresetPack").ToString();
+
+            if (string.IsNullOrEmpty(presetPack)
+                || string.IsNullOrEmpty(dataType)
+                || string.IsNullOrEmpty(this.headerRow)
+                )
+            {
+                return false;
+            }
+
+            string url = ConfigurationManager.AppSettings["UrlImport"];
+            string sendData = string.Format(@"
+            {{
+            ""command"":""check-param"",
+            ""presetPack"":""{0}"",
+            ""presetSeq"":null,
+            ""dataType"":""{1}"",
+            ""headerRow"":""{2}""
+            }}"
+            , presetPack, dataType, this.headerRow);
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Method = "POST";
+            request.ContentType = "application/json";
+            request.Timeout = 30 * 1000;
+            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+
+            // POST할 데이타를 Request Stream에 쓴다
+            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+            request.ContentLength = bytes.Length; // 바이트수 지정
+
+            using (Stream reqStream = request.GetRequestStream())
+            {
+                reqStream.Write(bytes, 0, bytes.Length);
+            }
+
+            // Response 처리
+            string responseText = string.Empty;
+            using (WebResponse resp = request.GetResponse())
+            {
+                Stream respStream = resp.GetResponseStream();
+                using (StreamReader sr = new StreamReader(respStream))
+                {
+                    responseText = sr.ReadToEnd();
+                }
+            }
+
+            //Console.WriteLine(responseText);
+            ImportResponse result = JsonConvert.DeserializeObject<ImportResponse>(responseText);
+
+            if (result != null)
+            {
+                if (result.code != 200)
+                {
+                    MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+                else
+                {
+                    List<UnmappedParamData> unmappedList = new List<UnmappedParamData>();
+                    foreach (string type in result.response.notMappedParams)
+                    {
+                        unmappedList.Add(new UnmappedParamData(type, "skip"));
+                    }
+                    this.gridControl1.DataSource = unmappedList;
+                    gridView1.RefreshData();
+                }
+            }
+            return true;
         }
 
         private void luePresetList_EditValueChanged(object sender, EventArgs e)
         {
-
+            CheckParam();
         }
 
         private void edtTag_ButtonClick(object sender, ButtonPressedEventArgs e)
@@ -982,6 +1065,11 @@ namespace DynaRAP.UControl
             ButtonEdit btn = sender as ButtonEdit;
             panelTag.Controls.Remove(btn);
 
+        }
+
+        private void cboImportType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CheckParam();
         }
     }
 

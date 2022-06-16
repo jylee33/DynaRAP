@@ -11,7 +11,7 @@ namespace DynaRAP.Data
         public int code { get; set; }
         public string message { get; set; }
         public ResponseImport response { get; set; }
-        public ResponseAtImport responseAt { get; set; }
+        public ResponseAt responseAt { get; set; }
         public int resultCount { get; set; }
     }
 
@@ -20,7 +20,7 @@ namespace DynaRAP.Data
         public int code { get; set; }
         public string message { get; set; }
         public List<ResponseImport> response { get; set; }
-        public ResponseAtImport responseAt { get; set; }
+        public ResponseAt responseAt { get; set; }
         public int resultCount { get; set; }
     }
 
@@ -35,19 +35,25 @@ namespace DynaRAP.Data
     {
         public string seq { get; set; }
         public string paramPack { get; set; }
-        public string paramGroupSeq { get; set; }
-        public string paramName { get; set; }
+        public string propSeq { get; set; }
         public string paramKey { get; set; }
         public string adamsKey { get; set; }
         public string zaeroKey { get; set; }
         public string grtKey { get; set; }
         public string fltpKey { get; set; }
         public string fltsKey { get; set; }
-        public string paramUnit { get; set; }
+        public string partInfo { get; set; }
+        public string partInfoSub { get; set; }
+        public double lrpX { get; set; }
+        public double lrpY { get; set; }
+        public double lrpZ { get; set; }
         public string registerUid { get; set; }
-        public int presetParamSeq { get; set; }
+        public Extras extras { get; set; }
+        public string tags { get; set; }
+        public int referenceSeq { get; set; }
         public string presetPack { get; set; }
         public string presetSeq { get; set; }
+        public PropInfo propInfo { get; set; }
     }
 
     public class PartImport
@@ -94,13 +100,6 @@ namespace DynaRAP.Data
         public List<string> notMappedParams { get; set; }
         public List<MappedParam> mappedParams { get; set; }
         //public List<PartList> partList { get; set; }
-    }
-
-    public class ResponseAtImport
-    {
-        public long timestamp { get; set; }
-        public string dateFormat { get; set; }
-        public string dateTime { get; set; }
     }
 
     public class UploadedAt

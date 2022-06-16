@@ -247,6 +247,7 @@
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.cboImportType.Size = new System.Drawing.Size(171, 22);
             this.cboImportType.TabIndex = 0;
+            this.cboImportType.SelectedIndexChanged += new System.EventHandler(this.cboImportType_SelectedIndexChanged);
             // 
             // tableLayoutPanel2
             // 
