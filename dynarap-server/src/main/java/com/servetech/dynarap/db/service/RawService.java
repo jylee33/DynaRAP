@@ -5,6 +5,7 @@ import com.servetech.dynarap.config.ServerConstants;
 import com.servetech.dynarap.controller.ApiController;
 import com.servetech.dynarap.db.mapper.RawMapper;
 import com.servetech.dynarap.db.service.task.PartImportTask;
+import com.servetech.dynarap.db.service.task.ZaeroPartImportTask;
 import com.servetech.dynarap.db.type.CryptoField;
 import com.servetech.dynarap.db.type.LongDate;
 import com.servetech.dynarap.db.type.String64;
@@ -384,8 +385,16 @@ public class RawService {
 
             // create thread worker start
             if (rawUpload.getStatus().equals("import")) {
-                PartImportTask importTask = new PartImportTask.Builder().setListOps(listOps).setZsetOps(zsetOps).createPartImportTask();
-                CompletableFuture.runAsync(importTask.asyncRunImport(jdbcTemplate, paramService, RawService.this, rawUpload), texecutor);
+                if (rawUpload.getDataType().equals("grt")
+                    || rawUpload.getDataType().equals("fltp")
+                    || rawUpload.getDataType().equals("flts")) {
+                    PartImportTask importTask = new PartImportTask.Builder().setListOps(listOps).setZsetOps(zsetOps).createPartImportTask();
+                    CompletableFuture.runAsync(importTask.asyncRunImport(jdbcTemplate, paramService, RawService.this, rawUpload), texecutor);
+                }
+                else if (rawUpload.getDataType().equals("zaero")) {
+                    ZaeroPartImportTask importTask = new ZaeroPartImportTask.Builder().setListOps(listOps).setZsetOps(zsetOps).createPartImportTask();
+                    CompletableFuture.runAsync(importTask.asyncRunImport(jdbcTemplate, paramService, RawService.this, rawUpload), texecutor);
+                }
             }
 
             return rawUpload;

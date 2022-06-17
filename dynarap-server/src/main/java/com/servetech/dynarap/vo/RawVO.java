@@ -93,6 +93,8 @@ public class RawVO implements IFlexibleValue {
             private String64 partName;
             private String julianStartAt;
             private String julianEndAt;
+            private String offsetStartAt;
+            private String offsetEndAt;
         }
 
         @Data
