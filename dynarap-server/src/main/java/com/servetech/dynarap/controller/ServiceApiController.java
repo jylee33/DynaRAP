@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.*;
 import java.util.*;
 
 @Controller
@@ -33,6 +34,9 @@ public class ServiceApiController extends ApiController {
 
     @Value("${dynarap.process.path}")
     private String processPath;
+
+    @Value("${static.resource.location}")
+    private String staticLocation;
 
     @RequestMapping(value = "/dir")
     @ResponseBody
@@ -708,7 +712,11 @@ public class ServiceApiController extends ApiController {
             if (!checkJsonEmpty(payload, "headerRow"))
                 headerRow = payload.get("headerRow").getAsString();
 
-            if (headerRow == null || headerRow.isEmpty())
+            String importFilePath = "";
+            if (!checkJsonEmpty(payload, "importFilePath"))
+                importFilePath = payload.get("importFilePath").getAsString();
+
+            if ((headerRow == null || headerRow.isEmpty()) && (importFilePath == null || importFilePath.isEmpty()))
                 throw new HandledServiceException(404, "파라미터를 확인하세요.");
 
             CryptoField presetSeq = CryptoField.LZERO;
@@ -729,44 +737,151 @@ public class ServiceApiController extends ApiController {
                     preset.getPresetPack(), preset.getSeq(), CryptoField.LZERO, CryptoField.LZERO,
                     1, 99999);
 
-            if (presetParams == null) presetParams = new ArrayList<>();
-            Map<String, ParamVO> adamsMap = new LinkedHashMap<>();
-            Map<String, ParamVO> zaeroMap = new LinkedHashMap<>();
-            Map<String, ParamVO> grtMap = new LinkedHashMap<>();
-            Map<String, ParamVO> fltpMap = new LinkedHashMap<>();
-            Map<String, ParamVO> fltsMap = new LinkedHashMap<>();
-            for (ParamVO param : presetParams) {
-                adamsMap.put(param.getAdamsKey() + "_" + param.getPropInfo().getParamUnit(), param);
-                zaeroMap.put(param.getZaeroKey() + "_" + param.getPropInfo().getParamUnit(), param);
-                grtMap.put(param.getGrtKey() + "_" + param.getPropInfo().getParamUnit(), param);
-                fltpMap.put(param.getFltpKey() + "_" + param.getPropInfo().getParamUnit(), param);
-                fltsMap.put(param.getFltsKey() + "_" + param.getPropInfo().getParamUnit(), param);
-            }
-
-            String[] splitParam = headerRow.trim().split(",");
-
             // data 0 is date
             List<String> notMappedParams = new ArrayList<>();
             List<Integer> mappedIndexes = new ArrayList<>();
             List<ParamVO> mappedParams = new ArrayList<>();
 
-            for (int i = 0; i < splitParam.length; i++) {
-                String p = splitParam[i];
-                if (p.equalsIgnoreCase("date")) continue;
-
-                ParamVO pi = null;
-                if (dataType.equals("adams") && adamsMap.containsKey(p)) pi = adamsMap.get(p);
-                if (dataType.equals("zaero") && zaeroMap.containsKey(p)) pi = zaeroMap.get(p);
-                if (dataType.equals("grt") && grtMap.containsKey(p)) pi = grtMap.get(p);
-                if (dataType.equals("fltp") && fltpMap.containsKey(p)) pi = fltpMap.get(p);
-                if (dataType.equals("flts") && fltsMap.containsKey(p)) pi = fltsMap.get(p);
-
-                if (pi == null) {
-                    notMappedParams.add(p);
+            if (dataType.equals("grt") || dataType.equals("fltp") || dataType.equals("flts")) {
+                if (presetParams == null) presetParams = new ArrayList<>();
+                Map<String, ParamVO> adamsMap = new LinkedHashMap<>();
+                Map<String, ParamVO> zaeroMap = new LinkedHashMap<>();
+                Map<String, ParamVO> grtMap = new LinkedHashMap<>();
+                Map<String, ParamVO> fltpMap = new LinkedHashMap<>();
+                Map<String, ParamVO> fltsMap = new LinkedHashMap<>();
+                for (ParamVO param : presetParams) {
+                    adamsMap.put(param.getAdamsKey() + "_" + param.getPropInfo().getParamUnit(), param);
+                    zaeroMap.put(param.getZaeroKey() + "_" + param.getPropInfo().getParamUnit(), param);
+                    grtMap.put(param.getGrtKey() + "_" + param.getPropInfo().getParamUnit(), param);
+                    fltpMap.put(param.getFltpKey() + "_" + param.getPropInfo().getParamUnit(), param);
+                    fltsMap.put(param.getFltsKey() + "_" + param.getPropInfo().getParamUnit(), param);
                 }
-                else {
-                    mappedParams.add(pi);
-                    mappedIndexes.add(i);
+
+                String[] splitParam = headerRow.trim().split(",");
+
+                for (int i = 0; i < splitParam.length; i++) {
+                    String p = splitParam[i];
+                    if (p.equalsIgnoreCase("date")) continue;
+
+                    ParamVO pi = null;
+                    if (dataType.equals("adams") && adamsMap.containsKey(p)) pi = adamsMap.get(p);
+                    if (dataType.equals("zaero") && zaeroMap.containsKey(p)) pi = zaeroMap.get(p);
+                    if (dataType.equals("grt") && grtMap.containsKey(p)) pi = grtMap.get(p);
+                    if (dataType.equals("fltp") && fltpMap.containsKey(p)) pi = fltpMap.get(p);
+                    if (dataType.equals("flts") && fltsMap.containsKey(p)) pi = fltsMap.get(p);
+
+                    if (pi == null) {
+                        notMappedParams.add(p);
+                    } else {
+                        mappedParams.add(pi);
+                        mappedIndexes.add(i);
+                    }
+                }
+            }
+            else {
+                if (presetParams == null) presetParams = new ArrayList<>();
+                Map<String, ParamVO> adamsMap = new LinkedHashMap<>();
+                Map<String, ParamVO> zaeroMap = new LinkedHashMap<>();
+                for (ParamVO param : presetParams) {
+                    adamsMap.put(param.getAdamsKey(), param);
+                    zaeroMap.put(param.getZaeroKey(), param);
+                }
+
+                // File loading
+                if (importFilePath.contains("C:\\")) {
+                    importFilePath = importFilePath.replaceAll("\\\\", "/");
+                    importFilePath = importFilePath.replaceAll("C:/", staticLocation.substring("file:".length()));
+                }
+
+                List<String> allParams = null;
+                List<List<Double>> allData = null;
+
+                try {
+                    File fImport = new File(importFilePath);
+                    FileInputStream fis = new FileInputStream(fImport);
+
+                    BufferedReader br = new BufferedReader(new InputStreamReader(fis));
+                    String line = null;
+
+                    String state = "before";
+                    List<List<String>> parameters = new ArrayList<>();
+                    List<List<List<Double>>> dataList = new ArrayList<>();
+                    LinkedList<Double> timeSet = new LinkedList<>();
+
+                    List<String> blockParams = null;
+                    List<List<Double>> blockDatas = null;
+
+                    while ((line = br.readLine()) != null) {
+                        line = line.trim();
+
+                        String[] splitted = line.split("\\s+");
+                        if (splitted == null || splitted.length < 2) {
+                            if (!state.equals("before")) {
+                                state = "before";
+                            }
+                            continue;
+                        }
+
+                        if (state.equals("before")) {
+                            if (!splitted[0].equalsIgnoreCase("UNITS"))
+                                continue;
+
+                            // append parameter array
+                            blockParams = new ArrayList<>();
+                            blockDatas = new ArrayList<>();
+
+                            for (int i = 1; i < splitted.length; i++) {
+                                blockParams.add(splitted[i]);
+                                blockDatas.add(new ArrayList<>());
+                            }
+
+                            parameters.add(blockParams);
+                            dataList.add(blockDatas);
+
+                            state = "extract";
+                            continue;
+                        }
+
+                        if (state.equals("extract")) {
+                            if (!timeSet.contains(Double.parseDouble(splitted[0])))
+                                timeSet.add(Double.parseDouble(splitted[0]));
+
+                            for (int i = 1; i < splitted.length; i++) {
+                                if (i < splitted.length)
+                                    blockDatas.get(i - 1).add(Double.parseDouble(splitted[i]));
+                                else
+                                    blockDatas.get(i - 1).add(0.0);
+                            }
+                        }
+                    }
+
+                    allParams = new ArrayList<>();
+                    for (List<String> p : parameters)
+                        allParams.addAll(p);
+
+                    allData = new ArrayList<>();
+                    for (List<List<Double>> d : dataList)
+                        allData.addAll(d);
+
+                    br.close();
+                    fis.close();
+                } catch(IOException ex) {
+                    ex.printStackTrace();
+                    throw new HandledServiceException(411, "분석중 오류가 발생했습니다. " + ex.getMessage());
+                }
+
+                for (int i = 0; i < allParams.size(); i++) {
+                    String p = allParams.get(i);
+                    ParamVO pi = null;
+                    if (dataType.equals("adams") && adamsMap.containsKey(p)) pi = adamsMap.get(p);
+                    if (dataType.equals("zaero") && zaeroMap.containsKey(p)) pi = zaeroMap.get(p);
+
+                    if (pi == null) {
+                        notMappedParams.add(p);
+                    }
+                    else {
+                        mappedParams.add(pi);
+                    }
                 }
             }
 
