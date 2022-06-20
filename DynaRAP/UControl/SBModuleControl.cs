@@ -9,6 +9,7 @@ using DynaRAP.Data;
 using DynaRAP.Forms;
 using DynaRAP.TEST;
 using DynaRAP.UTIL;
+using log4net.Config;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,8 @@ namespace DynaRAP.UControl
 {
     public partial class SBModuleControl : DevExpress.XtraEditors.XtraUserControl
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        
         ChartArea myChartArea = new ChartArea("LineChartArea");
         List<SBParamControl> sbParamList = new List<SBParamControl>();
         List<SBIntervalControl> sbIntervalList = new List<SBIntervalControl>();
@@ -56,6 +59,8 @@ namespace DynaRAP.UControl
         public SBModuleControl()
         {
             InitializeComponent();
+
+            XmlConfigurator.Configure(new FileInfo("log4net.xml"));
         }
 
         private void SBModuleControl_Load(object sender, EventArgs e)
@@ -127,6 +132,8 @@ namespace DynaRAP.UControl
             ""command"":""upload-list""
             }";
 
+                log.Info(sendData);
+
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
                 request.Method = "POST";
                 request.ContentType = "application/json";
@@ -171,6 +178,7 @@ namespace DynaRAP.UControl
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                return null;
             }
             return null;
 
@@ -336,6 +344,8 @@ namespace DynaRAP.UControl
             }}"
                 , uploadSeq);
 
+                log.Info(sendData);
+
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
                 request.Method = "POST";
                 request.ContentType = "application/json";
@@ -380,6 +390,7 @@ namespace DynaRAP.UControl
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                return null;
             }
             return null;
 
@@ -443,6 +454,8 @@ namespace DynaRAP.UControl
             }}"
                 , partSeq);
 
+                log.Info(sendData);
+
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
                 request.Method = "POST";
                 request.ContentType = "application/json";
@@ -487,6 +500,7 @@ namespace DynaRAP.UControl
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                return null;
             }
             return null;
 
@@ -807,6 +821,8 @@ namespace DynaRAP.UControl
             ""pageSize"":3000
             }";
 
+                log.Info(sendData);
+
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
                 request.Method = "POST";
                 request.ContentType = "application/json";
@@ -1089,7 +1105,9 @@ namespace DynaRAP.UControl
                 }
 
                 var json = JsonConvert.SerializeObject(req);
-                Console.WriteLine(json);
+
+                //Console.WriteLine(json);
+                log.Info(json);
 
                 string url = ConfigurationManager.AppSettings["UrlPart"];
 
@@ -1139,6 +1157,7 @@ namespace DynaRAP.UControl
             catch(Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                return false;
             }
             return true;
 
@@ -1218,6 +1237,8 @@ namespace DynaRAP.UControl
             ""pageSize"":3000
             }}"
                 , presetPack);
+
+                log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
                 request.Method = "POST";

@@ -8,6 +8,7 @@ using DevExpress.XtraTreeList.Columns;
 using DevExpress.XtraTreeList.Nodes;
 using DynaRAP.Data;
 using DynaRAP.UTIL;
+using log4net.Config;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -26,6 +27,8 @@ namespace DynaRAP.UControl
 {
     public partial class MgmtMatchingTabletControl : DevExpress.XtraEditors.XtraUserControl
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+      
         int focusedNodeId = 0;
         TreeListNode focusedNode = null;
         List<ResponsePreset> presetList = null;
@@ -37,6 +40,8 @@ namespace DynaRAP.UControl
         public MgmtMatchingTabletControl()
         {
             InitializeComponent();
+
+            XmlConfigurator.Configure(new FileInfo("log4net.xml"));
         }
 
         #region Method
@@ -152,6 +157,8 @@ namespace DynaRAP.UControl
             ""pageSize"":3000
             }";
 
+                log.Info(sendData);
+
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
                 request.Method = "POST";
                 request.ContentType = "application/json";
@@ -219,6 +226,8 @@ namespace DynaRAP.UControl
             }}"
                 , 1, pid, name, dirType);
 
+                log.Info(sendData);
+
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
                 request.Method = "POST";
                 request.ContentType = "application/json";
@@ -261,6 +270,7 @@ namespace DynaRAP.UControl
             catch(Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                return false;
             }
 
             return true;
@@ -282,6 +292,8 @@ namespace DynaRAP.UControl
             ""refSubSeq"":""{5}""
             }}"
                 , id, pid, name, dirType, paramPack, seq);
+
+                log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
                 request.Method = "POST";
@@ -325,6 +337,7 @@ namespace DynaRAP.UControl
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                return false;
             }
 
             return true;
@@ -340,6 +353,8 @@ namespace DynaRAP.UControl
             ""seq"":""{0}""
             }}
             ", id);
+
+                log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
                 request.Method = "POST";
@@ -382,6 +397,7 @@ namespace DynaRAP.UControl
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                return false;
             }
             return true;
         }
@@ -394,6 +410,8 @@ namespace DynaRAP.UControl
 
                 string url = ConfigurationManager.AppSettings["UrlDir"];
                 string sendData = "{ \"command\": \"list\" }";
+
+                log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
                 request.Method = "POST";
@@ -457,6 +475,8 @@ namespace DynaRAP.UControl
             ""pageNo"":1,
             ""pageSize"":3000
             }";
+
+                log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
                 request.Method = "POST";
@@ -529,6 +549,8 @@ namespace DynaRAP.UControl
             }}"
                 , opType, presetPack, encName);
 
+                log.Info(sendData);
+
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
                 request.Method = "POST";
                 request.ContentType = "application/json";
@@ -575,6 +597,7 @@ namespace DynaRAP.UControl
             catch(Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                return false;
             }
             return true;
         }
@@ -590,6 +613,8 @@ namespace DynaRAP.UControl
             ""presetPack"":""{0}""
             }}"
                 , presetPack);
+
+                log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
                 request.Method = "POST";
@@ -636,6 +661,7 @@ namespace DynaRAP.UControl
             catch(Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                return false;
             }
             return true;
         }
@@ -675,6 +701,8 @@ namespace DynaRAP.UControl
             ""pageSize"":3000
             }}"
                 , presetPack);
+
+                log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
                 request.Method = "POST";

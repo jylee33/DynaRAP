@@ -1,5 +1,6 @@
 ﻿using DevExpress.XtraEditors;
 using DynaRAP.Data;
+using log4net.Config;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,8 @@ namespace DynaRAP.UControl
 {
     public partial class CreateSBProgressForm : DevExpress.XtraEditors.XtraForm
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+   
         System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
         int progress = 0;
         bool isCompleted = false;
@@ -32,6 +35,7 @@ namespace DynaRAP.UControl
             InitializeComponent();
             bFirst = true;
 
+            XmlConfigurator.Configure(new FileInfo("log4net.xml"));
         }
 
         public CreateSBProgressForm(string uploadSeq) : this()
@@ -102,6 +106,8 @@ namespace DynaRAP.UControl
                 }}"
                 , uploadSeq);
 
+                log.Info(sendData);
+
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
                 request.Method = "POST";
                 request.ContentType = "application/json";
@@ -161,6 +167,7 @@ namespace DynaRAP.UControl
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                return false;
             }
 
             return true;

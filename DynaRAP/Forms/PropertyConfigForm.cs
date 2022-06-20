@@ -1,5 +1,6 @@
 ﻿using DevExpress.XtraEditors;
 using DynaRAP.Data;
+using log4net.Config;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -18,12 +19,16 @@ namespace DynaRAP.Forms
 {
     public partial class PropertyConfigForm : DevExpress.XtraEditors.XtraForm
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+      
         List<ResponsePropList> propList = new List<ResponsePropList>();
         string selPropertyType = string.Empty;
 
         public PropertyConfigForm()
         {
             InitializeComponent();
+
+            XmlConfigurator.Configure(new FileInfo("log4net.xml"));
         }
 
         private void PropertyConfigForm_Load(object sender, EventArgs e)
@@ -208,6 +213,8 @@ namespace DynaRAP.Forms
                 ""propType"":""""
                 }";
 
+                log.Info(sendData);
+
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
                 request.Method = "POST";
                 request.ContentType = "application/json";
@@ -240,6 +247,7 @@ namespace DynaRAP.Forms
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                return null;
             }
 
             return result.response;
@@ -258,6 +266,8 @@ namespace DynaRAP.Forms
                     ""paramUnit"":""{2}""
                 }}"
                 , propType, propCode, unit);
+
+                log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
                 request.Method = "POST";
@@ -300,6 +310,7 @@ namespace DynaRAP.Forms
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                return false;
             }
 
             return true;
@@ -320,6 +331,8 @@ namespace DynaRAP.Forms
                 }}"
                 , seq, propType, propCode, unit, deleted);
 
+                log.Info(sendData);
+
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
                 request.Method = "POST";
                 request.ContentType = "application/json";
@@ -361,6 +374,7 @@ namespace DynaRAP.Forms
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                return false;
             }
 
             return true;

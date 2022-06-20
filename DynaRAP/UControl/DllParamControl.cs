@@ -5,6 +5,7 @@ using DevExpress.XtraGrid.Columns;
 using DevExpress.XtraGrid.Views.Grid;
 using DynaRAP.Data;
 using DynaRAP.UTIL;
+using log4net.Config;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,8 @@ namespace DynaRAP.UControl
 {
     public partial class DllParamControl : DevExpress.XtraEditors.XtraUserControl
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+       
         string dllSeq = string.Empty;
         string dllParamSeq = string.Empty;
         string paramType = string.Empty;
@@ -35,6 +38,8 @@ namespace DynaRAP.UControl
         public DllParamControl()
         {
             InitializeComponent();
+
+            XmlConfigurator.Configure(new FileInfo("log4net.xml"));
         }
 
         public DllParamControl(string dllSeq, string dllParamSeq, string paramType) : this()
@@ -161,6 +166,7 @@ namespace DynaRAP.UControl
                 }}"
                 , dllSeq, gridView1.FocusedRowHandle + 1);
 
+                log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
                 request.Method = "POST";
@@ -194,6 +200,7 @@ namespace DynaRAP.UControl
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                return null;
             }
 
             return result;
@@ -279,6 +286,8 @@ namespace DynaRAP.UControl
                      , dllSeq, dllParamSeq, dataName);
                 }
 
+                log.Info(sendData);
+
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
                 request.Method = "POST";
                 request.ContentType = "application/json";
@@ -311,6 +320,7 @@ namespace DynaRAP.UControl
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                return null;
             }
 
             return result;
@@ -346,6 +356,8 @@ namespace DynaRAP.UControl
                 }}"
                 , dllSeq, dllParamSeq);
 
+                log.Info(sendData);
+
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
                 request.Method = "POST";
                 request.ContentType = "application/json";
@@ -378,6 +390,7 @@ namespace DynaRAP.UControl
             catch(Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                return null;
             }
 
             return result.response;

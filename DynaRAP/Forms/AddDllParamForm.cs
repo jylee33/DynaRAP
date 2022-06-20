@@ -1,6 +1,7 @@
 ﻿using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Controls;
 using DynaRAP.Data;
+using log4net.Config;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,8 @@ namespace DynaRAP.Forms
 {
     public partial class AddDllParamForm : DevExpress.XtraEditors.XtraForm
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+       
         DllParamResponse response = null;
         string seq = string.Empty;
 
@@ -27,6 +30,8 @@ namespace DynaRAP.Forms
         public AddDllParamForm()
         {
             InitializeComponent();
+
+            XmlConfigurator.Configure(new FileInfo("log4net.xml"));
         }
 
         public AddDllParamForm(string seq) : this()
@@ -87,6 +92,8 @@ namespace DynaRAP.Forms
                 }}"
                 , seq, encName, cboParameterType.Text);
 
+                log.Info(sendData);
+
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
                 request.Method = "POST";
                 request.ContentType = "application/json";
@@ -119,6 +126,7 @@ namespace DynaRAP.Forms
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                return null;
             }
 
             return result;

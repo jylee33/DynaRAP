@@ -9,6 +9,7 @@ using DynaRAP.Common;
 using DynaRAP.Data;
 using DynaRAP.EventData;
 using DynaRAP.UTIL;
+using log4net.Config;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,8 @@ namespace DynaRAP.UControl
 {
     public partial class ImportModuleControl : DevExpress.XtraEditors.XtraUserControl
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        
         string selectedFuselage = string.Empty;
         Dictionary<string, List<string>> dicData = new Dictionary<string, List<string>>();
         List<ImportParamControl> paramControlList = new List<ImportParamControl>();
@@ -46,6 +49,8 @@ namespace DynaRAP.UControl
         public ImportModuleControl()
         {
             InitializeComponent();
+
+            XmlConfigurator.Configure(new FileInfo("log4net.xml"));
         }
 
         public ImportModuleControl(ImportType importType) : this()
@@ -189,6 +194,8 @@ namespace DynaRAP.UControl
                 ""pageSize"":3000
                 }";
 
+                log.Info(sendData);
+
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
                 request.Method = "POST";
                 request.ContentType = "application/json";
@@ -221,6 +228,7 @@ namespace DynaRAP.UControl
             catch(Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                return null;
             }
 
             return result.response;
@@ -404,6 +412,8 @@ namespace DynaRAP.UControl
                 ""pageNo"":1,
                 ""pageSize"":3000
                 }";
+
+                log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
                 request.Method = "POST";
@@ -705,7 +715,9 @@ namespace DynaRAP.UControl
                 }
 
                 var json = JsonConvert.SerializeObject(import);
-                Console.WriteLine(json);
+
+                //Console.WriteLine(json);
+                log.Info(json);
 
                 string url = ConfigurationManager.AppSettings["UrlImport"];
 
@@ -766,6 +778,7 @@ namespace DynaRAP.UControl
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                return false;
             }
 
             return true;
@@ -997,6 +1010,8 @@ namespace DynaRAP.UControl
                     , presetPack, dataType, this.csvFilePath);
                 }
 
+                log.Info(sendData);
+
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
                 request.Method = "POST";
                 request.ContentType = "application/json";
@@ -1048,6 +1063,7 @@ namespace DynaRAP.UControl
             catch(Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                return false;
             }
 
             return true;
