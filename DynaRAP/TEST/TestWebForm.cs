@@ -116,45 +116,52 @@ namespace DynaRAP.TEST
 
         private void btnSend_Click(object sender, EventArgs e)
         {
-            txtResponse.Text = String.Empty;
-           
-            string url = txtUrl.Text;
-            string data = txtRequest.Text;
-
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = radioPOST.Checked ? "POST" : "GET";
-
-            if(radioPOST.Checked)
-                request.ContentType = "application/json";
-
-            request.Timeout = 30 * 1000;
-            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
-
-            if (radioPOST.Checked)
+            try
             {
-                // POST할 데이타를 Request Stream에 쓴다
-                byte[] bytes = Encoding.ASCII.GetBytes(data);
-                request.ContentLength = bytes.Length; // 바이트수 지정
+                txtResponse.Text = String.Empty;
 
-                using (Stream reqStream = request.GetRequestStream())
+                string url = txtUrl.Text;
+                string data = txtRequest.Text;
+
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = radioPOST.Checked ? "POST" : "GET";
+
+                if (radioPOST.Checked)
+                    request.ContentType = "application/json";
+
+                request.Timeout = 30 * 1000;
+                //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+
+                if (radioPOST.Checked)
                 {
-                    reqStream.Write(bytes, 0, bytes.Length);
-                }
-            }
+                    // POST할 데이타를 Request Stream에 쓴다
+                    byte[] bytes = Encoding.ASCII.GetBytes(data);
+                    request.ContentLength = bytes.Length; // 바이트수 지정
 
-            // Response 처리
-            string responseText = string.Empty;
-            using (WebResponse resp = request.GetResponse())
+                    using (Stream reqStream = request.GetRequestStream())
+                    {
+                        reqStream.Write(bytes, 0, bytes.Length);
+                    }
+                }
+
+                // Response 처리
+                string responseText = string.Empty;
+                using (WebResponse resp = request.GetResponse())
+                {
+                    Stream respStream = resp.GetResponseStream();
+                    using (StreamReader sr = new StreamReader(respStream))
+                    {
+                        responseText = sr.ReadToEnd();
+                    }
+                }
+
+                Console.WriteLine(responseText);
+                txtResponse.Text = responseText;
+            }
+            catch (Exception ex)
             {
-                Stream respStream = resp.GetResponseStream();
-                using (StreamReader sr = new StreamReader(respStream))
-                {
-                    responseText = sr.ReadToEnd();
-                }
+                MessageBox.Show(ex.Message);
             }
-
-            Console.WriteLine(responseText);
-            txtResponse.Text = responseText;
         }
     }
 }

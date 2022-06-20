@@ -95,80 +95,88 @@ namespace DynaRAP.UControl
 
         private bool GetProgress()
         {
-            string url = ConfigurationManager.AppSettings["UrlImport"];
-            string sendData = string.Format(@"
+            try
+            {
+                string url = ConfigurationManager.AppSettings["UrlImport"];
+                string sendData = string.Format(@"
             {{
             ""command"":""progress"",
             ""uploadSeq"":""{0}""
             }}"
-            , uploadSeq);
+                , uploadSeq);
 
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "POST";
-            request.ContentType = "application/json";
-            request.Timeout = 30 * 1000;
-            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Timeout = 30 * 1000;
+                //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
 
-            // POST할 데이타를 Request Stream에 쓴다
-            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
-            request.ContentLength = bytes.Length; // 바이트수 지정
+                // POST할 데이타를 Request Stream에 쓴다
+                byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+                request.ContentLength = bytes.Length; // 바이트수 지정
 
-            using (Stream reqStream = request.GetRequestStream())
-            {
-                reqStream.Write(bytes, 0, bytes.Length);
-            }
-
-            // Response 처리
-            string responseText = string.Empty;
-            using (WebResponse resp = request.GetResponse())
-            {
-                Stream respStream = resp.GetResponseStream();
-                using (StreamReader sr = new StreamReader(respStream))
+                using (Stream reqStream = request.GetRequestStream())
                 {
-                    responseText = sr.ReadToEnd();
+                    reqStream.Write(bytes, 0, bytes.Length);
                 }
-            }
 
-            //Console.WriteLine(responseText);
-            ImportResponse result = JsonConvert.DeserializeObject<ImportResponse>(responseText);
-
-            if (result != null)
-            {
-                if (result.code != 200)
+                // Response 처리
+                string responseText = string.Empty;
+                using (WebResponse resp = request.GetResponse())
                 {
-                    MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return false;
-                }
-                else
-                {
-                    if (result.response.status.Equals("import-done"))
+                    Stream respStream = resp.GetResponseStream();
+                    using (StreamReader sr = new StreamReader(respStream))
                     {
-                        isCompleted = true;
-                        timer.Stop();
-                        
-                        if(bFirst)
-                            MessageBox.Show(result.response.statusMessage);
-                        this.Close();
+                        responseText = sr.ReadToEnd();
                     }
-                    else if (result.response.status.Equals("error"))
+                }
+
+                //Console.WriteLine(responseText);
+                ImportResponse result = JsonConvert.DeserializeObject<ImportResponse>(responseText);
+
+                if (result != null)
+                {
+                    if (result.code != 200)
                     {
-                        isCompleted = true;
-                        timer.Stop();
-
-                        MessageBox.Show(result.response.statusMessage);
-
-                        this.notMappedParams = result.response.notMappedParams;
-                        DialogResult = DialogResult.Cancel;
-                        this.Close();
+                        MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return false;
                     }
                     else
                     {
-                        this.fetchCount = result.response.fetchCount;
-                        this.totalFetchCount = result.response.totalFetchCount;
+                        if (result.response.status.Equals("import-done"))
+                        {
+                            isCompleted = true;
+                            timer.Stop();
+
+                            if (bFirst)
+                                MessageBox.Show(result.response.statusMessage);
+                            this.Close();
+                        }
+                        else if (result.response.status.Equals("error"))
+                        {
+                            isCompleted = true;
+                            timer.Stop();
+
+                            MessageBox.Show(result.response.statusMessage);
+
+                            this.notMappedParams = result.response.notMappedParams;
+                            DialogResult = DialogResult.Cancel;
+                            this.Close();
+                        }
+                        else
+                        {
+                            this.fetchCount = result.response.fetchCount;
+                            this.totalFetchCount = result.response.totalFetchCount;
+                        }
                     }
                 }
+                bFirst = false;
             }
-            bFirst = false;
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
             return true;
         }
     }

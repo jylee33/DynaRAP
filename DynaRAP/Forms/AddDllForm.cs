@@ -54,52 +54,58 @@ namespace DynaRAP.Forms
 
         private DllResponse AddDll()
         {
-            //Encoding
-            byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(edtDataSetName.Text);
-            string encName = Convert.ToBase64String(basebyte);
-
-            string url = ConfigurationManager.AppSettings["UrlDLL"];
-
-            string sendData = string.Format(@"
-            {{
-            ""command"":""add"",
-            ""dataSetCode"":""{0}"",
-            ""dataSetName"":""{1}"",
-            ""dataVersion"":""{2}""
-            }}"
-            , edtDataSetCode.Text, encName, edtDataSetVersion.Text);
-
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "POST";
-            request.ContentType = "application/json";
-            request.Timeout = 30 * 1000;
-            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
-
-            // POST할 데이타를 Request Stream에 쓴다
-            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
-            request.ContentLength = bytes.Length; // 바이트수 지정
-
-            using (Stream reqStream = request.GetRequestStream())
+            DllResponse result = null;
+            try
             {
-                reqStream.Write(bytes, 0, bytes.Length);
-            }
+                //Encoding
+                byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(edtDataSetName.Text);
+                string encName = Convert.ToBase64String(basebyte);
 
-            // Response 처리
-            string responseText = string.Empty;
-            using (WebResponse resp = request.GetResponse())
-            {
-                Stream respStream = resp.GetResponseStream();
-                using (StreamReader sr = new StreamReader(respStream))
+                string url = ConfigurationManager.AppSettings["UrlDLL"];
+
+                string sendData = string.Format(@"
+                {{
+                ""command"":""add"",
+                ""dataSetCode"":""{0}"",
+                ""dataSetName"":""{1}"",
+                ""dataVersion"":""{2}""
+                }}"
+                , edtDataSetCode.Text, encName, edtDataSetVersion.Text);
+
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Timeout = 30 * 1000;
+                //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+
+                // POST할 데이타를 Request Stream에 쓴다
+                byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+                request.ContentLength = bytes.Length; // 바이트수 지정
+
+                using (Stream reqStream = request.GetRequestStream())
                 {
-                    responseText = sr.ReadToEnd();
+                    reqStream.Write(bytes, 0, bytes.Length);
                 }
+
+                // Response 처리
+                string responseText = string.Empty;
+                using (WebResponse resp = request.GetResponse())
+                {
+                    Stream respStream = resp.GetResponseStream();
+                    using (StreamReader sr = new StreamReader(respStream))
+                    {
+                        responseText = sr.ReadToEnd();
+                    }
+                }
+
+                //Console.WriteLine(responseText);
+                result = JsonConvert.DeserializeObject<DllResponse>(responseText);
             }
-
-            //Console.WriteLine(responseText);
-            DllResponse result = JsonConvert.DeserializeObject<DllResponse>(responseText);
-
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
             return result;
-
         }
     }
 }

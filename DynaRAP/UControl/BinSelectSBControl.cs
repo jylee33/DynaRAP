@@ -132,69 +132,76 @@ namespace DynaRAP.UControl
             //list.Add(new FlyingData(3, 0, "Short Block", null));
             list.Add(new FlyingData(1, 0, "Short Block", null));
 
-            string url = ConfigurationManager.AppSettings["UrlShortBlock"];
-
-            string sendData = string.Format(@"
-            {{
-            ""command"":""list"",
-            ""registerUid"":"""",
-            ""partSeq"":"""",
-            ""pageNo"":1,
-            ""pageSize"":3000
-            }}"
-            );
-
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "POST";
-            request.ContentType = "application/json";
-            request.Timeout = 30 * 1000;
-            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
-
-            // POST할 데이타를 Request Stream에 쓴다
-            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
-            request.ContentLength = bytes.Length; // 바이트수 지정
-
-            using (Stream reqStream = request.GetRequestStream())
+            try
             {
-                reqStream.Write(bytes, 0, bytes.Length);
-            }
+                string url = ConfigurationManager.AppSettings["UrlShortBlock"];
 
-            // Response 처리
-            string responseText = string.Empty;
-            using (WebResponse resp = request.GetResponse())
-            {
-                Stream respStream = resp.GetResponseStream();
-                using (StreamReader sr = new StreamReader(respStream))
+                string sendData = string.Format(@"
+                {{
+                ""command"":""list"",
+                ""registerUid"":"""",
+                ""partSeq"":"""",
+                ""pageNo"":1,
+                ""pageSize"":3000
+                }}"
+                );
+
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Timeout = 30 * 1000;
+                //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+
+                // POST할 데이타를 Request Stream에 쓴다
+                byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+                request.ContentLength = bytes.Length; // 바이트수 지정
+
+                using (Stream reqStream = request.GetRequestStream())
                 {
-                    responseText = sr.ReadToEnd();
+                    reqStream.Write(bytes, 0, bytes.Length);
                 }
-            }
 
-            //Console.WriteLine(responseText);
-            SBListResponse result = JsonConvert.DeserializeObject<SBListResponse>(responseText);
-
-            if (result != null)
-            {
-                if (result.code != 200)
+                // Response 처리
+                string responseText = string.Empty;
+                using (WebResponse resp = request.GetResponse())
                 {
-                    return null;
-                }
-                else
-                {
-                    foreach(ResponseSBList sbList in result.response)
+                    Stream respStream = resp.GetResponseStream();
+                    using (StreamReader sr = new StreamReader(respStream))
                     {
-                        FlyingData data = new FlyingData();
-                        data.ParentID = 1;
-
-                        //Decoding
-                        byte[] byte64 = Convert.FromBase64String(sbList.blockName);
-                        string decName = Encoding.UTF8.GetString(byte64);
-
-                        data.FlyingName = decName;
-                        data.Check = false;
-                        list.Add(data);
+                        responseText = sr.ReadToEnd();
                     }
                 }
+
+                //Console.WriteLine(responseText);
+                SBListResponse result = JsonConvert.DeserializeObject<SBListResponse>(responseText);
+
+                if (result != null)
+                {
+                    if (result.code != 200)
+                    {
+                        return null;
+                    }
+                    else
+                    {
+                        foreach (ResponseSBList sbList in result.response)
+                        {
+                            FlyingData data = new FlyingData();
+                            data.ParentID = 1;
+
+                            //Decoding
+                            byte[] byte64 = Convert.FromBase64String(sbList.blockName);
+                            string decName = Encoding.UTF8.GetString(byte64);
+
+                            data.FlyingName = decName;
+                            data.Check = false;
+                            list.Add(data);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
 
             return list;

@@ -195,43 +195,52 @@ namespace DynaRAP.Forms
 
         private List<ResponsePropList> GetPropertyInfo()
         {
-            BindingList<DirData> list = new BindingList<DirData>();
+            PropListResponse result = null;
 
-            string url = ConfigurationManager.AppSettings["UrlParam"];
-            string sendData = @"
+            try
             {
-            ""command"":""prop-list"",
-            ""propType"":""""
-            }";
+                BindingList<DirData> list = new BindingList<DirData>();
 
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "POST";
-            request.ContentType = "application/json";
-            request.Timeout = 30 * 1000;
-            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
-
-            // POST할 데이타를 Request Stream에 쓴다
-            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
-            request.ContentLength = bytes.Length; // 바이트수 지정
-
-            using (Stream reqStream = request.GetRequestStream())
-            {
-                reqStream.Write(bytes, 0, bytes.Length);
-            }
-
-            // Response 처리
-            string responseText = string.Empty;
-            using (WebResponse resp = request.GetResponse())
-            {
-                Stream respStream = resp.GetResponseStream();
-                using (StreamReader sr = new StreamReader(respStream))
+                string url = ConfigurationManager.AppSettings["UrlParam"];
+                string sendData = @"
                 {
-                    responseText = sr.ReadToEnd();
-                }
-            }
+                ""command"":""prop-list"",
+                ""propType"":""""
+                }";
 
-            //Console.WriteLine(responseText);
-            PropListResponse result = JsonConvert.DeserializeObject<PropListResponse>(responseText);
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Timeout = 30 * 1000;
+                //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+
+                // POST할 데이타를 Request Stream에 쓴다
+                byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+                request.ContentLength = bytes.Length; // 바이트수 지정
+
+                using (Stream reqStream = request.GetRequestStream())
+                {
+                    reqStream.Write(bytes, 0, bytes.Length);
+                }
+
+                // Response 처리
+                string responseText = string.Empty;
+                using (WebResponse resp = request.GetResponse())
+                {
+                    Stream respStream = resp.GetResponseStream();
+                    using (StreamReader sr = new StreamReader(respStream))
+                    {
+                        responseText = sr.ReadToEnd();
+                    }
+                }
+
+                //Console.WriteLine(responseText);
+                result = JsonConvert.DeserializeObject<PropListResponse>(responseText);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
 
             return result.response;
 
@@ -239,105 +248,121 @@ namespace DynaRAP.Forms
 
         private bool PropAdd(string propType, string propCode, string unit)
         {
-            string url = ConfigurationManager.AppSettings["UrlParam"];
-            string sendData = string.Format(@"
-            {{ ""command"":""prop-add"",
-                ""propType"":""{0}"",
-                ""propCode"":""{1}"",
-                ""paramUnit"":""{2}""
-            }}"
-            , propType, propCode, unit);
-
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "POST";
-            request.ContentType = "application/json";
-            request.Timeout = 30 * 1000;
-            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
-
-            // POST할 데이타를 Request Stream에 쓴다
-            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
-            request.ContentLength = bytes.Length; // 바이트수 지정
-
-            using (Stream reqStream = request.GetRequestStream())
+            try
             {
-                reqStream.Write(bytes, 0, bytes.Length);
-            }
+                string url = ConfigurationManager.AppSettings["UrlParam"];
+                string sendData = string.Format(@"
+                {{ ""command"":""prop-add"",
+                    ""propType"":""{0}"",
+                    ""propCode"":""{1}"",
+                    ""paramUnit"":""{2}""
+                }}"
+                , propType, propCode, unit);
 
-            // Response 처리
-            string responseText = string.Empty;
-            using (WebResponse resp = request.GetResponse())
-            {
-                Stream respStream = resp.GetResponseStream();
-                using (StreamReader sr = new StreamReader(respStream))
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Timeout = 30 * 1000;
+                //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+
+                // POST할 데이타를 Request Stream에 쓴다
+                byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+                request.ContentLength = bytes.Length; // 바이트수 지정
+
+                using (Stream reqStream = request.GetRequestStream())
                 {
-                    responseText = sr.ReadToEnd();
+                    reqStream.Write(bytes, 0, bytes.Length);
+                }
+
+                // Response 처리
+                string responseText = string.Empty;
+                using (WebResponse resp = request.GetResponse())
+                {
+                    Stream respStream = resp.GetResponseStream();
+                    using (StreamReader sr = new StreamReader(respStream))
+                    {
+                        responseText = sr.ReadToEnd();
+                    }
+                }
+
+                //Console.WriteLine(responseText);
+                PropAddResponse result = JsonConvert.DeserializeObject<PropAddResponse>(responseText);
+
+                if (result != null)
+                {
+                    if (result.code != 200)
+                    {
+                        MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return false;
+                    }
                 }
             }
-
-            //Console.WriteLine(responseText);
-            PropAddResponse result = JsonConvert.DeserializeObject<PropAddResponse>(responseText);
-
-            if (result != null)
+            catch (Exception ex)
             {
-                if (result.code != 200)
-                {
-                    MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return false;
-                }
+                MessageBox.Show(ex.Message);
             }
+
             return true;
         }
 
         private bool PropModify(string seq, string propType, string propCode, string unit, bool deleted = false)
         {
-            string url = ConfigurationManager.AppSettings["UrlParam"];
-            string sendData = string.Format(@"
-            {{ ""command"":""prop-modify"",
-            ""seq"":""{0}"",
-            ""propType"":""{1}"",
-            ""propCode"":""{2}"",
-            ""paramUnit"":""{3}"",
-            ""deleted"":{4}
-            }}"
-            , seq, propType, propCode, unit, deleted);
-
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "POST";
-            request.ContentType = "application/json";
-            request.Timeout = 30 * 1000;
-            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
-
-            // POST할 데이타를 Request Stream에 쓴다
-            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
-            request.ContentLength = bytes.Length; // 바이트수 지정
-
-            using (Stream reqStream = request.GetRequestStream())
+            try
             {
-                reqStream.Write(bytes, 0, bytes.Length);
-            }
+                string url = ConfigurationManager.AppSettings["UrlParam"];
+                string sendData = string.Format(@"
+                {{ ""command"":""prop-modify"",
+                ""seq"":""{0}"",
+                ""propType"":""{1}"",
+                ""propCode"":""{2}"",
+                ""paramUnit"":""{3}"",
+                ""deleted"":{4}
+                }}"
+                , seq, propType, propCode, unit, deleted);
 
-            // Response 처리
-            string responseText = string.Empty;
-            using (WebResponse resp = request.GetResponse())
-            {
-                Stream respStream = resp.GetResponseStream();
-                using (StreamReader sr = new StreamReader(respStream))
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Timeout = 30 * 1000;
+                //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+
+                // POST할 데이타를 Request Stream에 쓴다
+                byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+                request.ContentLength = bytes.Length; // 바이트수 지정
+
+                using (Stream reqStream = request.GetRequestStream())
                 {
-                    responseText = sr.ReadToEnd();
+                    reqStream.Write(bytes, 0, bytes.Length);
+                }
+
+                // Response 처리
+                string responseText = string.Empty;
+                using (WebResponse resp = request.GetResponse())
+                {
+                    Stream respStream = resp.GetResponseStream();
+                    using (StreamReader sr = new StreamReader(respStream))
+                    {
+                        responseText = sr.ReadToEnd();
+                    }
+                }
+
+                //Console.WriteLine(responseText);
+                PropAddResponse result = JsonConvert.DeserializeObject<PropAddResponse>(responseText);
+
+                if (result != null)
+                {
+                    if (result.code != 200)
+                    {
+                        MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return false;
+                    }
                 }
             }
-
-            //Console.WriteLine(responseText);
-            PropAddResponse result = JsonConvert.DeserializeObject<PropAddResponse>(responseText);
-
-            if (result != null)
+            catch (Exception ex)
             {
-                if (result.code != 200)
-                {
-                    MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return false;
-                }
+                MessageBox.Show(ex.Message);
             }
+
             return true;
         }
 

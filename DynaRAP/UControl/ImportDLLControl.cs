@@ -88,43 +88,52 @@ namespace DynaRAP.UControl
 
         private DllParamResponse RemoveDllParam(string paramSeq)
         {
-            string url = ConfigurationManager.AppSettings["UrlDLL"];
+            DllParamResponse result = null;
 
-            string sendData = string.Format(@"
-            {{
-            ""command"":""param-remove"",
-            ""seq"":""{0}""
-            }}"
-            , paramSeq);
-
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "POST";
-            request.ContentType = "application/json";
-            request.Timeout = 30 * 1000;
-            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
-
-            // POST할 데이타를 Request Stream에 쓴다
-            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
-            request.ContentLength = bytes.Length; // 바이트수 지정
-
-            using (Stream reqStream = request.GetRequestStream())
+            try
             {
-                reqStream.Write(bytes, 0, bytes.Length);
-            }
+                string url = ConfigurationManager.AppSettings["UrlDLL"];
 
-            // Response 처리
-            string responseText = string.Empty;
-            using (WebResponse resp = request.GetResponse())
-            {
-                Stream respStream = resp.GetResponseStream();
-                using (StreamReader sr = new StreamReader(respStream))
+                string sendData = string.Format(@"
+                {{
+                ""command"":""param-remove"",
+                ""seq"":""{0}""
+                }}"
+                , paramSeq);
+
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Timeout = 30 * 1000;
+                //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+
+                // POST할 데이타를 Request Stream에 쓴다
+                byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+                request.ContentLength = bytes.Length; // 바이트수 지정
+
+                using (Stream reqStream = request.GetRequestStream())
                 {
-                    responseText = sr.ReadToEnd();
+                    reqStream.Write(bytes, 0, bytes.Length);
                 }
-            }
 
-            //Console.WriteLine(responseText);
-            DllParamResponse result = JsonConvert.DeserializeObject<DllParamResponse>(responseText);
+                // Response 처리
+                string responseText = string.Empty;
+                using (WebResponse resp = request.GetResponse())
+                {
+                    Stream respStream = resp.GetResponseStream();
+                    using (StreamReader sr = new StreamReader(respStream))
+                    {
+                        responseText = sr.ReadToEnd();
+                    }
+                }
+
+                //Console.WriteLine(responseText);
+                result = JsonConvert.DeserializeObject<DllParamResponse>(responseText);
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
 
             return result;
 
@@ -243,42 +252,51 @@ namespace DynaRAP.UControl
 
         private List<ResponseDLL> GetDllList()
         {
-            string url = ConfigurationManager.AppSettings["UrlDLL"];
-            string sendData = @"
+            DllListResponse result = null;
+
+            try
             {
-            ""command"":""list"",
-            ""pageNo"":1,
-            ""pageSize"":3000
-            }";
-
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "POST";
-            request.ContentType = "application/json";
-            request.Timeout = 30 * 1000;
-            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
-
-            // POST할 데이타를 Request Stream에 쓴다
-            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
-            request.ContentLength = bytes.Length; // 바이트수 지정
-
-            using (Stream reqStream = request.GetRequestStream())
-            {
-                reqStream.Write(bytes, 0, bytes.Length);
-            }
-
-            // Response 처리
-            string responseText = string.Empty;
-            using (WebResponse resp = request.GetResponse())
-            {
-                Stream respStream = resp.GetResponseStream();
-                using (StreamReader sr = new StreamReader(respStream))
+                string url = ConfigurationManager.AppSettings["UrlDLL"];
+                string sendData = @"
                 {
-                    responseText = sr.ReadToEnd();
-                }
-            }
+                ""command"":""list"",
+                ""pageNo"":1,
+                ""pageSize"":3000
+                }";
 
-            //Console.WriteLine(responseText);
-            DllListResponse result = JsonConvert.DeserializeObject<DllListResponse>(responseText);
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Timeout = 30 * 1000;
+                //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+
+                // POST할 데이타를 Request Stream에 쓴다
+                byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+                request.ContentLength = bytes.Length; // 바이트수 지정
+
+                using (Stream reqStream = request.GetRequestStream())
+                {
+                    reqStream.Write(bytes, 0, bytes.Length);
+                }
+
+                // Response 처리
+                string responseText = string.Empty;
+                using (WebResponse resp = request.GetResponse())
+                {
+                    Stream respStream = resp.GetResponseStream();
+                    using (StreamReader sr = new StreamReader(respStream))
+                    {
+                        responseText = sr.ReadToEnd();
+                    }
+                }
+
+                //Console.WriteLine(responseText);
+                result = JsonConvert.DeserializeObject<DllListResponse>(responseText);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
 
             return result.response;
 
@@ -309,42 +327,51 @@ namespace DynaRAP.UControl
 
         private List<ResponseDLLParam> GetDllParamList(string seq)
         {
-            string url = ConfigurationManager.AppSettings["UrlDLL"];
-            string sendData = string.Format(@"
-            {{
-            ""command"":""param-list"",
-            ""dllSeq"":""{0}""
-            }}"
-            , seq);
+            DllParamListResponse result = null;
 
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "POST";
-            request.ContentType = "application/json";
-            request.Timeout = 30 * 1000;
-            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
-
-            // POST할 데이타를 Request Stream에 쓴다
-            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
-            request.ContentLength = bytes.Length; // 바이트수 지정
-
-            using (Stream reqStream = request.GetRequestStream())
+            try
             {
-                reqStream.Write(bytes, 0, bytes.Length);
-            }
+                string url = ConfigurationManager.AppSettings["UrlDLL"];
+                string sendData = string.Format(@"
+                {{
+                ""command"":""param-list"",
+                ""dllSeq"":""{0}""
+                }}"
+                , seq);
 
-            // Response 처리
-            string responseText = string.Empty;
-            using (WebResponse resp = request.GetResponse())
-            {
-                Stream respStream = resp.GetResponseStream();
-                using (StreamReader sr = new StreamReader(respStream))
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Timeout = 30 * 1000;
+                //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+
+                // POST할 데이타를 Request Stream에 쓴다
+                byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+                request.ContentLength = bytes.Length; // 바이트수 지정
+
+                using (Stream reqStream = request.GetRequestStream())
                 {
-                    responseText = sr.ReadToEnd();
+                    reqStream.Write(bytes, 0, bytes.Length);
                 }
-            }
 
-            //Console.WriteLine(responseText);
-            DllParamListResponse result = JsonConvert.DeserializeObject<DllParamListResponse>(responseText);
+                // Response 처리
+                string responseText = string.Empty;
+                using (WebResponse resp = request.GetResponse())
+                {
+                    Stream respStream = resp.GetResponseStream();
+                    using (StreamReader sr = new StreamReader(respStream))
+                    {
+                        responseText = sr.ReadToEnd();
+                    }
+                }
+
+                //Console.WriteLine(responseText);
+                result = JsonConvert.DeserializeObject<DllParamListResponse>(responseText);
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
 
             return result.response;
 
@@ -372,43 +399,52 @@ namespace DynaRAP.UControl
 
         private DllResponse RemoveDll(string seq)
         {
-            string url = ConfigurationManager.AppSettings["UrlDLL"];
+            DllResponse result = null;
 
-            string sendData = string.Format(@"
-            {{
-            ""command"":""remove"",
-            ""seq"":""{0}""
-            }}"
-            , seq);
-
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "POST";
-            request.ContentType = "application/json";
-            request.Timeout = 30 * 1000;
-            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
-
-            // POST할 데이타를 Request Stream에 쓴다
-            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
-            request.ContentLength = bytes.Length; // 바이트수 지정
-
-            using (Stream reqStream = request.GetRequestStream())
+            try
             {
-                reqStream.Write(bytes, 0, bytes.Length);
-            }
+                string url = ConfigurationManager.AppSettings["UrlDLL"];
 
-            // Response 처리
-            string responseText = string.Empty;
-            using (WebResponse resp = request.GetResponse())
-            {
-                Stream respStream = resp.GetResponseStream();
-                using (StreamReader sr = new StreamReader(respStream))
+                string sendData = string.Format(@"
+                {{
+                ""command"":""remove"",
+                ""seq"":""{0}""
+                }}"
+                , seq);
+
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Timeout = 30 * 1000;
+                //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+
+                // POST할 데이타를 Request Stream에 쓴다
+                byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+                request.ContentLength = bytes.Length; // 바이트수 지정
+
+                using (Stream reqStream = request.GetRequestStream())
                 {
-                    responseText = sr.ReadToEnd();
+                    reqStream.Write(bytes, 0, bytes.Length);
                 }
-            }
 
-            //Console.WriteLine(responseText);
-            DllResponse result = JsonConvert.DeserializeObject<DllResponse>(responseText);
+                // Response 처리
+                string responseText = string.Empty;
+                using (WebResponse resp = request.GetResponse())
+                {
+                    Stream respStream = resp.GetResponseStream();
+                    using (StreamReader sr = new StreamReader(respStream))
+                    {
+                        responseText = sr.ReadToEnd();
+                    }
+                }
+
+                //Console.WriteLine(responseText);
+                result = JsonConvert.DeserializeObject<DllResponse>(responseText);
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
 
             return result;
 

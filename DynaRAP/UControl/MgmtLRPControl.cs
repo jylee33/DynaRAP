@@ -202,8 +202,10 @@ namespace DynaRAP.UControl
 
         private bool AddDir(string dirType, string name, string pid)
         {
-            string url = ConfigurationManager.AppSettings["UrlDir"];
-            string sendData = string.Format(@"
+            try
+            {
+                string url = ConfigurationManager.AppSettings["UrlDir"];
+                string sendData = string.Format(@"
             {{ ""command"":""add"",
             ""seq"":""{0}"",
             ""parentDirSeq"":""{1}"",
@@ -213,53 +215,61 @@ namespace DynaRAP.UControl
             ""refSeq"":""0"",
             ""refSubSeq"":""0""
             }}"
-            , 1, pid, name, dirType);
+                , 1, pid, name, dirType);
 
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "POST";
-            request.ContentType = "application/json";
-            request.Timeout = 30 * 1000;
-            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Timeout = 30 * 1000;
+                //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
 
-            // POST할 데이타를 Request Stream에 쓴다
-            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
-            request.ContentLength = bytes.Length; // 바이트수 지정
+                // POST할 데이타를 Request Stream에 쓴다
+                byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+                request.ContentLength = bytes.Length; // 바이트수 지정
 
-            using (Stream reqStream = request.GetRequestStream())
-            {
-                reqStream.Write(bytes, 0, bytes.Length);
-            }
-
-            // Response 처리
-            string responseText = string.Empty;
-            using (WebResponse resp = request.GetResponse())
-            {
-                Stream respStream = resp.GetResponseStream();
-                using (StreamReader sr = new StreamReader(respStream))
+                using (Stream reqStream = request.GetRequestStream())
                 {
-                    responseText = sr.ReadToEnd();
+                    reqStream.Write(bytes, 0, bytes.Length);
+                }
+
+                // Response 처리
+                string responseText = string.Empty;
+                using (WebResponse resp = request.GetResponse())
+                {
+                    Stream respStream = resp.GetResponseStream();
+                    using (StreamReader sr = new StreamReader(respStream))
+                    {
+                        responseText = sr.ReadToEnd();
+                    }
+                }
+
+                //Console.WriteLine(responseText);
+                DirJsonData result = JsonConvert.DeserializeObject<DirJsonData>(responseText);
+
+                if (result != null)
+                {
+                    if (result.code != 200)
+                    {
+                        MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return false;
+                    }
+                    this.focusedNodeId = result.response.seq;
                 }
             }
-
-            //Console.WriteLine(responseText);
-            DirJsonData result = JsonConvert.DeserializeObject<DirJsonData>(responseText);
-
-            if (result != null)
+            catch(Exception ex)
             {
-                if (result.code != 200)
-                {
-                    MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return false;
-                }
-                this.focusedNodeId = result.response.seq;
+                MessageBox.Show(ex.Message);
             }
+
             return true;
         }
 
         private bool ModifyDir(string dirType, string id, string pid, string name, string paramPack, string seq)
         {
-            string url = ConfigurationManager.AppSettings["UrlDir"];
-            string sendData = string.Format(@"
+            try
+            {
+                string url = ConfigurationManager.AppSettings["UrlDir"];
+                string sendData = string.Format(@"
             {{ ""command"":""modify"",
             ""seq"":""{0}"",
             ""parentDirSeq"":""{1}"",
@@ -269,95 +279,109 @@ namespace DynaRAP.UControl
             ""refSeq"":""{4}"",
             ""refSubSeq"":""{5}""
             }}"
-            , id, pid, name, dirType, paramPack, seq);
+                , id, pid, name, dirType, paramPack, seq);
 
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "POST";
-            request.ContentType = "application/json";
-            request.Timeout = 30 * 1000;
-            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Timeout = 30 * 1000;
+                //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
 
-            // POST할 데이타를 Request Stream에 쓴다
-            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
-            request.ContentLength = bytes.Length; // 바이트수 지정
+                // POST할 데이타를 Request Stream에 쓴다
+                byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+                request.ContentLength = bytes.Length; // 바이트수 지정
 
-            using (Stream reqStream = request.GetRequestStream())
-            {
-                reqStream.Write(bytes, 0, bytes.Length);
-            }
-
-            // Response 처리
-            string responseText = string.Empty;
-            using (WebResponse resp = request.GetResponse())
-            {
-                Stream respStream = resp.GetResponseStream();
-                using (StreamReader sr = new StreamReader(respStream))
+                using (Stream reqStream = request.GetRequestStream())
                 {
-                    responseText = sr.ReadToEnd();
+                    reqStream.Write(bytes, 0, bytes.Length);
+                }
+
+                // Response 처리
+                string responseText = string.Empty;
+                using (WebResponse resp = request.GetResponse())
+                {
+                    Stream respStream = resp.GetResponseStream();
+                    using (StreamReader sr = new StreamReader(respStream))
+                    {
+                        responseText = sr.ReadToEnd();
+                    }
+                }
+
+                //Console.WriteLine(responseText);
+                DirJsonData result = JsonConvert.DeserializeObject<DirJsonData>(responseText);
+
+                if (result != null)
+                {
+                    if (result.code != 200)
+                    {
+                        MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return false;
+                    }
+                    this.focusedNodeId = result.response.seq;
                 }
             }
-
-            //Console.WriteLine(responseText);
-            DirJsonData result = JsonConvert.DeserializeObject<DirJsonData>(responseText);
-
-            if (result != null)
+            catch(Exception ex)
             {
-                if (result.code != 200)
-                {
-                    MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return false;
-                }
-                this.focusedNodeId = result.response.seq;
+                MessageBox.Show(ex.Message);
             }
+
             return true;
         }
 
         private bool RemoveDir(string id)
         {
-            string url = ConfigurationManager.AppSettings["UrlDir"];
-            string sendData = string.Format(@"
+            try
+            {
+                string url = ConfigurationManager.AppSettings["UrlDir"];
+                string sendData = string.Format(@"
             {{""command"":""remove"",
             ""seq"":""{0}""
             }}
             ", id);
 
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "POST";
-            request.ContentType = "application/json";
-            request.Timeout = 30 * 1000;
-            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Timeout = 30 * 1000;
+                //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
 
-            // POST할 데이타를 Request Stream에 쓴다
-            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
-            request.ContentLength = bytes.Length; // 바이트수 지정
+                // POST할 데이타를 Request Stream에 쓴다
+                byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+                request.ContentLength = bytes.Length; // 바이트수 지정
 
-            using (Stream reqStream = request.GetRequestStream())
-            {
-                reqStream.Write(bytes, 0, bytes.Length);
-            }
-
-            // Response 처리
-            string responseText = string.Empty;
-            using (WebResponse resp = request.GetResponse())
-            {
-                Stream respStream = resp.GetResponseStream();
-                using (StreamReader sr = new StreamReader(respStream))
+                using (Stream reqStream = request.GetRequestStream())
                 {
-                    responseText = sr.ReadToEnd();
+                    reqStream.Write(bytes, 0, bytes.Length);
+                }
+
+                // Response 처리
+                string responseText = string.Empty;
+                using (WebResponse resp = request.GetResponse())
+                {
+                    Stream respStream = resp.GetResponseStream();
+                    using (StreamReader sr = new StreamReader(respStream))
+                    {
+                        responseText = sr.ReadToEnd();
+                    }
+                }
+
+                //Console.WriteLine(responseText);
+                DirJsonData result = JsonConvert.DeserializeObject<DirJsonData>(responseText);
+
+                if (result != null)
+                {
+                    if (result.code != 200)
+                    {
+                        MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return false;
+                    }
                 }
             }
-
-            //Console.WriteLine(responseText);
-            DirJsonData result = JsonConvert.DeserializeObject<DirJsonData>(responseText);
-
-            if (result != null)
+            catch(Exception ex)
             {
-                if (result.code != 200)
-                {
-                    MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return false;
-                }
+                MessageBox.Show(ex.Message);
             }
+
             return true;
         }
         
@@ -365,48 +389,55 @@ namespace DynaRAP.UControl
         {
             BindingList<DirData> list = new BindingList<DirData>();
 
-            string url = ConfigurationManager.AppSettings["UrlDir"];
-            string sendData = "{ \"command\": \"list\" }";
-
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "POST";
-            request.ContentType = "application/json";
-            request.Timeout = 30 * 1000;
-            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
-
-            // POST할 데이타를 Request Stream에 쓴다
-            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
-            request.ContentLength = bytes.Length; // 바이트수 지정
-
-            using (Stream reqStream = request.GetRequestStream())
+            try
             {
-                reqStream.Write(bytes, 0, bytes.Length);
-            }
+                string url = ConfigurationManager.AppSettings["UrlDir"];
+                string sendData = "{ \"command\": \"list\" }";
 
-            // Response 처리
-            string responseText = string.Empty;
-            using (WebResponse resp = request.GetResponse())
-            {
-                Stream respStream = resp.GetResponseStream();
-                using (StreamReader sr = new StreamReader(respStream))
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Timeout = 30 * 1000;
+                //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+
+                // POST할 데이타를 Request Stream에 쓴다
+                byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+                request.ContentLength = bytes.Length; // 바이트수 지정
+
+                using (Stream reqStream = request.GetRequestStream())
                 {
-                    responseText = sr.ReadToEnd();
+                    reqStream.Write(bytes, 0, bytes.Length);
+                }
+
+                // Response 처리
+                string responseText = string.Empty;
+                using (WebResponse resp = request.GetResponse())
+                {
+                    Stream respStream = resp.GetResponseStream();
+                    using (StreamReader sr = new StreamReader(respStream))
+                    {
+                        responseText = sr.ReadToEnd();
+                    }
+                }
+
+                //Console.WriteLine(responseText);
+                DirJsonData result = JsonConvert.DeserializeObject<DirJsonData>(responseText);
+                //object result = JsonConvert.DeserializeObject(responseText);
+
+                foreach (Pool pool in result.response.pools)
+                {
+                    byte[] byte64 = Convert.FromBase64String(pool.dirName);
+                    string name = Encoding.UTF8.GetString(byte64);
+
+                    if (pool.dirType.Equals("folder") || pool.dirType.Equals("param"))
+                    {
+                        list.Add(new DirData(pool.seq, pool.parentDirSeq, pool.dirType, name, pool.refSeq, pool.refSubSeq));
+                    }
                 }
             }
-
-            //Console.WriteLine(responseText);
-            DirJsonData result = JsonConvert.DeserializeObject<DirJsonData>(responseText);
-            //object result = JsonConvert.DeserializeObject(responseText);
-
-            foreach (Pool pool in result.response.pools)
+            catch(Exception ex)
             {
-                byte[] byte64 = Convert.FromBase64String(pool.dirName);
-                string name = Encoding.UTF8.GetString(byte64);
-
-                if (pool.dirType.Equals("folder") || pool.dirType.Equals("param"))
-                {
-                    list.Add(new DirData(pool.seq, pool.parentDirSeq, pool.dirType, name, pool.refSeq, pool.refSubSeq));
-                }
+                MessageBox.Show(ex.Message);
             }
 
             return list;
@@ -415,49 +446,58 @@ namespace DynaRAP.UControl
 
         private List<ResponseParam> GetParamList()
         {
-            string url = ConfigurationManager.AppSettings["UrlParam"];
-            //string sendData = @"
-            //{
-            //""command"":""list"",
-            //""pageNo"":1,
-            //""pageSize"":3000,
-            //""resultDataType"": ""map""
-            //}";
-            string sendData = @"
+            ListParamJsonData result = null;
+
+            try
+            {
+                string url = ConfigurationManager.AppSettings["UrlParam"];
+                //string sendData = @"
+                //{
+                //""command"":""list"",
+                //""pageNo"":1,
+                //""pageSize"":3000,
+                //""resultDataType"": ""map""
+                //}";
+                string sendData = @"
             {
             ""command"":""list"",
             ""pageNo"":1,
             ""pageSize"":3000
             }";
 
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "POST";
-            request.ContentType = "application/json";
-            request.Timeout = 30 * 1000;
-            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Timeout = 30 * 1000;
+                //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
 
-            // POST할 데이타를 Request Stream에 쓴다
-            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
-            request.ContentLength = bytes.Length; // 바이트수 지정
+                // POST할 데이타를 Request Stream에 쓴다
+                byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+                request.ContentLength = bytes.Length; // 바이트수 지정
 
-            using (Stream reqStream = request.GetRequestStream())
-            {
-                reqStream.Write(bytes, 0, bytes.Length);
-            }
-
-            // Response 처리
-            string responseText = string.Empty;
-            using (WebResponse resp = request.GetResponse())
-            {
-                Stream respStream = resp.GetResponseStream();
-                using (StreamReader sr = new StreamReader(respStream))
+                using (Stream reqStream = request.GetRequestStream())
                 {
-                    responseText = sr.ReadToEnd();
+                    reqStream.Write(bytes, 0, bytes.Length);
                 }
-            }
 
-            //Console.WriteLine(responseText);
-            ListParamJsonData result = JsonConvert.DeserializeObject<ListParamJsonData>(responseText);
+                // Response 처리
+                string responseText = string.Empty;
+                using (WebResponse resp = request.GetResponse())
+                {
+                    Stream respStream = resp.GetResponseStream();
+                    using (StreamReader sr = new StreamReader(respStream))
+                    {
+                        responseText = sr.ReadToEnd();
+                    }
+                }
+
+                //Console.WriteLine(responseText);
+                result = JsonConvert.DeserializeObject<ListParamJsonData>(responseText);
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
 
             return result.response;
 
@@ -465,20 +505,22 @@ namespace DynaRAP.UControl
 
         private bool AddModParameter(string opType, string paramKey, string tags, string extras, string paramPack = "")
         {
-            ResponseParam param = paramList.Find(x => x.paramKey.Equals(paramKey));
-            if(param == null || opType.Equals("modify"))
+            try
             {
-                lblDuplicateKey.Visible = false;
-            }
-            else
-            {
-                lblDuplicateKey.Visible = true;
-                MessageBox.Show("Failed", "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
+                ResponseParam param = paramList.Find(x => x.paramKey.Equals(paramKey));
+                if (param == null || opType.Equals("modify"))
+                {
+                    lblDuplicateKey.Visible = false;
+                }
+                else
+                {
+                    lblDuplicateKey.Visible = true;
+                    MessageBox.Show("Failed", "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
 
-            string url = ConfigurationManager.AppSettings["UrlParam"];
-            string sendData = string.Format(@"
+                string url = ConfigurationManager.AppSettings["UrlParam"];
+                string sendData = string.Format(@"
             {{
             ""command"":""{0}"",
             ""seq"":"""",
@@ -498,99 +540,113 @@ namespace DynaRAP.UControl
             ""tags"":""{13}"",
             ""extras"":{14}
             }}"
-            , opType, paramPack, paramKey, edtAdams.Text
-            , edtZaero.Text, edtGrt.Text, edtFltp.Text, edtFlts.Text
-            , cboPart.Text, cboPartLocation.Text
-            , edtLrpX.Text, edtLrpY.Text, edtLrpZ.Text, tags, extras);
+                , opType, paramPack, paramKey, edtAdams.Text
+                , edtZaero.Text, edtGrt.Text, edtFltp.Text, edtFlts.Text
+                , cboPart.Text, cboPartLocation.Text
+                , edtLrpX.Text, edtLrpY.Text, edtLrpZ.Text, tags, extras);
 
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "POST";
-            request.ContentType = "application/json";
-            request.Timeout = 30 * 1000;
-            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Timeout = 30 * 1000;
+                //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
 
-            // POST할 데이타를 Request Stream에 쓴다
-            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
-            request.ContentLength = bytes.Length; // 바이트수 지정
+                // POST할 데이타를 Request Stream에 쓴다
+                byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+                request.ContentLength = bytes.Length; // 바이트수 지정
 
-            using (Stream reqStream = request.GetRequestStream())
-            {
-                reqStream.Write(bytes, 0, bytes.Length);
-            }
-
-            // Response 처리
-            string responseText = string.Empty;
-            using (WebResponse resp = request.GetResponse())
-            {
-                Stream respStream = resp.GetResponseStream();
-                using (StreamReader sr = new StreamReader(respStream))
+                using (Stream reqStream = request.GetRequestStream())
                 {
-                    responseText = sr.ReadToEnd();
+                    reqStream.Write(bytes, 0, bytes.Length);
+                }
+
+                // Response 처리
+                string responseText = string.Empty;
+                using (WebResponse resp = request.GetResponse())
+                {
+                    Stream respStream = resp.GetResponseStream();
+                    using (StreamReader sr = new StreamReader(respStream))
+                    {
+                        responseText = sr.ReadToEnd();
+                    }
+                }
+
+                Console.WriteLine(responseText);
+                AddParamJsonData result = JsonConvert.DeserializeObject<AddParamJsonData>(responseText);
+
+                if (result != null)
+                {
+                    if (result.code != 200)
+                    {
+                        MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return false;
+                    }
+                    //this.focusedNodeId = result.response.seq;
                 }
             }
-
-            Console.WriteLine(responseText);
-            AddParamJsonData result = JsonConvert.DeserializeObject<AddParamJsonData>(responseText);
-
-            if (result != null)
+            catch(Exception ex)
             {
-                if (result.code != 200)
-                {
-                    MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return false;
-                }
-                //this.focusedNodeId = result.response.seq;
+                MessageBox.Show(ex.Message);
             }
+
             return true;
         }
 
         private bool RemoveParam(string paramPack)
         {
-            string url = ConfigurationManager.AppSettings["UrlParam"];
-            string sendData = string.Format(@"
+            try
+            {
+                string url = ConfigurationManager.AppSettings["UrlParam"];
+                string sendData = string.Format(@"
             {{
             ""command"":""remove"",
             ""paramPack"":""{0}""
             }}"
-            , paramPack);
+                , paramPack);
 
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "POST";
-            request.ContentType = "application/json";
-            request.Timeout = 30 * 1000;
-            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Timeout = 30 * 1000;
+                //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
 
-            // POST할 데이타를 Request Stream에 쓴다
-            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
-            request.ContentLength = bytes.Length; // 바이트수 지정
+                // POST할 데이타를 Request Stream에 쓴다
+                byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+                request.ContentLength = bytes.Length; // 바이트수 지정
 
-            using (Stream reqStream = request.GetRequestStream())
-            {
-                reqStream.Write(bytes, 0, bytes.Length);
-            }
-
-            // Response 처리
-            string responseText = string.Empty;
-            using (WebResponse resp = request.GetResponse())
-            {
-                Stream respStream = resp.GetResponseStream();
-                using (StreamReader sr = new StreamReader(respStream))
+                using (Stream reqStream = request.GetRequestStream())
                 {
-                    responseText = sr.ReadToEnd();
+                    reqStream.Write(bytes, 0, bytes.Length);
+                }
+
+                // Response 처리
+                string responseText = string.Empty;
+                using (WebResponse resp = request.GetResponse())
+                {
+                    Stream respStream = resp.GetResponseStream();
+                    using (StreamReader sr = new StreamReader(respStream))
+                    {
+                        responseText = sr.ReadToEnd();
+                    }
+                }
+
+                //Console.WriteLine(responseText);
+                DirJsonData result = JsonConvert.DeserializeObject<DirJsonData>(responseText);
+
+                if (result != null)
+                {
+                    if (result.code != 200)
+                    {
+                        MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return false;
+                    }
                 }
             }
-
-            //Console.WriteLine(responseText);
-            DirJsonData result = JsonConvert.DeserializeObject<DirJsonData>(responseText);
-
-            if (result != null)
+            catch (Exception ex)
             {
-                if (result.code != 200)
-                {
-                    MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return false;
-                }
+                MessageBox.Show(ex.Message);
             }
+
             return true;
         }
 
@@ -610,45 +666,53 @@ namespace DynaRAP.UControl
 
         private List<ResponsePropList> GetPropertyInfo()
         {
-            BindingList<DirData> list = new BindingList<DirData>();
+            try
+            {
+                BindingList<DirData> list = new BindingList<DirData>();
 
-            string url = ConfigurationManager.AppSettings["UrlParam"];
-            string sendData = @"
+                string url = ConfigurationManager.AppSettings["UrlParam"];
+                string sendData = @"
             {
             ""command"":""prop-list"",
             ""propType"":""""
             }";
 
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "POST";
-            request.ContentType = "application/json";
-            request.Timeout = 30 * 1000;
-            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Timeout = 30 * 1000;
+                //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
 
-            // POST할 데이타를 Request Stream에 쓴다
-            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
-            request.ContentLength = bytes.Length; // 바이트수 지정
+                // POST할 데이타를 Request Stream에 쓴다
+                byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+                request.ContentLength = bytes.Length; // 바이트수 지정
 
-            using (Stream reqStream = request.GetRequestStream())
-            {
-                reqStream.Write(bytes, 0, bytes.Length);
-            }
-
-            // Response 처리
-            string responseText = string.Empty;
-            using (WebResponse resp = request.GetResponse())
-            {
-                Stream respStream = resp.GetResponseStream();
-                using (StreamReader sr = new StreamReader(respStream))
+                using (Stream reqStream = request.GetRequestStream())
                 {
-                    responseText = sr.ReadToEnd();
+                    reqStream.Write(bytes, 0, bytes.Length);
                 }
+
+                // Response 처리
+                string responseText = string.Empty;
+                using (WebResponse resp = request.GetResponse())
+                {
+                    Stream respStream = resp.GetResponseStream();
+                    using (StreamReader sr = new StreamReader(respStream))
+                    {
+                        responseText = sr.ReadToEnd();
+                    }
+                }
+
+                //Console.WriteLine(responseText);
+                PropListResponse result = JsonConvert.DeserializeObject<PropListResponse>(responseText);
+
+                return result.response;
             }
-
-            //Console.WriteLine(responseText);
-            PropListResponse result = JsonConvert.DeserializeObject<PropListResponse>(responseText);
-
-            return result.response;
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return null;
+            }
 
         }
 

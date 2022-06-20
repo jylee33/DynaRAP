@@ -170,49 +170,58 @@ namespace DynaRAP.UControl
 
         private List<ResponseParam> GetParamList()
         {
-            string url = ConfigurationManager.AppSettings["UrlParam"];
-            //string sendData = @"
-            //{
-            //""command"":""list"",
-            //""pageNo"":1,
-            //""pageSize"":3000,
-            //""resultDataType"": ""map""
-            //}";
-            string sendData = @"
+            ListParamJsonData result = null;
+
+            try
             {
-            ""command"":""list"",
-            ""pageNo"":1,
-            ""pageSize"":3000
-            }";
-
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "POST";
-            request.ContentType = "application/json";
-            request.Timeout = 30 * 1000;
-            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
-
-            // POST할 데이타를 Request Stream에 쓴다
-            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
-            request.ContentLength = bytes.Length; // 바이트수 지정
-
-            using (Stream reqStream = request.GetRequestStream())
-            {
-                reqStream.Write(bytes, 0, bytes.Length);
-            }
-
-            // Response 처리
-            string responseText = string.Empty;
-            using (WebResponse resp = request.GetResponse())
-            {
-                Stream respStream = resp.GetResponseStream();
-                using (StreamReader sr = new StreamReader(respStream))
+                string url = ConfigurationManager.AppSettings["UrlParam"];
+                //string sendData = @"
+                //{
+                //""command"":""list"",
+                //""pageNo"":1,
+                //""pageSize"":3000,
+                //""resultDataType"": ""map""
+                //}";
+                string sendData = @"
                 {
-                    responseText = sr.ReadToEnd();
-                }
-            }
+                ""command"":""list"",
+                ""pageNo"":1,
+                ""pageSize"":3000
+                }";
 
-            //Console.WriteLine(responseText);
-            ListParamJsonData result = JsonConvert.DeserializeObject<ListParamJsonData>(responseText);
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Timeout = 30 * 1000;
+                //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+
+                // POST할 데이타를 Request Stream에 쓴다
+                byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+                request.ContentLength = bytes.Length; // 바이트수 지정
+
+                using (Stream reqStream = request.GetRequestStream())
+                {
+                    reqStream.Write(bytes, 0, bytes.Length);
+                }
+
+                // Response 처리
+                string responseText = string.Empty;
+                using (WebResponse resp = request.GetResponse())
+                {
+                    Stream respStream = resp.GetResponseStream();
+                    using (StreamReader sr = new StreamReader(respStream))
+                    {
+                        responseText = sr.ReadToEnd();
+                    }
+                }
+
+                //Console.WriteLine(responseText);
+                result = JsonConvert.DeserializeObject<ListParamJsonData>(responseText);
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
 
             return result.response;
 
@@ -390,11 +399,11 @@ namespace DynaRAP.UControl
             {
                 string url = ConfigurationManager.AppSettings["UrlPreset"];
                 string sendData = @"
-            {
-            ""command"":""list"",
-            ""pageNo"":1,
-            ""pageSize"":3000
-            }";
+                {
+                ""command"":""list"",
+                ""pageNo"":1,
+                ""pageSize"":3000
+                }";
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
                 request.Method = "POST";
@@ -429,6 +438,7 @@ namespace DynaRAP.UControl
             }
             catch (Exception ex)
             {
+                MessageBox.Show(ex.Message);
                 return null;
             }
 
@@ -641,115 +651,123 @@ namespace DynaRAP.UControl
 
         private bool Import()
         {
-            ImportRequest import = new ImportRequest();
-            import.command = "upload";
-            import.sourcePath = csvFilePath;
-            import.flightAt = string.Format("{0:yyyy-MM-dd}", DateTime.Now);
-            import.dataType = cboImportType.Text.ToLower();
-            import.forcedImport = chkForcedImport.Checked;
-            import.lpfOption = new LpfOption();
-            import.hpfOption = new HpfOption();
-            import.tempMappingParams = new Dictionary<string, string>();
-            import.parts = new List<Part>();
-
-            string presetPack = String.Empty;
-            if (luePresetList.GetColumnValue("PresetPack") != null)
-                presetPack = luePresetList.GetColumnValue("PresetPack").ToString();
-
-            import.presetPack = presetPack;
-
-            import.lpfOption.n = edtLPFn.Text;
-            import.lpfOption.cutoff = edtLPFcutoff.Text;
-            import.lpfOption.btype = cboLPFbtype.Text;
-
-            import.hpfOption.n = edtHPFn.Text;
-            import.hpfOption.cutoff = edtHPFcutoff.Text;
-            import.hpfOption.btype = cboHPFbtype.Text;
-
-            for (int i = 0; i < gridView1.RowCount; i++)
+            try
             {
-                string paramName = gridView1.GetRowCellValue(i, "UnmappedParamName") == null ? "" : gridView1.GetRowCellValue(i, "UnmappedParamName").ToString();
-                string paramKey = gridView1.GetRowCellValue(i, "ParamKey") == null ? "skip" : gridView1.GetRowCellValue(i, "ParamKey").ToString();
-                if (string.IsNullOrEmpty(paramKey))
+                ImportRequest import = new ImportRequest();
+                import.command = "upload";
+                import.sourcePath = csvFilePath;
+                import.flightAt = string.Format("{0:yyyy-MM-dd}", DateTime.Now);
+                import.dataType = cboImportType.Text.ToLower();
+                import.forcedImport = chkForcedImport.Checked;
+                import.lpfOption = new LpfOption();
+                import.hpfOption = new HpfOption();
+                import.tempMappingParams = new Dictionary<string, string>();
+                import.parts = new List<Part>();
+
+                string presetPack = String.Empty;
+                if (luePresetList.GetColumnValue("PresetPack") != null)
+                    presetPack = luePresetList.GetColumnValue("PresetPack").ToString();
+
+                import.presetPack = presetPack;
+
+                import.lpfOption.n = edtLPFn.Text;
+                import.lpfOption.cutoff = edtLPFcutoff.Text;
+                import.lpfOption.btype = cboLPFbtype.Text;
+
+                import.hpfOption.n = edtHPFn.Text;
+                import.hpfOption.cutoff = edtHPFcutoff.Text;
+                import.hpfOption.btype = cboHPFbtype.Text;
+
+                for (int i = 0; i < gridView1.RowCount; i++)
                 {
-                    paramKey = "skip";
-                }
-                import.tempMappingParams.Add(paramName, paramKey);
-            }
-
-            for (int i = 0; i < gridView2.RowCount; i++)
-            {
-                string splitName = gridView2.GetRowCellValue(i, "SplitName") == null ? "" : gridView2.GetRowCellValue(i, "SplitName").ToString();
-                string startTime = gridView2.GetRowCellValue(i, "StartTime") == null ? "" : gridView2.GetRowCellValue(i, "StartTime").ToString();
-                string endTime = gridView2.GetRowCellValue(i, "EndTime") == null ? "" : gridView2.GetRowCellValue(i, "EndTime").ToString();
-                //Encoding
-                byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(splitName);
-                string partName = Convert.ToBase64String(basebyte);
-
-                string t1 = Utils.GetJulianFromDate(startTime);
-                string t2 = Utils.GetJulianFromDate(endTime);
-
-                import.parts.Add(new Part(partName, t1, t2));
-            }
-
-            var json = JsonConvert.SerializeObject(import);
-            Console.WriteLine(json);
-
-            string url = ConfigurationManager.AppSettings["UrlImport"];
-
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "POST";
-            request.ContentType = "application/json";
-            request.Timeout = 30 * 1000;
-            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
-
-            // POST할 데이타를 Request Stream에 쓴다
-            byte[] bytes = Encoding.ASCII.GetBytes(json);
-            request.ContentLength = bytes.Length; // 바이트수 지정
-
-            using (Stream reqStream = request.GetRequestStream())
-            {
-                reqStream.Write(bytes, 0, bytes.Length);
-            }
-
-            // Response 처리
-            string responseText = string.Empty;
-            using (WebResponse resp = request.GetResponse())
-            {
-                Stream respStream = resp.GetResponseStream();
-                using (StreamReader sr = new StreamReader(respStream))
-                {
-                    responseText = sr.ReadToEnd();
-                }
-            }
-
-            //Console.WriteLine(responseText);
-            ImportResponse result = JsonConvert.DeserializeObject<ImportResponse>(responseText);
-
-            if (result != null)
-            {
-                if (result.code != 200)
-                {
-                    MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return false;
-                }
-                else
-                {
-                    // progress 확인
-                    //ImportProgressForm form = new ImportProgressForm("116a1460354a7065cb1393aa94a529e14221be82a5bae3bbccc8b1a5b6b59680"); // test
-                    ImportProgressForm form = new ImportProgressForm(result.response.seq);
-                    if (form.ShowDialog() == DialogResult.Cancel)
+                    string paramName = gridView1.GetRowCellValue(i, "UnmappedParamName") == null ? "" : gridView1.GetRowCellValue(i, "UnmappedParamName").ToString();
+                    string paramKey = gridView1.GetRowCellValue(i, "ParamKey") == null ? "skip" : gridView1.GetRowCellValue(i, "ParamKey").ToString();
+                    if (string.IsNullOrEmpty(paramKey))
                     {
-                        List<UnmappedParamData> unmappedList = new List<UnmappedParamData>();
-                        foreach (string type in form.NotMappedParams)
+                        paramKey = "skip";
+                    }
+                    import.tempMappingParams.Add(paramName, paramKey);
+                }
+
+                for (int i = 0; i < gridView2.RowCount; i++)
+                {
+                    string splitName = gridView2.GetRowCellValue(i, "SplitName") == null ? "" : gridView2.GetRowCellValue(i, "SplitName").ToString();
+                    string startTime = gridView2.GetRowCellValue(i, "StartTime") == null ? "" : gridView2.GetRowCellValue(i, "StartTime").ToString();
+                    string endTime = gridView2.GetRowCellValue(i, "EndTime") == null ? "" : gridView2.GetRowCellValue(i, "EndTime").ToString();
+                    //Encoding
+                    byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(splitName);
+                    string partName = Convert.ToBase64String(basebyte);
+
+                    string t1 = Utils.GetJulianFromDate(startTime);
+                    string t2 = Utils.GetJulianFromDate(endTime);
+
+                    import.parts.Add(new Part(partName, t1, t2));
+                }
+
+                var json = JsonConvert.SerializeObject(import);
+                Console.WriteLine(json);
+
+                string url = ConfigurationManager.AppSettings["UrlImport"];
+
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Timeout = 30 * 1000;
+                //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+
+                // POST할 데이타를 Request Stream에 쓴다
+                byte[] bytes = Encoding.ASCII.GetBytes(json);
+                request.ContentLength = bytes.Length; // 바이트수 지정
+
+                using (Stream reqStream = request.GetRequestStream())
+                {
+                    reqStream.Write(bytes, 0, bytes.Length);
+                }
+
+                // Response 처리
+                string responseText = string.Empty;
+                using (WebResponse resp = request.GetResponse())
+                {
+                    Stream respStream = resp.GetResponseStream();
+                    using (StreamReader sr = new StreamReader(respStream))
+                    {
+                        responseText = sr.ReadToEnd();
+                    }
+                }
+
+                //Console.WriteLine(responseText);
+                ImportResponse result = JsonConvert.DeserializeObject<ImportResponse>(responseText);
+
+                if (result != null)
+                {
+                    if (result.code != 200)
+                    {
+                        MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return false;
+                    }
+                    else
+                    {
+                        // progress 확인
+                        //ImportProgressForm form = new ImportProgressForm("116a1460354a7065cb1393aa94a529e14221be82a5bae3bbccc8b1a5b6b59680"); // test
+                        ImportProgressForm form = new ImportProgressForm(result.response.seq);
+                        if (form.ShowDialog() == DialogResult.Cancel)
                         {
-                            unmappedList.Add(new UnmappedParamData(type, "skip"));
+                            List<UnmappedParamData> unmappedList = new List<UnmappedParamData>();
+                            foreach (string type in form.NotMappedParams)
+                            {
+                                unmappedList.Add(new UnmappedParamData(type, "skip"));
+                            }
+                            this.gridControl1.DataSource = unmappedList;
+                            gridView1.RefreshData();
                         }
-                        this.gridControl1.DataSource = unmappedList;
-                        gridView1.RefreshData();
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
             return true;
         }
 
@@ -936,25 +954,27 @@ namespace DynaRAP.UControl
 
         private bool CheckParam()
         {
-            string presetPack = String.Empty;
-            string dataType = cboImportType.Text.ToLower();
-
-            if (luePresetList.GetColumnValue("PresetPack") != null)
-                presetPack = luePresetList.GetColumnValue("PresetPack").ToString();
-
-            if (string.IsNullOrEmpty(presetPack)
-                || string.IsNullOrEmpty(dataType)
-                || string.IsNullOrEmpty(this.headerRow)
-                )
+            try
             {
-                return false;
-            }
+                string presetPack = String.Empty;
+                string dataType = cboImportType.Text.ToLower();
 
-            string url = ConfigurationManager.AppSettings["UrlImport"];
-            string sendData = String.Empty;
-            if (importType == ImportType.FLYING) // 비행데이터 import
-            {
-                sendData = string.Format(@"
+                if (luePresetList.GetColumnValue("PresetPack") != null)
+                    presetPack = luePresetList.GetColumnValue("PresetPack").ToString();
+
+                if (string.IsNullOrEmpty(presetPack)
+                    || string.IsNullOrEmpty(dataType)
+                    || string.IsNullOrEmpty(this.headerRow)
+                    )
+                {
+                    return false;
+                }
+
+                string url = ConfigurationManager.AppSettings["UrlImport"];
+                string sendData = String.Empty;
+                if (importType == ImportType.FLYING) // 비행데이터 import
+                {
+                    sendData = string.Format(@"
                 {{
                 ""command"":""check-param"",
                 ""presetPack"":""{0}"",
@@ -962,11 +982,11 @@ namespace DynaRAP.UControl
                 ""dataType"":""{1}"",
                 ""headerRow"":""{2}""
                 }}"
-                , presetPack, dataType, this.headerRow);
-            }
-            else // 해석데이터 import
-            {
-                sendData = string.Format(@"
+                    , presetPack, dataType, this.headerRow);
+                }
+                else // 해석데이터 import
+                {
+                    sendData = string.Format(@"
                 {{
                 ""command"":""check-param"",
                 ""presetPack"":""{0}"",
@@ -974,56 +994,62 @@ namespace DynaRAP.UControl
                 ""dataType"":""{1}"",
                 ""importFilePath"":""{2}""
                 }}"
-                , presetPack, dataType, this.csvFilePath);
-            }
-
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "POST";
-            request.ContentType = "application/json";
-            request.Timeout = 30 * 1000;
-            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
-
-            // POST할 데이타를 Request Stream에 쓴다
-            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
-            request.ContentLength = bytes.Length; // 바이트수 지정
-
-            using (Stream reqStream = request.GetRequestStream())
-            {
-                reqStream.Write(bytes, 0, bytes.Length);
-            }
-
-            // Response 처리
-            string responseText = string.Empty;
-            using (WebResponse resp = request.GetResponse())
-            {
-                Stream respStream = resp.GetResponseStream();
-                using (StreamReader sr = new StreamReader(respStream))
-                {
-                    responseText = sr.ReadToEnd();
+                    , presetPack, dataType, this.csvFilePath);
                 }
-            }
 
-            //Console.WriteLine(responseText);
-            ImportResponse result = JsonConvert.DeserializeObject<ImportResponse>(responseText);
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Timeout = 30 * 1000;
+                //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
 
-            if (result != null)
-            {
-                if (result.code != 200)
+                // POST할 데이타를 Request Stream에 쓴다
+                byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+                request.ContentLength = bytes.Length; // 바이트수 지정
+
+                using (Stream reqStream = request.GetRequestStream())
                 {
-                    MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return false;
+                    reqStream.Write(bytes, 0, bytes.Length);
                 }
-                else
+
+                // Response 처리
+                string responseText = string.Empty;
+                using (WebResponse resp = request.GetResponse())
                 {
-                    List<UnmappedParamData> unmappedList = new List<UnmappedParamData>();
-                    foreach (string type in result.response.notMappedParams)
+                    Stream respStream = resp.GetResponseStream();
+                    using (StreamReader sr = new StreamReader(respStream))
                     {
-                        unmappedList.Add(new UnmappedParamData(type, "skip"));
+                        responseText = sr.ReadToEnd();
                     }
-                    this.gridControl1.DataSource = unmappedList;
-                    gridView1.RefreshData();
+                }
+
+                //Console.WriteLine(responseText);
+                ImportResponse result = JsonConvert.DeserializeObject<ImportResponse>(responseText);
+
+                if (result != null)
+                {
+                    if (result.code != 200)
+                    {
+                        MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return false;
+                    }
+                    else
+                    {
+                        List<UnmappedParamData> unmappedList = new List<UnmappedParamData>();
+                        foreach (string type in result.response.notMappedParams)
+                        {
+                            unmappedList.Add(new UnmappedParamData(type, "skip"));
+                        }
+                        this.gridControl1.DataSource = unmappedList;
+                        gridView1.RefreshData();
+                    }
                 }
             }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
             return true;
         }
 

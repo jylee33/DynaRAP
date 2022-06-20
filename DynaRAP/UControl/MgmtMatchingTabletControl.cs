@@ -142,44 +142,52 @@ namespace DynaRAP.UControl
 
         private List<ResponseParam> GetParamList()
         {
-            string url = ConfigurationManager.AppSettings["UrlParam"];
-            string sendData = @"
+            try
+            {
+                string url = ConfigurationManager.AppSettings["UrlParam"];
+                string sendData = @"
             {
             ""command"":""list"",
             ""pageNo"":1,
             ""pageSize"":3000
             }";
 
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "POST";
-            request.ContentType = "application/json";
-            request.Timeout = 30 * 1000;
-            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Timeout = 30 * 1000;
+                //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
 
-            // POST할 데이타를 Request Stream에 쓴다
-            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
-            request.ContentLength = bytes.Length; // 바이트수 지정
+                // POST할 데이타를 Request Stream에 쓴다
+                byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+                request.ContentLength = bytes.Length; // 바이트수 지정
 
-            using (Stream reqStream = request.GetRequestStream())
-            {
-                reqStream.Write(bytes, 0, bytes.Length);
-            }
-
-            // Response 처리
-            string responseText = string.Empty;
-            using (WebResponse resp = request.GetResponse())
-            {
-                Stream respStream = resp.GetResponseStream();
-                using (StreamReader sr = new StreamReader(respStream))
+                using (Stream reqStream = request.GetRequestStream())
                 {
-                    responseText = sr.ReadToEnd();
+                    reqStream.Write(bytes, 0, bytes.Length);
                 }
+
+                // Response 처리
+                string responseText = string.Empty;
+                using (WebResponse resp = request.GetResponse())
+                {
+                    Stream respStream = resp.GetResponseStream();
+                    using (StreamReader sr = new StreamReader(respStream))
+                    {
+                        responseText = sr.ReadToEnd();
+                    }
+                }
+
+                //Console.WriteLine(responseText);
+                ListParamJsonData result = JsonConvert.DeserializeObject<ListParamJsonData>(responseText);
+
+                return result.response;
             }
-
-            //Console.WriteLine(responseText);
-            ListParamJsonData result = JsonConvert.DeserializeObject<ListParamJsonData>(responseText);
-
-            return result.response;
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return null;
+            }
 
         }
 
@@ -196,8 +204,10 @@ namespace DynaRAP.UControl
 
         private bool AddDir(string dirType, string name, string pid)
         {
-            string url = ConfigurationManager.AppSettings["UrlDir"];
-            string sendData = string.Format(@"
+            try
+            {
+                string url = ConfigurationManager.AppSettings["UrlDir"];
+                string sendData = string.Format(@"
             {{ ""command"":""add"",
             ""seq"":""{0}"",
             ""parentDirSeq"":""{1}"",
@@ -207,53 +217,61 @@ namespace DynaRAP.UControl
             ""refSeq"":""0"",
             ""refSubSeq"":""0""
             }}"
-            , 1, pid, name, dirType);
+                , 1, pid, name, dirType);
 
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "POST";
-            request.ContentType = "application/json";
-            request.Timeout = 30 * 1000;
-            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Timeout = 30 * 1000;
+                //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
 
-            // POST할 데이타를 Request Stream에 쓴다
-            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
-            request.ContentLength = bytes.Length; // 바이트수 지정
+                // POST할 데이타를 Request Stream에 쓴다
+                byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+                request.ContentLength = bytes.Length; // 바이트수 지정
 
-            using (Stream reqStream = request.GetRequestStream())
-            {
-                reqStream.Write(bytes, 0, bytes.Length);
-            }
-
-            // Response 처리
-            string responseText = string.Empty;
-            using (WebResponse resp = request.GetResponse())
-            {
-                Stream respStream = resp.GetResponseStream();
-                using (StreamReader sr = new StreamReader(respStream))
+                using (Stream reqStream = request.GetRequestStream())
                 {
-                    responseText = sr.ReadToEnd();
+                    reqStream.Write(bytes, 0, bytes.Length);
+                }
+
+                // Response 처리
+                string responseText = string.Empty;
+                using (WebResponse resp = request.GetResponse())
+                {
+                    Stream respStream = resp.GetResponseStream();
+                    using (StreamReader sr = new StreamReader(respStream))
+                    {
+                        responseText = sr.ReadToEnd();
+                    }
+                }
+
+                //Console.WriteLine(responseText);
+                DirJsonData result = JsonConvert.DeserializeObject<DirJsonData>(responseText);
+
+                if (result != null)
+                {
+                    if (result.code != 200)
+                    {
+                        MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return false;
+                    }
+                    this.focusedNodeId = result.response.seq;
                 }
             }
-
-            //Console.WriteLine(responseText);
-            DirJsonData result = JsonConvert.DeserializeObject<DirJsonData>(responseText);
-
-            if (result != null)
+            catch(Exception ex)
             {
-                if (result.code != 200)
-                {
-                    MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return false;
-                }
-                this.focusedNodeId = result.response.seq;
+                MessageBox.Show(ex.Message);
             }
+
             return true;
         }
 
         private bool ModifyDir(string dirType, string id, string pid, string name, string paramPack, string seq)
         {
-            string url = ConfigurationManager.AppSettings["UrlDir"];
-            string sendData = string.Format(@"
+            try
+            {
+                string url = ConfigurationManager.AppSettings["UrlDir"];
+                string sendData = string.Format(@"
             {{ ""command"":""modify"",
             ""seq"":""{0}"",
             ""parentDirSeq"":""{1}"",
@@ -263,318 +281,361 @@ namespace DynaRAP.UControl
             ""refSeq"":""{4}"",
             ""refSubSeq"":""{5}""
             }}"
-            , id, pid, name, dirType, paramPack, seq);
+                , id, pid, name, dirType, paramPack, seq);
 
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "POST";
-            request.ContentType = "application/json";
-            request.Timeout = 30 * 1000;
-            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Timeout = 30 * 1000;
+                //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
 
-            // POST할 데이타를 Request Stream에 쓴다
-            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
-            request.ContentLength = bytes.Length; // 바이트수 지정
+                // POST할 데이타를 Request Stream에 쓴다
+                byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+                request.ContentLength = bytes.Length; // 바이트수 지정
 
-            using (Stream reqStream = request.GetRequestStream())
-            {
-                reqStream.Write(bytes, 0, bytes.Length);
-            }
-
-            // Response 처리
-            string responseText = string.Empty;
-            using (WebResponse resp = request.GetResponse())
-            {
-                Stream respStream = resp.GetResponseStream();
-                using (StreamReader sr = new StreamReader(respStream))
+                using (Stream reqStream = request.GetRequestStream())
                 {
-                    responseText = sr.ReadToEnd();
+                    reqStream.Write(bytes, 0, bytes.Length);
+                }
+
+                // Response 처리
+                string responseText = string.Empty;
+                using (WebResponse resp = request.GetResponse())
+                {
+                    Stream respStream = resp.GetResponseStream();
+                    using (StreamReader sr = new StreamReader(respStream))
+                    {
+                        responseText = sr.ReadToEnd();
+                    }
+                }
+
+                //Console.WriteLine(responseText);
+                DirJsonData result = JsonConvert.DeserializeObject<DirJsonData>(responseText);
+
+                if (result != null)
+                {
+                    if (result.code != 200)
+                    {
+                        MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return false;
+                    }
+                    this.focusedNodeId = result.response.seq;
                 }
             }
-
-            //Console.WriteLine(responseText);
-            DirJsonData result = JsonConvert.DeserializeObject<DirJsonData>(responseText);
-
-            if (result != null)
+            catch (Exception ex)
             {
-                if (result.code != 200)
-                {
-                    MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return false;
-                }
-                this.focusedNodeId = result.response.seq;
+                MessageBox.Show(ex.Message);
             }
+
             return true;
         }
 
         private bool RemoveDir(string id)
         {
-            string url = ConfigurationManager.AppSettings["UrlDir"];
-            string sendData = string.Format(@"
+            try
+            {
+                string url = ConfigurationManager.AppSettings["UrlDir"];
+                string sendData = string.Format(@"
             {{""command"":""remove"",
             ""seq"":""{0}""
             }}
             ", id);
 
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "POST";
-            request.ContentType = "application/json";
-            request.Timeout = 30 * 1000;
-            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Timeout = 30 * 1000;
+                //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
 
-            // POST할 데이타를 Request Stream에 쓴다
-            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
-            request.ContentLength = bytes.Length; // 바이트수 지정
+                // POST할 데이타를 Request Stream에 쓴다
+                byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+                request.ContentLength = bytes.Length; // 바이트수 지정
 
-            using (Stream reqStream = request.GetRequestStream())
-            {
-                reqStream.Write(bytes, 0, bytes.Length);
-            }
-
-            // Response 처리
-            string responseText = string.Empty;
-            using (WebResponse resp = request.GetResponse())
-            {
-                Stream respStream = resp.GetResponseStream();
-                using (StreamReader sr = new StreamReader(respStream))
+                using (Stream reqStream = request.GetRequestStream())
                 {
-                    responseText = sr.ReadToEnd();
+                    reqStream.Write(bytes, 0, bytes.Length);
+                }
+
+                // Response 처리
+                string responseText = string.Empty;
+                using (WebResponse resp = request.GetResponse())
+                {
+                    Stream respStream = resp.GetResponseStream();
+                    using (StreamReader sr = new StreamReader(respStream))
+                    {
+                        responseText = sr.ReadToEnd();
+                    }
+                }
+
+                //Console.WriteLine(responseText);
+                DirJsonData result = JsonConvert.DeserializeObject<DirJsonData>(responseText);
+
+                if (result != null)
+                {
+                    if (result.code != 200)
+                    {
+                        MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return false;
+                    }
                 }
             }
-
-            //Console.WriteLine(responseText);
-            DirJsonData result = JsonConvert.DeserializeObject<DirJsonData>(responseText);
-
-            if (result != null)
+            catch (Exception ex)
             {
-                if (result.code != 200)
-                {
-                    MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return false;
-                }
+                MessageBox.Show(ex.Message);
             }
             return true;
         }
 
         private BindingList<DirData> GetDirList()
         {
-            BindingList<DirData> list = new BindingList<DirData>();
-
-            string url = ConfigurationManager.AppSettings["UrlDir"];
-            string sendData = "{ \"command\": \"list\" }";
-
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "POST";
-            request.ContentType = "application/json";
-            request.Timeout = 30 * 1000;
-            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
-
-            // POST할 데이타를 Request Stream에 쓴다
-            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
-            request.ContentLength = bytes.Length; // 바이트수 지정
-
-            using (Stream reqStream = request.GetRequestStream())
+            try
             {
-                reqStream.Write(bytes, 0, bytes.Length);
-            }
+                BindingList<DirData> list = new BindingList<DirData>();
 
-            // Response 처리
-            string responseText = string.Empty;
-            using (WebResponse resp = request.GetResponse())
-            {
-                Stream respStream = resp.GetResponseStream();
-                using (StreamReader sr = new StreamReader(respStream))
+                string url = ConfigurationManager.AppSettings["UrlDir"];
+                string sendData = "{ \"command\": \"list\" }";
+
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Timeout = 30 * 1000;
+                //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+
+                // POST할 데이타를 Request Stream에 쓴다
+                byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+                request.ContentLength = bytes.Length; // 바이트수 지정
+
+                using (Stream reqStream = request.GetRequestStream())
                 {
-                    responseText = sr.ReadToEnd();
+                    reqStream.Write(bytes, 0, bytes.Length);
                 }
-            }
 
-            //Console.WriteLine(responseText);
-            DirJsonData result = JsonConvert.DeserializeObject<DirJsonData>(responseText);
-            //object result = JsonConvert.DeserializeObject(responseText);
-
-            foreach (Pool pool in result.response.pools)
-            {
-                byte[] byte64 = Convert.FromBase64String(pool.dirName);
-                string name = Encoding.UTF8.GetString(byte64);
-
-                if (pool.dirType.Equals("folder") || pool.dirType.Equals("preset"))
+                // Response 처리
+                string responseText = string.Empty;
+                using (WebResponse resp = request.GetResponse())
                 {
-                    list.Add(new DirData(pool.seq, pool.parentDirSeq, pool.dirType, name, pool.refSeq, pool.refSubSeq));
+                    Stream respStream = resp.GetResponseStream();
+                    using (StreamReader sr = new StreamReader(respStream))
+                    {
+                        responseText = sr.ReadToEnd();
+                    }
                 }
-            }
 
-            return list;
+                //Console.WriteLine(responseText);
+                DirJsonData result = JsonConvert.DeserializeObject<DirJsonData>(responseText);
+                //object result = JsonConvert.DeserializeObject(responseText);
+
+                foreach (Pool pool in result.response.pools)
+                {
+                    byte[] byte64 = Convert.FromBase64String(pool.dirName);
+                    string name = Encoding.UTF8.GetString(byte64);
+
+                    if (pool.dirType.Equals("folder") || pool.dirType.Equals("preset"))
+                    {
+                        list.Add(new DirData(pool.seq, pool.parentDirSeq, pool.dirType, name, pool.refSeq, pool.refSubSeq));
+                    }
+                }
+
+                return list;
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return null;
+            }
 
         }
 
         private List<ResponsePreset> GetPresetList()
         {
-            string url = ConfigurationManager.AppSettings["UrlPreset"];
-            string sendData = @"
+            try
+            {
+                string url = ConfigurationManager.AppSettings["UrlPreset"];
+                string sendData = @"
             {
             ""command"":""list"",
             ""pageNo"":1,
             ""pageSize"":3000
             }";
 
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "POST";
-            request.ContentType = "application/json";
-            request.Timeout = 30 * 1000;
-            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Timeout = 30 * 1000;
+                //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
 
-            // POST할 데이타를 Request Stream에 쓴다
-            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
-            request.ContentLength = bytes.Length; // 바이트수 지정
+                // POST할 데이타를 Request Stream에 쓴다
+                byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+                request.ContentLength = bytes.Length; // 바이트수 지정
 
-            using (Stream reqStream = request.GetRequestStream())
-            {
-                reqStream.Write(bytes, 0, bytes.Length);
-            }
-
-            // Response 처리
-            string responseText = string.Empty;
-            using (WebResponse resp = request.GetResponse())
-            {
-                Stream respStream = resp.GetResponseStream();
-                using (StreamReader sr = new StreamReader(respStream))
+                using (Stream reqStream = request.GetRequestStream())
                 {
-                    responseText = sr.ReadToEnd();
+                    reqStream.Write(bytes, 0, bytes.Length);
                 }
+
+                // Response 처리
+                string responseText = string.Empty;
+                using (WebResponse resp = request.GetResponse())
+                {
+                    Stream respStream = resp.GetResponseStream();
+                    using (StreamReader sr = new StreamReader(respStream))
+                    {
+                        responseText = sr.ReadToEnd();
+                    }
+                }
+
+                //Console.WriteLine(responseText);
+                ListPresetJsonData result = JsonConvert.DeserializeObject<ListPresetJsonData>(responseText);
+
+                return result.response;
             }
-
-            //Console.WriteLine(responseText);
-            ListPresetJsonData result = JsonConvert.DeserializeObject<ListPresetJsonData>(responseText);
-
-            return result.response;
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return null;
+            }
 
         }
 
         private bool AddModParameter(string opType, string presetPack = "")
         {
-            ResponsePreset preset = presetList.Find(x => x.presetPack.Equals(presetPack));
-            string paramName = edtParamName.Text;
-
-            if (string.IsNullOrEmpty(paramName))
+            try
             {
-                lblMandatoryField.Visible = true;
-                MessageBox.Show("Failed", "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-            else
-            {
-                lblMandatoryField.Visible = false;
-            }
+                ResponsePreset preset = presetList.Find(x => x.presetPack.Equals(presetPack));
+                string paramName = edtParamName.Text;
 
-            //Encoding
-            byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(paramName);
-            string encName = Convert.ToBase64String(basebyte);
+                if (string.IsNullOrEmpty(paramName))
+                {
+                    lblMandatoryField.Visible = true;
+                    MessageBox.Show("Failed", "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+                else
+                {
+                    lblMandatoryField.Visible = false;
+                }
 
-            string url = ConfigurationManager.AppSettings["UrlPreset"];
-            string sendData = string.Format(@"
+                //Encoding
+                byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(paramName);
+                string encName = Convert.ToBase64String(basebyte);
+
+                string url = ConfigurationManager.AppSettings["UrlPreset"];
+                string sendData = string.Format(@"
             {{""command"":""{0}"",
             ""seq"":"""",
             ""presetPack"":""{1}"",
             ""presetName"":""{2}"",
             ""presetPackFrom"":""""
             }}"
-            , opType, presetPack, encName);
+                , opType, presetPack, encName);
 
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "POST";
-            request.ContentType = "application/json";
-            request.Timeout = 30 * 1000;
-            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Timeout = 30 * 1000;
+                //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
 
-            // POST할 데이타를 Request Stream에 쓴다
-            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
-            request.ContentLength = bytes.Length; // 바이트수 지정
+                // POST할 데이타를 Request Stream에 쓴다
+                byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+                request.ContentLength = bytes.Length; // 바이트수 지정
 
-            using (Stream reqStream = request.GetRequestStream())
-            {
-                reqStream.Write(bytes, 0, bytes.Length);
-            }
-
-            // Response 처리
-            string responseText = string.Empty;
-            using (WebResponse resp = request.GetResponse())
-            {
-                Stream respStream = resp.GetResponseStream();
-                using (StreamReader sr = new StreamReader(respStream))
+                using (Stream reqStream = request.GetRequestStream())
                 {
-                    responseText = sr.ReadToEnd();
+                    reqStream.Write(bytes, 0, bytes.Length);
+                }
+
+                // Response 처리
+                string responseText = string.Empty;
+                using (WebResponse resp = request.GetResponse())
+                {
+                    Stream respStream = resp.GetResponseStream();
+                    using (StreamReader sr = new StreamReader(respStream))
+                    {
+                        responseText = sr.ReadToEnd();
+                    }
+                }
+
+                //Console.WriteLine(responseText);
+                AddPresetJsonData result = JsonConvert.DeserializeObject<AddPresetJsonData>(responseText);
+
+                if (result != null)
+                {
+                    if (result.code != 200)
+                    {
+                        MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return false;
+                    }
+                    else
+                    {
+                        edtParamName.Text = string.Empty;
+                    }
+                    //this.focusedNodeId = result.response.seq;
                 }
             }
-
-            //Console.WriteLine(responseText);
-            AddPresetJsonData result = JsonConvert.DeserializeObject<AddPresetJsonData>(responseText);
-
-            if (result != null)
+            catch(Exception ex)
             {
-                if (result.code != 200)
-                {
-                    MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return false;
-                }
-                else
-                {
-                    edtParamName.Text = string.Empty;
-                }
-                //this.focusedNodeId = result.response.seq;
+                MessageBox.Show(ex.Message);
             }
             return true;
         }
 
         private bool RemovePreset(string presetPack)
         {
-            string url = ConfigurationManager.AppSettings["UrlPreset"];
-            string sendData = string.Format(@"
+            try
+            {
+                string url = ConfigurationManager.AppSettings["UrlPreset"];
+                string sendData = string.Format(@"
             {{
             ""command"":""remove"",
             ""presetPack"":""{0}""
             }}"
-            , presetPack);
+                , presetPack);
 
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "POST";
-            request.ContentType = "application/json";
-            request.Timeout = 30 * 1000;
-            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Timeout = 30 * 1000;
+                //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
 
-            // POST할 데이타를 Request Stream에 쓴다
-            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
-            request.ContentLength = bytes.Length; // 바이트수 지정
+                // POST할 데이타를 Request Stream에 쓴다
+                byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+                request.ContentLength = bytes.Length; // 바이트수 지정
 
-            using (Stream reqStream = request.GetRequestStream())
-            {
-                reqStream.Write(bytes, 0, bytes.Length);
-            }
-
-            // Response 처리
-            string responseText = string.Empty;
-            using (WebResponse resp = request.GetResponse())
-            {
-                Stream respStream = resp.GetResponseStream();
-                using (StreamReader sr = new StreamReader(respStream))
+                using (Stream reqStream = request.GetRequestStream())
                 {
-                    responseText = sr.ReadToEnd();
+                    reqStream.Write(bytes, 0, bytes.Length);
+                }
+
+                // Response 처리
+                string responseText = string.Empty;
+                using (WebResponse resp = request.GetResponse())
+                {
+                    Stream respStream = resp.GetResponseStream();
+                    using (StreamReader sr = new StreamReader(respStream))
+                    {
+                        responseText = sr.ReadToEnd();
+                    }
+                }
+
+                //Console.WriteLine(responseText);
+                DirJsonData result = JsonConvert.DeserializeObject<DirJsonData>(responseText);
+
+                if (result != null)
+                {
+                    if (result.code != 200)
+                    {
+                        MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return false;
+                    }
+                    else
+                    {
+                        edtParamName.Text = string.Empty;
+                    }
                 }
             }
-
-            //Console.WriteLine(responseText);
-            DirJsonData result = JsonConvert.DeserializeObject<DirJsonData>(responseText);
-
-            if (result != null)
+            catch(Exception ex)
             {
-                if (result.code != 200)
-                {
-                    MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return false;
-                }
-                else
-                {
-                    edtParamName.Text = string.Empty;
-                }
+                MessageBox.Show(ex.Message);
             }
             return true;
         }
@@ -600,8 +661,10 @@ namespace DynaRAP.UControl
 
         private List<ResponseParam> GetPresetParamList(string presetPack)
         {
-            string url = ConfigurationManager.AppSettings["UrlPreset"];
-            string sendData = string.Format(@"
+            try
+            {
+                string url = ConfigurationManager.AppSettings["UrlPreset"];
+                string sendData = string.Format(@"
             {{
             ""command"":""param-list"",
             ""presetPack"":""{0}"",
@@ -611,38 +674,44 @@ namespace DynaRAP.UControl
             ""pageNo"":1,
             ""pageSize"":3000
             }}"
-            , presetPack);
+                , presetPack);
 
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "POST";
-            request.ContentType = "application/json";
-            request.Timeout = 30 * 1000;
-            //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Timeout = 30 * 1000;
+                //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
 
-            // POST할 데이타를 Request Stream에 쓴다
-            byte[] bytes = Encoding.ASCII.GetBytes(sendData);
-            request.ContentLength = bytes.Length; // 바이트수 지정
+                // POST할 데이타를 Request Stream에 쓴다
+                byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+                request.ContentLength = bytes.Length; // 바이트수 지정
 
-            using (Stream reqStream = request.GetRequestStream())
-            {
-                reqStream.Write(bytes, 0, bytes.Length);
-            }
-
-            // Response 처리
-            string responseText = string.Empty;
-            using (WebResponse resp = request.GetResponse())
-            {
-                Stream respStream = resp.GetResponseStream();
-                using (StreamReader sr = new StreamReader(respStream))
+                using (Stream reqStream = request.GetRequestStream())
                 {
-                    responseText = sr.ReadToEnd();
+                    reqStream.Write(bytes, 0, bytes.Length);
                 }
+
+                // Response 처리
+                string responseText = string.Empty;
+                using (WebResponse resp = request.GetResponse())
+                {
+                    Stream respStream = resp.GetResponseStream();
+                    using (StreamReader sr = new StreamReader(respStream))
+                    {
+                        responseText = sr.ReadToEnd();
+                    }
+                }
+
+                //Console.WriteLine(responseText);
+                ListParamJsonData result = JsonConvert.DeserializeObject<ListParamJsonData>(responseText);
+
+                return result.response;
             }
-
-            //Console.WriteLine(responseText);
-            ListParamJsonData result = JsonConvert.DeserializeObject<ListParamJsonData>(responseText);
-
-            return result.response;
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return null;
+            }
 
         }
 
