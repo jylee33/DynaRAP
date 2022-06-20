@@ -440,14 +440,22 @@ public class PartImportTask {
                         // lpf, hpf 처리
                         for (PartVO part : partList) {
                             String julianFrom = "";
-                            if (julianFrom == null || julianFrom.isEmpty())
-                                julianFrom = zsetOps.rangeByScore("P" + part.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE).iterator().next();
-                            String julianTo = "";
-                            if (julianTo == null || julianTo.isEmpty())
-                                julianTo = zsetOps.reverseRangeByScore("P" + part.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE).iterator().next();
+                            Set<String> listSet = zsetOps.rangeByScore("P" + part.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE);
+                            if (listSet != null && listSet.size() > 0)
+                                julianFrom = listSet.iterator().next();
 
-                            String julianStart = zsetOps.rangeByScore("P" + part.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE).iterator().next();
-                            Long startRowAt = zsetOps.score("P" + part.getSeq().originOf() + ".R", julianStart).longValue();
+                            String julianTo = "";
+                            listSet = zsetOps.reverseRangeByScore("P" + part.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE);
+                            if (listSet != null && listSet.size() > 0)
+                                julianTo = listSet.iterator().next();
+
+                            if (julianFrom == null || julianFrom.isEmpty()
+                                || julianTo == null || julianTo.isEmpty()) {
+                                logger.debug("[[[[[ There is no record on part " + part.getSeq().originOf());
+                                continue;
+                            }
+
+                            Long startRowAt = zsetOps.score("P" + part.getSeq().originOf() + ".R", julianFrom).longValue();
 
                             Long rankFrom = zsetOps.rank("P" + part.getSeq().originOf() + ".R", julianFrom);
                             if (rankFrom == null) {
@@ -463,7 +471,7 @@ public class PartImportTask {
                             for (ParamVO param : mappedParams) {
                                 String rowKey = "P" + part.getSeq().originOf() + ".N" + param.getReferenceSeq();
 
-                                Set<String> listSet = zsetOps.rangeByScore(
+                                listSet = zsetOps.rangeByScore(
                                         rowKey, startRowAt + rankFrom, startRowAt + rankTo);
                                 Iterator<String> iterListSet = listSet.iterator();
 

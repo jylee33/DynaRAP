@@ -1075,13 +1075,34 @@ public class ServiceApiController extends ApiController {
 
             JsonArray jarrJulian = payload.get("julianRange").getAsJsonArray();
             String julianFrom = jarrJulian.get(0).getAsString();
-            if (julianFrom == null || julianFrom.isEmpty())
-                julianFrom = zsetOps.rangeByScore("P" + partInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE).iterator().next();
+            if (julianFrom == null || julianFrom.isEmpty()) {
+                Set<String> listSet = zsetOps.rangeByScore("P" + partInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE);
+                if (listSet != null && listSet.size() > 0)
+                    julianFrom = listSet.iterator().next();
+            }
             String julianTo = jarrJulian.get(1).getAsString();
-            if (julianTo == null || julianTo.isEmpty())
-                julianTo = zsetOps.reverseRangeByScore("P" + partInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE).iterator().next();
+            if (julianTo == null || julianTo.isEmpty()) {
+                Set<String> listSet = zsetOps.reverseRangeByScore("P" + partInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE);
+                if (listSet != null && listSet.size() > 0)
+                    julianTo = listSet.iterator().next();
+            }
 
-            String julianStart = zsetOps.rangeByScore("P" + partInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE).iterator().next();
+            if (julianFrom == null || julianFrom.isEmpty() || julianTo == null || julianTo.isEmpty()) {
+                jobjResult.add("paramSet", ServerConstants.GSON.toJsonTree(params));
+                jobjResult.add("julianSet", ServerConstants.GSON.toJsonTree(new ArrayList<String>()));
+                jobjResult.add("data", ServerConstants.GSON.toJsonTree(new LinkedHashMap<String, List<Double>>()));
+                return ResponseHelper.response(200, "Success - rowData", jobjResult);
+            }
+
+            Set<String> listSet = zsetOps.rangeByScore("P" + partInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE);
+            if (listSet == null || listSet.size() == 0) {
+                jobjResult.add("paramSet", ServerConstants.GSON.toJsonTree(params));
+                jobjResult.add("julianSet", ServerConstants.GSON.toJsonTree(new ArrayList<String>()));
+                jobjResult.add("data", ServerConstants.GSON.toJsonTree(new LinkedHashMap<String, List<Double>>()));
+                return ResponseHelper.response(200, "Success - rowData", jobjResult);
+            }
+
+            String julianStart = listSet.iterator().next();
             Long startRowAt = zsetOps.score("P" + partInfo.getSeq().originOf() + ".R", julianStart).longValue();
 
             Long rankFrom = zsetOps.rank("P" + partInfo.getSeq().originOf() + ".R", julianFrom);
@@ -1097,7 +1118,7 @@ public class ServiceApiController extends ApiController {
 
             LinkedHashMap<String, List<Double>> rowData = new LinkedHashMap<>();
             for (ParamVO p : params) {
-                Set<String> listSet = zsetOps.rangeByScore(
+                listSet = zsetOps.rangeByScore(
                         "P" + partInfo.getSeq().originOf() + "." + filterType + p.getReferenceSeq(), startRowAt + rankFrom, startRowAt + rankTo);
 
                 Iterator<String> iterListSet = listSet.iterator();
@@ -1171,6 +1192,8 @@ public class ServiceApiController extends ApiController {
             for (ParamVO p : params) {
                 Set<String> listSet = zsetOps.rangeByScore(
                         "P" + partInfo.getSeq().originOf() + "." + filterType + p.getReferenceSeq(), 0, Integer.MAX_VALUE);
+                if (listSet == null || listSet.size() == 0) continue;
+
                 List<Double> rowData = new ArrayList<>();
                 paramData.put(p.getParamKey(), rowData);
 
