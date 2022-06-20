@@ -132,6 +132,7 @@ namespace DynaRAP.UControl
             ""command"":""upload-list""
             }";
 
+                log.Info("url : " + url);
                 log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
@@ -344,6 +345,7 @@ namespace DynaRAP.UControl
             }}"
                 , uploadSeq);
 
+                log.Info("url : " + url);
                 log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
@@ -454,6 +456,7 @@ namespace DynaRAP.UControl
             }}"
                 , partSeq);
 
+                log.Info("url : " + url);
                 log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
@@ -821,6 +824,7 @@ namespace DynaRAP.UControl
             ""pageSize"":3000
             }";
 
+                log.Info("url : " + url);
                 log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
@@ -1104,12 +1108,13 @@ namespace DynaRAP.UControl
 
                 }
 
+                string url = ConfigurationManager.AppSettings["UrlPart"];
+
                 var json = JsonConvert.SerializeObject(req);
 
                 //Console.WriteLine(json);
+                log.Info("url : " + url);
                 log.Info(json);
-
-                string url = ConfigurationManager.AppSettings["UrlPart"];
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
                 request.Method = "POST";
@@ -1238,6 +1243,7 @@ namespace DynaRAP.UControl
             }}"
                 , presetPack);
 
+                log.Info("url : " + url);
                 log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);

@@ -222,6 +222,7 @@ namespace DynaRAP.UControl
             }}"
                 , 1, pid, name, dirType);
 
+                log.Info("url : " + url);
                 log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
@@ -289,6 +290,7 @@ namespace DynaRAP.UControl
             }}"
                 , id, pid, name, dirType, paramPack, seq);
 
+                log.Info("url : " + url);
                 log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
@@ -350,6 +352,7 @@ namespace DynaRAP.UControl
             }}
             ", id);
 
+                log.Info("url : " + url);
                 log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
@@ -408,6 +411,7 @@ namespace DynaRAP.UControl
                 string url = ConfigurationManager.AppSettings["UrlDir"];
                 string sendData = "{ \"command\": \"list\" }";
 
+                log.Info("url : " + url);
                 log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
@@ -482,6 +486,7 @@ namespace DynaRAP.UControl
             ""pageSize"":3000
             }";
 
+                log.Info("url : " + url);
                 log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
@@ -565,6 +570,7 @@ namespace DynaRAP.UControl
                 , cboPart.Text, cboPartLocation.Text
                 , edtLrpX.Text, edtLrpY.Text, edtLrpZ.Text, tags, extras);
 
+                log.Info("url : " + url);
                 log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
@@ -627,6 +633,7 @@ namespace DynaRAP.UControl
             }}"
                 , paramPack);
 
+                log.Info("url : " + url);
                 log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
@@ -703,6 +710,7 @@ namespace DynaRAP.UControl
             ""propType"":""""
             }";
 
+                log.Info("url : " + url);
                 log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);

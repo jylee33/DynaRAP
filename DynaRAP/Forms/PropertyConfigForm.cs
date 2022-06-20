@@ -213,6 +213,7 @@ namespace DynaRAP.Forms
                 ""propType"":""""
                 }";
 
+                log.Info("url : " + url);
                 log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
@@ -267,6 +268,7 @@ namespace DynaRAP.Forms
                 }}"
                 , propType, propCode, unit);
 
+                log.Info("url : " + url);
                 log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
@@ -331,6 +333,7 @@ namespace DynaRAP.Forms
                 }}"
                 , seq, propType, propCode, unit, deleted);
 
+                log.Info("url : " + url);
                 log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);

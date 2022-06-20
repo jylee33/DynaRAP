@@ -166,6 +166,7 @@ namespace DynaRAP.UControl
                 }}"
                 , dllSeq, gridView1.FocusedRowHandle + 1);
 
+                log.Info("url : " + url);
                 log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
@@ -286,6 +287,7 @@ namespace DynaRAP.UControl
                      , dllSeq, dllParamSeq, dataName);
                 }
 
+                log.Info("url : " + url);
                 log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
@@ -356,6 +358,7 @@ namespace DynaRAP.UControl
                 }}"
                 , dllSeq, dllParamSeq);
 
+                log.Info("url : " + url);
                 log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);

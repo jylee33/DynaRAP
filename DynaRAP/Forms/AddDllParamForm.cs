@@ -92,6 +92,7 @@ namespace DynaRAP.Forms
                 }}"
                 , seq, encName, cboParameterType.Text);
 
+                log.Info("url : " + url);
                 log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);

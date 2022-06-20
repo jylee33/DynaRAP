@@ -157,6 +157,7 @@ namespace DynaRAP.UControl
             ""pageSize"":3000
             }";
 
+                log.Info("url : " + url);
                 log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
@@ -226,6 +227,7 @@ namespace DynaRAP.UControl
             }}"
                 , 1, pid, name, dirType);
 
+                log.Info("url : " + url);
                 log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
@@ -293,6 +295,7 @@ namespace DynaRAP.UControl
             }}"
                 , id, pid, name, dirType, paramPack, seq);
 
+                log.Info("url : " + url);
                 log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
@@ -354,6 +357,7 @@ namespace DynaRAP.UControl
             }}
             ", id);
 
+                log.Info("url : " + url);
                 log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
@@ -411,6 +415,7 @@ namespace DynaRAP.UControl
                 string url = ConfigurationManager.AppSettings["UrlDir"];
                 string sendData = "{ \"command\": \"list\" }";
 
+                log.Info("url : " + url);
                 log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
@@ -476,6 +481,7 @@ namespace DynaRAP.UControl
             ""pageSize"":3000
             }";
 
+                log.Info("url : " + url);
                 log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
@@ -549,6 +555,7 @@ namespace DynaRAP.UControl
             }}"
                 , opType, presetPack, encName);
 
+                log.Info("url : " + url);
                 log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
@@ -614,6 +621,7 @@ namespace DynaRAP.UControl
             }}"
                 , presetPack);
 
+                log.Info("url : " + url);
                 log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
@@ -702,6 +710,7 @@ namespace DynaRAP.UControl
             }}"
                 , presetPack);
 
+                log.Info("url : " + url);
                 log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);

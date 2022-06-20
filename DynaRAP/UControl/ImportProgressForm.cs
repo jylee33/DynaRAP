@@ -109,6 +109,7 @@ namespace DynaRAP.UControl
             }}"
                 , uploadSeq);
 
+                log.Info("url : " + url);
                 log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);

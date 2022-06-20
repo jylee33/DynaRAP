@@ -194,6 +194,7 @@ namespace DynaRAP.UControl
                 ""pageSize"":3000
                 }";
 
+                log.Info("url : " + url);
                 log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
@@ -413,6 +414,7 @@ namespace DynaRAP.UControl
                 ""pageSize"":3000
                 }";
 
+                log.Info("url : " + url);
                 log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
@@ -714,12 +716,13 @@ namespace DynaRAP.UControl
                     import.parts.Add(new Part(partName, t1, t2));
                 }
 
+                string url = ConfigurationManager.AppSettings["UrlImport"];
+
                 var json = JsonConvert.SerializeObject(import);
 
                 //Console.WriteLine(json);
+                log.Info("url : " + url);
                 log.Info(json);
-
-                string url = ConfigurationManager.AppSettings["UrlImport"];
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
                 request.Method = "POST";
@@ -1010,6 +1013,7 @@ namespace DynaRAP.UControl
                     , presetPack, dataType, this.csvFilePath);
                 }
 
+                log.Info("url : " + url);
                 log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);

@@ -151,6 +151,7 @@ namespace DynaRAP.UControl
                 }}"
                 );
 
+                log.Info("url : " + url);
                 log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);

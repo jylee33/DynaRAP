@@ -74,6 +74,7 @@ namespace DynaRAP.UControl
                 ""pageSize"":3000
                 }";
 
+                log.Info("url : " + url);
                 log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
@@ -288,6 +289,7 @@ namespace DynaRAP.UControl
                 ""pageSize"":3000
                 }";
 
+                log.Info("url : " + url);
                 log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
@@ -382,6 +384,7 @@ namespace DynaRAP.UControl
                 }}"
                 , presetPack);
 
+                log.Info("url : " + url);
                 log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);

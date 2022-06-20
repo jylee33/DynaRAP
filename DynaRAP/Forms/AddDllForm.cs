@@ -77,6 +77,7 @@ namespace DynaRAP.Forms
                 }}"
                 , edtDataSetCode.Text, encName, edtDataSetVersion.Text);
 
+                log.Info("url : " + url);
                 log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
