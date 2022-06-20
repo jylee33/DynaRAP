@@ -791,12 +791,12 @@ namespace DynaRAP.UControl
                 if (importType == ImportType.FLYING)
                 {
                     csvFilePath = @"C:\temp\TEST_GRT_SL30_03_1st_FT_Load_1_edit220617.csv";
-                    lblFlyingData.Text = @"C:\temp\TEST_GRT_SL30_03_1st_FT_Load_1_edit220617.csv";
+                    lblFlyingData.Text = csvFilePath;
                 }
                 else
                 {
                     csvFilePath = @"C:\temp\a.dat";
-                    lblFlyingData.Text = @"C:\temp\a.dat";
+                    lblFlyingData.Text = csvFilePath;
                 }
                 StreamReader sr = new StreamReader(csvFilePath);
 #else
@@ -849,7 +849,6 @@ namespace DynaRAP.UControl
                 }
                 else // 해석데이터 import
                 {
-                    int idx = 0;
                     dicData.Clear();
 
                     Dictionary<string, List<string>> tempData = new Dictionary<string, List<string>>();
@@ -952,15 +951,31 @@ namespace DynaRAP.UControl
             }
 
             string url = ConfigurationManager.AppSettings["UrlImport"];
-            string sendData = string.Format(@"
-            {{
-            ""command"":""check-param"",
-            ""presetPack"":""{0}"",
-            ""presetSeq"":null,
-            ""dataType"":""{1}"",
-            ""headerRow"":""{2}""
-            }}"
-            , presetPack, dataType, this.headerRow);
+            string sendData = String.Empty;
+            if (importType == ImportType.FLYING) // 비행데이터 import
+            {
+                sendData = string.Format(@"
+                {{
+                ""command"":""check-param"",
+                ""presetPack"":""{0}"",
+                ""presetSeq"":null,
+                ""dataType"":""{1}"",
+                ""headerRow"":""{2}""
+                }}"
+                , presetPack, dataType, this.headerRow);
+            }
+            else // 해석데이터 import
+            {
+                sendData = string.Format(@"
+                {{
+                ""command"":""check-param"",
+                ""presetPack"":""{0}"",
+                ""presetSeq"":null,
+                ""dataType"":""{1}"",
+                ""importFilePath"":""{2}""
+                }}"
+                , presetPack, dataType, this.csvFilePath);
+            }
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "POST";
