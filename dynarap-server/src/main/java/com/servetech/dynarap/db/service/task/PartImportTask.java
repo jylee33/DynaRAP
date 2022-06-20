@@ -504,6 +504,9 @@ public class PartImportTask {
                 } catch(Exception ex) {
                     ex.printStackTrace();
 
+                    rawUpload.setStatus("error");
+                    rawUpload.setStatusMessage("업로드에 오류가 있습니다. [" + ex.getMessage() + "]");
+
                     try {
                         rawUpload.setImportDone(false);
                         rawService.updateRawUpload(rawUpload);
