@@ -301,9 +301,11 @@ public class RawService {
             if (uploadReq == null)
                 throw new Exception("요청 형식이 올바르지 않습니다. 파라미터를 확인하세요.");
 
-            if (uploadReq.getSourcePath().contains("C:\\")) {
+            if (uploadReq.getSourcePath().contains("C:\\")
+                || uploadReq.getSourcePath().contains("c:\\")) {
+                uploadReq.setSourcePath(uploadReq.getSourcePath().toLowerCase(Locale.ROOT));
                 uploadReq.setSourcePath(uploadReq.getSourcePath().replaceAll("\\\\", "/"));
-                uploadReq.setSourcePath(uploadReq.getSourcePath().replaceAll("C:/", staticLocation.substring("file:".length())));
+                uploadReq.setSourcePath(uploadReq.getSourcePath().replaceAll("c:/", staticLocation.substring("file:".length())));
             }
 
             File fStatic = new File(uploadReq.getSourcePath());

@@ -788,9 +788,11 @@ public class ServiceApiController extends ApiController {
                 }
 
                 // File loading
-                if (importFilePath.contains("C:\\")) {
+                if (importFilePath.contains("C:\\")
+                    || importFilePath.contains("c:\\")) {
+                    importFilePath = importFilePath.toLowerCase(Locale.ROOT);
                     importFilePath = importFilePath.replaceAll("\\\\", "/");
-                    importFilePath = importFilePath.replaceAll("C:/", staticLocation.substring("file:".length()));
+                    importFilePath = importFilePath.replaceAll("c:/", staticLocation.substring("file:".length()));
                 }
 
                 List<String> allParams = null;
