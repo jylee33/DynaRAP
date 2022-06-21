@@ -68,6 +68,8 @@ namespace DynaRAP.UControl
                 }
                 progressBar.Position = fetchCount;
                 lblProgress.Text = string.Format("{0} / {1}", fetchCount, totalFetchCount);
+
+                bFirst = false;
             }
 
         }
@@ -177,7 +179,6 @@ namespace DynaRAP.UControl
                         }
                     }
                 }
-                bFirst = false;
             }
             catch (Exception ex)
             {
