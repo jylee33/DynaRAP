@@ -320,6 +320,8 @@ public class RawService {
 
             RawVO.Upload rawUpload = getUploadById(uploadId);
             if (rawUpload == null) {
+                final String dataType = uploadReq.getDataType();
+
                 rawUpload = new RawVO.Upload();
                 rawUpload.setUploadId(uploadId);
                 rawUpload.setUploadName(new String64(originalFileName));
@@ -351,6 +353,21 @@ public class RawService {
                     rawUpload.setHpfCutoff(uploadReq.getHpfOption().getCutoff());
                     rawUpload.setHpfBtype(uploadReq.getHpfOption().getBtype());
                 }
+
+                Collections.sort(uploadReq.getParts(), new Comparator<RawVO.UploadRequest.UploadPart>() {
+                            @Override
+                            public int compare(RawVO.UploadRequest.UploadPart o1, RawVO.UploadRequest.UploadPart o2) {
+                                if (dataType.equals("grt")
+                                        || dataType.equals("fltp")
+                                        || dataType.equals("flts")) {
+                                    return o1.getJulianStartAt().compareTo(o2.getJulianStartAt());
+                                }
+                                else {
+                                    return o1.getOffsetStartAt().compareTo(o2.getOffsetStartAt());
+                                }
+                            }
+                        });
+
                 insertRawUpload(rawUpload);
                 uploadStat.put(rawUpload.getSeq().valueOf(), rawUpload);
 

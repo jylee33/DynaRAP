@@ -464,6 +464,19 @@ public interface ParamMapper {
 
     @Select({
             "<script>" +
+                    "select * from dynarap_preset_param " +
+                    "where presetPack = #{presetPack,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "and presetSeq = #{presetSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "and paramPack = #{paramPack,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "and paramSeq = #{paramSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "order by seq desc " +
+                    "limit 0, 1 " +
+                    "</script>"
+    })
+    PresetVO.Param selectPresetParam(Map<String, Object> params) throws Exception;
+
+    @Select({
+            "<script>" +
                     "select a.*, b.seq as referenceSeq, 0 as presetPack, 0 as presetSeq from dynarap_param a, dynarap_notmapped_param b " +
                     "where a.seq = b.paramSeq " +
                     "and a.paramPack = b.paramPack " +

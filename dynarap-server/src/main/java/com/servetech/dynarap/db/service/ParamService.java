@@ -770,7 +770,16 @@ public class ParamService {
             presetParam.setPresetPack(preset.getPresetPack());
             presetParam.setPresetSeq(preset.getSeq());
 
-            paramMapper.insertPresetParam(presetParam);
+            // 기존 저장된 내용 체크 후 없다면 저장.
+            Map<String, Object> params = new HashMap<>();
+            params.put("presetPack", presetParam.getPresetPack());
+            params.put("presetSeq", presetParam.getPresetSeq());
+            params.put("paramPack", presetParam.getParamPack());
+            params.put("paramSeq", presetParam.getParamSeq());
+            PresetVO.Param currentParam = paramMapper.selectPresetParam(params);
+            if (currentParam == null)
+                paramMapper.insertPresetParam(presetParam);
+
         } catch(Exception e) {
             throw new HandledServiceException(410, e.getMessage());
         }
@@ -786,9 +795,15 @@ public class ParamService {
 
             // FIXME: 삭제에 대한 처리가 결국 preset을 변형하는 거로 처리해야 되는가?
 
+            PresetVO preset = null;
+            if (presetParam.getPresetSeq() == null || presetParam.getPresetSeq().isEmpty())
+                preset = getActivePreset(presetParam.getPresetPack());
+            else
+                preset = getPresetBySeq(presetParam.getPresetSeq());
+
             Map<String, Object> params = new HashMap<>();
-            params.put("presetPack", presetParam.getPresetPack());
-            params.put("presetSeq", presetParam.getPresetSeq());
+            params.put("presetPack", preset.getPresetPack());
+            params.put("presetSeq", preset.getSeq());
 
             if (presetParam.getParamPack() != null && !presetParam.getParamPack().isEmpty()) {
                 params.put("paramPack", presetParam.getParamPack());
