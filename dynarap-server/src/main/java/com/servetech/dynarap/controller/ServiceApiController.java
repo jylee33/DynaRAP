@@ -352,7 +352,11 @@ public class ServiceApiController extends ApiController {
 
             for (int i = 0; i < jarrBulk.size(); i++) {
                 JsonObject jobjParam = jarrBulk.get(i).getAsJsonObject();
-                getService(ParamService.class).insertPresetParam(jobjParam);
+                try {
+                    getService(ParamService.class).insertPresetParam(jobjParam);
+                } catch(HandledServiceException hse) {
+                    // skip insert
+                }
             }
             return ResponseHelper.response(200, "Success - Preset Param Add Bulk", "");
         }
