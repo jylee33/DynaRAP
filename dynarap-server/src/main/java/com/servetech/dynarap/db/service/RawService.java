@@ -301,9 +301,11 @@ public class RawService {
             if (uploadReq == null)
                 throw new Exception("요청 형식이 올바르지 않습니다. 파라미터를 확인하세요.");
 
-            if (uploadReq.getSourcePath().contains("C:\\")) {
+            if (uploadReq.getSourcePath().contains("C:\\")
+                || uploadReq.getSourcePath().contains("c:\\")) {
+                uploadReq.setSourcePath(uploadReq.getSourcePath().toLowerCase(Locale.ROOT));
                 uploadReq.setSourcePath(uploadReq.getSourcePath().replaceAll("\\\\", "/"));
-                uploadReq.setSourcePath(uploadReq.getSourcePath().replaceAll("C:/", staticLocation.substring("file:".length())));
+                uploadReq.setSourcePath(uploadReq.getSourcePath().replaceAll("c:/", staticLocation.substring("file:".length())));
             }
 
             File fStatic = new File(uploadReq.getSourcePath());
@@ -318,6 +320,8 @@ public class RawService {
 
             RawVO.Upload rawUpload = getUploadById(uploadId);
             if (rawUpload == null) {
+                final String dataType = uploadReq.getDataType();
+
                 rawUpload = new RawVO.Upload();
                 rawUpload.setUploadId(uploadId);
                 rawUpload.setUploadName(new String64(originalFileName));
@@ -349,6 +353,21 @@ public class RawService {
                     rawUpload.setHpfCutoff(uploadReq.getHpfOption().getCutoff());
                     rawUpload.setHpfBtype(uploadReq.getHpfOption().getBtype());
                 }
+
+                Collections.sort(uploadReq.getParts(), new Comparator<RawVO.UploadRequest.UploadPart>() {
+                            @Override
+                            public int compare(RawVO.UploadRequest.UploadPart o1, RawVO.UploadRequest.UploadPart o2) {
+                                if (dataType.equals("grt")
+                                        || dataType.equals("fltp")
+                                        || dataType.equals("flts")) {
+                                    return o1.getJulianStartAt().compareTo(o2.getJulianStartAt());
+                                }
+                                else {
+                                    return o1.getOffsetStartAt().compareTo(o2.getOffsetStartAt());
+                                }
+                            }
+                        });
+
                 insertRawUpload(rawUpload);
                 uploadStat.put(rawUpload.getSeq().valueOf(), rawUpload);
 

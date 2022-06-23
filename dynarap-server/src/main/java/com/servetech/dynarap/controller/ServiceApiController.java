@@ -352,7 +352,11 @@ public class ServiceApiController extends ApiController {
 
             for (int i = 0; i < jarrBulk.size(); i++) {
                 JsonObject jobjParam = jarrBulk.get(i).getAsJsonObject();
-                getService(ParamService.class).insertPresetParam(jobjParam);
+                try {
+                    getService(ParamService.class).insertPresetParam(jobjParam);
+                } catch(HandledServiceException hse) {
+                    // skip insert
+                }
             }
             return ResponseHelper.response(200, "Success - Preset Param Add Bulk", "");
         }
@@ -744,15 +748,11 @@ public class ServiceApiController extends ApiController {
 
             if (dataType.equals("grt") || dataType.equals("fltp") || dataType.equals("flts")) {
                 if (presetParams == null) presetParams = new ArrayList<>();
-                Map<String, ParamVO> adamsMap = new LinkedHashMap<>();
-                Map<String, ParamVO> zaeroMap = new LinkedHashMap<>();
                 Map<String, ParamVO> grtMap = new LinkedHashMap<>();
                 Map<String, ParamVO> fltpMap = new LinkedHashMap<>();
                 Map<String, ParamVO> fltsMap = new LinkedHashMap<>();
                 for (ParamVO param : presetParams) {
-                    adamsMap.put(param.getAdamsKey() + "_" + param.getPropInfo().getParamUnit(), param);
-                    zaeroMap.put(param.getZaeroKey() + "_" + param.getPropInfo().getParamUnit(), param);
-                    grtMap.put(param.getGrtKey() + "_" + param.getPropInfo().getParamUnit(), param);
+                    grtMap.put(param.getGrtKey(), param);
                     fltpMap.put(param.getFltpKey() + "_" + param.getPropInfo().getParamUnit(), param);
                     fltsMap.put(param.getFltsKey() + "_" + param.getPropInfo().getParamUnit(), param);
                 }
@@ -764,8 +764,6 @@ public class ServiceApiController extends ApiController {
                     if (p.equalsIgnoreCase("date")) continue;
 
                     ParamVO pi = null;
-                    if (dataType.equals("adams") && adamsMap.containsKey(p)) pi = adamsMap.get(p);
-                    if (dataType.equals("zaero") && zaeroMap.containsKey(p)) pi = zaeroMap.get(p);
                     if (dataType.equals("grt") && grtMap.containsKey(p)) pi = grtMap.get(p);
                     if (dataType.equals("fltp") && fltpMap.containsKey(p)) pi = fltpMap.get(p);
                     if (dataType.equals("flts") && fltsMap.containsKey(p)) pi = fltsMap.get(p);
@@ -788,9 +786,11 @@ public class ServiceApiController extends ApiController {
                 }
 
                 // File loading
-                if (importFilePath.contains("C:\\")) {
+                if (importFilePath.contains("C:\\")
+                    || importFilePath.contains("c:\\")) {
+                    importFilePath = importFilePath.toLowerCase(Locale.ROOT);
                     importFilePath = importFilePath.replaceAll("\\\\", "/");
-                    importFilePath = importFilePath.replaceAll("C:/", staticLocation.substring("file:".length()));
+                    importFilePath = importFilePath.replaceAll("c:/", staticLocation.substring("file:".length()));
                 }
 
                 List<String> allParams = null;

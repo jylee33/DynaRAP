@@ -80,6 +80,7 @@ public class PartImportTask {
                     Statement stmt = conn.createStatement();
 
                     if (rawUpload.getStatus().equals("import")) {
+                        /*
                         // 기존 raw 테이블 삭제.
                         stmt.executeUpdate("drop table if exists `dynarap_" + tempTableName + "` cascade");
                         stmt.executeUpdate("create table `dynarap_" + tempTableName + "`\n" +
@@ -100,17 +101,14 @@ public class PartImportTask {
                         stmt.executeUpdate("create index `idx_dynarap_" + tempTableName + "_julian_row` on `dynarap_" + tempTableName + "` (`julianTimeAt`,`rowNo`)");
                         stmt.executeUpdate("create index `idx_dynarap_" + tempTableName + "_preset_row` on `dynarap_" + tempTableName + "` (`presetPack`,`presetSeq`,`presetParamSeq`,`rowNo`)");
                         conn.commit(); // drop 이후 커밋 처리.
+                         */
 
                         if (presetParams == null) presetParams = new ArrayList<>();
-                        Map<String, ParamVO> adamsMap = new LinkedHashMap<>();
-                        Map<String, ParamVO> zaeroMap = new LinkedHashMap<>();
                         Map<String, ParamVO> grtMap = new LinkedHashMap<>();
                         Map<String, ParamVO> fltpMap = new LinkedHashMap<>();
                         Map<String, ParamVO> fltsMap = new LinkedHashMap<>();
                         for (ParamVO param : presetParams) {
-                            adamsMap.put(param.getAdamsKey() + "_" + param.getPropInfo().getParamUnit(), param);
-                            zaeroMap.put(param.getZaeroKey() + "_" + param.getPropInfo().getParamUnit(), param);
-                            grtMap.put(param.getGrtKey() + "_" + param.getPropInfo().getParamUnit(), param);
+                            grtMap.put(param.getGrtKey(), param);
                             fltpMap.put(param.getFltpKey() + "_" + param.getPropInfo().getParamUnit(), param);
                             fltsMap.put(param.getFltsKey() + "_" + param.getPropInfo().getParamUnit(), param);
                         }
@@ -136,8 +134,6 @@ public class PartImportTask {
                             if (p.equalsIgnoreCase("date")) continue;
 
                             ParamVO pi = null;
-                            if (rawUpload.getDataType().equals("adams") && adamsMap.containsKey(p)) pi = adamsMap.get(p);
-                            if (rawUpload.getDataType().equals("zaero") && zaeroMap.containsKey(p)) pi = zaeroMap.get(p);
                             if (rawUpload.getDataType().equals("grt") && grtMap.containsKey(p)) pi = grtMap.get(p);
                             if (rawUpload.getDataType().equals("fltp") && fltpMap.containsKey(p)) pi = fltpMap.get(p);
                             if (rawUpload.getDataType().equals("flts") && fltsMap.containsKey(p)) pi = fltsMap.get(p);
@@ -189,9 +185,7 @@ public class PartImportTask {
                                                 "and paramPack = " + tempParam.getParamPack().originOf() + " " +
                                                 "and paramSeq = " + tempParam.getSeq().originOf());
                                 if (!rs.next()) {
-                                    String notMappedParamKey = tempParam.getAdamsKey();
-                                    if (rawUpload.getDataType().equals("zaero")) notMappedParamKey = tempParam.getZaeroKey();
-                                    if (rawUpload.getDataType().equals("grt")) notMappedParamKey = tempParam.getGrtKey();
+                                    String notMappedParamKey = tempParam.getGrtKey();
                                     if (rawUpload.getDataType().equals("fltp")) notMappedParamKey = tempParam.getFltpKey();
                                     if (rawUpload.getDataType().equals("flts")) notMappedParamKey = tempParam.getFltsKey();
 
