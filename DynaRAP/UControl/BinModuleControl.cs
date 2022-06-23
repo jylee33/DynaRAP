@@ -218,6 +218,7 @@ namespace DynaRAP.UControl
 
                         if (bFind)
                         {
+                            MessageBox.Show("항목의 중복이 허용되지 않습니다.");
                             combo.SelectedIndex = prevSelected;
                         }
                         else
@@ -355,7 +356,7 @@ namespace DynaRAP.UControl
                         foreach (ResponseParam param in paramList)
                         {
                             //AddParameter(param);
-                            gridList.Add(new PresetParamData(param.paramKey, param.adamsKey, param.zaeroKey, param.grtKey, param.fltpKey, param.fltsKey, param.propInfo.propType, param.partInfo, 1));
+                            gridList.Add(new PresetParamData(param.paramKey, param.adamsKey, param.zaeroKey, param.grtKey, param.fltpKey, param.fltsKey, param.propInfo.propType, param.partInfo, param.seq, param.paramPack, 1));
                         }
 
                         this.gridControl1.DataSource = gridList;
@@ -432,7 +433,7 @@ namespace DynaRAP.UControl
             {
                 gridList = new List<PresetParamData>();
             }
-            gridList.Add(new PresetParamData("", "", "", "", "", "", "", "", 1));
+            gridList.Add(new PresetParamData("", "", "", "", "", "", "", "", "", "", 1));
             this.gridControl1.DataSource = gridList;
             //gridControl1.Update();
             gridView1.RefreshData();

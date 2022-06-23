@@ -132,7 +132,7 @@ namespace DynaRAP.UControl
             diagram.AxisX.DateTimeScaleOptions.GridAlignment = DateTimeGridAlignment.Millisecond;
             diagram.AxisX.DateTimeScaleOptions.AutoGrid = false;
             diagram.AxisX.DateTimeScaleOptions.GridSpacing = 1;
-            diagram.AxisX.Label.TextPattern = "{A:HH:mm:ss.fff}";
+            diagram.AxisX.Label.TextPattern = "{A:HH:mm:ss.ffffff}";
             //diag.AxisX.Label.TextPattern = "{A:MMM-dd HH}";
 
             this.rangeControl1.Client = chartControl;
@@ -177,6 +177,12 @@ namespace DynaRAP.UControl
         private void RangeControl1_RangeChanged(object sender, DevExpress.XtraEditors.RangeControlRangeEventArgs range)
         {
             //Console.WriteLine("start : {0}, end : {1}", range.Range.Minimum, range.Range.Maximum);
+            //DateTime min = (DateTime)range.Range.Minimum;
+            //DateTime max = (DateTime)range.Range.Maximum;
+
+            //this.minValue = min.TimeOfDay.ToString().Substring(6, 8);
+            //this.maxValue = max.TimeOfDay.ToString().Substring(6, 8);
+
             this.minValue = range.Range.Minimum;
             this.maxValue = range.Range.Maximum;
 

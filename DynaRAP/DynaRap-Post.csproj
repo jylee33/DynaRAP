@@ -141,6 +141,7 @@
     <Compile Include="Data\DllParamResponse.cs" />
     <Compile Include="Data\DllResponse.cs" />
     <Compile Include="Data\DllListResponse.cs" />
+    <Compile Include="Data\PresetParamAddBulk.cs" />
     <Compile Include="Data\UnmappedParamData.cs" />
     <Compile Include="Data\ImportIntervalData.cs" />
     <Compile Include="Data\SBListResponse.cs" />

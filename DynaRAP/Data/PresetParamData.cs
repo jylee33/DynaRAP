@@ -11,7 +11,7 @@ namespace DynaRAP.Data
         public PresetParamData()
         {
         }
-        public PresetParamData(string paramKey, string adamsKey, string zaeroKey, string grtKey, string fltpKey, string fltsKey, string partInfo, string partInfoSub, int del)
+        public PresetParamData(string paramKey, string adamsKey, string zaeroKey, string grtKey, string fltpKey, string fltsKey, string partInfo, string partInfoSub, string seq, string paramPack, int del)
         {
             ParamKey = paramKey;
             AdamsKey = adamsKey;
@@ -21,6 +21,8 @@ namespace DynaRAP.Data
             FltsKey = fltsKey;
             PartInfo = partInfo;
             PartInfoSub = partInfoSub;
+            Seq = seq;
+            ParamPack = paramPack;
             Del = del;
         }
         public string ParamKey { get; set; }
@@ -31,6 +33,8 @@ namespace DynaRAP.Data
         public string FltsKey { get; set; }
         public string PartInfo { get; set; }
         public string PartInfoSub { get; set; }
+        public string Seq { get; set; }
+        public string ParamPack { get; set; }
         public int Del { get; set; }
     }
 }

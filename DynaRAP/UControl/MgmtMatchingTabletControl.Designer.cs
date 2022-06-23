@@ -37,13 +37,13 @@
             this.labelControl3 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl37 = new DevExpress.XtraEditors.LabelControl();
             this.lblMandatoryField = new DevExpress.XtraEditors.LabelControl();
-            this.edtParamName = new DevExpress.XtraEditors.TextEdit();
+            this.edtPresetName = new DevExpress.XtraEditors.TextEdit();
             this.separatorControl1 = new DevExpress.XtraEditors.SeparatorControl();
             this.separatorControl2 = new DevExpress.XtraEditors.SeparatorControl();
             this.panelControl1 = new DevExpress.XtraEditors.PanelControl();
             this.xtraScrollableControl1 = new DevExpress.XtraEditors.XtraScrollableControl();
             this.gridControl1 = new DevExpress.XtraGrid.GridControl();
-            this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
+            this.gridView2 = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.gridColumn1 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemComboBox1 = new DevExpress.XtraEditors.Repository.RepositoryItemComboBox();
             this.gridColumn2 = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -56,6 +56,8 @@
             this.gridColumn9 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemImageComboBox1 = new DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox();
             this.imageCollection1 = new DevExpress.Utils.ImageCollection(this.components);
+            this.gridColumn10 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.gridColumn11 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.btnSaveAsNewParameter = new DevExpress.XtraEditors.SimpleButton();
             this.btnDeleteParameter = new DevExpress.XtraEditors.SimpleButton();
             this.btnModifyParameter = new DevExpress.XtraEditors.SimpleButton();
@@ -70,14 +72,14 @@
             this.ID = new DevExpress.XtraTreeList.Columns.TreeListColumn();
             this.treeList1 = new DevExpress.XtraTreeList.TreeList();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            ((System.ComponentModel.ISupportInitialize)(this.edtParamName.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.edtPresetName.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.separatorControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.separatorControl2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.panelControl1)).BeginInit();
             this.panelControl1.SuspendLayout();
             this.xtraScrollableControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemComboBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemImageComboBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).BeginInit();
@@ -137,9 +139,9 @@
             this.labelControl3.Appearance.Options.UseFont = true;
             this.labelControl3.Location = new System.Drawing.Point(107, 84);
             this.labelControl3.Name = "labelControl3";
-            this.labelControl3.Size = new System.Drawing.Size(55, 13);
+            this.labelControl3.Size = new System.Drawing.Size(58, 13);
             this.labelControl3.TabIndex = 0;
-            this.labelControl3.Text = "파라미터명";
+            this.labelControl3.Text = "프리셋 이름";
             // 
             // labelControl37
             // 
@@ -166,13 +168,13 @@
             this.lblMandatoryField.Text = "프리셋 이름은 필수 입니다.";
             this.lblMandatoryField.Visible = false;
             // 
-            // edtParamName
+            // edtPresetName
             // 
-            this.edtParamName.EditValue = "";
-            this.edtParamName.Location = new System.Drawing.Point(242, 84);
-            this.edtParamName.Name = "edtParamName";
-            this.edtParamName.Size = new System.Drawing.Size(222, 22);
-            this.edtParamName.TabIndex = 1;
+            this.edtPresetName.EditValue = "";
+            this.edtPresetName.Location = new System.Drawing.Point(242, 84);
+            this.edtPresetName.Name = "edtPresetName";
+            this.edtPresetName.Size = new System.Drawing.Size(222, 22);
+            this.edtPresetName.TabIndex = 1;
             // 
             // separatorControl1
             // 
@@ -214,7 +216,7 @@
             this.xtraScrollableControl1.Controls.Add(this.labelControl3);
             this.xtraScrollableControl1.Controls.Add(this.labelControl37);
             this.xtraScrollableControl1.Controls.Add(this.lblMandatoryField);
-            this.xtraScrollableControl1.Controls.Add(this.edtParamName);
+            this.xtraScrollableControl1.Controls.Add(this.edtPresetName);
             this.xtraScrollableControl1.Controls.Add(this.separatorControl1);
             this.xtraScrollableControl1.Controls.Add(this.separatorControl2);
             this.xtraScrollableControl1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -226,7 +228,7 @@
             // gridControl1
             // 
             this.gridControl1.Location = new System.Drawing.Point(107, 174);
-            this.gridControl1.MainView = this.gridView1;
+            this.gridControl1.MainView = this.gridView2;
             this.gridControl1.Name = "gridControl1";
             this.gridControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemImageComboBox1,
@@ -234,11 +236,11 @@
             this.gridControl1.Size = new System.Drawing.Size(1008, 659);
             this.gridControl1.TabIndex = 27;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
-            this.gridView1});
+            this.gridView2});
             // 
-            // gridView1
+            // gridView2
             // 
-            this.gridView1.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
+            this.gridView2.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
             this.gridColumn1,
             this.gridColumn2,
             this.gridColumn3,
@@ -247,9 +249,11 @@
             this.gridColumn6,
             this.gridColumn7,
             this.gridColumn8,
-            this.gridColumn9});
-            this.gridView1.GridControl = this.gridControl1;
-            this.gridView1.Name = "gridView1";
+            this.gridColumn9,
+            this.gridColumn10,
+            this.gridColumn11});
+            this.gridView2.GridControl = this.gridControl1;
+            this.gridView2.Name = "gridView2";
             // 
             // gridColumn1
             // 
@@ -345,6 +349,18 @@
             this.imageCollection1.ImageStream = ((DevExpress.Utils.ImageCollectionStreamer)(resources.GetObject("imageCollection1.ImageStream")));
             this.imageCollection1.Images.SetKeyName(0, "NONE");
             this.imageCollection1.Images.SetKeyName(1, "DELETE");
+            // 
+            // gridColumn10
+            // 
+            this.gridColumn10.Caption = "Seq";
+            this.gridColumn10.FieldName = "Seq";
+            this.gridColumn10.Name = "gridColumn10";
+            // 
+            // gridColumn11
+            // 
+            this.gridColumn11.Caption = "ParamPack";
+            this.gridColumn11.FieldName = "ParamPack";
+            this.gridColumn11.Name = "gridColumn11";
             // 
             // btnSaveAsNewParameter
             // 
@@ -501,7 +517,7 @@
             this.Name = "MgmtMatchingTabletControl";
             this.Size = new System.Drawing.Size(1629, 942);
             this.Load += new System.EventHandler(this.MgmtMatchingTableControl_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.edtParamName.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.edtPresetName.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.separatorControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.separatorControl2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.panelControl1)).EndInit();
@@ -509,7 +525,7 @@
             this.xtraScrollableControl1.ResumeLayout(false);
             this.xtraScrollableControl1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridView2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemComboBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemImageComboBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).EndInit();
@@ -535,7 +551,7 @@
         private DevExpress.XtraEditors.LabelControl labelControl3;
         private DevExpress.XtraEditors.LabelControl labelControl37;
         private DevExpress.XtraEditors.LabelControl lblMandatoryField;
-        private DevExpress.XtraEditors.TextEdit edtParamName;
+        private DevExpress.XtraEditors.TextEdit edtPresetName;
         private DevExpress.XtraEditors.SeparatorControl separatorControl1;
         private DevExpress.XtraEditors.SeparatorControl separatorControl2;
         private DevExpress.XtraEditors.PanelControl panelControl1;
@@ -555,7 +571,7 @@
         private DevExpress.XtraEditors.SimpleButton btnDeleteParameter;
         private DevExpress.XtraEditors.SimpleButton btnModifyParameter;
         private DevExpress.XtraGrid.GridControl gridControl1;
-        private DevExpress.XtraGrid.Views.Grid.GridView gridView1;
+        private DevExpress.XtraGrid.Views.Grid.GridView gridView2;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn1;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn2;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn3;
@@ -568,5 +584,7 @@
         private DevExpress.Utils.ImageCollection imageCollection1;
         private DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox repositoryItemImageComboBox1;
         private DevExpress.XtraEditors.Repository.RepositoryItemComboBox repositoryItemComboBox1;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn10;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn11;
     }
 }

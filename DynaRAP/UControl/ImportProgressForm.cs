@@ -55,7 +55,7 @@ namespace DynaRAP.UControl
             if (isCompleted)
             {
                 timer.Stop();
-                //MessageBox.Show("완료");
+                MessageBox.Show("완료");
                 this.Close();
             }
 
@@ -81,7 +81,7 @@ namespace DynaRAP.UControl
 
             progressBar.Properties.ShowTitle = true;
 
-            if(GetProgress())
+            if (GetProgress())
             {
                 progressBar.Properties.Minimum = 0;
                 progressBar.Properties.Maximum = this.totalFetchCount;
@@ -96,7 +96,6 @@ namespace DynaRAP.UControl
 
                 timer.Start();
             }
-
         }
 
         private bool GetProgress()
@@ -159,6 +158,9 @@ namespace DynaRAP.UControl
 
                             if (bFirst)
                                 MessageBox.Show(result.response.statusMessage);
+                            else
+                                MessageBox.Show("완료");
+
                             this.Close();
                         }
                         else if (result.response.status.Equals("error"))

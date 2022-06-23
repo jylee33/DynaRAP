@@ -275,6 +275,9 @@ namespace DynaRAP.UControl
         {
             cboFlying.Properties.Items.Clear();
 
+            if (uploadList == null)
+                return;
+
             foreach (ResponseImport list in uploadList)
             {
                 //Decoding

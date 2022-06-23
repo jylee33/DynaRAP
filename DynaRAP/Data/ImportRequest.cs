@@ -42,12 +42,16 @@ namespace DynaRAP.Data
         public string partName { get; set; }
         public string julianStartAt { get; set; }
         public string julianEndAt { get; set; }
+        public string offsetStartAt { get; set; }
+        public string offsetEndAt { get; set; }
 
-        public Part(string partName, string julianStartAt, string julianEndAt)
+        public Part(string partName, string julianStartAt, string julianEndAt, string offsetStartAt, string offsetEndAt)
         {
             this.partName = partName;
             this.julianStartAt = julianStartAt;
             this.julianEndAt = julianEndAt;
+            this.offsetStartAt = offsetStartAt;
+            this.offsetEndAt = offsetEndAt;
         }
     }
 

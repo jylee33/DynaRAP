@@ -866,21 +866,6 @@ namespace DynaRAP.UControl
             flowLayoutPanel1.HorizontalScroll.Enabled = false;
 
             InitializeProperty();
-
-#if DEBUG
-            //edtKey.Text = "Bending, LH Wing BL1870";
-            //edtAdams.Text = "112102";
-            //edtZaero.Text = "112102";
-            //edtGrt.Text = "SW921P";
-            //edtFltp.Text = "SW921P";
-            //edtFlts.Text = "SW921S";
-            //cboProperty.Text = "BM";
-            //cboUnit.Text = "N-mm";
-            //cboPart.Text = "Wing";
-            //cboPartLocation.Text = "Left";
-            //cboAirplane.Text = "A2/3/6";
-#endif
-
             InitializeParamList();
             InitializeDirDataList();
         }

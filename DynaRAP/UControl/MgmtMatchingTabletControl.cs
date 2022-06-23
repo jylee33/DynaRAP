@@ -143,6 +143,9 @@ namespace DynaRAP.UControl
 #endif
 
             //luePresetList.EditValue = edtParamName.Text;
+            luePresetList.EditValue = "";
+            gridControl1.DataSource = null;
+            gridView2.RefreshData();
         }
 
         private List<ResponseParam> GetParamList()
@@ -528,9 +531,9 @@ namespace DynaRAP.UControl
             try
             {
                 ResponsePreset preset = presetList.Find(x => x.presetPack.Equals(presetPack));
-                string paramName = edtParamName.Text;
+                string presetName = edtPresetName.Text;
 
-                if (string.IsNullOrEmpty(paramName))
+                if (string.IsNullOrEmpty(presetName))
                 {
                     lblMandatoryField.Visible = true;
                     MessageBox.Show("Failed", "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -542,7 +545,7 @@ namespace DynaRAP.UControl
                 }
 
                 //Encoding
-                byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(paramName);
+                byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(presetName);
                 string encName = Convert.ToBase64String(basebyte);
 
                 string url = ConfigurationManager.AppSettings["UrlPreset"];
@@ -596,7 +599,8 @@ namespace DynaRAP.UControl
                     }
                     else
                     {
-                        edtParamName.Text = string.Empty;
+                        edtPresetName.Text = string.Empty;
+                        return ParamAddBulk(result.response.presetPack);
                     }
                     //this.focusedNodeId = result.response.seq;
                 }
@@ -606,6 +610,81 @@ namespace DynaRAP.UControl
                 MessageBox.Show(ex.Message);
                 return false;
             }
+            return true;
+        }
+
+        private bool ParamAddBulk(string presetPack)
+        {
+            try
+            {
+                PresetParamAddBulk paramAddBulk = new PresetParamAddBulk();
+                paramAddBulk.command = "param-add-bulk";
+                paramAddBulk.@params = new List<Param>();
+
+                for (int i = 0; i < gridView2.RowCount; i++)
+                {
+                    string paramSeq = gridView2.GetRowCellValue(i, "Seq") == null ? "" : gridView2.GetRowCellValue(i, "Seq").ToString();
+                    string paramPack = gridView2.GetRowCellValue(i, "ParamPack") == null ? "" : gridView2.GetRowCellValue(i, "ParamPack").ToString();
+
+                    paramAddBulk.@params.Add(new Param(presetPack, "", paramSeq, paramPack));
+                }
+
+                string url = ConfigurationManager.AppSettings["UrlPreset"];
+
+                var json = JsonConvert.SerializeObject(paramAddBulk);
+
+                //Console.WriteLine(json);
+                log.Info("url : " + url);
+                log.Info(json);
+
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Timeout = 30 * 1000;
+                //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+
+                // POST할 데이타를 Request Stream에 쓴다
+                byte[] bytes = Encoding.ASCII.GetBytes(json);
+                request.ContentLength = bytes.Length; // 바이트수 지정
+
+                using (Stream reqStream = request.GetRequestStream())
+                {
+                    reqStream.Write(bytes, 0, bytes.Length);
+                }
+
+                // Response 처리
+                string responseText = string.Empty;
+                using (WebResponse resp = request.GetResponse())
+                {
+                    Stream respStream = resp.GetResponseStream();
+                    using (StreamReader sr = new StreamReader(respStream))
+                    {
+                        responseText = sr.ReadToEnd();
+                    }
+                }
+
+                //Console.WriteLine(responseText);
+                JsonData result = JsonConvert.DeserializeObject<JsonData>(responseText);
+
+                if (result != null)
+                {
+                    if (result.code != 200)
+                    {
+                        MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return false;
+            }
+
             return true;
         }
 
@@ -662,7 +741,7 @@ namespace DynaRAP.UControl
                     }
                     else
                     {
-                        edtParamName.Text = string.Empty;
+                        edtPresetName.Text = string.Empty;
                     }
                 }
             }
@@ -755,7 +834,7 @@ namespace DynaRAP.UControl
         private void InitializeGridControl()
         {
             //paramList
-            repositoryItemComboBox1.TextEditStyle = TextEditStyles.DisableTextEditor;
+            //repositoryItemComboBox1.TextEditStyle = TextEditStyles.DisableTextEditor;
             repositoryItemComboBox1.SelectedIndexChanged += RepositoryItemComboBox1_SelectedIndexChanged;
             repositoryItemComboBox1.BeforePopup += RepositoryItemComboBox1_BeforePopup;
             repositoryItemComboBox1.PopupFormMinSize = new System.Drawing.Size(0, 500);
@@ -767,29 +846,29 @@ namespace DynaRAP.UControl
 
             //gridView1.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
 
-            gridView1.OptionsView.ShowColumnHeaders = true;
-            gridView1.OptionsView.ShowGroupPanel = false;
-            gridView1.OptionsView.ShowIndicator = true;
-            gridView1.IndicatorWidth = 40;
-            gridView1.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.False;
-            gridView1.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.False;
-            gridView1.OptionsView.ColumnAutoWidth = true;
+            gridView2.OptionsView.ShowColumnHeaders = true;
+            gridView2.OptionsView.ShowGroupPanel = false;
+            gridView2.OptionsView.ShowIndicator = true;
+            gridView2.IndicatorWidth = 40;
+            gridView2.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.False;
+            gridView2.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.False;
+            gridView2.OptionsView.ColumnAutoWidth = true;
 
-            gridView1.OptionsBehavior.ReadOnly = false;
+            gridView2.OptionsBehavior.ReadOnly = false;
             //gridView1.OptionsBehavior.Editable = false;
 
-            gridView1.OptionsSelection.MultiSelectMode = DevExpress.XtraGrid.Views.Grid.GridMultiSelectMode.RowSelect;
-            gridView1.OptionsSelection.EnableAppearanceFocusedCell = false;
+            gridView2.OptionsSelection.MultiSelectMode = DevExpress.XtraGrid.Views.Grid.GridMultiSelectMode.RowSelect;
+            gridView2.OptionsSelection.EnableAppearanceFocusedCell = false;
 
-            gridView1.CustomDrawRowIndicator += GridView1_CustomDrawRowIndicator;
+            gridView2.CustomDrawRowIndicator += GridView1_CustomDrawRowIndicator;
 
-            GridColumn colType = gridView1.Columns["ParamKey"];
+            GridColumn colType = gridView2.Columns["ParamKey"];
             colType.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
             colType.OptionsColumn.FixedWidth = true;
             colType.Width = 240;
             colType.Caption = "Parameter Name";
 
-            GridColumn colDel = gridView1.Columns["Del"];
+            GridColumn colDel = gridView2.Columns["Del"];
             colDel.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
             colDel.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
             colDel.OptionsColumn.FixedWidth = true;
@@ -827,20 +906,6 @@ namespace DynaRAP.UControl
 
             btnAddParameter.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             btnAddParameter.Properties.AllowFocused = false;
-
-#if DEBUG
-            //edtKey.Text = "Bending, LH Wing BL1870";
-            //edtAdams.Text = "112102";
-            //edtZaero.Text = "112102";
-            //edtGrt.Text = "SW921P";
-            //edtFltp.Text = "SW921P";
-            //edtFlts.Text = "SW921S";
-            //cboProperty.Text = "BM";
-            //cboUnit.Text = "N-mm";
-            //cboPart.Text = "Wing";
-            //cboPartLocation.Text = "Left";
-            //cboAirplane.Text = "A2/3/6";
-#endif
 
             luePresetList.Properties.DisplayMember = "PresetName";
             luePresetList.Properties.ValueMember = "PresetPack";
@@ -1264,10 +1329,10 @@ namespace DynaRAP.UControl
             {
                 gridList = new List<PresetParamData>();
             }
-            gridList.Add(new PresetParamData("", "", "", "", "", "", "", "", 1));
+            gridList.Add(new PresetParamData("", "", "", "", "", "", "", "", "", "", 1));
             this.gridControl1.DataSource = gridList;
             //gridControl1.Update();
-            gridView1.RefreshData();
+            gridView2.RefreshData();
 
         }
 
@@ -1307,17 +1372,103 @@ namespace DynaRAP.UControl
                 foreach (ResponseParam param in presetParamList)
                 {
                     //AddParameter(param);
-                    gridList.Add(new PresetParamData(param.paramKey, param.adamsKey, param.zaeroKey, param.grtKey, param.fltpKey, param.fltsKey, param.propInfo.propType, param.partInfo, 1));
+                    gridList.Add(new PresetParamData(param.paramKey, param.adamsKey, param.zaeroKey, param.grtKey, param.fltpKey, param.fltsKey, param.propInfo.propType, param.partInfo, param.seq, param.paramPack, 1));
                 }
 
                 this.gridControl1.DataSource = gridList;
             }
-            edtParamName.Text = presetName;
+            edtPresetName.Text = presetName;
         }
 
         private void RepositoryItemImageComboBox1_Click(object sender, EventArgs e)
         {
-            gridView1.DeleteRow(gridView1.FocusedRowHandle);
+            if (luePresetList.GetColumnValue("PresetName") == null)
+                return;
+
+            string presetPack = String.Empty;
+            if (luePresetList.GetColumnValue("PresetPack") != null)
+                presetPack = luePresetList.GetColumnValue("PresetPack").ToString();
+
+            if (string.IsNullOrEmpty(presetPack) == false)
+            {
+                bool bResult = ParamRemove(presetPack);
+
+                if (bResult)
+                {
+                    gridView2.DeleteRow(gridView2.FocusedRowHandle);
+                }
+            }
+        }
+
+        private bool ParamRemove(string presetPack)
+        {
+            try
+            {
+                int i = gridView2.FocusedRowHandle;
+                string paramSeq = gridView2.GetRowCellValue(i, "Seq") == null ? "" : gridView2.GetRowCellValue(i, "Seq").ToString();
+                string paramPack = gridView2.GetRowCellValue(i, "ParamPack") == null ? "" : gridView2.GetRowCellValue(i, "ParamPack").ToString();
+
+                string url = ConfigurationManager.AppSettings["UrlPreset"];
+                string sendData = string.Format(@"
+                {{""command"":""param-remove"",
+                ""presetPack"":""{0}"",
+                ""presetSeq"":"""",
+                ""paramPack"":""{1}"",
+                ""paramSeq"":""{2}""
+                }}"
+                , presetPack, paramPack, paramSeq);
+
+                log.Info("url : " + url);
+                log.Info(sendData);
+
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Timeout = 30 * 1000;
+                //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+
+                // POST할 데이타를 Request Stream에 쓴다
+                byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+                request.ContentLength = bytes.Length; // 바이트수 지정
+
+                using (Stream reqStream = request.GetRequestStream())
+                {
+                    reqStream.Write(bytes, 0, bytes.Length);
+                }
+
+                // Response 처리
+                string responseText = string.Empty;
+                using (WebResponse resp = request.GetResponse())
+                {
+                    Stream respStream = resp.GetResponseStream();
+                    using (StreamReader sr = new StreamReader(respStream))
+                    {
+                        responseText = sr.ReadToEnd();
+                    }
+                }
+
+                //Console.WriteLine(responseText);
+                JsonData result = JsonConvert.DeserializeObject<JsonData>(responseText);
+
+                if (result != null)
+                {
+                    if (result.code != 200)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                    //this.focusedNodeId = result.response.seq;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return false;
+            }
+            return true;
         }
 
         private void RepositoryItemComboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -1339,16 +1490,18 @@ namespace DynaRAP.UControl
                         string fltsKey = param.fltsKey;
                         string partInfo = param.partInfo;
                         string partInfoSub = param.partInfoSub;
+                        string seq = param.seq;
+                        string paramPack = param.paramPack;
 
                         bool bFind = false;
 
-                        for (int i = 0; i < gridView1.RowCount; i++)
+                        for (int i = 0; i < gridView2.RowCount; i++)
                         {
-                            string adams = gridView1.GetRowCellValue(i, "AdamsKey") == null ? "" : gridView1.GetRowCellValue(i, "AdamsKey").ToString();
-                            string zaero = gridView1.GetRowCellValue(i, "ZaeroKey") == null ? "" : gridView1.GetRowCellValue(i, "ZaeroKey").ToString();
-                            string grt = gridView1.GetRowCellValue(i, "GrtKey") == null ? "" : gridView1.GetRowCellValue(i, "GrtKey").ToString();
-                            string fltp = gridView1.GetRowCellValue(i, "FltpKey") == null ? "" : gridView1.GetRowCellValue(i, "FltpKey").ToString();
-                            string flts = gridView1.GetRowCellValue(i, "FltsKey") == null ? "" : gridView1.GetRowCellValue(i, "FltsKey").ToString();
+                            string adams = gridView2.GetRowCellValue(i, "AdamsKey") == null ? "" : gridView2.GetRowCellValue(i, "AdamsKey").ToString();
+                            string zaero = gridView2.GetRowCellValue(i, "ZaeroKey") == null ? "" : gridView2.GetRowCellValue(i, "ZaeroKey").ToString();
+                            string grt = gridView2.GetRowCellValue(i, "GrtKey") == null ? "" : gridView2.GetRowCellValue(i, "GrtKey").ToString();
+                            string fltp = gridView2.GetRowCellValue(i, "FltpKey") == null ? "" : gridView2.GetRowCellValue(i, "FltpKey").ToString();
+                            string flts = gridView2.GetRowCellValue(i, "FltsKey") == null ? "" : gridView2.GetRowCellValue(i, "FltsKey").ToString();
                             //string part1 = gridView1.GetRowCellValue(i, "PartInfo") == null ? "" : gridView1.GetRowCellValue(i, "PartInfo").ToString();
                             //string part2 = gridView1.GetRowCellValue(i, "PartInfoSub") == null ? "" : gridView1.GetRowCellValue(i, "PartInfoSub").ToString();
 
@@ -1368,17 +1521,20 @@ namespace DynaRAP.UControl
 
                         if (bFind)
                         {
+                            MessageBox.Show("항목의 중복이 허용되지 않습니다.");
                             combo.SelectedIndex = prevSelected;
                         }
                         else
                         {
-                            gridView1.SetRowCellValue(gridView1.FocusedRowHandle, "AdamsKey", adamsKey);
-                            gridView1.SetRowCellValue(gridView1.FocusedRowHandle, "ZaeroKey", zaeroKey);
-                            gridView1.SetRowCellValue(gridView1.FocusedRowHandle, "GrtKey", grtKey);
-                            gridView1.SetRowCellValue(gridView1.FocusedRowHandle, "FltpKey", fltpKey);
-                            gridView1.SetRowCellValue(gridView1.FocusedRowHandle, "FltsKey", fltsKey);
-                            gridView1.SetRowCellValue(gridView1.FocusedRowHandle, "PartInfo", partInfo);
-                            gridView1.SetRowCellValue(gridView1.FocusedRowHandle, "PartInfoSub", partInfoSub);
+                            gridView2.SetRowCellValue(gridView2.FocusedRowHandle, "AdamsKey", adamsKey);
+                            gridView2.SetRowCellValue(gridView2.FocusedRowHandle, "ZaeroKey", zaeroKey);
+                            gridView2.SetRowCellValue(gridView2.FocusedRowHandle, "GrtKey", grtKey);
+                            gridView2.SetRowCellValue(gridView2.FocusedRowHandle, "FltpKey", fltpKey);
+                            gridView2.SetRowCellValue(gridView2.FocusedRowHandle, "FltsKey", fltsKey);
+                            gridView2.SetRowCellValue(gridView2.FocusedRowHandle, "PartInfo", partInfo);
+                            gridView2.SetRowCellValue(gridView2.FocusedRowHandle, "PartInfoSub", partInfoSub);
+                            gridView2.SetRowCellValue(gridView2.FocusedRowHandle, "Seq", seq);
+                            gridView2.SetRowCellValue(gridView2.FocusedRowHandle, "ParamPack", paramPack);
                         }
 
                     }

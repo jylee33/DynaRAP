@@ -328,6 +328,7 @@ namespace DynaRAP.UControl
 
                     if (bFind)
                     {
+                        MessageBox.Show("항목의 중복이 허용되지 않습니다.");
                         combo.SelectedIndex = prevSelected;
                     }
 
@@ -596,7 +597,10 @@ namespace DynaRAP.UControl
             {
                 intervalList = new List<ImportIntervalData>();
             }
-            intervalList.Add(new ImportIntervalData("", "", minValue.ToString(), maxValue.ToString(), recordCnt.ToString(), 1));
+            DateTime min = (DateTime)minValue;
+            DateTime max = (DateTime)maxValue;
+
+            intervalList.Add(new ImportIntervalData("", "", min.ToString("yyyy-MM-dd HH:mm:ss.ffffff"), max.ToString("yyyy-MM-dd HH:mm:ss.ffffff"), recordCnt.ToString(), 1));
             this.gridControl2.DataSource = intervalList;
             gridView2.RefreshData();
 
@@ -710,10 +714,25 @@ namespace DynaRAP.UControl
                     byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(splitName);
                     string partName = Convert.ToBase64String(basebyte);
 
-                    string t1 = Utils.GetJulianFromDate(startTime);
-                    string t2 = Utils.GetJulianFromDate(endTime);
+                    string t1 = string.Empty;
+                    string t2 = string.Empty;
+                    string t3 = string.Empty;
+                    string t4 = string.Empty;
+                    if (importType == ImportType.FLYING)
+                    {
+                        t1 = Utils.GetJulianFromDate(startTime);
+                        t2 = Utils.GetJulianFromDate(endTime);
+                    }
+                    else
+                    {
+                        t3 = Utils.GetJulianFromDate(startTime);
+                        t4 = Utils.GetJulianFromDate(endTime);
 
-                    import.parts.Add(new Part(partName, t1, t2));
+                        t3 = t3.Substring(t3.Length - 9, 9);
+                        t4 = t4.Substring(t4.Length - 9, 9);
+                    }
+
+                    import.parts.Add(new Part(partName, t1, t2, t3, t4));
                 }
 
                 string url = ConfigurationManager.AppSettings["UrlImport"];
@@ -829,7 +848,7 @@ namespace DynaRAP.UControl
                 }
                 else
                 {
-                    csvFilePath = @"C:\temp\a.dat";
+                    csvFilePath = @"C:\temp\ANAYSIS_ZAERO_LD_LI212A5R2_M06_00k_abc001_AtoA_MD.dat";
                     lblFlyingData.Text = csvFilePath;
                 }
                 StreamReader sr = new StreamReader(csvFilePath);
@@ -980,7 +999,7 @@ namespace DynaRAP.UControl
 
                 if (string.IsNullOrEmpty(presetPack)
                     || string.IsNullOrEmpty(dataType)
-                    || string.IsNullOrEmpty(this.headerRow)
+                    || (importType == ImportType.FLYING && string.IsNullOrEmpty(this.headerRow))
                     )
                 {
                     return false;
@@ -988,6 +1007,7 @@ namespace DynaRAP.UControl
 
                 string url = ConfigurationManager.AppSettings["UrlImport"];
                 string sendData = String.Empty;
+                csvFilePath = csvFilePath.Replace("\\", "\\\\");
                 if (importType == ImportType.FLYING) // 비행데이터 import
                 {
                     sendData = string.Format(@"
