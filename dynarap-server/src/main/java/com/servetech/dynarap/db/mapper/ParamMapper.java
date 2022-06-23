@@ -381,7 +381,7 @@ public interface ParamMapper {
             "<script>" +
                     "select c.*, a.presetPack, a.presetSeq, a.seq as referenceSeq " +
                     "from dynarap_preset_param a, dynarap_preset b, dynarap_param c " +
-                    "where a.presetPack = b.presetPack " +
+                    "where a.presetPack = b.presetPack and a.presetSeq = b.seq " +
                     "and b.presetPack = #{presetPack,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
                     "<choose> " +
                     "<when test='@com.servetech.dynarap.db.type.MybatisEmptyChecker@isNotEmpty(presetSeq)'> " +
@@ -413,7 +413,7 @@ public interface ParamMapper {
             "<script>" +
                     "select count(*) " +
                     "from dynarap_preset_param a, dynarap_preset b, dynarap_param c " +
-                    "where a.presetPack = b.presetPack " +
+                    "where a.presetPack = b.presetPack and a.presetSeq = b.seq  " +
                     "and b.presetPack = #{presetPack,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
                     "<choose> " +
                     "<when test='@com.servetech.dynarap.db.type.MybatisEmptyChecker@isNotEmpty(presetSeq)'> " +

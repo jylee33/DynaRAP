@@ -672,6 +672,7 @@ public class ParamService {
             Map<String, Object> params = new HashMap<>();
             params.put("presetPack", presetPack);
             params.put("presetSeq", presetSeq == null || presetSeq.isEmpty() ? null : presetSeq);
+
             if (paramPack != null && !paramPack.isEmpty()) {
                 params.put("paramPack", paramPack == null || paramPack.isEmpty() ? null : paramPack);
                 params.put("paramSeq", paramSeq == null || paramSeq.isEmpty() ? null : paramSeq);
@@ -680,9 +681,11 @@ public class ParamService {
                 params.put("paramPack", null);
                 params.put("paramSeq", null);
             }
+
             params.put("startIndex", (pageNo - 1) * pageSize);
             params.put("pageSize", pageSize);
             List<ParamVO> paramList = paramMapper.selectPresetParamList(params);
+
             if (paramList == null) paramList = new ArrayList<>();
             for (ParamVO param : paramList) {
                 params.put("paramPack", param.getParamPack());
