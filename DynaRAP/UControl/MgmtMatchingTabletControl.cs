@@ -1338,6 +1338,8 @@ namespace DynaRAP.UControl
 
         private void luePresetList_EditValueChanged(object sender, EventArgs e)
         {
+            gridControl1.DataSource = null;
+
             paramIndex = startParamIndex;
             //int reducedHeight = (paramHeight * flowLayoutPanel1.Controls.Count);
             //flowLayoutPanel1.Height -= reducedHeight;
@@ -1377,6 +1379,7 @@ namespace DynaRAP.UControl
 
                 this.gridControl1.DataSource = gridList;
             }
+            gridView2.RefreshData();
             edtPresetName.Text = presetName;
         }
 
