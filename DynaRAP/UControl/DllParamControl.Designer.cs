@@ -79,8 +79,6 @@
             this.gridColumn2.Caption = "seq";
             this.gridColumn2.FieldName = "Seq";
             this.gridColumn2.Name = "gridColumn2";
-            this.gridColumn2.Visible = true;
-            this.gridColumn2.VisibleIndex = 1;
             // 
             // gridColumn3
             // 
@@ -89,7 +87,7 @@
             this.gridColumn3.FieldName = "Del";
             this.gridColumn3.Name = "gridColumn3";
             this.gridColumn3.Visible = true;
-            this.gridColumn3.VisibleIndex = 2;
+            this.gridColumn3.VisibleIndex = 1;
             // 
             // repositoryItemImageComboBox1
             // 
