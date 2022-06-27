@@ -255,7 +255,7 @@ namespace DynaRAP
             //}
 
 #if DEBUG
-            tabbedView1.ActivateDocument(mgmtMatchingTableControl);
+            tabbedView1.ActivateDocument(dllImportModuleControl);
 #else
             tabbedView1.RemoveDocument(flyingImportModuleControl);
             tabbedView1.RemoveDocument(analysisImportModuleControl);
@@ -916,8 +916,11 @@ namespace DynaRAP
             //TestGridForm form4 = new TestGridForm();
             //form4.Show();
 
-            TestGrid2Form form2 = new TestGrid2Form();
-            form2.Show();
+            //TestGrid2Form form2 = new TestGrid2Form();
+            //form2.Show();
+
+            TestGrid4Form form4 = new TestGrid4Form();
+            form4.Show();
 
         }
 

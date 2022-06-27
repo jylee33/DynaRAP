@@ -42,6 +42,7 @@
             this.gridColumn6 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemImageComboBox1 = new DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox();
             this.imageCollection1 = new DevExpress.Utils.ImageCollection(this.components);
+            this.AddRow = new DevExpress.XtraEditors.SimpleButton();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemComboBox1)).BeginInit();
@@ -60,7 +61,7 @@
             this.repositoryItemImageComboBox1,
             this.repositoryItemComboBox1,
             this.repositoryItemComboBox2});
-            this.gridControl1.Size = new System.Drawing.Size(651, 527);
+            this.gridControl1.Size = new System.Drawing.Size(651, 504);
             this.gridControl1.TabIndex = 37;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
@@ -157,12 +158,23 @@
             this.imageCollection1.Images.SetKeyName(0, "NONE");
             this.imageCollection1.Images.SetKeyName(1, "DELETE");
             // 
+            // AddRow
+            // 
+            this.AddRow.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.AddRow.Location = new System.Drawing.Point(0, 504);
+            this.AddRow.Name = "AddRow";
+            this.AddRow.Size = new System.Drawing.Size(651, 23);
+            this.AddRow.TabIndex = 38;
+            this.AddRow.Text = "Add Row";
+            this.AddRow.Click += new System.EventHandler(this.AddRow_Click);
+            // 
             // TestGrid2Form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(651, 527);
             this.Controls.Add(this.gridControl1);
+            this.Controls.Add(this.AddRow);
             this.Name = "TestGrid2Form";
             this.Text = "TestGrid2Form";
             this.Load += new System.EventHandler(this.TestGrid2Form_Load);
@@ -190,5 +202,6 @@
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn6;
         private DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox repositoryItemImageComboBox1;
         private DevExpress.Utils.ImageCollection imageCollection1;
+        private DevExpress.XtraEditors.SimpleButton AddRow;
     }
 }

@@ -141,5 +141,10 @@ namespace DynaRAP.TEST
         {
             RepositoryItemImageComboBox combo = sender as RepositoryItemImageComboBox;
         }
+
+        private void AddRow_Click(object sender, EventArgs e)
+        {
+            gridView1.AddNewRow();
+        }
     }
 }

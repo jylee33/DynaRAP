@@ -31,7 +31,7 @@ namespace DynaRAP.UControl
         string paramType = string.Empty;
 
         ResponseDLLParamData dllParamDataList = new ResponseDLLParamData();
-        List<DllParamData> dllDataGridList = new List<DllParamData>();
+        //List<DllParamData> dllDataGridList = new List<DllParamData>();
 
         public event EventHandler AddDel_Succeeded;
 
@@ -60,10 +60,11 @@ namespace DynaRAP.UControl
             //gridView1.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
 
             //gridControl1.UseEmbeddedNavigator = true;
-
             //gridView1.OptionsView.NewItemRowPosition = NewItemRowPosition.Top;
-            //gridView1.InitNewRow += GridView1_InitNewRow;
-            
+           
+            RefreshGridControl();
+            gridView1.InitNewRow += GridView1_InitNewRow;
+
             gridView1.OptionsView.ShowColumnHeaders = true;
             gridView1.OptionsView.ShowGroupPanel = false;
             gridView1.OptionsView.ShowIndicator = true;
@@ -71,13 +72,19 @@ namespace DynaRAP.UControl
             gridView1.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.False;
             gridView1.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.False;
             gridView1.OptionsView.ColumnAutoWidth = true;
-
+            
             gridView1.OptionsBehavior.ReadOnly = false;
             //gridView1.OptionsBehavior.Editable = false;
-
-            gridView1.OptionsSelection.MultiSelectMode = DevExpress.XtraGrid.Views.Grid.GridMultiSelectMode.RowSelect;
+            
             gridView1.OptionsSelection.EnableAppearanceFocusedCell = false;
+            
+            gridView1.OptionsSelection.MultiSelect = true;
+            //gridView1.OptionsSelection.MultiSelectMode = DevExpress.XtraGrid.Views.Grid.GridMultiSelectMode.RowSelect;
+            gridView1.OptionsSelection.MultiSelectMode = GridMultiSelectMode.CellSelect;
+            gridView1.OptionsClipboard.CopyColumnHeaders = DevExpress.Utils.DefaultBoolean.False;
 
+            gridView1.OptionsClipboard.PasteMode = DevExpress.Export.PasteMode.Update;
+            
             gridView1.CustomDrawRowIndicator += GridView1_CustomDrawRowIndicator;
             //gridView1.OptionsBehavior.AllowAddRows = DefaultBoolean.True;
 
@@ -87,8 +94,8 @@ namespace DynaRAP.UControl
             //colData.OptionsColumn.FixedWidth = true;
             //colData.Width = 240;
             //colData.Caption = "UnmappedParamName";
-            colData.OptionsColumn.ReadOnly = true;
-
+            //colData.OptionsColumn.ReadOnly = true;
+            
             GridColumn colDel = gridView1.Columns["Del"];
             colDel.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
             colDel.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
@@ -96,14 +103,13 @@ namespace DynaRAP.UControl
             colDel.Width = 40;
             colDel.Caption = "삭제";
             colDel.OptionsColumn.ReadOnly = true;
-
+            
             this.repositoryItemImageComboBox1.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(0, 0));
             this.repositoryItemImageComboBox1.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(1, 1));
             this.repositoryItemImageComboBox1.GlyphAlignment = HorzAlignment.Center;
             this.repositoryItemImageComboBox1.Buttons[0].Visible = false;
             this.repositoryItemImageComboBox1.Click += RepositoryItemImageComboBox1_Click;
-
-            RefreshGridControl();
+            
             //gridView1.BestFitColumns();
         }
 
@@ -111,18 +117,36 @@ namespace DynaRAP.UControl
         {
             dllParamDataList = GetDllParamDataList();
 
-            dllDataGridList.Clear();
+            //dllDataGridList.Clear();
+            //foreach (string key in dllParamDataList.data.Keys)
+            //{
+            //    if (key.Equals(this.dllParamSeq))
+            //    {
+            //        foreach (string val in dllParamDataList.data[key])
+            //        {
+            //            dllDataGridList.Add(new DllParamData(val, 1));
+            //        }
+            //    }
+            //}
+            //gridControl1.DataSource = dllDataGridList;
+
+            DataTable dt = new DataTable();
+
+            dt.Columns.Add("Data", typeof(string));
+            dt.Columns.Add("Del", typeof(int));
+
             foreach (string key in dllParamDataList.data.Keys)
             {
                 if (key.Equals(this.dllParamSeq))
                 {
                     foreach (string val in dllParamDataList.data[key])
                     {
-                        dllDataGridList.Add(new DllParamData(val, 1));
+                        dt.Rows.Add(val, 1);
                     }
                 }
             }
-            gridControl1.DataSource = dllDataGridList;
+
+            gridControl1.DataSource = dt;
             gridView1.RefreshData();
 
         }
@@ -210,6 +234,8 @@ namespace DynaRAP.UControl
 
         private void btnAddNewRow_Click(object sender, EventArgs e)
         {
+            gridView1.AddNewRow();
+#if null
             string dataName = string.Empty;
             if (this.paramType.Equals("data"))
             {
@@ -253,6 +279,7 @@ namespace DynaRAP.UControl
                     MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+#endif
         }
 
         private DllParamDataResponse AddDllParamData(string dataName)
@@ -331,10 +358,10 @@ namespace DynaRAP.UControl
 
         private void GridView1_InitNewRow(object sender, InitNewRowEventArgs e)
         {
-            GridView view = sender as GridView;
+            GridView gridView = sender as GridView;
             // Set the new row cell value
-            view.SetRowCellValue(e.RowHandle, view.Columns["Seq"], "");
-            view.SetRowCellValue(e.RowHandle, view.Columns["Data"], "test");
+            //gridView.SetRowCellValue(e.RowHandle, gridView.Columns["Data"], "test");
+            gridView.SetRowCellValue(e.RowHandle, gridView.Columns["Del"], 1);
         }
 
         private void GridView1_CustomDrawRowIndicator(object sender, RowIndicatorCustomDrawEventArgs e)
