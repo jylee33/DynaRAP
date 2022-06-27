@@ -848,7 +848,7 @@ namespace DynaRAP.UControl
                 }
                 else
                 {
-                    csvFilePath = @"C:\temp\ANAYSIS_ZAERO_LD_LI212A5R2_M06_00k_abc001_AtoA_MD.dat";
+                    csvFilePath = @"C:\temp\NL01-BFP23-06025-P002_GRIDG_SOF.dat";
                     lblFlyingData.Text = csvFilePath;
                 }
                 StreamReader sr = new StreamReader(csvFilePath);
@@ -957,6 +957,11 @@ namespace DynaRAP.UControl
                         else
                         {
                             data = data.Where((source, index) => string.IsNullOrEmpty(source) == false).ToArray();
+
+                            if(data[0].StartsWith("-"))
+                            {
+                                continue;
+                            }
 
                             i = 0;
                             foreach (string key in tempData.Keys)
