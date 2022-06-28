@@ -38,10 +38,13 @@
             this.repositoryItemImageComboBox1 = new DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox();
             this.imageCollection1 = new DevExpress.Utils.ImageCollection(this.components);
             this.btnAddNewRow = new DevExpress.XtraEditors.SimpleButton();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.btnSave = new DevExpress.XtraEditors.SimpleButton();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemImageComboBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).BeginInit();
+            this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // gridControl1
@@ -52,7 +55,7 @@
             this.gridControl1.Name = "gridControl1";
             this.gridControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemImageComboBox1});
-            this.gridControl1.Size = new System.Drawing.Size(408, 265);
+            this.gridControl1.Size = new System.Drawing.Size(408, 268);
             this.gridControl1.TabIndex = 0;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
@@ -105,20 +108,48 @@
             // 
             // btnAddNewRow
             // 
-            this.btnAddNewRow.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.btnAddNewRow.Location = new System.Drawing.Point(0, 265);
+            this.btnAddNewRow.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnAddNewRow.Location = new System.Drawing.Point(0, 0);
+            this.btnAddNewRow.Margin = new System.Windows.Forms.Padding(0);
             this.btnAddNewRow.Name = "btnAddNewRow";
-            this.btnAddNewRow.Size = new System.Drawing.Size(408, 23);
+            this.btnAddNewRow.Size = new System.Drawing.Size(204, 20);
             this.btnAddNewRow.TabIndex = 1;
             this.btnAddNewRow.Text = "Add New Row";
             this.btnAddNewRow.Click += new System.EventHandler(this.btnAddNewRow_Click);
+            // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.ColumnCount = 2;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.Controls.Add(this.btnAddNewRow, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.btnSave, 1, 0);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 268);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 1;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(408, 20);
+            this.tableLayoutPanel1.TabIndex = 2;
+            // 
+            // btnSave
+            // 
+            this.btnSave.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnSave.Location = new System.Drawing.Point(204, 0);
+            this.btnSave.Margin = new System.Windows.Forms.Padding(0);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(204, 20);
+            this.btnSave.TabIndex = 1;
+            this.btnSave.Text = "Save";
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // DllParamControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.gridControl1);
-            this.Controls.Add(this.btnAddNewRow);
+            this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "DllParamControl";
             this.Size = new System.Drawing.Size(408, 288);
             this.Load += new System.EventHandler(this.DllParamControl_Load);
@@ -126,6 +157,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemImageComboBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).EndInit();
+            this.tableLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -140,5 +172,7 @@
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn3;
         private DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox repositoryItemImageComboBox1;
         private DevExpress.Utils.ImageCollection imageCollection1;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private DevExpress.XtraEditors.SimpleButton btnSave;
     }
 }
