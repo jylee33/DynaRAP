@@ -117,6 +117,9 @@ namespace DynaRAP.UControl
         {
             dllParamDataList = GetDllParamDataList();
 
+            if (dllParamDataList == null)
+                return;
+
             //dllDataGridList.Clear();
             //foreach (string key in dllParamDataList.data.Keys)
             //{

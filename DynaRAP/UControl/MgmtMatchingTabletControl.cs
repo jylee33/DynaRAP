@@ -1338,6 +1338,7 @@ namespace DynaRAP.UControl
 
         private void luePresetList_EditValueChanged(object sender, EventArgs e)
         {
+            gridList = null;
             gridControl1.DataSource = null;
 
             paramIndex = startParamIndex;

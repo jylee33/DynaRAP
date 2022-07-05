@@ -51,6 +51,9 @@ namespace DynaRAP
 
         CsvTableControl csvTableControl = null;
 
+        //DockPanel panelChart = null;
+        //ChartControl chartControl = null;
+
         public DevExpress.XtraBars.Docking.DockManager DockManager1
         {
             get
@@ -660,6 +663,47 @@ namespace DynaRAP
 
         private void btnChartLine2d_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
+            DataTable dt = new DataTable();
+
+            if (dt != null)
+            {
+                //MainForm mainForm = this.ParentForm as MainForm;
+
+                //if (chartControl != null)
+                //{
+                //    chartControl.Dispose();
+                //    chartControl = null;
+                //}
+
+                DXChartControl chartControl = new DXChartControl();
+                DockPanel panelChart = null;
+
+                if (panelChart == null)
+                {
+                    panelChart = new DockPanel();
+                    panelChart = this.DockManager1.AddPanel(DockingStyle.Float);
+                    panelChart.FloatLocation = new Point(500, 100);
+                    panelChart.FloatSize = new Size(1058, 528);
+                    //panelChart.Name = this.sb.SbName;
+                    //panelChart.Text = this.sb.SbName;
+                    chartControl.Dock = DockStyle.Fill;
+                    panelChart.Controls.Add(chartControl);
+                    panelChart.ClosedPanel += PanelChart_ClosedPanel;
+                }
+                else
+                {
+                    //panelChart.Name = this.sb.SbName;
+                    //panelChart.Text = this.sb.SbName;
+                    //panelChart.Controls.Clear();
+                    chartControl.Dock = DockStyle.Fill;
+                    panelChart.Controls.Add(chartControl);
+                    panelChart.Show();
+                    panelChart.Focus();
+                }
+            }
+            return;
+            
+            /*
             if (plotModuleControl == null)
             {
                 plotModuleControl = new PlotModuleControl();
@@ -675,6 +719,7 @@ namespace DynaRAP
             plotModuleControl.AddDocument(new DXChartControl());
 
             return;
+            */
 
             TestChartLine form = new TestChartLine();
             form.Show();
@@ -690,6 +735,10 @@ namespace DynaRAP
 
             //    chartForm.Show();
             //}
+        }
+
+        private void PanelChart_ClosedPanel(object sender, DockPanelEventArgs e)
+        {
         }
 
         private void btnChartMinMax_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -709,11 +758,12 @@ namespace DynaRAP
             plotModuleControl.AddDocument(new DXChartControl());
 
             return;
-
+            
             TestChartLine form = new TestChartLine();
             form.Show();
             return;
-
+            
+            /*
             ChartControl chartControl = null;
 
             chartControl = GetRangeArea2DChartControl();
@@ -724,6 +774,7 @@ namespace DynaRAP
 
                 chartForm.Show();
             }
+            */
         }
 
         private void btnChartPotato_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
