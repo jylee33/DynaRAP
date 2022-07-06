@@ -142,6 +142,7 @@
     <Compile Include="Data\DllResponse.cs" />
     <Compile Include="Data\DllListResponse.cs" />
     <Compile Include="Data\PresetParamAddBulk.cs" />
+    <Compile Include="Data\SBData.cs" />
     <Compile Include="Data\UnmappedParamData.cs" />
     <Compile Include="Data\ImportIntervalData.cs" />
     <Compile Include="Data\SBListResponse.cs" />
@@ -451,6 +452,12 @@
     <Compile Include="UControl\PlotModuleControl.Designer.cs">
       <DependentUpon>PlotModuleControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="UControl\SBListControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\SBListControl.Designer.cs">
+      <DependentUpon>SBListControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="UControl\SBParamControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -706,6 +713,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\PlotModuleControl.resx">
       <DependentUpon>PlotModuleControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\SBListControl.resx">
+      <DependentUpon>SBListControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\SBParamControl.resx">
       <DependentUpon>SBParamControl.cs</DependentUpon>

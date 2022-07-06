@@ -992,6 +992,21 @@ namespace DynaRAP
             TestTab1Form form = new TestTab1Form();
             form.Show();
         }
+
+        private void btnSBInfoView_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            SBListControl sbControl = new SBListControl();
+            DockPanel panelSBList = new DockPanel();
+
+            panelSBList = this.DockManager1.AddPanel(DockingStyle.Float);
+            panelSBList.FloatLocation = new Point(500, 100);
+            panelSBList.FloatSize = new Size(1058, 528);
+            //panelSBList.Name = "";
+            panelSBList.Text = "ShortBlock List";
+            sbControl.Dock = DockStyle.Fill;
+            panelSBList.Controls.Add(sbControl);
+            panelSBList.ClosedPanel += PanelChart_ClosedPanel;
+        }
     }
 
 }
