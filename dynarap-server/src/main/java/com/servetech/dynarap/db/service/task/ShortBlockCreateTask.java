@@ -23,10 +23,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class ShortBlockCreateTask {
@@ -75,17 +72,18 @@ public class ShortBlockCreateTask {
                         // param 넣기
                         PreparedStatement pstmt = conn.prepareStatement(
                                 "insert into dynarap_sblock_param (" +
-                                        "blockMetaSeq,paramNo,paramPack,paramSeq,paramName," +
-                                        "paramKey,adamsKey,zaeroKey,grtKey,fltpKey,fltsKey,paramUnit,unionParamSeq" +
-                                        ") values (?,?,?,?,?,?,?,?,?,?,?,?,?)");
+                                        "blockMetaSeq,paramNo,paramPack,paramSeq," +
+                                        "paramKey,adamsKey,zaeroKey,grtKey," +
+                                        "fltpKey,fltsKey,unionParamSeq,propSeq" +
+                                        ") values (?,?,?,?," +
+                                        "?,?,?,?," +
+                                        "?,?,?,?)");
                         int paramNo = 1;
                         for (ShortBlockVO.CreateRequest.Parameter p : shortBlockMeta.getCreateRequest().getParameters()) {
                             // parameter 처리.
                             ResultSet rs = stmt.executeQuery(
                                     "select seq from dynarap_preset_param " +
-                                            "where presetPack = " + shortBlockMeta.getSelectedPresetPack().originOf() + " " +
-                                            "  and presetSeq = " + shortBlockMeta.getSelectedPresetSeq().originOf() + " " +
-                                            "  and paramPack = " + p.getParamPack().originOf() + " " +
+                                            "where paramPack = " + p.getParamPack().originOf() + " " +
                                             "  and paramSeq = " + p.getParamSeq().originOf() + " " +
                                             "union " +
                                             "select seq from dynarap_notmapped_param " +
@@ -95,7 +93,7 @@ public class ShortBlockCreateTask {
                                             "limit 0, 1");
 
                             if (!rs.next()) {
-                                logger.info("[[[[[ " + p.getParamName().originOf() + " " + p.getParamKey() + " not found on part info");
+                                logger.info("[[[[[ " + p.getParamKey() + " not found on part info");
                                 rs.close();
                                 continue;
                             }
@@ -107,17 +105,14 @@ public class ShortBlockCreateTask {
                             pstmt.setInt(2, paramNo);
                             pstmt.setLong(3, p.getParamPack() == null || p.getParamPack().isEmpty() ? 0 : p.getParamPack().originOf());
                             pstmt.setLong(4, p.getParamSeq() == null || p.getParamSeq().isEmpty() ? 0 : p.getParamSeq().originOf());
-                            pstmt.setString(5, p.getParamName() == null || p.getParamName().isEmpty()
-                                    ? "SBM" + String.format("%08d", (int) shortBlockMeta.getSeq().originOf()) + "_Param"
-                                      + String.format("%03d", paramNo) : p.getParamName().originOf());
-                            pstmt.setString(6, p.getParamKey());
-                            pstmt.setString(7, p.getAdamsKey());
-                            pstmt.setString(8, p.getZaeroKey());
-                            pstmt.setString(9, p.getGrtKey());
-                            pstmt.setString(10, p.getFltpKey());
-                            pstmt.setString(11, p.getFltsKey());
-                            pstmt.setString(12, p.getParamUnit());
-                            pstmt.setLong(13, paramSeq);
+                            pstmt.setString(5, p.getParamKey());
+                            pstmt.setString(6, p.getAdamsKey());
+                            pstmt.setString(7, p.getZaeroKey());
+                            pstmt.setString(8, p.getGrtKey());
+                            pstmt.setString(9, p.getFltpKey());
+                            pstmt.setString(10, p.getFltsKey());
+                            pstmt.setLong(11, paramSeq);
+                            pstmt.setLong(12, p.getPropSeq().originOf());
                             pstmt.addBatch();
                             pstmt.clearParameters();
                             paramNo++;
@@ -167,14 +162,27 @@ public class ShortBlockCreateTask {
 
                                 shortBlockMeta.setFetchCount(i + 1);
 
-                                Statement stmt = conn.createStatement();
-                                ResultSet rs = stmt.executeQuery(
-                                        "select min(julianTimeAt) from dynarap_part_raw " +
-                                                "where partSeq = " + shortBlockMeta.getPartSeq().originOf() + " limit 0, 1");
                                 String julianStartFrom = "";
-                                if (rs.next())
-                                    julianStartFrom = rs.getString(1);
-                                rs.close();
+                                Statement stmt = conn.createStatement();
+                                ResultSet rs = null;
+
+                                if (shortBlockMeta.getPartInfo().getJulianStartAt() == null
+                                    || shortBlockMeta.getPartInfo().getJulianStartAt().isEmpty()) {
+                                    rs = stmt.executeQuery(
+                                            "select min(offsetTimeAt) from dynarap_part_raw " +
+                                                    "where partSeq = " + shortBlockMeta.getPartSeq().originOf() + " limit 0, 1");
+                                    if (rs.next())
+                                        julianStartFrom = rs.getString(1);
+                                    rs.close();
+                                }
+                                else {
+                                    rs = stmt.executeQuery(
+                                            "select min(julianTimeAt) from dynarap_part_raw " +
+                                                    "where partSeq = " + shortBlockMeta.getPartSeq().originOf() + " limit 0, 1");
+                                    if (rs.next())
+                                        julianStartFrom = rs.getString(1);
+                                    rs.close();
+                                }
 
                                 // short block 생성.
                                 ShortBlockVO shortBlock = new ShortBlockVO();
@@ -183,10 +191,19 @@ public class ShortBlockCreateTask {
                                 shortBlock.setBlockMetaSeq(shortBlockMeta.getSeq());
                                 shortBlock.setBlockNo(blockInfo.getBlockNo());
                                 shortBlock.setBlockName(blockInfo.getBlockName());
-                                shortBlock.setJulianStartAt(blockInfo.getJulianStartAt());
-                                shortBlock.setJulianEndAt(blockInfo.getJulianEndAt());
-                                shortBlock.setOffsetStartAt(PartService.getJulianTimeOffset(julianStartFrom, shortBlock.getJulianStartAt()));
-                                shortBlock.setOffsetEndAt(PartService.getJulianTimeOffset(julianStartFrom, shortBlock.getJulianEndAt()));
+
+                                if (julianStartFrom.indexOf(":") > -1) {
+                                    shortBlock.setJulianStartAt(blockInfo.getJulianStartAt());
+                                    shortBlock.setJulianEndAt(blockInfo.getJulianEndAt());
+                                    shortBlock.setOffsetStartAt(PartService.getJulianTimeOffset(julianStartFrom, shortBlock.getJulianStartAt()));
+                                    shortBlock.setOffsetEndAt(PartService.getJulianTimeOffset(julianStartFrom, shortBlock.getJulianEndAt()));
+                                }
+                                else {
+                                    shortBlock.setJulianStartAt("");
+                                    shortBlock.setJulianEndAt("");
+                                    shortBlock.setOffsetStartAt(Double.parseDouble(blockInfo.getJulianStartAt()));
+                                    shortBlock.setOffsetEndAt(Double.parseDouble(blockInfo.getJulianEndAt()));
+                                }
 
                                 PreparedStatement pstmt = conn.prepareStatement(
                                         "insert into dynarap_sblock (" +
@@ -225,19 +242,38 @@ public class ShortBlockCreateTask {
                                 // dump part raw from raw_temp table
                                 int minRowNo = -1;
                                 int maxRowNo = -1;
-                                String minMaxRowQuery = "select\n" +
-                                        "    (select distinct rowNo from dynarap_part_raw " +
-                                        "      where partSeq = " + shortBlock.getPartSeq().originOf() + " " +
-                                        "        and julianTimeAt = (\n" +
-                                        "        select min(julianTimeAt) from dynarap_part_raw " +
-                                        "         where partSeq = " + shortBlock.getPartSeq().originOf() + " " +
-                                        "           and julianTimeAt >= '" + shortBlock.getJulianStartAt() + "')) as minRowNo,\n" +
-                                        "    (select distinct rowNo from dynarap_part_raw " +
-                                        "      where partSeq = " + shortBlock.getPartSeq().originOf() + " " +
-                                        "        and julianTimeAt = (\n" +
-                                        "        select max(julianTimeAt) from dynarap_part_raw " +
-                                        "         where partSeq = " + shortBlock.getPartSeq().originOf() + " " +
-                                        "           and julianTimeAt <= '" + shortBlock.getJulianEndAt() + "')) as maxRowNo";
+                                String minMaxRowQuery = "";
+
+                                if (julianStartFrom.indexOf(":") > -1) {
+                                    minMaxRowQuery = "select\n" +
+                                            "    (select distinct rowNo from dynarap_part_raw " +
+                                            "      where partSeq = " + shortBlock.getPartSeq().originOf() + " " +
+                                            "        and julianTimeAt = (\n" +
+                                            "        select min(julianTimeAt) from dynarap_part_raw " +
+                                            "         where partSeq = " + shortBlock.getPartSeq().originOf() + " " +
+                                            "           and julianTimeAt >= '" + shortBlock.getJulianStartAt() + "')) as minRowNo,\n" +
+                                            "    (select distinct rowNo from dynarap_part_raw " +
+                                            "      where partSeq = " + shortBlock.getPartSeq().originOf() + " " +
+                                            "        and julianTimeAt = (\n" +
+                                            "        select max(julianTimeAt) from dynarap_part_raw " +
+                                            "         where partSeq = " + shortBlock.getPartSeq().originOf() + " " +
+                                            "           and julianTimeAt <= '" + shortBlock.getJulianEndAt() + "')) as maxRowNo";
+                                }
+                                else {
+                                    minMaxRowQuery = "select\n" +
+                                            "    (select distinct rowNo from dynarap_part_raw " +
+                                            "      where partSeq = " + shortBlock.getPartSeq().originOf() + " " +
+                                            "        and offsetTimeAt = (\n" +
+                                            "        select min(offsetTimeAt) from dynarap_part_raw " +
+                                            "         where partSeq = " + shortBlock.getPartSeq().originOf() + " " +
+                                            "           and offsetTimeAt >= '" + shortBlock.getOffsetStartAt() + "')) as minRowNo,\n" +
+                                            "    (select distinct rowNo from dynarap_part_raw " +
+                                            "      where partSeq = " + shortBlock.getPartSeq().originOf() + " " +
+                                            "        and offsetTimeAt = (\n" +
+                                            "        select max(offsetTimeAt) from dynarap_part_raw " +
+                                            "         where partSeq = " + shortBlock.getPartSeq().originOf() + " " +
+                                            "           and offsetTimeAt <= '" + shortBlock.getOffsetEndAt() + "')) as maxRowNo";
+                                }
 
                                 rs = stmt.executeQuery(minMaxRowQuery);
                                 if (rs.next()) {
@@ -251,13 +287,12 @@ public class ShortBlockCreateTask {
 
                                 long jobStartAt = System.currentTimeMillis();
 
-                                String paramQuery = "select seq, presetParamSeq, rowNo, julianTimeAt, paramVal, paramValStr, lpf, hpf " +
+                                String paramQuery = "select seq, presetParamSeq, rowNo, julianTimeAt, offsetTimeAt, paramVal, paramValStr " +
                                         "from dynarap_part_raw " +
                                         "where partSeq = ? " +
                                         "and rowNo between ? and ? " +
                                         "and presetParamSeq = ? " +
                                         "order by rowNo asc";
-
                                 pstmt = conn.prepareStatement(paramQuery);
 
                                 PreparedStatement pstmt_insert = conn.prepareStatement(
@@ -284,22 +319,35 @@ public class ShortBlockCreateTask {
                                     int batchCount = 1;
                                     while (rs.next()) {
                                         int rowNo = rs.getInt("rowNo");
-                                        String julianTimeAt = rs.getString("julianTimeAt");
+                                        String rowId = rs.getString("julianTimeAt");
+                                        if (julianStartFrom.indexOf(":") == -1)
+                                            rowId = String.format("%.05f", rs.getDouble("offsetTimeAt"));
+
                                         Double dblVal = rs.getDouble("paramVal");
 
-                                        zsetOps.addIfAbsent("S" + shortBlock.getSeq().originOf() + ".R", rs.getString("julianTimeAt"), rowNo);
+                                        zsetOps.addIfAbsent("S" + shortBlock.getSeq().originOf() + ".R", rowId, rowNo);
 
                                         pstmt_insert.setLong(1, shortBlock.getSeq().originOf());
                                         pstmt_insert.setLong(2, shortBlock.getPartSeq().originOf());
                                         pstmt_insert.setLong(3, param.getSeq().originOf());
                                         pstmt_insert.setInt(4, rowNo);
-                                        pstmt_insert.setString(5, julianTimeAt);
-                                        pstmt_insert.setDouble(6, PartService.getJulianTimeOffset(julianStartFrom, julianTimeAt));
+
+                                        if (julianStartFrom.indexOf(":") > -1) {
+                                            pstmt_insert.setString(5, rowId);
+                                            pstmt_insert.setDouble(6, PartService.getJulianTimeOffset(julianStartFrom, rowId));
+                                        }
+                                        else {
+                                            pstmt_insert.setString(5, "");
+                                            pstmt_insert.setDouble(6, Double.parseDouble(rowId));
+                                        }
+
                                         pstmt_insert.setDouble(7, dblVal);
                                         pstmt_insert.setString(8, rs.getString("paramValStr"));
 
-                                        Double lpfVal = rs.getDouble("lpf");
-                                        Double hpfVal = rs.getDouble("hpf");
+                                        Double lpfVal = getFilteredVal(
+                                                "P" + shortBlockMeta.getPartInfo().getSeq().originOf() + ".N" + param.getUnionParamSeq(), "lpf", rowId, dblVal);
+                                        Double hpfVal = getFilteredVal(
+                                                "P" + shortBlockMeta.getPartInfo().getSeq().originOf() + ".N" + param.getUnionParamSeq(), "hpf", rowId, dblVal);
 
                                         pstmt_insert.setDouble(9, lpfVal);
                                         pstmt_insert.setDouble(10, hpfVal);
@@ -314,12 +362,12 @@ public class ShortBlockCreateTask {
                                         batchCount++;
 
                                         if (dblVal != null) {
-                                            zsetOps.add(rowKey, julianTimeAt + ":" + dblVal, rowNo);
-                                            zsetOps.add(lpfKey, julianTimeAt + ":" + lpfVal, rowNo);
-                                            zsetOps.add(hpfKey, julianTimeAt + ":" + hpfVal, rowNo);
+                                            zsetOps.add(rowKey, rowId + ":" + dblVal, rowNo);
+                                            zsetOps.add(lpfKey, rowId + ":" + lpfVal, rowNo);
+                                            zsetOps.add(hpfKey, rowId + ":" + hpfVal, rowNo);
                                         }
                                         else
-                                            zsetOps.add(rowKey, julianTimeAt + ":" + rs.getString("paramValStr"), rowNo);
+                                            zsetOps.add(rowKey, rowId + ":" + rs.getString("paramValStr"), rowNo);
                                     }
                                     if ((batchCount % 1000) > 0) {
                                         pstmt_insert.executeBatch();
@@ -367,6 +415,32 @@ public class ShortBlockCreateTask {
                 }
             }
         };
+    }
+
+    public double getFilteredVal(String rowKey, String filterType, String rowId, double rowVal) {
+        Long rank = zsetOps.rank(rowKey, rowId + ":" + rowVal);
+        if (rank == null) return 0.0;
+
+        Set<String> rows = null;
+        if (filterType.equals("lpf")) {
+            rows = zsetOps.rangeByScore(
+                    rowKey.replaceAll(".N", ".L"), 0, Integer.MAX_VALUE, rank, rank + 1);
+        }
+        else {
+            rows = zsetOps.rangeByScore(
+                    rowKey.replaceAll(".N", ".H"), 0, Integer.MAX_VALUE, rank, rank + 1);
+        }
+
+        if (rows != null && rows.size() > 0) {
+            Iterator<String> iterRows = rows.iterator();
+            if (iterRows.hasNext()) {
+                String dataKey = iterRows.next();
+                String[] splitData = dataKey.split(":");
+                return Double.parseDouble(splitData[1]);
+            }
+        }
+
+        return 0.0;
     }
 
     public static class Builder {
