@@ -27,8 +27,6 @@ public class ShortBlockVO {
     public static class Meta {
         private CryptoField seq;
         private CryptoField partSeq;
-        private CryptoField selectedPresetPack; /* 선택된 preset 정보 노출 */
-        private CryptoField selectedPresetSeq; /* 선택된 preset 정보 노출 */
         private Float overlap;
         private Float sliceTime;
         private CryptoField.NAuth registerUid;
@@ -106,8 +104,6 @@ public class ShortBlockVO {
         private CryptoField partSeq;
         private float sliceTime;
         private float overlap;
-        private CryptoField presetPack;
-        private CryptoField presetSeq;
         private List<Parameter> parameters;
         private List<ShortBlock> shortBlocks;
         private boolean forcedCreate;
@@ -122,10 +118,7 @@ public class ShortBlockVO {
             private String grtKey;
             private String fltpKey;
             private String fltsKey;
-            private String64 paramName;
-            private String paramUnit;
-            private String propType;
-            private String propCode;
+            private CryptoField propSeq;
         }
 
         @Data

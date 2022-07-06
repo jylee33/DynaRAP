@@ -373,8 +373,6 @@ public class PartService {
                 shortBlockMeta.setCreateRequest(createReq);
                 shortBlockMeta.setOverlap(createReq.getOverlap());
                 shortBlockMeta.setSliceTime(createReq.getSliceTime());
-                shortBlockMeta.setSelectedPresetPack(createReq.getPresetPack());
-                shortBlockMeta.setSelectedPresetSeq(createReq.getPresetSeq());
                 insertShortBlockMeta(shortBlockMeta);
                 createStat.put(shortBlockMeta.getSeq().valueOf(), shortBlockMeta);
 

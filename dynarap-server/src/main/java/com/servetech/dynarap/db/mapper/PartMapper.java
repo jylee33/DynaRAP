@@ -162,15 +162,13 @@ public interface PartMapper {
     @Insert({
             "<script>" +
                     "insert into dynarap_sblock_meta (" +
-                    "partSeq,overlap,sliceTime,registerUid,createdAt,selectedPresetPack,selectedPresetSeq,createDone" +
+                    "partSeq,overlap,sliceTime,registerUid,createdAt,createDone" +
                     ") values (" +
                     "#{partSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField}" +
                     ",#{overlap}" +
                     ",#{sliceTime}" +
                     ",#{registerUid,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField_NAuth}" +
                     ",#{createdAt,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=LongDate}" +
-                    ",#{selectedPresetPack,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField}" +
-                    ",#{selectedPresetSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField}" +
                     ",#{createDone}" +
                     ")" +
                     "</script>"
@@ -185,8 +183,6 @@ public interface PartMapper {
                     " update dynarap_sblock_meta set " +
                     " overlap = #{overlap}" +
                     ",sliceTime = #{sliceTime}" +
-                    ",selectedPresetPack = #{selectedPresetPack,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField}" +
-                    ",selectedPresetSeq = #{selectedPresetSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField}" +
                     ",createDone = #{createDone}" +
                     " where seq = #{seq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
                     "</script>"
@@ -259,7 +255,7 @@ public interface PartMapper {
                     "<if test='@com.servetech.dynarap.db.type.MybatisEmptyChecker@isNotEmpty(partSeq)'>" +
                     " and partSeq = #{partSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
                     "</if>" +
-                    "order by partSeq desc, blockNo asc, seq desc " +
+                    "order by partSeq desc, blockMetaSeq desc, blockNo asc, seq desc " +
                     "limit #{startIndex}, #{pageSize}" +
                     "</script>"
     })
