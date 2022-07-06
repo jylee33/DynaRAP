@@ -13,8 +13,6 @@ namespace DynaRAP.Data
         public string partSeq { get; set; }
         public double sliceTime { get; set; }
         public double overlap { get; set; }
-        public string presetPack { get; set; }
-        public string presetSeq { get; set; }
         public List<Parameter> parameters { get; set; }
         public List<ShortBlock> shortBlocks { get; set; }
         public bool forcedCreate { get; set; }
@@ -22,16 +20,15 @@ namespace DynaRAP.Data
 
     public class Parameter
     {
-        public string paramPack { get; set; }
         public string paramSeq { get; set; }
-        public string paramName { get; set; }
+        public string paramPack { get; set; }
         public string paramKey { get; set; }
         public string adamsKey { get; set; }
         public string zaeroKey { get; set; }
         public string grtKey { get; set; }
         public string fltpKey { get; set; }
         public string fltsKey { get; set; }
-        public string paramUnit { get; set; }
+        public string propSeq { get; set; }
     }
 
     public class ShortBlock

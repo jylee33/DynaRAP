@@ -147,13 +147,26 @@ namespace DynaRAP.UControl
                     }
                     else
                     {
-                        if (result.response.status.Equals("import-done") || result.response.totalFetchCount == 0)
+                        if (result.response.status.Equals("create-done") || result.response.totalFetchCount == 0)
                         {
                             isCompleted = true;
                             timer.Stop();
 
                             if (bFirst)
                                 MessageBox.Show(result.response.statusMessage);
+                            else
+                                MessageBox.Show("완료");
+
+                            this.Close();
+                        }
+                        else if (result.response.status.Equals("error"))
+                        {
+                            isCompleted = true;
+                            timer.Stop();
+
+                            MessageBox.Show(result.response.statusMessage);
+
+                            DialogResult = DialogResult.Cancel;
                             this.Close();
                         }
                         else
@@ -163,7 +176,6 @@ namespace DynaRAP.UControl
                         }
                     }
                 }
-                bFirst = false;
             }
             catch (Exception ex)
             {

@@ -33,7 +33,7 @@ namespace DynaRAP.UControl
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         
         ChartArea myChartArea = new ChartArea("LineChartArea");
-        List<SBParamControl> sbParamList = new List<SBParamControl>();
+        //List<SBParamControl> sbParamList = new List<SBParamControl>();
         List<SBIntervalControl> sbIntervalList = new List<SBIntervalControl>();
 
         Dictionary<string, List<string>> dicData = new Dictionary<string, List<string>>();
@@ -58,6 +58,8 @@ namespace DynaRAP.UControl
 
         double sbLen = 1;
         double overlap = 10;
+
+        string partSeq = String.Empty;
 
         public SBModuleControl()
         {
@@ -738,7 +740,6 @@ namespace DynaRAP.UControl
                 byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(seq);
                 string encName = Convert.ToBase64String(basebyte);
 
-                string partSeq = "";
                 ResponsePart part = partList.Find(x => x.partName.Equals(encName));
                 if (part != null)
                 {
@@ -1321,11 +1322,6 @@ namespace DynaRAP.UControl
             lblValidSBCount.Text = string.Format(Properties.Resources.StringValidSBCount, sbIntervalList.Count);
         }
 
-        private void btnSaveSplittedParameter_ButtonClick(object sender, ButtonPressedEventArgs e)
-        {
-
-        }
-
         private void btnSaveSplittedParameter_ButtonClick(object sender, EventArgs e)
         {
             CreateShortBlock();
@@ -1341,67 +1337,72 @@ namespace DynaRAP.UControl
                 CreateShortBlockRequest req = new CreateShortBlockRequest();
                 req.command = "create-shortblock";
                 req.blockMetaSeq = "";
-                req.partSeq = "";
+                req.partSeq = this.partSeq;
                 req.sliceTime = sbLen;
                 req.overlap = overlap;
 
-                string presetPack = string.Empty;
-                string presetSeq = string.Empty;
-                if (luePresetList.GetColumnValue("PresetPack") != null)
-                {
-                    presetPack = luePresetList.GetColumnValue("PresetPack").ToString();
-                    ResponsePreset preset = presetList.Find(x => x.presetPack.Equals(presetPack));
+                //string presetPack = string.Empty;
+                //string presetSeq = string.Empty;
+                //if (luePresetList.GetColumnValue("PresetPack") != null)
+                //{
+                //    presetPack = luePresetList.GetColumnValue("PresetPack").ToString();
+                //    ResponsePreset preset = presetList.Find(x => x.presetPack.Equals(presetPack));
 
-                    if (preset != null)
-                    {
-                        presetSeq = preset.seq;
-                    }
-                }
+                //    if (preset != null)
+                //    {
+                //        presetSeq = preset.seq;
+                //    }
+                //}
 
-                req.presetPack = presetPack;
-                req.presetSeq = presetSeq;
+                //req.presetPack = presetPack;
+                //req.presetSeq = presetSeq;
 
                 req.parameters = new List<Parameter>();
-                foreach (SBParamControl ctrl in sbParamList)
+                int i = 0;
+
+                for (i = 0; i < gridView1.RowCount; i++)
                 {
-                    ////Encoding
-                    //byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(ctrl.PartName);
-                    //string partName = Convert.ToBase64String(basebyte);
-
-                    //string t1 = Utils.GetJulianFromDate(ctrl.Min);
-                    //string t2 = Utils.GetJulianFromDate(ctrl.Max);
-
-                    //req.parts.Add(new Part(partName, t1, t2));
+                    string paramKey = gridView1.GetRowCellValue(i, "ParamKey") == null ? "" : gridView1.GetRowCellValue(i, "ParamKey").ToString();
+                    string adams = gridView1.GetRowCellValue(i, "AdamsKey") == null ? "" : gridView1.GetRowCellValue(i, "AdamsKey").ToString();
+                    string zaero = gridView1.GetRowCellValue(i, "ZaeroKey") == null ? "" : gridView1.GetRowCellValue(i, "ZaeroKey").ToString();
+                    string grt = gridView1.GetRowCellValue(i, "GrtKey") == null ? "" : gridView1.GetRowCellValue(i, "GrtKey").ToString();
+                    string fltp = gridView1.GetRowCellValue(i, "FltpKey") == null ? "" : gridView1.GetRowCellValue(i, "FltpKey").ToString();
+                    string flts = gridView1.GetRowCellValue(i, "FltsKey") == null ? "" : gridView1.GetRowCellValue(i, "FltsKey").ToString();
+                    string propSeq = gridView1.GetRowCellValue(i, "PartInfo") == null ? "" : gridView1.GetRowCellValue(i, "PartInfo").ToString();
+                    //string partInfoSub = gridView1.GetRowCellValue(i, "PartInfoSub") == null ? "" : gridView1.GetRowCellValue(i, "PartInfoSub").ToString();
+                    string paramSeq = gridView1.GetRowCellValue(i, "Seq") == null ? "" : gridView1.GetRowCellValue(i, "Seq").ToString();
+                    string paramPack = gridView1.GetRowCellValue(i, "ParamPack") == null ? "" : gridView1.GetRowCellValue(i, "ParamPack").ToString();
+                
                     Parameter param = new Parameter();
-                    ResponseParam resParam = ctrl.Param;
-                    param.paramPack = resParam.paramPack;
-                    param.paramSeq = resParam.seq;
-                    //param.paramName = resParam.paramName;// resParam 구조체 변경되면서 수정되어야 하는데 일단 주석처리함.
-                    param.paramKey = resParam.paramKey;
-                    param.adamsKey = resParam.adamsKey;
-                    param.zaeroKey = resParam.zaeroKey;
-                    param.grtKey = resParam.grtKey;
-                    param.fltpKey = resParam.fltpKey;
-                    param.fltsKey = resParam.fltsKey;
-                    param.paramUnit = resParam.propInfo.paramUnit;
-
+                    param.paramSeq = paramSeq;
+                    param.paramPack = paramPack;
+                    param.paramKey = paramKey;
+                    param.adamsKey = adams;
+                    param.zaeroKey = zaero;
+                    param.grtKey = grt;
+                    param.fltpKey = fltp;
+                    param.fltsKey = flts;
+                    param.propSeq = propSeq;
+               
                     req.parameters.Add(param);
                 }
 
                 req.shortBlocks = new List<ShortBlock>();
-                int i = 1;
+                i = 1;
                 foreach (SBIntervalControl ctrl in sbIntervalList)
                 {
                     ShortBlock sb = new ShortBlock();
                     SplittedSB splitSb = ctrl.Sb;
                     sb.blockNo = i++;
                     sb.blockName = splitSb.SbName;
-                    sb.julianStartAt = splitSb.StartTime;
-                    sb.julianEndAt = splitSb.EndTime;
+                    sb.julianStartAt = Utils.GetJulianFromDate(splitSb.StartTime);
+                    sb.julianEndAt = Utils.GetJulianFromDate(splitSb.EndTime);
 
                     req.shortBlocks.Add(sb);
 
                 }
+
+                req.forcedCreate = true;
 
                 string url = ConfigurationManager.AppSettings["UrlPart"];
 

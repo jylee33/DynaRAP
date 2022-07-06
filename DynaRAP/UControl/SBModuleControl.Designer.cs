@@ -810,7 +810,6 @@
             this.btnSaveSplittedParameter.Properties.ReadOnly = true;
             this.btnSaveSplittedParameter.Size = new System.Drawing.Size(104, 22);
             this.btnSaveSplittedParameter.TabIndex = 12;
-            this.btnSaveSplittedParameter.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.btnSaveSplittedParameter_ButtonClick);
             this.btnSaveSplittedParameter.Click += new System.EventHandler(this.btnSaveSplittedParameter_ButtonClick);
             // 
             // imageCollection2
