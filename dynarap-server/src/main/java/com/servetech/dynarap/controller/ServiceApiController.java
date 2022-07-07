@@ -14,13 +14,12 @@ import com.servetech.dynarap.vo.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 @Controller
@@ -912,6 +911,267 @@ public class ServiceApiController extends ApiController {
         throw new HandledServiceException(411, "명령이 정의되지 않았습니다.");
     }
 
+    @RequestMapping(value = "/part/d")
+    public void apiPartDownload(HttpServletRequest request, HttpServletResponse response,
+                                      @PathVariable String serviceVersion,
+                                      @RequestBody JsonObject payload, Authentication authentication) throws HandledServiceException {
+        UserVO user = getService(UserService.class).getUser("admin@dynarap@dynarap");
+
+        if (checkJsonEmpty(payload, "command"))
+            throw new HandledServiceException(404, "파라미터를 확인하세요.");
+
+        String command = payload.get("command").getAsString();
+
+        if (command.equals("row-data")) {
+            CryptoField partSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "partSeq"))
+                partSeq = CryptoField.decode(payload.get("partSeq").getAsString(), 0L);
+
+            String filterType = "N";
+            if (!checkJsonEmpty(payload, "filterType"))
+                filterType = payload.get("filterType").getAsString();
+
+            PartVO partInfo = getService(PartService.class).getPartBySeq(partSeq);
+
+            // 요청 파라미터 셋.
+            JsonObject jobjResult = new JsonObject();
+            JsonArray jarrParams = null;
+            if (!checkJsonEmpty(payload, "paramSet"))
+                jarrParams = payload.get("paramSet").getAsJsonArray();
+            List<ParamVO> params = new ArrayList<>();
+
+            if (jarrParams == null || jarrParams.size() == 0) {
+                List<String> paramSet = listOps.range("P" + partInfo.getSeq().originOf(), 0, Integer.MAX_VALUE);
+                for (String p : paramSet) {
+                    ParamVO param = getService(ParamService.class).getPresetParamBySeq(
+                            new CryptoField(Long.parseLong(p.substring(1))));
+                    if (param == null) {
+                        param = getService(ParamService.class).getNotMappedParamBySeq(
+                                new CryptoField(Long.parseLong(p.substring(1))));
+                        if (param == null) continue;
+                    }
+
+                    params.add(param);
+                }
+            }
+            else {
+                for (int i = 0; i < jarrParams.size(); i++) {
+                    Long paramKey = jarrParams.get(i).getAsLong();
+                    ParamVO param = getService(ParamService.class).getPresetParamBySeq(new CryptoField(paramKey));
+                    if (param == null) {
+                        param = getService(ParamService.class).getNotMappedParamBySeq(
+                                new CryptoField(paramKey));
+                        if (param == null) continue;
+                    }
+                    params.add(param);
+                }
+            }
+
+            JsonArray jarrJulian = payload.get("julianRange").getAsJsonArray();
+            String julianFrom = jarrJulian.get(0).getAsString();
+            if (julianFrom == null || julianFrom.isEmpty()) {
+                Set<String> listSet = zsetOps.rangeByScore("P" + partInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE);
+                if (listSet != null && listSet.size() > 0)
+                    julianFrom = listSet.iterator().next();
+            }
+            String julianTo = jarrJulian.get(1).getAsString();
+            if (julianTo == null || julianTo.isEmpty()) {
+                Set<String> listSet = zsetOps.reverseRangeByScore("P" + partInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE);
+                if (listSet != null && listSet.size() > 0)
+                    julianTo = listSet.iterator().next();
+            }
+
+            LinkedHashMap<String, List<Double>> rowData = new LinkedHashMap<>();
+            if (julianFrom == null || julianFrom.isEmpty() || julianTo == null || julianTo.isEmpty()) {
+                jobjResult.add("paramSet", ServerConstants.GSON.toJsonTree(params));
+                jobjResult.add("julianSet", ServerConstants.GSON.toJsonTree(new ArrayList<String>()));
+                jobjResult.add("data", ServerConstants.GSON.toJsonTree(rowData));
+            }
+            else {
+                Set<String> listSet = zsetOps.rangeByScore("P" + partInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE);
+                if (listSet == null || listSet.size() == 0) {
+                    jobjResult.add("paramSet", ServerConstants.GSON.toJsonTree(params));
+                    jobjResult.add("julianSet", ServerConstants.GSON.toJsonTree(new ArrayList<String>()));
+                    jobjResult.add("data", ServerConstants.GSON.toJsonTree(rowData));
+                }
+                else {
+                    String julianStart = listSet.iterator().next();
+                    Long startRowAt = zsetOps.score("P" + partInfo.getSeq().originOf() + ".R", julianStart).longValue();
+
+                    Long rankFrom = zsetOps.rank("P" + partInfo.getSeq().originOf() + ".R", julianFrom);
+                    if (rankFrom == null) {
+                        julianFrom = zsetOps.rangeByScore("P" + partInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE).iterator().next();
+                        rankFrom = zsetOps.rank("P" + partInfo.getSeq().originOf() + ".R", julianFrom);
+                    }
+                    Long rankTo = zsetOps.rank("P" + partInfo.getSeq().originOf() + ".R", julianTo);
+                    if (rankTo == null) {
+                        julianTo = zsetOps.reverseRangeByScore("P" + partInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE).iterator().next();
+                        rankTo = zsetOps.rank("P" + partInfo.getSeq().originOf() + ".R", julianTo);
+                    }
+
+                    rowData = new LinkedHashMap<>();
+                    for (ParamVO p : params) {
+                        listSet = zsetOps.rangeByScore(
+                                "P" + partInfo.getSeq().originOf() + "." + filterType + p.getReferenceSeq(), startRowAt + rankFrom, startRowAt + rankTo);
+
+                        Iterator<String> iterListSet = listSet.iterator();
+                        while (iterListSet.hasNext()) {
+                            String rowVal = iterListSet.next();
+                            String julianTime = rowVal.substring(0, rowVal.lastIndexOf(":"));
+                            List<Double> rowList = rowData.get(julianTime);
+                            if (rowList == null) {
+                                rowList = new ArrayList<>();
+                                rowData.put(julianTime, rowList);
+                            }
+                            Double dblVal = Double.parseDouble(rowVal.substring(rowVal.lastIndexOf(":") + 1));
+                            rowList.add(dblVal);
+                        }
+                    }
+
+                    jobjResult.add("paramSet", ServerConstants.GSON.toJsonTree(params));
+                    jobjResult.add("julianSet", ServerConstants.GSON.toJsonTree(Arrays.asList(rowData.keySet())));
+                    jobjResult.add("data", ServerConstants.GSON.toJsonTree(rowData.values()));
+                }
+            }
+
+            StringBuilder sbOut = new StringBuilder();
+            sbOut.append("DATE,");
+            for (ParamVO p : params) sbOut.append(p.getParamKey()).append(",");
+            sbOut.append("\n");
+            sbOut.append(",");
+            for (ParamVO p : params) sbOut.append(",");
+            sbOut.append("\n");
+
+            // flush data
+            Set<String> keys = rowData.keySet();
+            Iterator<String> iterKeys = keys.iterator();
+            while (iterKeys.hasNext()) {
+                String time = iterKeys.next();
+                List<Double> row = rowData.get(time);
+                sbOut.append(time).append(",");
+                for (Double d : row) sbOut.append(d).append(",");
+                sbOut.append("\n");
+            }
+
+            response.setHeader("Content-Type", "application/octet-stream");
+            response.addHeader("Content-Disposition",
+                    "attachment; filename=\"part_" + System.currentTimeMillis() + ".csv\";");
+            response.addHeader("Content-Transfer-Encoding", "binary");
+
+            try {
+                byte[] outBuf = sbOut.toString().getBytes(StandardCharsets.UTF_8);
+                OutputStream os = response.getOutputStream();
+                os.write(outBuf, 0, outBuf.length);
+                os.flush();
+            } catch(IOException ioe) {
+                throw new HandledServiceException(411, ioe.getMessage());
+            }
+        }
+
+        if (command.equals("column-data")) {
+            CryptoField partSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "partSeq"))
+                partSeq = CryptoField.decode(payload.get("partSeq").getAsString(), 0L);
+
+            String filterType = "N";
+            if (!checkJsonEmpty(payload, "filterType"))
+                filterType = payload.get("filterType").getAsString();
+
+            PartVO partInfo = getService(PartService.class).getPartBySeq(partSeq);
+
+            // 요청 파라미터 셋.
+            JsonObject jobjResult = new JsonObject();
+            JsonArray jarrParams = null;
+            if (!checkJsonEmpty(payload, "paramSet"))
+                jarrParams = payload.get("paramSet").getAsJsonArray();
+            List<ParamVO> params = new ArrayList<>();
+
+            if (jarrParams == null || jarrParams.size() == 0) {
+                List<String> paramSet = listOps.range("P" + partInfo.getSeq().originOf(), 0, Integer.MAX_VALUE);
+                for (String p : paramSet) {
+                    ParamVO param = getService(ParamService.class).getPresetParamBySeq(
+                            new CryptoField(Long.parseLong(p.substring(1))));
+                    if (param == null) {
+                        param = getService(ParamService.class).getNotMappedParamBySeq(
+                                new CryptoField(Long.parseLong(p.substring(1))));
+                        if (param == null) continue;
+                    }
+
+                    params.add(param);
+                }
+            }
+            else {
+                for (int i = 0; i < jarrParams.size(); i++) {
+                    Long paramKey = jarrParams.get(i).getAsLong();
+                    ParamVO param = getService(ParamService.class).getPresetParamBySeq(new CryptoField(paramKey));
+                    if (param == null) {
+                        param = getService(ParamService.class).getNotMappedParamBySeq(
+                                new CryptoField(paramKey));
+                        if (param == null) continue;
+                    }
+                    params.add(param);
+                }
+            }
+
+            List<String> julianData = new ArrayList<>();
+            LinkedHashMap<String, List<Double>> paramData = new LinkedHashMap<>();
+            for (ParamVO p : params) {
+                Set<String> listSet = zsetOps.rangeByScore(
+                        "P" + partInfo.getSeq().originOf() + "." + filterType + p.getReferenceSeq(), 0, Integer.MAX_VALUE);
+                if (listSet == null || listSet.size() == 0) continue;
+
+                List<Double> rowData = new ArrayList<>();
+                paramData.put(p.getParamKey(), rowData);
+
+                Iterator<String> iterListSet = listSet.iterator();
+                while (iterListSet.hasNext()) {
+                    String rowVal = iterListSet.next();
+                    String julianTime = rowVal.substring(0, rowVal.lastIndexOf(":"));
+                    if (!julianData.contains(julianTime)) julianData.add(julianTime);
+
+                    Double dblVal = Double.parseDouble(rowVal.substring(rowVal.lastIndexOf(":") + 1));
+                    rowData.add(dblVal);
+                }
+            }
+
+            jobjResult.add("julianSet", ServerConstants.GSON.toJsonTree(Arrays.asList(julianData)));
+            jobjResult.add("data", ServerConstants.GSON.toJsonTree(paramData.values()));
+
+            StringBuilder sbOut = new StringBuilder();
+            sbOut.append("DATE,");
+            for (ParamVO p : params) sbOut.append(p.getParamKey()).append(",");
+            sbOut.append("\n");
+            sbOut.append(",");
+            for (ParamVO p : params) sbOut.append(",");
+            sbOut.append("\n");
+
+            // flush data
+            Set<String> keys = paramData.keySet();
+            Iterator<String> iterKeys = keys.iterator();
+            while (iterKeys.hasNext()) {
+                String time = iterKeys.next();
+                List<Double> row = paramData.get(time);
+                sbOut.append(time).append(",");
+                for (Double d : row) sbOut.append(d).append(",");
+                sbOut.append("\n");
+            }
+
+            response.setHeader("Content-Type", "application/octet-stream");
+            response.addHeader("Content-Disposition",
+                    "attachment; filename=\"part_" + System.currentTimeMillis() + ".csv\";");
+            response.addHeader("Content-Transfer-Encoding", "binary");
+
+            try {
+                byte[] outBuf = sbOut.toString().getBytes(StandardCharsets.UTF_8);
+                OutputStream os = response.getOutputStream();
+                os.write(outBuf, 0, outBuf.length);
+                os.flush();
+            } catch(IOException ioe) {
+                throw new HandledServiceException(411, ioe.getMessage());
+            }
+        }
+    }
+
     @RequestMapping(value = "/part")
     @ResponseBody
     public Object apiPart(HttpServletRequest request, @PathVariable String serviceVersion,
@@ -1217,10 +1477,272 @@ public class ServiceApiController extends ApiController {
         throw new HandledServiceException(411, "명령이 정의되지 않았습니다.");
     }
 
+    @RequestMapping(value = "/shortblock/d")
+    public void apiShortBlockDownload(HttpServletRequest request, HttpServletResponse response,
+                                @PathVariable String serviceVersion,
+                                @RequestBody JsonObject payload, Authentication authentication) throws HandledServiceException {
+        UserVO user = getService(UserService.class).getUser("admin@dynarap@dynarap");
+
+        if (checkJsonEmpty(payload, "command"))
+            throw new HandledServiceException(404, "파라미터를 확인하세요.");
+
+        String command = payload.get("command").getAsString();
+
+        if (command.equals("row-data")) {
+            CryptoField blockSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "blockSeq"))
+                blockSeq = CryptoField.decode(payload.get("blockSeq").getAsString(), 0L);
+
+            String filterType = "N";
+            if (!checkJsonEmpty(payload, "filterType"))
+                filterType = payload.get("filterType").getAsString();
+
+            ShortBlockVO blockInfo = getService(PartService.class).getShortBlockBySeq(blockSeq);
+
+            // 요청 파라미터 셋.
+            JsonObject jobjResult = new JsonObject();
+            JsonArray jarrParams = null;
+            if (!checkJsonEmpty(payload, "paramSet"))
+                jarrParams = payload.get("paramSet").getAsJsonArray();
+            List<ParamVO> params = new ArrayList<>();
+
+            if (jarrParams == null || jarrParams.size() == 0) {
+                List<String> paramSet = listOps.range("S" + blockInfo.getSeq().originOf(), 0, Integer.MAX_VALUE);
+                for (String p : paramSet) {
+                    ParamVO param = getService(ParamService.class).getPresetParamBySeq(
+                            new CryptoField(Long.parseLong(p.substring(1))));
+                    if (param == null) {
+                        param = getService(ParamService.class).getNotMappedParamBySeq(
+                                new CryptoField(Long.parseLong(p.substring(1))));
+                        if (param == null) continue;
+                    }
+
+                    params.add(param);
+                }
+            }
+            else {
+                for (int i = 0; i < jarrParams.size(); i++) {
+                    Long paramKey = jarrParams.get(i).getAsLong();
+                    ParamVO param = getService(ParamService.class).getPresetParamBySeq(new CryptoField(paramKey));
+                    if (param == null) {
+                        param = getService(ParamService.class).getNotMappedParamBySeq(
+                                new CryptoField(paramKey));
+                        if (param == null) continue;
+                    }
+                    params.add(param);
+                }
+            }
+
+            JsonArray jarrJulian = payload.get("julianRange").getAsJsonArray();
+            String julianFrom = jarrJulian.get(0).getAsString();
+            if (julianFrom == null || julianFrom.isEmpty()) {
+                Set<String> listSet = zsetOps.rangeByScore("S" + blockInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE);
+                if (listSet != null && listSet.size() > 0)
+                    julianFrom = listSet.iterator().next();
+            }
+            String julianTo = jarrJulian.get(1).getAsString();
+            if (julianTo == null || julianTo.isEmpty()) {
+                Set<String> listSet = zsetOps.reverseRangeByScore("S" + blockInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE);
+                if (listSet != null && listSet.size() > 0)
+                    julianTo = listSet.iterator().next();
+            }
+
+            LinkedHashMap<String, List<Double>> rowData = new LinkedHashMap<>();
+            if (julianFrom == null || julianFrom.isEmpty() || julianTo == null || julianTo.isEmpty()) {
+                jobjResult.add("paramSet", ServerConstants.GSON.toJsonTree(params));
+                jobjResult.add("julianSet", ServerConstants.GSON.toJsonTree(new ArrayList<String>()));
+                jobjResult.add("data", ServerConstants.GSON.toJsonTree(rowData));
+            }
+            else {
+                Set<String> listSet = zsetOps.rangeByScore("S" + blockInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE);
+                if (listSet == null || listSet.size() == 0) {
+                    jobjResult.add("paramSet", ServerConstants.GSON.toJsonTree(params));
+                    jobjResult.add("julianSet", ServerConstants.GSON.toJsonTree(new ArrayList<String>()));
+                    jobjResult.add("data", ServerConstants.GSON.toJsonTree(rowData));
+                }
+                else {
+                    String julianStart = listSet.iterator().next();
+                    Long startRowAt = zsetOps.score("S" + blockInfo.getSeq().originOf() + ".R", julianStart).longValue();
+
+                    Long rankFrom = zsetOps.rank("S" + blockInfo.getSeq().originOf() + ".R", julianFrom);
+                    if (rankFrom == null) {
+                        julianFrom = zsetOps.rangeByScore("S" + blockInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE).iterator().next();
+                        rankFrom = zsetOps.rank("S" + blockInfo.getSeq().originOf() + ".R", julianFrom);
+                    }
+                    Long rankTo = zsetOps.rank("S" + blockInfo.getSeq().originOf() + ".R", julianTo);
+                    if (rankTo == null) {
+                        julianTo = zsetOps.reverseRangeByScore("S" + blockInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE).iterator().next();
+                        rankTo = zsetOps.rank("S" + blockInfo.getSeq().originOf() + ".R", julianTo);
+                    }
+
+                    rowData = new LinkedHashMap<>();
+                    for (ParamVO p : params) {
+                        listSet = zsetOps.rangeByScore(
+                                "S" + blockInfo.getSeq().originOf() + "." + filterType + p.getReferenceSeq(), startRowAt + rankFrom, startRowAt + rankTo);
+
+                        Iterator<String> iterListSet = listSet.iterator();
+                        while (iterListSet.hasNext()) {
+                            String rowVal = iterListSet.next();
+                            String julianTime = rowVal.substring(0, rowVal.lastIndexOf(":"));
+                            List<Double> rowList = rowData.get(julianTime);
+                            if (rowList == null) {
+                                rowList = new ArrayList<>();
+                                rowData.put(julianTime, rowList);
+                            }
+                            Double dblVal = Double.parseDouble(rowVal.substring(rowVal.lastIndexOf(":") + 1));
+                            rowList.add(dblVal);
+                        }
+                    }
+
+                    jobjResult.add("paramSet", ServerConstants.GSON.toJsonTree(params));
+                    jobjResult.add("julianSet", ServerConstants.GSON.toJsonTree(Arrays.asList(rowData.keySet())));
+                    jobjResult.add("data", ServerConstants.GSON.toJsonTree(rowData.values()));
+                }
+            }
+
+            StringBuilder sbOut = new StringBuilder();
+            sbOut.append("DATE,");
+            for (ParamVO p : params) sbOut.append(p.getParamKey()).append(",");
+            sbOut.append("\n");
+            sbOut.append(",");
+            for (ParamVO p : params) sbOut.append(",");
+            sbOut.append("\n");
+
+            // flush data
+            Set<String> keys = rowData.keySet();
+            Iterator<String> iterKeys = keys.iterator();
+            while (iterKeys.hasNext()) {
+                String time = iterKeys.next();
+                List<Double> row = rowData.get(time);
+                sbOut.append(time).append(",");
+                for (Double d : row) sbOut.append(d).append(",");
+                sbOut.append("\n");
+            }
+
+            response.setHeader("Content-Type", "application/octet-stream");
+            response.addHeader("Content-Disposition",
+                    "attachment; filename=\"shortblock_" + System.currentTimeMillis() + ".csv\";");
+            response.addHeader("Content-Transfer-Encoding", "binary");
+
+            try {
+                byte[] outBuf = sbOut.toString().getBytes(StandardCharsets.UTF_8);
+                OutputStream os = response.getOutputStream();
+                os.write(outBuf, 0, outBuf.length);
+                os.flush();
+            } catch(IOException ioe) {
+                throw new HandledServiceException(411, ioe.getMessage());
+            }
+        }
+
+        if (command.equals("column-data")) {
+            CryptoField blockSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "blockSeq"))
+                blockSeq = CryptoField.decode(payload.get("blockSeq").getAsString(), 0L);
+
+            String filterType = "N";
+            if (!checkJsonEmpty(payload, "filterType"))
+                filterType = payload.get("filterType").getAsString();
+
+            ShortBlockVO blockInfo = getService(PartService.class).getShortBlockBySeq(blockSeq);
+
+            // 요청 파라미터 셋.
+            JsonObject jobjResult = new JsonObject();
+            JsonArray jarrParams = null;
+            if (!checkJsonEmpty(payload, "paramSet"))
+                jarrParams = payload.get("paramSet").getAsJsonArray();
+            List<ParamVO> params = new ArrayList<>();
+
+            if (jarrParams == null || jarrParams.size() == 0) {
+                List<String> paramSet = listOps.range("S" + blockInfo.getSeq().originOf(), 0, Integer.MAX_VALUE);
+                for (String p : paramSet) {
+                    ParamVO param = getService(ParamService.class).getPresetParamBySeq(
+                            new CryptoField(Long.parseLong(p.substring(1))));
+                    if (param == null) {
+                        param = getService(ParamService.class).getNotMappedParamBySeq(
+                                new CryptoField(Long.parseLong(p.substring(1))));
+                        if (param == null) continue;
+                    }
+
+                    params.add(param);
+                }
+            }
+            else {
+                for (int i = 0; i < jarrParams.size(); i++) {
+                    Long paramKey = jarrParams.get(i).getAsLong();
+                    ParamVO param = getService(ParamService.class).getPresetParamBySeq(new CryptoField(paramKey));
+                    if (param == null) {
+                        param = getService(ParamService.class).getNotMappedParamBySeq(
+                                new CryptoField(paramKey));
+                        if (param == null) continue;
+                    }
+                    params.add(param);
+                }
+            }
+
+            List<String> julianData = new ArrayList<>();
+            LinkedHashMap<String, List<Double>> paramData = new LinkedHashMap<>();
+            for (ParamVO p : params) {
+                Set<String> listSet = zsetOps.rangeByScore(
+                        "S" + blockInfo.getSeq().originOf() + "." + filterType + p.getReferenceSeq(), 0, Integer.MAX_VALUE);
+                if (listSet == null || listSet.size() == 0) continue;
+
+                List<Double> rowData = new ArrayList<>();
+                paramData.put(p.getParamKey(), rowData);
+
+                Iterator<String> iterListSet = listSet.iterator();
+                while (iterListSet.hasNext()) {
+                    String rowVal = iterListSet.next();
+                    String julianTime = rowVal.substring(0, rowVal.lastIndexOf(":"));
+                    if (!julianData.contains(julianTime)) julianData.add(julianTime);
+
+                    Double dblVal = Double.parseDouble(rowVal.substring(rowVal.lastIndexOf(":") + 1));
+                    rowData.add(dblVal);
+                }
+            }
+
+            jobjResult.add("julianSet", ServerConstants.GSON.toJsonTree(Arrays.asList(julianData)));
+            jobjResult.add("data", ServerConstants.GSON.toJsonTree(paramData.values()));
+
+            StringBuilder sbOut = new StringBuilder();
+            sbOut.append("DATE,");
+            for (ParamVO p : params) sbOut.append(p.getParamKey()).append(",");
+            sbOut.append("\n");
+            sbOut.append(",");
+            for (ParamVO p : params) sbOut.append(",");
+            sbOut.append("\n");
+
+            // flush data
+            Set<String> keys = paramData.keySet();
+            Iterator<String> iterKeys = keys.iterator();
+            while (iterKeys.hasNext()) {
+                String time = iterKeys.next();
+                List<Double> row = paramData.get(time);
+                sbOut.append(time).append(",");
+                for (Double d : row) sbOut.append(d).append(",");
+                sbOut.append("\n");
+            }
+
+            response.setHeader("Content-Type", "application/octet-stream");
+            response.addHeader("Content-Disposition",
+                    "attachment; filename=\"shortblock_" + System.currentTimeMillis() + ".csv\";");
+            response.addHeader("Content-Transfer-Encoding", "binary");
+
+            try {
+                byte[] outBuf = sbOut.toString().getBytes(StandardCharsets.UTF_8);
+                OutputStream os = response.getOutputStream();
+                os.write(outBuf, 0, outBuf.length);
+                os.flush();
+            } catch(IOException ioe) {
+                throw new HandledServiceException(411, ioe.getMessage());
+            }
+        }
+    }
+
     @RequestMapping(value = "/shortblock")
     @ResponseBody
-    public Object apiShortBlock(HttpServletRequest request, @PathVariable String serviceVersion,
-                          @RequestBody JsonObject payload, Authentication authentication) throws HandledServiceException {
+    public Object apiShortBlock(HttpServletRequest request, HttpServletResponse response,
+                                @PathVariable String serviceVersion,
+                                @RequestBody JsonObject payload, Authentication authentication) throws HandledServiceException {
         /*
         String accessToken = request.getHeader("Authorization");
         if (accessToken == null || (!accessToken.startsWith("bearer") && !accessToken.startsWith("Bearer")))
