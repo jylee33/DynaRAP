@@ -227,6 +227,7 @@ namespace DynaRAP.UControl
             }
             catch (Exception ex)
             {
+                log.Error(ex.Message);
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -351,6 +352,7 @@ namespace DynaRAP.UControl
             }
             catch (Exception ex)
             {
+                log.Error(ex.Message);
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -422,6 +424,7 @@ namespace DynaRAP.UControl
             }
             catch(Exception ex)
             {
+                log.Error(ex.Message);
                 MessageBox.Show(ex.Message);
                 return null;
             }
