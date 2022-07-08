@@ -111,6 +111,7 @@ namespace DynaRAP.Forms
             }
             catch (Exception ex)
             {
+                log.Error(ex.Message);
                 MessageBox.Show(ex.Message);
                 return null;
             }

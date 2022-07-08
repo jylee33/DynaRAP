@@ -130,7 +130,7 @@ namespace DynaRAP.UControl
             try
             {
                 string url = ConfigurationManager.AppSettings["UrlShortBlock"];
-                url += "?d=true";
+                url += "/d";
 
                 string sendData = string.Format(@"
                 {{
@@ -170,7 +170,7 @@ namespace DynaRAP.UControl
                 }
 
                 //Console.WriteLine(responseText);
-                SBListResponse result = JsonConvert.DeserializeObject<SBListResponse>(responseText);
+                JsonData result = JsonConvert.DeserializeObject<JsonData>(responseText);
 
                 if (result != null)
                 {
@@ -184,6 +184,7 @@ namespace DynaRAP.UControl
             }
             catch (Exception ex)
             {
+                log.Error(ex.Message);
                 MessageBox.Show(ex.Message);
             }
 
@@ -323,6 +324,7 @@ namespace DynaRAP.UControl
             }
             catch (Exception ex)
             {
+                log.Error(ex.Message);
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -407,6 +409,7 @@ namespace DynaRAP.UControl
             }
             catch (Exception ex)
             {
+                log.Error(ex.Message);
                 MessageBox.Show(ex.Message);
                 return null;
             }
@@ -487,6 +490,7 @@ namespace DynaRAP.UControl
             }
             catch (Exception ex)
             {
+                log.Error(ex.Message);
                 MessageBox.Show(ex.Message);
                 return null;
             }
