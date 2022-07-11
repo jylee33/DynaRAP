@@ -402,31 +402,33 @@ public class ShortBlockCreateTask {
 
                                     pstmt.clearParameters();
 
-                                    // 파라미터 평균, 민맥스 처리
-                                    Statement stmt_block = conn.createStatement();
-                                    stmt_block.executeUpdate("insert into dynarap_sblock_param_val (" +
-                                            "blockMetaSeq,blockSeq,unionParamSeq,psd,rms,n0,zarray,zPeak,zValley," +
-                                            "blockMin,blockMax,blockAvg,blockLpfMin,blockLpfMax,blockLpfAvg,blockHpfMin,blockHpfMax,blockHpfAvg)" +
-                                            " values (" +
-                                            "" + shortBlockMeta.getSeq().originOf() + "" +
-                                            "," + shortBlock.getSeq().originOf() + "" +
-                                            "," + param.getUnionParamSeq() + "" +
-                                            "," + 0 + "" +
-                                            "," + 0 + "" +
-                                            "," + 0 + "" +
-                                            "," + 0 + "" +
-                                            "," + 0 + "" +
-                                            "," + 0 + "" +
-                                            "," + blockMin + "" +
-                                            "," + blockMax + "" +
-                                            "," + (sumTotal / countTotal) + "" +
-                                            "," + blockLpfMin + "" +
-                                            "," + blockLpfMax + "" +
-                                            "," + (sumLpfTotal / countTotal) + "" +
-                                            "," + blockHpfMin + "" +
-                                            "," + blockHpfMax + "" +
-                                            "," + (sumHpfTotal / countTotal) + ")");
-                                    stmt_block.close();
+                                    if (countTotal > 0) {
+                                        // 파라미터 평균, 민맥스 처리
+                                        Statement stmt_block = conn.createStatement();
+                                        stmt_block.executeUpdate("insert into dynarap_sblock_param_val (" +
+                                                "blockMetaSeq,blockSeq,unionParamSeq,psd,rms,n0,zarray,zPeak,zValley," +
+                                                "blockMin,blockMax,blockAvg,blockLpfMin,blockLpfMax,blockLpfAvg,blockHpfMin,blockHpfMax,blockHpfAvg)" +
+                                                " values (" +
+                                                "" + shortBlockMeta.getSeq().originOf() + "" +
+                                                "," + shortBlock.getSeq().originOf() + "" +
+                                                "," + param.getUnionParamSeq() + "" +
+                                                "," + 0 + "" +
+                                                "," + 0 + "" +
+                                                "," + 0 + "" +
+                                                "," + 0 + "" +
+                                                "," + 0 + "" +
+                                                "," + 0 + "" +
+                                                "," + blockMin + "" +
+                                                "," + blockMax + "" +
+                                                "," + (sumTotal / countTotal) + "" +
+                                                "," + blockLpfMin + "" +
+                                                "," + blockLpfMax + "" +
+                                                "," + (sumLpfTotal / countTotal) + "" +
+                                                "," + blockHpfMin + "" +
+                                                "," + blockHpfMax + "" +
+                                                "," + (sumHpfTotal / countTotal) + ")");
+                                        stmt_block.close();
+                                    }
                                 }
 
                                 pstmt_insert.close();
