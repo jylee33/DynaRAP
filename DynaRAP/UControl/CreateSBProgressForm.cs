@@ -152,9 +152,9 @@ namespace DynaRAP.UControl
                             isCompleted = true;
                             timer.Stop();
 
-                            if (bFirst)
-                                MessageBox.Show(result.response.statusMessage);
-                            else
+                            //if (bFirst)
+                            //    MessageBox.Show(result.response.statusMessage);
+                            //else
                                 MessageBox.Show("완료");
 
                             this.Close();
