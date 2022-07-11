@@ -1374,7 +1374,7 @@ namespace DynaRAP.UControl
                     string grt = gridView1.GetRowCellValue(i, "GrtKey") == null ? "" : gridView1.GetRowCellValue(i, "GrtKey").ToString();
                     string fltp = gridView1.GetRowCellValue(i, "FltpKey") == null ? "" : gridView1.GetRowCellValue(i, "FltpKey").ToString();
                     string flts = gridView1.GetRowCellValue(i, "FltsKey") == null ? "" : gridView1.GetRowCellValue(i, "FltsKey").ToString();
-                    string propSeq = gridView1.GetRowCellValue(i, "PartInfo") == null ? "" : gridView1.GetRowCellValue(i, "PartInfo").ToString();
+                    string propSeq = gridView1.GetRowCellValue(i, "PropSeq") == null ? "" : gridView1.GetRowCellValue(i, "PropSeq").ToString();
                     //string partInfoSub = gridView1.GetRowCellValue(i, "PartInfoSub") == null ? "" : gridView1.GetRowCellValue(i, "PartInfoSub").ToString();
                     string paramSeq = gridView1.GetRowCellValue(i, "Seq") == null ? "" : gridView1.GetRowCellValue(i, "Seq").ToString();
                     string paramPack = gridView1.GetRowCellValue(i, "ParamPack") == null ? "" : gridView1.GetRowCellValue(i, "ParamPack").ToString();
@@ -1499,7 +1499,7 @@ namespace DynaRAP.UControl
             {
                 gridList = new List<PresetParamData>();
             }
-            gridList.Add(new PresetParamData("", "", "", "", "", "", "", "", "", "", 1));
+            gridList.Add(new PresetParamData("", "", "", "", "", "", "", "", "", "", "", 1));
             this.gridControl1.DataSource = gridList;
             //gridControl1.Update();
             gridView1.RefreshData();
@@ -1538,7 +1538,7 @@ namespace DynaRAP.UControl
                 foreach (ResponseParam param in presetParamList)
                 {
                     //AddParameter(param);
-                    gridList.Add(new PresetParamData(param.paramKey, param.adamsKey, param.zaeroKey, param.grtKey, param.fltpKey, param.fltsKey, param.propInfo.propType, param.partInfo, param.seq, param.paramPack, 1));
+                    gridList.Add(new PresetParamData(param.paramKey, param.adamsKey, param.zaeroKey, param.grtKey, param.fltpKey, param.fltsKey, param.propInfo.propType, param.partInfo, param.seq, param.propInfo.seq, param.paramPack, 1));
                 }
 
                 this.gridControl1.DataSource = gridList;

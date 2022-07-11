@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SBModuleControl));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.separatorControl1 = new DevExpress.XtraEditors.SeparatorControl();
             this.labelControl2 = new DevExpress.XtraEditors.LabelControl();
@@ -95,6 +95,7 @@
             this.lblValidSBCount = new DevExpress.XtraEditors.LabelControl();
             this.btnSaveSplittedParameter = new DevExpress.XtraEditors.ButtonEdit();
             this.imageCollection2 = new DevExpress.Utils.ImageCollection(this.components);
+            this.gridColumn12 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.separatorControl1)).BeginInit();
             this.panelData.SuspendLayout();
@@ -403,6 +404,7 @@
             this.gridColumn7,
             this.gridColumn8,
             this.gridColumn9,
+            this.gridColumn12,
             this.gridColumn10,
             this.gridColumn11});
             this.gridView1.GridControl = this.gridControl1;
@@ -635,8 +637,8 @@
             // 
             // chart1
             // 
-            chartArea2.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea2);
+            chartArea1.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea1);
             this.chart1.Location = new System.Drawing.Point(3, 813);
             this.chart1.Name = "chart1";
             this.chart1.Size = new System.Drawing.Size(623, 132);
@@ -818,6 +820,12 @@
             this.imageCollection2.Images.SetKeyName(0, "none.png");
             this.imageCollection2.Images.SetKeyName(1, "view.png");
             // 
+            // gridColumn12
+            // 
+            this.gridColumn12.Caption = "PropSeq";
+            this.gridColumn12.FieldName = "PropSeq";
+            this.gridColumn12.Name = "gridColumn12";
+            // 
             // SBModuleControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -929,5 +937,6 @@
         private DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox repositoryItemImageComboBox1;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn10;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn11;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn12;
     }
 }

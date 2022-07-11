@@ -1339,7 +1339,7 @@ namespace DynaRAP.UControl
             {
                 gridList = new List<PresetParamData>();
             }
-            gridList.Add(new PresetParamData("", "", "", "", "", "", "", "", "", "", 1));
+            gridList.Add(new PresetParamData("", "", "", "", "", "", "", "", "", "", "", 1));
             this.gridControl1.DataSource = gridList;
             //gridControl1.Update();
             gridView1.RefreshData();
@@ -1385,7 +1385,7 @@ namespace DynaRAP.UControl
                 foreach (ResponseParam param in presetParamList)
                 {
                     //AddParameter(param);
-                    gridList.Add(new PresetParamData(param.paramKey, param.adamsKey, param.zaeroKey, param.grtKey, param.fltpKey, param.fltsKey, param.propInfo.propType, param.partInfo, param.seq, param.paramPack, 1));
+                    gridList.Add(new PresetParamData(param.paramKey, param.adamsKey, param.zaeroKey, param.grtKey, param.fltpKey, param.fltsKey, param.propInfo.propType, param.partInfo, param.seq, param.propInfo.seq, param.paramPack, 1));
                 }
 
                 this.gridControl1.DataSource = gridList;

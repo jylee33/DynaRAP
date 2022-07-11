@@ -96,13 +96,29 @@ namespace DynaRAP.UControl
 
             this.repositoryItemImageComboBox1.Click += RepositoryItemImageComboBox1_Click;
 
-            GridColumn colDownload = gridView1.Columns["Download"];
-            colDownload.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
-            colDownload.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
-            colDownload.OptionsColumn.FixedWidth = true;
-            colDownload.Width = 40;
-            colDownload.Caption = "CSV";
-            colDownload.OptionsColumn.ReadOnly = true;
+            GridColumn colDownload1 = gridView1.Columns["Download1"];
+            colDownload1.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
+            colDownload1.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
+            colDownload1.OptionsColumn.FixedWidth = true;
+            colDownload1.Width = 80;
+            colDownload1.Caption = "CSV_RAW";
+            colDownload1.OptionsColumn.ReadOnly = true;
+
+            GridColumn colDownload2 = gridView1.Columns["Download2"];
+            colDownload2.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
+            colDownload2.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
+            colDownload2.OptionsColumn.FixedWidth = true;
+            colDownload2.Width = 80;
+            colDownload2.Caption = "CSV_LPF";
+            colDownload2.OptionsColumn.ReadOnly = true;
+
+            GridColumn colDownload3 = gridView1.Columns["Download3"];
+            colDownload3.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
+            colDownload3.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
+            colDownload3.OptionsColumn.FixedWidth = true;
+            colDownload3.Width = 80;
+            colDownload3.Caption = "CSV_HPF";
+            colDownload3.OptionsColumn.ReadOnly = true;
 
             this.repositoryItemImageComboBox2.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(0, 0));
             this.repositoryItemImageComboBox2.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(1, 1));
@@ -111,34 +127,71 @@ namespace DynaRAP.UControl
             this.repositoryItemImageComboBox2.Buttons[0].Visible = false;
 
             this.repositoryItemImageComboBox2.Click += RepositoryItemImageComboBox2_Click;
+
+            this.repositoryItemImageComboBox3.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(0, 0));
+            this.repositoryItemImageComboBox3.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(1, 1));
+
+            this.repositoryItemImageComboBox3.GlyphAlignment = HorzAlignment.Center;
+            this.repositoryItemImageComboBox3.Buttons[0].Visible = false;
+
+            this.repositoryItemImageComboBox3.Click += RepositoryItemImageComboBox3_Click;
+
+            this.repositoryItemImageComboBox4.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(0, 0));
+            this.repositoryItemImageComboBox4.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(1, 1));
+
+            this.repositoryItemImageComboBox4.GlyphAlignment = HorzAlignment.Center;
+            this.repositoryItemImageComboBox4.Buttons[0].Visible = false;
+
+            this.repositoryItemImageComboBox4.Click += RepositoryItemImageComboBox4_Click;
         }
 
         private void RepositoryItemImageComboBox1_Click(object sender, EventArgs e)
         {
-
+            int row = gridView1.FocusedRowHandle;
+            string blockSeq = gridView1.GetRowCellValue(row, "Seq") == null ? "" : gridView1.GetRowCellValue(row, "Seq").ToString();
+            GetSBData(blockSeq, "N");
         }
 
         private void RepositoryItemImageComboBox2_Click(object sender, EventArgs e)
         {
             int row = gridView1.FocusedRowHandle;
             string blockSeq = gridView1.GetRowCellValue(row, "Seq") == null ? "" : gridView1.GetRowCellValue(row, "Seq").ToString();
-            DownloadCSVfile(blockSeq);
+            GetSBData(blockSeq, "N", true);
         }
 
-        private void DownloadCSVfile(string blockSeq)
+        private void RepositoryItemImageComboBox3_Click(object sender, EventArgs e)
+        {
+            int row = gridView1.FocusedRowHandle;
+            string blockSeq = gridView1.GetRowCellValue(row, "Seq") == null ? "" : gridView1.GetRowCellValue(row, "Seq").ToString();
+            GetSBData(blockSeq, "L", true);
+        }
+
+        private void RepositoryItemImageComboBox4_Click(object sender, EventArgs e)
+        {
+            int row = gridView1.FocusedRowHandle;
+            string blockSeq = gridView1.GetRowCellValue(row, "Seq") == null ? "" : gridView1.GetRowCellValue(row, "Seq").ToString();
+            GetSBData(blockSeq, "H", true);
+        }
+
+        private void GetSBData(string blockSeq, string filterType, bool bDownload = false)
         {
             try
             {
                 string url = ConfigurationManager.AppSettings["UrlShortBlock"];
-                url += "/d";
+
+                if (bDownload)
+                {
+                    url += "/d";
+                }
 
                 string sendData = string.Format(@"
                 {{
                 ""command"":""row-data"",
                 ""blockSeq"":""{0}"",
-                ""filterType"": ""N""
+                ""julianRange"":["""", """"],
+                ""filterType"": ""{1}""
                 }}"
-                , blockSeq);
+                , blockSeq, filterType);
 
                 log.Info("url : " + url);
                 log.Info(sendData);
@@ -169,18 +222,23 @@ namespace DynaRAP.UControl
                     }
                 }
 
-                //Console.WriteLine(responseText);
-                JsonData result = JsonConvert.DeserializeObject<JsonData>(responseText);
+                SaveFileDialog dlg = new SaveFileDialog();
+                dlg.Filter = "Comma Separated Value files (CSV)|*.csv";
+                dlg.Title = "Save an Image File";
 
-                if (result != null)
+                if (dlg.ShowDialog() == DialogResult.OK)
                 {
-                    if (result.code != 200)
-                    {
-                    }
-                    else
-                    {
-                    }
+                    string fileName = dlg.FileName;
+
+                    FileStream fs = new FileStream(fileName, FileMode.Append, FileAccess.Write);
+                    StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
+                    sw.WriteLine(responseText);
+                    sw.Close();
+                    fs.Close();
+
                 }
+
+                //Console.WriteLine(responseText);
             }
             catch (Exception ex)
             {
@@ -252,7 +310,7 @@ namespace DynaRAP.UControl
                             byte[] byte64 = Convert.FromBase64String(sb.blockName);
                             string decName = Encoding.UTF8.GetString(byte64);
 
-                            gridList.Add(new SBData(decName, sb.julianStartAt, sb.julianEndAt, sb.seq, 1, 1));
+                            gridList.Add(new SBData(decName, sb.julianStartAt, sb.julianEndAt, sb.seq, 1, 1, 1, 1));
                         }
 
                         this.gridControl1.DataSource = gridList;
@@ -334,6 +392,10 @@ namespace DynaRAP.UControl
 
         private void InitializePartList(string flyingName)
         {
+            gridList = null;
+            gridControl1.DataSource = null;
+            gridView1.RefreshData();
+
             cboPart.Properties.Items.Clear();
             cboPart.Text = String.Empty;
 
