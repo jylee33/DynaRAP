@@ -153,33 +153,44 @@ namespace DynaRAP.UControl
         {
             int row = gridView1.FocusedRowHandle;
             string blockSeq = gridView1.GetRowCellValue(row, "Seq") == null ? "" : gridView1.GetRowCellValue(row, "Seq").ToString();
-            GetSBData(blockSeq, "N");
+            string start = gridView1.GetRowCellValue(row, "JulianStartAt") == null ? "" : gridView1.GetRowCellValue(row, "JulianStartAt").ToString();
+            string end = gridView1.GetRowCellValue(row, "JulianEndAt") == null ? "" : gridView1.GetRowCellValue(row, "JulianEndAt").ToString();
+
+            GetSBData(blockSeq, start, end, "N");
         }
 
         private void RepositoryItemImageComboBox2_Click(object sender, EventArgs e)
         {
             int row = gridView1.FocusedRowHandle;
             string blockSeq = gridView1.GetRowCellValue(row, "Seq") == null ? "" : gridView1.GetRowCellValue(row, "Seq").ToString();
+            string start = gridView1.GetRowCellValue(row, "JulianStartAt") == null ? "" : gridView1.GetRowCellValue(row, "JulianStartAt").ToString();
+            string end = gridView1.GetRowCellValue(row, "JulianEndAt") == null ? "" : gridView1.GetRowCellValue(row, "JulianEndAt").ToString();
 
             // 아래 strParamSet 을 구해서 GetSBData() 호출할 때 사용하면 해당 paramSet 에 대한 SBData 만 얻어올 수 있다.
             //List<string> sbParamList = GetSBParamList(blockSeq);
             //string strParamSet = JsonConvert.SerializeObject(sbParamList);
 
-            GetSBData(blockSeq, "N", true);
+            GetSBData(blockSeq, start, end, "N", true);
         }
 
         private void RepositoryItemImageComboBox3_Click(object sender, EventArgs e)
         {
             int row = gridView1.FocusedRowHandle;
             string blockSeq = gridView1.GetRowCellValue(row, "Seq") == null ? "" : gridView1.GetRowCellValue(row, "Seq").ToString();
-            GetSBData(blockSeq, "L", true);
+            string start = gridView1.GetRowCellValue(row, "JulianStartAt") == null ? "" : gridView1.GetRowCellValue(row, "JulianStartAt").ToString();
+            string end = gridView1.GetRowCellValue(row, "JulianEndAt") == null ? "" : gridView1.GetRowCellValue(row, "JulianEndAt").ToString();
+
+            GetSBData(blockSeq, start, end, "L", true);
         }
 
         private void RepositoryItemImageComboBox4_Click(object sender, EventArgs e)
         {
             int row = gridView1.FocusedRowHandle;
             string blockSeq = gridView1.GetRowCellValue(row, "Seq") == null ? "" : gridView1.GetRowCellValue(row, "Seq").ToString();
-            GetSBData(blockSeq, "H", true);
+            string start = gridView1.GetRowCellValue(row, "JulianStartAt") == null ? "" : gridView1.GetRowCellValue(row, "JulianStartAt").ToString();
+            string end = gridView1.GetRowCellValue(row, "JulianEndAt") == null ? "" : gridView1.GetRowCellValue(row, "JulianEndAt").ToString();
+
+            GetSBData(blockSeq, start, end, "H", true);
         }
 
         private List<string> GetSBParamList(string blockSeq)
@@ -251,7 +262,7 @@ namespace DynaRAP.UControl
 
         }
 
-        private void GetSBData(string blockSeq, string filterType, bool bDownload = false)
+        private void GetSBData(string blockSeq, string start, string end,  string filterType, bool bDownload = false)
         {
             try
             {
@@ -266,10 +277,10 @@ namespace DynaRAP.UControl
                 {{
                 ""command"":""row-data"",
                 ""blockSeq"":""{0}"",
-                ""julianRange"":["""", """"],
-                ""filterType"": ""{1}""
+                ""julianRange"":[""{1}"", ""{2}""],
+                ""filterType"": ""{3}""
                 }}"
-                , blockSeq, filterType);
+                , blockSeq, start, end, filterType);
 
                 log.Info("url : " + url);
                 log.Info(sendData);
