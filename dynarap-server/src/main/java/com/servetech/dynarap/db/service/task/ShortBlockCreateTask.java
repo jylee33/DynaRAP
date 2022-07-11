@@ -316,6 +316,17 @@ public class ShortBlockCreateTask {
                                     String lpfKey = "S" + shortBlock.getSeq().originOf() + ".L" + param.getUnionParamSeq();
                                     String hpfKey = "S" + shortBlock.getSeq().originOf() + ".H" + param.getUnionParamSeq();
 
+                                    int countTotal = 0;
+                                    double sumTotal = 0.0;
+                                    double sumLpfTotal = 0.0;
+                                    double sumHpfTotal = 0.0;
+                                    double blockMin = Integer.MAX_VALUE;
+                                    double blockMax = Integer.MIN_VALUE;
+                                    double blockLpfMin = Integer.MAX_VALUE;
+                                    double blockLpfMax = Integer.MIN_VALUE;
+                                    double blockHpfMin = Integer.MAX_VALUE;
+                                    double blockHpfMax = Integer.MIN_VALUE;
+
                                     int batchCount = 1;
                                     while (rs.next()) {
                                         int rowNo = rs.getInt("rowNo");
@@ -368,6 +379,19 @@ public class ShortBlockCreateTask {
                                         }
                                         else
                                             zsetOps.add(rowKey, rowId + ":" + rs.getString("paramValStr"), rowNo);
+
+                                        sumTotal += dblVal;
+                                        sumLpfTotal += lpfVal;
+                                        sumHpfTotal += hpfVal;
+
+                                        blockMin = Math.min(blockMin, dblVal);
+                                        blockMax = Math.min(blockMax, dblVal);
+                                        blockLpfMin = Math.min(blockLpfMin, dblVal);
+                                        blockLpfMax = Math.min(blockLpfMax, dblVal);
+                                        blockHpfMin = Math.min(blockHpfMin, dblVal);
+                                        blockHpfMax = Math.min(blockHpfMax, dblVal);
+
+                                        countTotal++;
                                     }
                                     if ((batchCount % 1000) > 0) {
                                         pstmt_insert.executeBatch();
@@ -377,6 +401,32 @@ public class ShortBlockCreateTask {
                                     rs.close();
 
                                     pstmt.clearParameters();
+
+                                    // 파라미터 평균, 민맥스 처리
+                                    Statement stmt_block = conn.createStatement();
+                                    stmt_block.executeUpdate("insert into dynarap_sblock_param_val (" +
+                                            "blockMetaSeq,blockSeq,unionParamSeq,psd,rms,n0,zarray,zPeak,zValley," +
+                                            "blockMin,blockMax,blockAvg,blockLpfMin,blockLpfMax,blockLpfAvg,blockHpfMin,blockHpfMax,blockHpfAvg)" +
+                                            " values (" +
+                                            "" + shortBlockMeta.getSeq().originOf() + "" +
+                                            "," + shortBlock.getSeq().originOf() + "" +
+                                            "," + param.getUnionParamSeq() + "" +
+                                            "," + 0 + "" +
+                                            "," + 0 + "" +
+                                            "," + 0 + "" +
+                                            "," + 0 + "" +
+                                            "," + 0 + "" +
+                                            "," + 0 + "" +
+                                            "," + blockMin + "" +
+                                            "," + blockMax + "" +
+                                            "," + (sumTotal / countTotal) + "" +
+                                            "," + blockLpfMin + "" +
+                                            "," + blockLpfMax + "" +
+                                            "," + (sumLpfTotal / countTotal) + "" +
+                                            "," + blockHpfMin + "" +
+                                            "," + blockHpfMax + "" +
+                                            "," + (sumHpfTotal / countTotal) + ")");
+                                    stmt_block.close();
                                 }
 
                                 pstmt_insert.close();
