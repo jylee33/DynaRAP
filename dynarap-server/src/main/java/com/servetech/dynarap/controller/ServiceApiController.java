@@ -950,13 +950,12 @@ public class ServiceApiController extends ApiController {
                                 new CryptoField(Long.parseLong(p.substring(1))));
                         if (param == null) continue;
                     }
-
                     params.add(param);
                 }
             }
             else {
                 for (int i = 0; i < jarrParams.size(); i++) {
-                    Long paramKey = jarrParams.get(i).getAsLong();
+                    Long paramKey = CryptoField.decode(jarrParams.get(i).getAsString(), 0L).originOf();
                     ParamVO param = getService(ParamService.class).getPresetParamBySeq(new CryptoField(paramKey));
                     if (param == null) {
                         param = getService(ParamService.class).getNotMappedParamBySeq(
@@ -1096,13 +1095,12 @@ public class ServiceApiController extends ApiController {
                                 new CryptoField(Long.parseLong(p.substring(1))));
                         if (param == null) continue;
                     }
-
                     params.add(param);
                 }
             }
             else {
                 for (int i = 0; i < jarrParams.size(); i++) {
-                    Long paramKey = jarrParams.get(i).getAsLong();
+                    Long paramKey = CryptoField.decode(jarrParams.get(i).getAsString(), 0L).originOf();
                     ParamVO param = getService(ParamService.class).getPresetParamBySeq(new CryptoField(paramKey));
                     if (param == null) {
                         param = getService(ParamService.class).getNotMappedParamBySeq(
@@ -1223,6 +1221,32 @@ public class ServiceApiController extends ApiController {
             return ResponseHelper.response(200, "Success - Part Info", partInfo);
         }
 
+        if (command.equals("param-list")) {
+            CryptoField partSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "partSeq"))
+                partSeq = CryptoField.decode(payload.get("partSeq").getAsString(), 0L);
+
+            JsonObject jobjParams = new JsonObject();
+            List<ParamVO> resultParams = new ArrayList<>();
+            List<CryptoField> paramList = getService(ParamService.class).getPartParamList(partSeq);
+            if (paramList == null) paramList = new ArrayList<>();
+
+            jobjParams.add("paramSet", ServerConstants.GSON.toJsonTree(paramList));
+
+            for (CryptoField seq : paramList) {
+                ParamVO param = getService(ParamService.class).getPresetParamBySeq(seq);
+                if (param == null) {
+                    param = getService(ParamService.class).getNotMappedParamBySeq(seq);
+                    if (param == null) continue;
+                }
+                resultParams.add(param);
+            }
+
+            jobjParams.add("paramData", ServerConstants.GSON.toJsonTree(resultParams));
+
+            return ResponseHelper.response(200, "Success - Part Info", jobjParams);
+        }
+
         // 업로드 리스트 가져가기
         if (command.equals("create-shortblock")) {
             ShortBlockVO.Meta shortBlockMeta = getService(PartService.class).doCreateShortBlock(user.getUid(), payload);
@@ -1316,13 +1340,12 @@ public class ServiceApiController extends ApiController {
                                 new CryptoField(Long.parseLong(p.substring(1))));
                         if (param == null) continue;
                     }
-
                     params.add(param);
                 }
             }
             else {
                 for (int i = 0; i < jarrParams.size(); i++) {
-                    Long paramKey = jarrParams.get(i).getAsLong();
+                    Long paramKey = CryptoField.decode(jarrParams.get(i).getAsString(), 0L).originOf();
                     ParamVO param = getService(ParamService.class).getPresetParamBySeq(new CryptoField(paramKey));
                     if (param == null) {
                         param = getService(ParamService.class).getNotMappedParamBySeq(
@@ -1430,13 +1453,12 @@ public class ServiceApiController extends ApiController {
                                 new CryptoField(Long.parseLong(p.substring(1))));
                         if (param == null) continue;
                     }
-
                     params.add(param);
                 }
             }
             else {
                 for (int i = 0; i < jarrParams.size(); i++) {
-                    Long paramKey = jarrParams.get(i).getAsLong();
+                    Long paramKey = CryptoField.decode(jarrParams.get(i).getAsString(), 0L).originOf();
                     ParamVO param = getService(ParamService.class).getPresetParamBySeq(new CryptoField(paramKey));
                     if (param == null) {
                         param = getService(ParamService.class).getNotMappedParamBySeq(
@@ -1516,13 +1538,12 @@ public class ServiceApiController extends ApiController {
                                 new CryptoField(Long.parseLong(p.substring(1))));
                         if (param == null) continue;
                     }
-
                     params.add(param);
                 }
             }
             else {
                 for (int i = 0; i < jarrParams.size(); i++) {
-                    Long paramKey = jarrParams.get(i).getAsLong();
+                    Long paramKey = CryptoField.decode(jarrParams.get(i).getAsString(), 0L).originOf();
                     ParamVO param = getService(ParamService.class).getPresetParamBySeq(new CryptoField(paramKey));
                     if (param == null) {
                         param = getService(ParamService.class).getNotMappedParamBySeq(
@@ -1662,13 +1683,12 @@ public class ServiceApiController extends ApiController {
                                 new CryptoField(Long.parseLong(p.substring(1))));
                         if (param == null) continue;
                     }
-
                     params.add(param);
                 }
             }
             else {
                 for (int i = 0; i < jarrParams.size(); i++) {
-                    Long paramKey = jarrParams.get(i).getAsLong();
+                    Long paramKey = CryptoField.decode(jarrParams.get(i).getAsString(), 0L).originOf();
                     ParamVO param = getService(ParamService.class).getPresetParamBySeq(new CryptoField(paramKey));
                     if (param == null) {
                         param = getService(ParamService.class).getNotMappedParamBySeq(
@@ -1790,6 +1810,32 @@ public class ServiceApiController extends ApiController {
             return ResponseHelper.response(200, "Success - ShortBlock Info", shortBlockInfo);
         }
 
+        if (command.equals("param-list")) {
+            CryptoField blockSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "blockSeq"))
+                blockSeq = CryptoField.decode(payload.get("blockSeq").getAsString(), 0L);
+
+            JsonObject jobjParams = new JsonObject();
+            List<ParamVO> resultParams = new ArrayList<>();
+            List<CryptoField> paramList = getService(ParamService.class).getShortBlockParamList(blockSeq);
+            if (paramList == null) paramList = new ArrayList<>();
+
+            jobjParams.add("paramSet", ServerConstants.GSON.toJsonTree(paramList));
+
+            for (CryptoField seq : paramList) {
+                ParamVO param = getService(ParamService.class).getPresetParamBySeq(seq);
+                if (param == null) {
+                    param = getService(ParamService.class).getNotMappedParamBySeq(seq);
+                    if (param == null) continue;
+                }
+                resultParams.add(param);
+            }
+
+            jobjParams.add("paramData", ServerConstants.GSON.toJsonTree(resultParams));
+
+            return ResponseHelper.response(200, "Success - Part Info", jobjParams);
+        }
+
         if (command.equals("remove-meta")) {
             CryptoField blockMetaSeq = CryptoField.LZERO;
             if (!checkJsonEmpty(payload, "blockMetaSeq"))
@@ -1828,13 +1874,12 @@ public class ServiceApiController extends ApiController {
                                 new CryptoField(Long.parseLong(p.substring(1))));
                         if (param == null) continue;
                     }
-
                     params.add(param);
                 }
             }
             else {
                 for (int i = 0; i < jarrParams.size(); i++) {
-                    Long paramKey = jarrParams.get(i).getAsLong();
+                    Long paramKey = CryptoField.decode(jarrParams.get(i).getAsString(), 0L).originOf();
                     ParamVO param = getService(ParamService.class).getPresetParamBySeq(new CryptoField(paramKey));
                     if (param == null) {
                         param = getService(ParamService.class).getNotMappedParamBySeq(
@@ -1942,13 +1987,12 @@ public class ServiceApiController extends ApiController {
                                 new CryptoField(Long.parseLong(p.substring(1))));
                         if (param == null) continue;
                     }
-
                     params.add(param);
                 }
             }
             else {
                 for (int i = 0; i < jarrParams.size(); i++) {
-                    Long paramKey = jarrParams.get(i).getAsLong();
+                    Long paramKey = CryptoField.decode(jarrParams.get(i).getAsString(), 0L).originOf();
                     ParamVO param = getService(ParamService.class).getPresetParamBySeq(new CryptoField(paramKey));
                     if (param == null) {
                         param = getService(ParamService.class).getNotMappedParamBySeq(

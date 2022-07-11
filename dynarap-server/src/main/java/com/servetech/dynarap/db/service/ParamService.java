@@ -831,4 +831,25 @@ public class ParamService {
             throw new HandledServiceException(410, e.getMessage());
         }
     }
+
+    public List<CryptoField> getPartParamList(CryptoField partSeq) throws HandledServiceException {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("partSeq", partSeq);
+            return paramMapper.selectPartParamList(params);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    public List<CryptoField> getShortBlockParamList(CryptoField blockSeq) throws HandledServiceException {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("blockSeq", blockSeq);
+            return paramMapper.selectShortBlockParamList(params);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
 }

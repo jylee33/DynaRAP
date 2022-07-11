@@ -521,4 +521,20 @@ public interface ParamMapper {
     void deleteAllPresetParam(Map<String, Object> params) throws Exception;
 
 
+    @Select({
+            "<script>" +
+                    "select distinct presetParamSeq from dynarap_part_raw " +
+                    "where partSeq = #{partSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "</script>"
+    })
+    List<CryptoField> selectPartParamList(Map<String, Object> params) throws Exception;
+
+    @Select({
+            "<script>" +
+                    "select distinct blockParamSeq from dynarap_sblock_raw " +
+                    "where blockSeq = #{blockSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "</script>"
+    })
+    List<CryptoField> selectShortBlockParamList(Map<String, Object> params) throws Exception;
+
 }
