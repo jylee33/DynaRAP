@@ -143,6 +143,10 @@ namespace DynaRAP.UControl
             this.repositoryItemImageComboBox4.Buttons[0].Visible = false;
 
             this.repositoryItemImageComboBox4.Click += RepositoryItemImageComboBox4_Click;
+
+#if DEBUG
+            gridView1.Columns["Seq"].Visible = true;
+#endif
         }
 
         private void RepositoryItemImageComboBox1_Click(object sender, EventArgs e)
@@ -156,6 +160,11 @@ namespace DynaRAP.UControl
         {
             int row = gridView1.FocusedRowHandle;
             string blockSeq = gridView1.GetRowCellValue(row, "Seq") == null ? "" : gridView1.GetRowCellValue(row, "Seq").ToString();
+
+            // 아래 strParamSet 을 구해서 GetSBData() 호출할 때 사용하면 해당 paramSet 에 대한 SBData 만 얻어올 수 있다.
+            //List<string> sbParamList = GetSBParamList(blockSeq);
+            //string strParamSet = JsonConvert.SerializeObject(sbParamList);
+
             GetSBData(blockSeq, "N", true);
         }
 
@@ -171,6 +180,75 @@ namespace DynaRAP.UControl
             int row = gridView1.FocusedRowHandle;
             string blockSeq = gridView1.GetRowCellValue(row, "Seq") == null ? "" : gridView1.GetRowCellValue(row, "Seq").ToString();
             GetSBData(blockSeq, "H", true);
+        }
+
+        private List<string> GetSBParamList(string blockSeq)
+        {
+            try
+            {
+                string url = ConfigurationManager.AppSettings["UrlShortBlock"];
+
+                string sendData = string.Format(@"
+                {{
+                ""command"":""param-list"",
+                ""blockSeq"":""{0}""
+                }}"
+                , blockSeq);
+
+                log.Info("url : " + url);
+                log.Info(sendData);
+
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Timeout = 30 * 1000;
+                //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+
+                // POST할 데이타를 Request Stream에 쓴다
+                byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+                request.ContentLength = bytes.Length; // 바이트수 지정
+
+                using (Stream reqStream = request.GetRequestStream())
+                {
+                    reqStream.Write(bytes, 0, bytes.Length);
+                }
+
+                // Response 처리
+                string responseText = string.Empty;
+                using (WebResponse resp = request.GetResponse())
+                {
+                    Stream respStream = resp.GetResponseStream();
+                    using (StreamReader sr = new StreamReader(respStream))
+                    {
+                        responseText = sr.ReadToEnd();
+                    }
+                }
+
+                SBParamListResponse result = JsonConvert.DeserializeObject<SBParamListResponse>(responseText);
+
+                if (result != null)
+                {
+                    if (result.code != 200)
+                    {
+                        return null;
+                    }
+                    else
+                    {
+                        return result.response.paramSet;
+                    }
+                }
+
+                //Console.WriteLine(responseText);
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex.Message);
+                MessageBox.Show(ex.Message);
+                return null;
+            }
+
+            return null;
+
         }
 
         private void GetSBData(string blockSeq, string filterType, bool bDownload = false)
