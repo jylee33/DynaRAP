@@ -385,11 +385,11 @@ public class ShortBlockCreateTask {
                                         sumHpfTotal += hpfVal;
 
                                         blockMin = Math.min(blockMin, dblVal);
-                                        blockMax = Math.min(blockMax, dblVal);
+                                        blockMax = Math.max(blockMax, dblVal);
                                         blockLpfMin = Math.min(blockLpfMin, dblVal);
-                                        blockLpfMax = Math.min(blockLpfMax, dblVal);
+                                        blockLpfMax = Math.max(blockLpfMax, dblVal);
                                         blockHpfMin = Math.min(blockHpfMin, dblVal);
-                                        blockHpfMax = Math.min(blockHpfMax, dblVal);
+                                        blockHpfMax = Math.max(blockHpfMax, dblVal);
 
                                         countTotal++;
                                     }
