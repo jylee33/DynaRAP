@@ -1035,7 +1035,7 @@ public class ServiceApiController extends ApiController {
 
             StringBuilder sbOut = new StringBuilder();
             sbOut.append("DATE,");
-            for (ParamVO p : params) sbOut.append(p.getParamKey()).append(",");
+            for (ParamVO p : params) sbOut.append(p.getParamKey().replaceAll(",", "_")).append(",");
             sbOut.append("\n");
             sbOut.append(",");
             for (ParamVO p : params) sbOut.append(",");
@@ -1137,7 +1137,7 @@ public class ServiceApiController extends ApiController {
 
             StringBuilder sbOut = new StringBuilder();
             sbOut.append("DATE,");
-            for (ParamVO p : params) sbOut.append(p.getParamKey()).append(",");
+            for (ParamVO p : params) sbOut.append(p.getParamKey().replaceAll(",", "_")).append(",");
             sbOut.append("\n");
             sbOut.append(",");
             for (ParamVO p : params) sbOut.append(",");
@@ -1623,7 +1623,7 @@ public class ServiceApiController extends ApiController {
 
             StringBuilder sbOut = new StringBuilder();
             sbOut.append("DATE,");
-            for (ParamVO p : params) sbOut.append(p.getParamKey()).append(",");
+            for (ParamVO p : params) sbOut.append(p.getParamKey().replaceAll(",", "_")).append(",");
             sbOut.append("\n");
             sbOut.append(",");
             for (ParamVO p : params) sbOut.append(",");
@@ -1725,7 +1725,7 @@ public class ServiceApiController extends ApiController {
 
             StringBuilder sbOut = new StringBuilder();
             sbOut.append("DATE,");
-            for (ParamVO p : params) sbOut.append(p.getParamKey()).append(",");
+            for (ParamVO p : params) sbOut.append(p.getParamKey().replaceAll(",", "_")).append(",");
             sbOut.append("\n");
             sbOut.append(",");
             for (ParamVO p : params) sbOut.append(",");
