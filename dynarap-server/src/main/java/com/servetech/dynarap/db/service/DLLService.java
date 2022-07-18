@@ -272,8 +272,14 @@ public class DLLService {
                 ndr.setParamSeq(dllRaw.getParamSeq());
                 if (dllParam.getParamType().equalsIgnoreCase("string"))
                     ndr.setParamValStr(jarrData.get(i).getAsString());
-                else
-                    ndr.setParamVal(jarrData.get(i).getAsDouble());
+                else {
+                    Double dblValue = 0.0;
+                    try {
+                        dblValue = Double.parseDouble(jarrData.get(i).getAsString());
+                    } catch(NumberFormatException nfe) {
+                    }
+                    ndr.setParamVal(dblValue);
+                }
                 dllMapper.insertDLLData(ndr);
                 dllData.add(ndr);
             }
