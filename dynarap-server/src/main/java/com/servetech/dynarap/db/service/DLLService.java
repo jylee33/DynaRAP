@@ -1,5 +1,6 @@
 package com.servetech.dynarap.db.service;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.servetech.dynarap.config.ServerConstants;
 import com.servetech.dynarap.controller.ApiController;
@@ -243,11 +244,54 @@ public class DLLService {
     }
 
     @Transactional
+    public List<DLLVO.Raw> insertDLLDataBulk(CryptoField.NAuth uid, JsonObject payload) throws HandledServiceException {
+        try {
+            DLLVO.Raw dllRaw = ServerConstants.GSON.fromJson(payload, DLLVO.Raw.class);
+            if (dllRaw == null || dllRaw.getDllSeq() == null || dllRaw.getDllSeq().isEmpty()
+                    || dllRaw.getParamSeq() == null || dllRaw.getParamSeq().isEmpty()) {
+                throw new HandledServiceException(411, "요청 내용이 DLL 데이터 형식에 맞지 않습니다.");
+            }
+
+            // 파람 정보
+            DLLVO.Param dllParam = getDLLParamBySeq(dllRaw.getParamSeq());
+
+            // 해당 파라미터 데이터 지우기
+            deleteDLLDataByParam(payload);
+
+            // 전달된 데이터로 채우기
+            JsonArray jarrData = null;
+            if (!ApiController.checkJsonEmpty(payload, "data"))
+                jarrData = payload.get("data").getAsJsonArray();
+
+            List<DLLVO.Raw> dllData = new ArrayList<>();
+            int rowNo = 1;
+            for (int i = 0; i < jarrData.size(); i++) {
+                DLLVO.Raw ndr = new DLLVO.Raw();
+                ndr.setDllSeq(dllRaw.getDllSeq());
+                ndr.setRowNo(rowNo++);
+                ndr.setParamSeq(dllRaw.getParamSeq());
+                if (dllParam.getParamType().equalsIgnoreCase("string"))
+                    ndr.setParamValStr(jarrData.get(i).getAsString());
+                else
+                    ndr.setParamVal(jarrData.get(i).getAsDouble());
+                dllMapper.insertDLLData(ndr);
+                dllData.add(ndr);
+            }
+
+            return dllData;
+        } catch (Exception e) {
+            throw new HandledServiceException(411, e.getMessage());
+        }
+    }
+
+    @Transactional
     public DLLVO.Raw insertDLLData(CryptoField.NAuth uid, JsonObject payload) throws HandledServiceException {
         try {
             DLLVO.Raw dllRaw = ServerConstants.GSON.fromJson(payload, DLLVO.Raw.class);
-            if (dllRaw == null || dllRaw.getDllSeq() == null || dllRaw.getDllSeq().isEmpty() || dllRaw.getParamSeq() == null || dllRaw.getParamSeq().isEmpty())
+            if (dllRaw == null || dllRaw.getDllSeq() == null || dllRaw.getDllSeq().isEmpty()
+                    || dllRaw.getParamSeq() == null || dllRaw.getParamSeq().isEmpty()) {
                 throw new HandledServiceException(411, "요청 내용이 DLL 데이터 형식에 맞지 않습니다.");
+            }
 
             int maxRowNo = getDLLDataMaxRow(dllRaw.getDllSeq(), dllRaw.getParamSeq());
             dllRaw.setRowNo(maxRowNo + 1);
@@ -380,8 +424,8 @@ public class DLLService {
                 throw new HandledServiceException(411, "요청 파라미터 오류입니다. [필수 파라미터 누락]");
 
             CryptoField dllParamSeq = CryptoField.LZERO;
-            if (!ApiController.checkJsonEmpty(payload, "dllParamSeq"))
-                dllParamSeq = CryptoField.decode(payload.get("dllParamSeq").getAsString(), 0L);
+            if (!ApiController.checkJsonEmpty(payload, "paramSeq"))
+                dllParamSeq = CryptoField.decode(payload.get("paramSeq").getAsString(), 0L);
 
             Map<String, Object> params = new HashMap<>();
             params.put("dllSeq", dllSeq);
