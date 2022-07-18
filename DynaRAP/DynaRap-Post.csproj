@@ -135,6 +135,7 @@
     <Compile Include="Common\DrawTypes.cs" />
     <Compile Include="Common\ParamProperty.cs" />
     <Compile Include="Common\SeriesPointData.cs" />
+    <Compile Include="Data\DllParamDataAddBulkRequest.cs" />
     <Compile Include="Data\SBParamListResponse.cs" />
     <Compile Include="Data\DllParamDataResponse.cs" />
     <Compile Include="Data\DllParamDataListResponse.cs" />

@@ -435,7 +435,87 @@ namespace DynaRAP.UControl
 
         private void btnSave_Click(object sender, EventArgs e)
         {
+            AddDllParamDataBulk();
+        }
+
+        private bool AddDllParamDataBulk()
+        {
+            try
+            {
+                DllParamDataAddBulkRequest req = new DllParamDataAddBulkRequest();
+
+                req.command = "data-add-bulk";
+                req.dllSeq = this.dllSeq;
+                req.paramSeq = this.dllParamSeq;
+                req.data = new List<string>();
+
+                for (int i = 0; i < gridView1.RowCount; i++)
+                {
+                    string gridData = gridView1.GetRowCellValue(i, "Data") == null ? "" : gridView1.GetRowCellValue(i, "Data").ToString();
+
+                    req.data.Add(gridData);
+                }
+
+                string url = ConfigurationManager.AppSettings["UrlDLL"];
+
+                var json = JsonConvert.SerializeObject(req);
+
+                //Console.WriteLine(json);
+                log.Info("url : " + url);
+                log.Info(json);
+
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Timeout = 30 * 1000;
+                //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+
+                // POST할 데이타를 Request Stream에 쓴다
+                byte[] bytes = Encoding.ASCII.GetBytes(json);
+                request.ContentLength = bytes.Length; // 바이트수 지정
+
+                using (Stream reqStream = request.GetRequestStream())
+                {
+                    reqStream.Write(bytes, 0, bytes.Length);
+                }
+
+                // Response 처리
+                string responseText = string.Empty;
+                using (WebResponse resp = request.GetResponse())
+                {
+                    Stream respStream = resp.GetResponseStream();
+                    using (StreamReader sr = new StreamReader(respStream))
+                    {
+                        responseText = sr.ReadToEnd();
+                    }
+                }
+
+                //Console.WriteLine(responseText);
+                JsonData result = JsonConvert.DeserializeObject<JsonData>(responseText);
+
+                if (result != null)
+                {
+                    if (result.code != 200)
+                    {
+                        MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex.Message);
+                MessageBox.Show(ex.Message);
+                return false;
+            }
+
+            return true;
 
         }
+
     }
 }
