@@ -517,9 +517,15 @@ public class ServiceApiController extends ApiController {
             return ResponseHelper.response(200, "Success - DLL Data List", jobjResult);
         }
 
+        /*
         if (command.equals("data-add")) {
             DLLVO.Raw dllRaw = getService(DLLService.class).insertDLLData(user.getUid(), payload);
             return ResponseHelper.response(200, "Success - DLL Data Add", dllRaw);
+        } */
+
+        if (command.equals("data-add-bulk")) {
+            List<DLLVO.Raw> dllRawData = getService(DLLService.class).insertDLLDataBulk(user.getUid(), payload);
+            return ResponseHelper.response(200, "Success - DLL Data Add Bulk", dllRawData);
         }
 
         if (command.equals("data-modify")) {
@@ -565,35 +571,6 @@ public class ServiceApiController extends ApiController {
                         getService(DLLService.class).deleteDLLData(dllSeq);
                     }
                 }
-                else {
-                    // 일부 내용만 삭제 (사실상 업데이트)
-                    for (int i = 0; i < jarrParams.size(); i++) {
-                        DLLVO.Param dp = paramMap.get(jarrParams.get(i).getAsString());
-                        if (dp == null) continue;
-
-                        List<DLLVO.Raw> dllRaws = getService(DLLService.class).getDLLData(dllSeq, dp.getSeq());
-                        if (dllRaws == null) continue;
-
-                        for (DLLVO.Raw dr : dllRaws) {
-                            if (jarrRows != null && jarrRows.size() == 2) {
-                                if (jarrRows.get(1).getAsInt() == 0)
-                                    jarrRows.set(1, new JsonPrimitive(Integer.MAX_VALUE));
-
-                                if (dr.getRowNo() >= jarrRows.get(0).getAsInt()
-                                        && dr.getRowNo() <= jarrRows.get(1).getAsInt()) {
-                                    dr.setParamVal(0.0);
-                                    dr.setParamValStr("");
-                                    getService(DLLService.class).updateDLLData(dr);
-                                }
-                            }
-                            else {
-                                dr.setParamVal(0.0);
-                                dr.setParamValStr("");
-                                getService(DLLService.class).updateDLLData(dr);
-                            }
-                        }
-                    }
-                }
             }
             else {
                 // row 조건에 따라서 지우기, 해당 row 전체 삭제만 있음.
@@ -601,7 +578,8 @@ public class ServiceApiController extends ApiController {
                     if (jarrRows.get(1).getAsInt() == 0)
                         jarrRows.set(1, new JsonPrimitive(Integer.MAX_VALUE));
 
-                    getService(DLLService.class).deleteDLLDataByRow(dllSeq, jarrRows.get(0).getAsInt(), jarrRows.get(1).getAsInt());
+                    getService(DLLService.class).deleteDLLDataByRow(dllSeq,
+                            jarrRows.get(0).getAsInt(), jarrRows.get(1).getAsInt());
                 }
             }
 
@@ -1035,7 +1013,7 @@ public class ServiceApiController extends ApiController {
 
             StringBuilder sbOut = new StringBuilder();
             sbOut.append("DATE,");
-            for (ParamVO p : params) sbOut.append(p.getParamKey()).append(",");
+            for (ParamVO p : params) sbOut.append(p.getParamKey().replaceAll(",", "_")).append(",");
             sbOut.append("\n");
             sbOut.append(",");
             for (ParamVO p : params) sbOut.append(",");
@@ -1137,7 +1115,7 @@ public class ServiceApiController extends ApiController {
 
             StringBuilder sbOut = new StringBuilder();
             sbOut.append("DATE,");
-            for (ParamVO p : params) sbOut.append(p.getParamKey()).append(",");
+            for (ParamVO p : params) sbOut.append(p.getParamKey().replaceAll(",", "_")).append(",");
             sbOut.append("\n");
             sbOut.append(",");
             for (ParamVO p : params) sbOut.append(",");
@@ -1623,7 +1601,7 @@ public class ServiceApiController extends ApiController {
 
             StringBuilder sbOut = new StringBuilder();
             sbOut.append("DATE,");
-            for (ParamVO p : params) sbOut.append(p.getParamKey()).append(",");
+            for (ParamVO p : params) sbOut.append(p.getParamKey().replaceAll(",", "_")).append(",");
             sbOut.append("\n");
             sbOut.append(",");
             for (ParamVO p : params) sbOut.append(",");
@@ -1725,7 +1703,7 @@ public class ServiceApiController extends ApiController {
 
             StringBuilder sbOut = new StringBuilder();
             sbOut.append("DATE,");
-            for (ParamVO p : params) sbOut.append(p.getParamKey()).append(",");
+            for (ParamVO p : params) sbOut.append(p.getParamKey().replaceAll(",", "_")).append(",");
             sbOut.append("\n");
             sbOut.append(",");
             for (ParamVO p : params) sbOut.append(",");
