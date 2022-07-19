@@ -502,6 +502,7 @@ namespace DynaRAP.UControl
                     }
                     else
                     {
+                        MessageBox.Show(result.message, "Success", MessageBoxButtons.OK);
                         return true;
                     }
                 }
