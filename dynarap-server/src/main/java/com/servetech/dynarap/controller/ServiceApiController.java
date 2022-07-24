@@ -7,6 +7,7 @@ import com.servetech.dynarap.config.ServerConstants;
 import com.servetech.dynarap.db.service.*;
 import com.servetech.dynarap.db.service.task.PartImportTask;
 import com.servetech.dynarap.db.type.CryptoField;
+import com.servetech.dynarap.db.type.LongDate;
 import com.servetech.dynarap.db.type.String64;
 import com.servetech.dynarap.ext.HandledServiceException;
 import com.servetech.dynarap.ext.ResponseHelper;
@@ -2006,6 +2007,140 @@ public class ServiceApiController extends ApiController {
             jobjResult.add("data", ServerConstants.GSON.toJsonTree(paramData.values()));
 
             return ResponseHelper.response(200, "Success - columnData", jobjResult);
+        }
+
+        throw new HandledServiceException(411, "명령이 정의되지 않았습니다.");
+    }
+
+    @RequestMapping(value = "/data-prop")
+    @ResponseBody
+    public Object apiDataProp(HttpServletRequest request, HttpServletResponse response,
+                                @PathVariable String serviceVersion,
+                                @RequestBody JsonObject payload, Authentication authentication) throws HandledServiceException {
+        /*
+        String accessToken = request.getHeader("Authorization");
+        if (accessToken == null || (!accessToken.startsWith("bearer") && !accessToken.startsWith("Bearer")))
+            return ResponseHelper.error(403, "권한이 없습니다.");
+
+        String username = authentication.getPrincipal().toString();
+        */
+        UserVO user = getService(UserService.class).getUser("admin@dynarap@dynarap");
+
+        if (checkJsonEmpty(payload, "command"))
+            throw new HandledServiceException(404, "파라미터를 확인하세요.");
+
+        String command = payload.get("command").getAsString();
+
+        if (command.equals("list")) {
+            CryptoField referenceKey = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "referenceKey"))
+                referenceKey = CryptoField.decode(payload.get("referenceKey").getAsString(), 0L);
+
+            String referenceType = "";
+            if (!checkJsonEmpty(payload, "referenceType"))
+                referenceType = payload.get("referenceType").getAsString();
+
+            if (referenceType == null || referenceType.isEmpty() || referenceKey.isEmpty())
+                throw new HandledServiceException(411, "조회를 위한 필수값이 없습니다.");
+
+            List<DataPropVO> dataPropList = getService(RawService.class).getDataPropList(referenceType, referenceKey);
+
+            return ResponseHelper.response(200, "Success - DataProp list", dataPropList);
+        }
+
+        if (command.equals("add")) {
+            CryptoField referenceKey = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "referenceKey"))
+                referenceKey = CryptoField.decode(payload.get("referenceKey").getAsString(), 0L);
+
+            String referenceType = "";
+            if (!checkJsonEmpty(payload, "referenceType"))
+                referenceType = payload.get("referenceType").getAsString();
+
+            String64 propName = null;
+            if (!checkJsonEmpty(payload, "propName"))
+                propName = String64.decode(payload.get("propName").getAsString());
+
+            if (referenceType == null || referenceType.isEmpty() || referenceKey.isEmpty())
+                throw new HandledServiceException(411, "조회를 위한 필수값이 없습니다.");
+
+            String64 propValue = null;
+            if (!checkJsonEmpty(payload, "propValue"))
+                propValue = String64.decode(payload.get("propValue").getAsString());
+
+            DataPropVO dataProp = new DataPropVO();
+            dataProp.setPropName(propName);
+            dataProp.setPropValue(propValue);
+            dataProp.setReferenceKey(referenceKey);
+            dataProp.setReferenceType(referenceType);
+            dataProp.setUpdatedAt(LongDate.now());
+            getService(RawService.class).insertDataProp(dataProp);
+
+            return ResponseHelper.response(200, "Success - DataProp add", dataProp);
+        }
+
+        if (command.equals("update")) {
+            CryptoField referenceKey = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "referenceKey"))
+                referenceKey = CryptoField.decode(payload.get("referenceKey").getAsString(), 0L);
+
+            String referenceType = "";
+            if (!checkJsonEmpty(payload, "referenceType"))
+                referenceType = payload.get("referenceType").getAsString();
+
+            String64 propName = null;
+            if (!checkJsonEmpty(payload, "propName"))
+                propName = String64.decode(payload.get("propName").getAsString());
+
+            if (referenceType == null || referenceType.isEmpty() || referenceKey.isEmpty())
+                throw new HandledServiceException(411, "조회를 위한 필수값이 없습니다.");
+
+            DataPropVO dataProp = getService(RawService.class).getDataPropByName(
+                    referenceType, referenceKey, propName);
+            if (dataProp == null)
+                throw new HandledServiceException(411, "등록되지 않은 이름입니다.");
+
+            String64 propValue = null;
+            if (!checkJsonEmpty(payload, "propValue"))
+                propValue = String64.decode(payload.get("propValue").getAsString());
+
+            dataProp.setPropValue(propValue);
+            dataProp.setUpdatedAt(LongDate.now());
+            getService(RawService.class).updateDataProp(dataProp);
+
+            return ResponseHelper.response(200, "Success - DataProp update", dataProp);
+        }
+
+        if (command.equals("remove-all")) {
+            CryptoField referenceKey = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "referenceKey"))
+                referenceKey = CryptoField.decode(payload.get("referenceKey").getAsString(), 0L);
+
+            String referenceType = "";
+            if (!checkJsonEmpty(payload, "referenceType"))
+                referenceType = payload.get("referenceType").getAsString();
+
+            getService(RawService.class).deleteDataPropByType(referenceType, referenceKey);
+
+            return ResponseHelper.response(200, "Success - DataProp remove by all", "");
+        }
+
+        if (command.equals("remove-name")) {
+            CryptoField referenceKey = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "referenceKey"))
+                referenceKey = CryptoField.decode(payload.get("referenceKey").getAsString(), 0L);
+
+            String referenceType = "";
+            if (!checkJsonEmpty(payload, "referenceType"))
+                referenceType = payload.get("referenceType").getAsString();
+
+            String64 propName = null;
+            if (!checkJsonEmpty(payload, "propName"))
+                propName = String64.decode(payload.get("propName").getAsString());
+
+            getService(RawService.class).deleteDataPropByName(referenceType, referenceKey, propName);
+
+            return ResponseHelper.response(200, "Success - DataProp remove by name", "");
         }
 
         throw new HandledServiceException(411, "명령이 정의되지 않았습니다.");

@@ -10,10 +10,16 @@ import com.servetech.dynarap.db.type.CryptoField;
 import com.servetech.dynarap.db.type.LongDate;
 import com.servetech.dynarap.db.type.String64;
 import com.servetech.dynarap.ext.HandledServiceException;
+import com.servetech.dynarap.vo.DataPropVO;
 import com.servetech.dynarap.vo.ParamVO;
 import com.servetech.dynarap.vo.PresetVO;
 import com.servetech.dynarap.vo.RawVO;
 import lombok.RequiredArgsConstructor;
+import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
+import org.objectweb.asm.Handle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -680,4 +686,86 @@ public class RawService {
         }
         return lines;
     }
+
+
+    public List<DataPropVO> getDataPropList(String referenceType, CryptoField referenceKey) throws HandledServiceException {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("referenceType", referenceType);
+            params.put("referenceKey", referenceKey);
+            return rawMapper.selectDataPropList(params);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    public DataPropVO getDataPropByName(String referenceType, CryptoField referenceKey, String64 propName) throws HandledServiceException {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("referenceType", referenceType);
+            params.put("referenceKey", referenceKey);
+            params.put("propName", propName);
+            return rawMapper.selectDataPropByName(params);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    @Transactional
+    public void insertDataProp(DataPropVO dataProp) throws HandledServiceException {
+        try {
+            DataPropVO existProp = getDataPropByName(dataProp.getReferenceType(),
+                    dataProp.getReferenceKey(), dataProp.getPropName());
+            if (existProp != null)
+                throw new HandledServiceException(411, "이미 존재하는 이름입니다.");
+
+            rawMapper.insertDataProp(dataProp);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    @Transactional
+    public void updateDataProp(DataPropVO dataProp) throws HandledServiceException {
+        try {
+            rawMapper.updateDataProp(dataProp);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    @Transactional
+    public void deleteDataPropByType(String referenceType, CryptoField referenceKey) throws HandledServiceException {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("referenceType", referenceType);
+            params.put("referenceKey", referenceKey);
+            rawMapper.deleteDataPropByType(params);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    @Transactional
+    public void deleteDataPropBySeq(CryptoField seq) throws HandledServiceException {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("seq", seq);
+            rawMapper.deleteDataPropBySeq(params);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    @Transactional
+    public void deleteDataPropByName(String referenceType, CryptoField referenceKey, String64 propName) throws HandledServiceException {
+        try {
+            DataPropVO dataProp = getDataPropByName(referenceType, referenceKey, propName);
+            if (dataProp != null)
+                deleteDataPropBySeq(dataProp.getSeq());
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
 }

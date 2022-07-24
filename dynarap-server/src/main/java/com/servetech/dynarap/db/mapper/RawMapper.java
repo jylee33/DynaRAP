@@ -1,6 +1,7 @@
 package com.servetech.dynarap.db.mapper;
 
 import com.servetech.dynarap.db.type.CryptoField;
+import com.servetech.dynarap.vo.DataPropVO;
 import com.servetech.dynarap.vo.FlightVO;
 import com.servetech.dynarap.vo.RawVO;
 import org.apache.ibatis.annotations.*;
@@ -183,5 +184,71 @@ public interface RawMapper {
                     "</script>"
     })
     void deleteRawUpload(Map<String, Object> params) throws Exception;
+
+
+
+    @Select({
+            "<script>" +
+                    "select * from dynarap_data_prop " +
+                    "where referenceType = #{referenceType} " +
+                    "and referenceKey = #{referenceKey,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "order by propName asc " +
+                    "</script>"
+    })
+    List<DataPropVO> selectDataPropList(Map<String, Object> params) throws Exception;
+
+    @Select({
+            "<script>" +
+                    "select * from dynarap_data_prop " +
+                    "where referenceType = #{referenceType} " +
+                    "and referenceKey = #{referenceKey,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "and propName = #{propName,javaType=java.lang.String,jdbcType=VARCHAR,typeHandler=String64} " +
+                    "limit 0, 1 " +
+                    "</script>"
+    })
+    DataPropVO selectDataPropByName(Map<String, Object> params) throws Exception;
+
+    @Insert({
+            "<script>" +
+                    "insert into dynarap_data_prop (" +
+                    "propName, propValue, referenceType, referenceKey, updatedAt" +
+                    ") values (" +
+                    "#{propName,javaType=java.lang.String,jdbcType=VARCHAR,typeHandler=String64}" +
+                    ",#{propValue,javaType=java.lang.String,jdbcType=VARCHAR,typeHandler=String64}" +
+                    ",#{referenceType}" +
+                    ",#{referenceKey,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField}" +
+                    ",#{updatedAt,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=LongDate}" +
+                    ")" +
+                    "</script>"
+    })
+    void insertDataProp(DataPropVO dataProp) throws Exception;
+
+    @Update({
+            "<script>" +
+                    "update dynarap_data_prop set " +
+                    " propName = #{propName,javaType=java.lang.String,jdbcType=VARCHAR,typeHandler=String64}" +
+                    ",propValue = #{propValue,javaType=java.lang.String,jdbcType=VARCHAR,typeHandler=String64}" +
+                    ",updatedAt = #{updatedAt,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=LongDate}" +
+                    " where seq = #{seq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField}" +
+                    "</script>"
+    })
+    void updateDataProp(DataPropVO dataProp) throws Exception;
+
+    @Delete({
+            "<script>" +
+                    "delete from dynarap_data_prop " +
+                    "where referenceType = #{referenceType} " +
+                    "and referenceKey = #{referenceKey,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "</script>"
+    })
+    void deleteDataPropByType(Map<String, Object> params) throws Exception;
+
+    @Delete({
+            "<script>" +
+                    "delete from dynarap_data_prop " +
+                    "where seq = #{seq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "</script>"
+    })
+    void deleteDataPropBySeq(Map<String, Object> params) throws Exception;
 
 }
