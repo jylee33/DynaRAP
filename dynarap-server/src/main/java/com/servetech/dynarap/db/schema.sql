@@ -398,6 +398,19 @@ create table `dynarap_sblock_param_val`
 ) $$
 
 
+drop table if exists `dynarap_data_prop` cascade $$
+
+create table `dynarap_data_prop`
+(
+    `seq` bigint auto_increment not null            comment '일련번호',
+    `propName` varchar(64) not null                 comment '속성 이름',
+    `propValue` varchar(1024)                       comment '속성 값',
+    `referenceType` varchar(64) not null            comment '소속 타입',
+    `referenceKey` bigint default 0                 comment '소속 타입의 키값',
+    `updatedAt` bigint default 0                    comment '변경일자',
+    constraint pk_dynarap_data_prop primary key (`seq`)
+) $$
+
 
 
 delimiter ;
