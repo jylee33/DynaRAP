@@ -45,6 +45,7 @@ namespace DynaRAP.UControl
         string headerRow = string.Empty;
 
         ImportType importType = ImportType.FLYING;
+        string uploadSeq = string.Empty;
 
         public ImportModuleControl()
         {
@@ -665,6 +666,7 @@ namespace DynaRAP.UControl
             if (bResult)
             {
                 //MessageBox.Show(Properties.Resources.StringSuccessImport, Properties.Resources.StringSuccess, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                AddDataProp();
             }
         }
 
@@ -705,7 +707,8 @@ namespace DynaRAP.UControl
                     {
                         paramKey = "skip";
                     }
-                    import.tempMappingParams.Add(paramName, paramKey);
+                    if(import.tempMappingParams.ContainsKey(paramName) == false)
+                        import.tempMappingParams.Add(paramName, paramKey);
                 }
 
                 for (int i = 0; i < gridView2.RowCount; i++)
@@ -779,6 +782,7 @@ namespace DynaRAP.UControl
                 {
                     if (result.code != 200)
                     {
+                        uploadSeq = String.Empty;
                         MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return false;
                     }
@@ -786,7 +790,10 @@ namespace DynaRAP.UControl
                     {
                         // progress 확인
                         //ImportProgressForm form = new ImportProgressForm("116a1460354a7065cb1393aa94a529e14221be82a5bae3bbccc8b1a5b6b59680"); // test
-                        ImportProgressForm form = new ImportProgressForm(result.response.seq);
+
+                        uploadSeq = result.response.seq;
+
+                        ImportProgressForm form = new ImportProgressForm(uploadSeq);
                         if (form.ShowDialog() == DialogResult.Cancel)
                         {
                             List<UnmappedParamData> unmappedList = new List<UnmappedParamData>();
@@ -808,6 +815,96 @@ namespace DynaRAP.UControl
             }
 
             return true;
+        }
+
+        private void AddDataProp()
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(this.uploadSeq))
+                {
+                    return;
+                }
+
+                //Encoding
+                byte[] basebyte = System.Text.Encoding.UTF8.GetBytes("tags");
+                string encName = Convert.ToBase64String(basebyte);
+
+                string tagValues = string.Empty;
+                foreach(ButtonEdit btn in this.panelTag.Controls)
+                {
+                    tagValues += btn.Text + ",";
+                }
+
+                tagValues = tagValues.Substring(0, tagValues.LastIndexOf(","));
+
+                //Encoding
+                byte[] basebyte2 = System.Text.Encoding.UTF8.GetBytes(tagValues);
+                string encValue = Convert.ToBase64String(basebyte2);
+
+                string url = ConfigurationManager.AppSettings["UrlDataProp"];
+                string sendData = string.Format(@"
+                {{
+                ""command"":""add"",
+                ""referenceType"": ""upload"",
+                ""referenceKey"": ""{0}"",
+                ""propName"": ""{1}"",
+                ""propValue"": ""{2}""
+                }}"
+                    , this.uploadSeq, encName, encValue);
+
+                log.Info("url : " + url);
+                log.Info(sendData);
+
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Timeout = 30 * 1000;
+                //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+
+                // POST할 데이타를 Request Stream에 쓴다
+                byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+                request.ContentLength = bytes.Length; // 바이트수 지정
+
+                using (Stream reqStream = request.GetRequestStream())
+                {
+                    reqStream.Write(bytes, 0, bytes.Length);
+                }
+
+                // Response 처리
+                string responseText = string.Empty;
+                using (WebResponse resp = request.GetResponse())
+                {
+                    Stream respStream = resp.GetResponseStream();
+                    using (StreamReader sr = new StreamReader(respStream))
+                    {
+                        responseText = sr.ReadToEnd();
+                    }
+                }
+
+                //Console.WriteLine(responseText);
+                JsonData result = JsonConvert.DeserializeObject<JsonData>(responseText);
+
+                if (result != null)
+                {
+                    if (result.code != 200)
+                    {
+                        MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                    else
+                    {
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex.Message);
+                MessageBox.Show(ex.Message);
+                return;
+            }
+
+            return;
         }
 
         private void lblFlyingData_Click(object sender, EventArgs e)

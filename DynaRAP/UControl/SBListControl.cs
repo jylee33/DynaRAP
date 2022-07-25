@@ -50,6 +50,30 @@ namespace DynaRAP.UControl
             InitializeFlyingList();
             InitializeGridControl();
 
+            InitializeTagGridControl();
+
+        }
+
+        private void InitializeTagGridControl()
+        {
+            //gridView2.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+
+            gridView2.OptionsView.ShowColumnHeaders = false;
+            gridView2.OptionsView.ShowGroupPanel = false;
+            gridView2.OptionsView.ShowIndicator = false;
+            gridView2.IndicatorWidth = 40;
+            gridView2.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.False;
+            gridView2.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.False;
+            gridView2.OptionsView.ColumnAutoWidth = true;
+
+            gridView2.OptionsBehavior.ReadOnly = true;
+            gridView2.OptionsBehavior.Editable = false;
+
+            gridView2.OptionsSelection.MultiSelectMode = DevExpress.XtraGrid.Views.Grid.GridMultiSelectMode.RowSelect;
+            gridView2.OptionsSelection.EnableAppearanceFocusedCell = false;
+            gridView2.OptionsMenu.EnableColumnMenu = false;
+
+
         }
 
         private void InitializeGridControl()
@@ -368,8 +392,112 @@ namespace DynaRAP.UControl
 
             if (combo != null)
             {
-                InitializePartList(combo.Text);
+                string uploadName = combo.Text;
+                InitializePartList(uploadName);
+
+                //Encoding
+                byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(uploadName);
+                string encName = Convert.ToBase64String(basebyte);
+
+                ResponseImport upload = uploadList.Find(x => x.uploadName.Equals(encName));
+                if (upload != null)
+                {
+                    gridControl2.DataSource = null;
+                    gridView2.RefreshData();
+
+                    string[] tagArr = GetTagList(upload.seq);
+
+                    if (tagArr != null)
+                    {
+                        DataTable dt = new DataTable();
+
+                        dt.Columns.Add("Tag", typeof(string));
+
+                        foreach (string tag in tagArr)
+                        {
+                            dt.Rows.Add(tag);
+                        }
+
+                        gridControl2.DataSource = dt;
+                        gridView2.RefreshData();
+                    }
+                }
             }
+        }
+
+        private string[] GetTagList(string uploadSeq)
+        {
+            try
+            {
+                string url = ConfigurationManager.AppSettings["UrlDataProp"];
+
+                string sendData = string.Format(@"
+                {{
+                ""command"":""list"",
+                ""referenceType"": ""upload"",
+                ""referenceKey"": ""{0}""
+                }}"
+                , uploadSeq);
+
+                log.Info("url : " + url);
+                log.Info(sendData);
+
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Timeout = 30 * 1000;
+                //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+
+                // POST할 데이타를 Request Stream에 쓴다
+                byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+                request.ContentLength = bytes.Length; // 바이트수 지정
+
+                using (Stream reqStream = request.GetRequestStream())
+                {
+                    reqStream.Write(bytes, 0, bytes.Length);
+                }
+
+                // Response 처리
+                string responseText = string.Empty;
+                using (WebResponse resp = request.GetResponse())
+                {
+                    Stream respStream = resp.GetResponseStream();
+                    using (StreamReader sr = new StreamReader(respStream))
+                    {
+                        responseText = sr.ReadToEnd();
+                    }
+                }
+
+                //Console.WriteLine(responseText);
+                DataPropResponse result = JsonConvert.DeserializeObject<DataPropResponse>(responseText);
+
+                if (result != null)
+                {
+                    if (result.code != 200)
+                    {
+                    }
+                    else
+                    {
+                        foreach (ResponseDataProp data in result.response)
+                        {
+                            // 서버에서는 List<ResponseDataProp> 로 주지만 실제로는 값이 하나임.
+                            // 첫 데이터만 이용하고 빠져나감.
+                            //Decoding
+                            byte[] byte64 = Convert.FromBase64String(data.propValue);
+                            string decName = Encoding.UTF8.GetString(byte64);
+                            string[] tagArr = decName.Split(',');
+                            return tagArr;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex.Message);
+                MessageBox.Show(ex.Message);
+                return null;
+            }
+            return null;
         }
 
         private void CboPart_SelectedIndexChanged(object sender, EventArgs e)
@@ -657,6 +785,9 @@ namespace DynaRAP.UControl
             gridList = null;
             gridControl1.DataSource = null;
             gridView1.RefreshData();
+
+            gridControl2.DataSource = null;
+            gridView2.RefreshData();
         }
     }
 }

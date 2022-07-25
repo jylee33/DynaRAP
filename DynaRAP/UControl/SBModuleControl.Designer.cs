@@ -65,6 +65,7 @@
             this.gridColumn9 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemImageComboBox1 = new DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox();
             this.imageCollection1 = new DevExpress.Utils.ImageCollection(this.components);
+            this.gridColumn12 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridColumn10 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridColumn11 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.labelControl8 = new DevExpress.XtraEditors.LabelControl();
@@ -95,7 +96,6 @@
             this.lblValidSBCount = new DevExpress.XtraEditors.LabelControl();
             this.btnSaveSplittedParameter = new DevExpress.XtraEditors.ButtonEdit();
             this.imageCollection2 = new DevExpress.Utils.ImageCollection(this.components);
-            this.gridColumn12 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.separatorControl1)).BeginInit();
             this.panelData.SuspendLayout();
@@ -493,6 +493,12 @@
             this.imageCollection1.Images.SetKeyName(0, "none.png");
             this.imageCollection1.Images.SetKeyName(1, "delete.png");
             // 
+            // gridColumn12
+            // 
+            this.gridColumn12.Caption = "PropSeq";
+            this.gridColumn12.FieldName = "PropSeq";
+            this.gridColumn12.Name = "gridColumn12";
+            // 
             // gridColumn10
             // 
             this.gridColumn10.Caption = "Seq";
@@ -819,12 +825,6 @@
             this.imageCollection2.ImageStream = ((DevExpress.Utils.ImageCollectionStreamer)(resources.GetObject("imageCollection2.ImageStream")));
             this.imageCollection2.Images.SetKeyName(0, "none.png");
             this.imageCollection2.Images.SetKeyName(1, "view.png");
-            // 
-            // gridColumn12
-            // 
-            this.gridColumn12.Caption = "PropSeq";
-            this.gridColumn12.FieldName = "PropSeq";
-            this.gridColumn12.Name = "gridColumn12";
             // 
             // SBModuleControl
             // 

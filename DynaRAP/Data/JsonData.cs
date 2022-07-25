@@ -62,6 +62,13 @@ namespace DynaRAP.Data
         public string dateTime { get; set; }
     }
 
+    public class UpdatedAt
+    {
+        public long timestamp { get; set; }
+        public string dateFormat { get; set; }
+        public string dateTime { get; set; }
+    }
+
     public class Extras
     {
         public string paramName { get; set; }

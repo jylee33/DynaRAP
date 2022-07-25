@@ -52,6 +52,9 @@
             this.repositoryItemImageComboBox4 = new DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.btnRefresh = new DevExpress.XtraEditors.SimpleButton();
+            this.labelControl3 = new DevExpress.XtraEditors.LabelControl();
+            this.gridControl2 = new DevExpress.XtraGrid.GridControl();
+            this.gridView2 = new DevExpress.XtraGrid.Views.Grid.GridView();
             ((System.ComponentModel.ISupportInitialize)(this.cboFlying.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cboPart.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
@@ -63,28 +66,28 @@
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemImageComboBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemImageComboBox4)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gridControl2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridView2)).BeginInit();
             this.SuspendLayout();
             // 
             // cboFlying
             // 
             this.cboFlying.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cboFlying.Location = new System.Drawing.Point(100, 0);
-            this.cboFlying.Margin = new System.Windows.Forms.Padding(0);
+            this.cboFlying.Location = new System.Drawing.Point(103, 3);
             this.cboFlying.Name = "cboFlying";
             this.cboFlying.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.cboFlying.Size = new System.Drawing.Size(424, 22);
+            this.cboFlying.Size = new System.Drawing.Size(418, 22);
             this.cboFlying.TabIndex = 35;
             // 
             // cboPart
             // 
             this.cboPart.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cboPart.Location = new System.Drawing.Point(100, 22);
-            this.cboPart.Margin = new System.Windows.Forms.Padding(0);
+            this.cboPart.Location = new System.Drawing.Point(103, 25);
             this.cboPart.Name = "cboPart";
             this.cboPart.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.cboPart.Size = new System.Drawing.Size(424, 22);
+            this.cboPart.Size = new System.Drawing.Size(418, 22);
             this.cboPart.TabIndex = 36;
             // 
             // labelControl1
@@ -109,7 +112,7 @@
             // 
             this.tableLayoutPanel1.SetColumnSpan(this.gridControl1, 3);
             this.gridControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridControl1.Location = new System.Drawing.Point(3, 47);
+            this.gridControl1.Location = new System.Drawing.Point(3, 167);
             this.gridControl1.MainView = this.gridView1;
             this.gridControl1.Name = "gridControl1";
             this.gridControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
@@ -117,7 +120,7 @@
             this.repositoryItemImageComboBox2,
             this.repositoryItemImageComboBox3,
             this.repositoryItemImageComboBox4});
-            this.gridControl1.Size = new System.Drawing.Size(598, 306);
+            this.gridControl1.Size = new System.Drawing.Size(598, 186);
             this.gridControl1.TabIndex = 43;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
@@ -254,30 +257,57 @@
             this.tableLayoutPanel1.Controls.Add(this.labelControl2, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.cboPart, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.cboFlying, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.gridControl1, 0, 2);
+            this.tableLayoutPanel1.Controls.Add(this.gridControl1, 0, 3);
             this.tableLayoutPanel1.Controls.Add(this.btnRefresh, 2, 0);
+            this.tableLayoutPanel1.Controls.Add(this.labelControl3, 0, 2);
+            this.tableLayoutPanel1.Controls.Add(this.gridControl2, 1, 2);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 3;
+            this.tableLayoutPanel1.RowCount = 4;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 120F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(604, 356);
             this.tableLayoutPanel1.TabIndex = 44;
             // 
             // btnRefresh
             // 
             this.btnRefresh.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnRefresh.Location = new System.Drawing.Point(524, 0);
-            this.btnRefresh.Margin = new System.Windows.Forms.Padding(0);
+            this.btnRefresh.Location = new System.Drawing.Point(527, 3);
             this.btnRefresh.Name = "btnRefresh";
             this.tableLayoutPanel1.SetRowSpan(this.btnRefresh, 2);
-            this.btnRefresh.Size = new System.Drawing.Size(80, 44);
+            this.btnRefresh.Size = new System.Drawing.Size(74, 38);
             this.btnRefresh.TabIndex = 44;
             this.btnRefresh.Text = "새로고침";
             this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
+            // 
+            // labelControl3
+            // 
+            this.labelControl3.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.labelControl3.Location = new System.Drawing.Point(3, 96);
+            this.labelControl3.Name = "labelControl3";
+            this.labelControl3.Size = new System.Drawing.Size(24, 15);
+            this.labelControl3.TabIndex = 38;
+            this.labelControl3.Text = "태그";
+            // 
+            // gridControl2
+            // 
+            this.tableLayoutPanel1.SetColumnSpan(this.gridControl2, 2);
+            this.gridControl2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridControl2.Location = new System.Drawing.Point(103, 47);
+            this.gridControl2.MainView = this.gridView2;
+            this.gridControl2.Name = "gridControl2";
+            this.gridControl2.Size = new System.Drawing.Size(498, 114);
+            this.gridControl2.TabIndex = 45;
+            this.gridControl2.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
+            this.gridView2});
+            // 
+            // gridView2
+            // 
+            this.gridView2.GridControl = this.gridControl2;
+            this.gridView2.Name = "gridView2";
             // 
             // SBListControl
             // 
@@ -299,6 +329,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemImageComboBox4)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gridControl2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridView2)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -327,5 +359,8 @@
         private DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox repositoryItemImageComboBox3;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn8;
         private DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox repositoryItemImageComboBox4;
+        private DevExpress.XtraEditors.LabelControl labelControl3;
+        private DevExpress.XtraGrid.GridControl gridControl2;
+        private DevExpress.XtraGrid.Views.Grid.GridView gridView2;
     }
 }
