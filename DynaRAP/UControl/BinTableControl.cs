@@ -130,6 +130,7 @@ namespace DynaRAP.UControl
 
             bandedGridView.RowCellStyle += BandedGridView_RowCellStyle;
             bandedGridView.RowCellClick += BandedGridView_RowCellClick;
+            bandedGridView.RowCellStyle += BandedGridView_RowCellStyle1;
 
             //bandedGridView.ColumnPanelRowHeight = 40;
             //bandedGridView.IndicatorWidth = 100;
@@ -177,6 +178,43 @@ namespace DynaRAP.UControl
             //gridBand2.Columns.Add(bandedGridView.Columns["Column19"]);
             //gridBand2.Columns.Add(bandedGridView.Columns["Column20"]);
 
+
+        }
+
+        private void BandedGridView_RowCellStyle1(object sender, RowCellStyleEventArgs e)
+        {
+            GridView view = sender as GridView;
+
+            //if (e.Column != view.Columns["Column11"])
+            //    return;
+
+            //if (Convert.ToInt32(view.GetRowCellValue(e.RowHandle, view.Columns["Column11"])) > 10)
+            //if (Convert.ToInt32(view.GetRowCellValue(e.RowHandle, "Column11")) > 10)
+            //if (Convert.ToInt32(view.GetRowCellValue(e.RowHandle, e.Column.FieldName)) > 10)
+            //if (val > 10)
+            //{
+            //    e.Appearance.BackColor = Color.Red;
+            //}
+
+            int val = 0;
+            int.TryParse(view.GetRowCellValue(e.RowHandle, e.Column.FieldName).ToString(), out val);
+            if (val < 5)
+            {
+                e.Appearance.BackColor = Color.Green;
+            }
+            else if (val < 8)
+            {
+                e.Appearance.BackColor = Color.Yellow;
+                e.Appearance.ForeColor = Color.Black;
+            }
+            else if (val < 12)
+            {
+                e.Appearance.BackColor = Color.Orange;
+            }
+            else
+            {
+                e.Appearance.BackColor = Color.Red;
+            }
 
         }
 
