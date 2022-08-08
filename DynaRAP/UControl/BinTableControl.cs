@@ -191,7 +191,6 @@ namespace DynaRAP.UControl
             //if (Convert.ToInt32(view.GetRowCellValue(e.RowHandle, view.Columns["Column11"])) > 10)
             //if (Convert.ToInt32(view.GetRowCellValue(e.RowHandle, "Column11")) > 10)
             //if (Convert.ToInt32(view.GetRowCellValue(e.RowHandle, e.Column.FieldName)) > 10)
-            //if (val > 10)
             //{
             //    e.Appearance.BackColor = Color.Red;
             //}

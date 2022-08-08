@@ -596,6 +596,31 @@ namespace DynaRAP.UControl
             if (combo != null)
             {
                 InitializePartList(combo.Text);
+
+                // 프리셋 초기화
+                luePresetList.EditValue = "";
+                gridControl1.DataSource = null;
+                gridView1.RefreshData();
+
+                // 구간 미리보기 초기화
+                cboParameter.Properties.Items.Clear();
+                cboParameter.Text = String.Empty;
+
+                chart1.Series.Clear();
+
+                chart1.DataSource = null;
+                chart1.BackColor = Color.FromArgb(37, 37, 38);
+                chart1.DataBind();
+
+                chart1.Update();
+
+                // 분할 예상 구간 초기화
+                intervalIndex = START_INT_INDEX;
+                flowLayoutPanel2.Height = 22;
+                flowLayoutPanel2.Controls.Clear();
+           
+                sbIntervalList.Clear();
+                lblValidSBCount.Text = string.Format(Properties.Resources.StringValidSBCount, sbIntervalList.Count);
             }
         }
 

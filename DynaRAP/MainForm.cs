@@ -145,7 +145,7 @@ namespace DynaRAP
             {
                 tabbedView1.ActivateDocument(startControl);
             }
-
+            /*
             if (flyingImportModuleControl == null)
             {
                 flyingImportModuleControl = new ImportModuleControl(ImportType.FLYING);
@@ -256,9 +256,10 @@ namespace DynaRAP
             //{
             //    tabbedView1.ActivateDocument(mgmtPresetGroupControl);
             //}
+            */
 
 #if DEBUG
-            tabbedView1.ActivateDocument(binModuleControl);
+            tabbedView1.ActivateDocument(startControl);
 #else
             tabbedView1.RemoveDocument(flyingImportModuleControl);
             tabbedView1.RemoveDocument(analysisImportModuleControl);

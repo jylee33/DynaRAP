@@ -51,6 +51,8 @@
             this.gridColumn6 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridColumn7 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemComboBox1 = new DevExpress.XtraEditors.Repository.RepositoryItemComboBox();
+            this.labelControl11 = new DevExpress.XtraEditors.LabelControl();
+            this.edtEquation = new DevExpress.XtraEditors.TextEdit();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.btnAddParameter = new DevExpress.XtraEditors.ButtonEdit();
             this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
@@ -102,6 +104,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemComboBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.edtEquation.Properties)).BeginInit();
             this.flowLayoutPanel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnAddParameter.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnAddSplittedInterval.Properties)).BeginInit();
@@ -193,6 +196,8 @@
             this.flowLayoutPanel1.Controls.Add(this.labelControl1);
             this.flowLayoutPanel1.Controls.Add(this.luePresetList);
             this.flowLayoutPanel1.Controls.Add(this.gridControl1);
+            this.flowLayoutPanel1.Controls.Add(this.labelControl11);
+            this.flowLayoutPanel1.Controls.Add(this.edtEquation);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(227, 24);
@@ -260,7 +265,7 @@
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 1;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(791, 26);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(765, 26);
             this.tableLayoutPanel2.TabIndex = 0;
             // 
             // labelControl13
@@ -277,7 +282,7 @@
             // 
             this.btnViewData.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnViewData.EditValue = "데이터 보기";
-            this.btnViewData.Location = new System.Drawing.Point(684, 3);
+            this.btnViewData.Location = new System.Drawing.Point(658, 3);
             this.btnViewData.Name = "btnViewData";
             this.btnViewData.Properties.Appearance.Options.UseTextOptions = true;
             this.btnViewData.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
@@ -373,6 +378,23 @@
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.repositoryItemComboBox1.Name = "repositoryItemComboBox1";
             // 
+            // labelControl11
+            // 
+            this.labelControl11.Appearance.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
+            this.labelControl11.Appearance.Options.UseFont = true;
+            this.labelControl11.Location = new System.Drawing.Point(3, 823);
+            this.labelControl11.Name = "labelControl11";
+            this.labelControl11.Size = new System.Drawing.Size(309, 17);
+            this.labelControl11.TabIndex = 0;
+            this.labelControl11.Text = "동압식(Q) - 사용예 : ${PARAM1} - ${PARAM2}";
+            // 
+            // edtEquation
+            // 
+            this.edtEquation.Location = new System.Drawing.Point(3, 846);
+            this.edtEquation.Name = "edtEquation";
+            this.edtEquation.Size = new System.Drawing.Size(765, 22);
+            this.edtEquation.TabIndex = 3;
+            // 
             // flowLayoutPanel2
             // 
             this.flowLayoutPanel2.AutoScroll = true;
@@ -454,7 +476,7 @@
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Plus)});
             this.btnAddSplittedInterval.Properties.ReadOnly = true;
             this.btnAddSplittedInterval.Size = new System.Drawing.Size(110, 22);
-            this.btnAddSplittedInterval.TabIndex = 2;
+            this.btnAddSplittedInterval.TabIndex = 1;
             this.btnAddSplittedInterval.Click += new System.EventHandler(this.btnAddSplittedInterval_ButtonClick);
             // 
             // gridControl2
@@ -466,7 +488,7 @@
             this.repositoryItemImageComboBox1,
             this.repositoryItemComboBox2});
             this.gridControl2.Size = new System.Drawing.Size(785, 282);
-            this.gridControl2.TabIndex = 3;
+            this.gridControl2.TabIndex = 2;
             this.gridControl2.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView2});
             // 
@@ -580,7 +602,7 @@
             this.edtTag.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Plus)});
             this.edtTag.Size = new System.Drawing.Size(301, 22);
-            this.edtTag.TabIndex = 4;
+            this.edtTag.TabIndex = 3;
             this.edtTag.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.edtTag_ButtonClick);
             this.edtTag.KeyUp += new System.Windows.Forms.KeyEventHandler(this.edtTag_KeyUp);
             // 
@@ -616,7 +638,7 @@
             this.tableLayoutPanel4.RowCount = 1;
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel4.Size = new System.Drawing.Size(788, 26);
-            this.tableLayoutPanel4.TabIndex = 33;
+            this.tableLayoutPanel4.TabIndex = 4;
             // 
             // chkLPF
             // 
@@ -660,14 +682,14 @@
             this.edtLPFn.Location = new System.Drawing.Point(103, 3);
             this.edtLPFn.Name = "edtLPFn";
             this.edtLPFn.Size = new System.Drawing.Size(94, 22);
-            this.edtLPFn.TabIndex = 1;
+            this.edtLPFn.TabIndex = 0;
             // 
             // edtLPFcutoff
             // 
             this.edtLPFcutoff.Location = new System.Drawing.Point(253, 3);
             this.edtLPFcutoff.Name = "edtLPFcutoff";
             this.edtLPFcutoff.Size = new System.Drawing.Size(94, 22);
-            this.edtLPFcutoff.TabIndex = 2;
+            this.edtLPFcutoff.TabIndex = 1;
             // 
             // cboLPFbtype
             // 
@@ -676,7 +698,7 @@
             this.cboLPFbtype.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.cboLPFbtype.Size = new System.Drawing.Size(94, 22);
-            this.cboLPFbtype.TabIndex = 3;
+            this.cboLPFbtype.TabIndex = 2;
             // 
             // tableLayoutPanel3
             // 
@@ -701,7 +723,7 @@
             this.tableLayoutPanel3.RowCount = 1;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel3.Size = new System.Drawing.Size(788, 26);
-            this.tableLayoutPanel3.TabIndex = 33;
+            this.tableLayoutPanel3.TabIndex = 5;
             // 
             // chkHPF
             // 
@@ -745,14 +767,14 @@
             this.edtHPFn.Location = new System.Drawing.Point(103, 3);
             this.edtHPFn.Name = "edtHPFn";
             this.edtHPFn.Size = new System.Drawing.Size(94, 22);
-            this.edtHPFn.TabIndex = 1;
+            this.edtHPFn.TabIndex = 0;
             // 
             // edtHPFcutoff
             // 
             this.edtHPFcutoff.Location = new System.Drawing.Point(253, 3);
             this.edtHPFcutoff.Name = "edtHPFcutoff";
             this.edtHPFcutoff.Size = new System.Drawing.Size(94, 22);
-            this.edtHPFcutoff.TabIndex = 2;
+            this.edtHPFcutoff.TabIndex = 1;
             // 
             // cboHPFbtype
             // 
@@ -761,7 +783,7 @@
             this.cboHPFbtype.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.cboHPFbtype.Size = new System.Drawing.Size(94, 22);
-            this.cboHPFbtype.TabIndex = 3;
+            this.cboHPFbtype.TabIndex = 2;
             // 
             // tableLayoutPanel5
             // 
@@ -832,6 +854,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemComboBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.edtEquation.Properties)).EndInit();
             this.flowLayoutPanel2.ResumeLayout(false);
             this.flowLayoutPanel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnAddParameter.Properties)).EndInit();
@@ -927,5 +950,7 @@
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn7;
         private DevExpress.XtraEditors.Repository.RepositoryItemComboBox repositoryItemComboBox1;
         private DevExpress.XtraEditors.Repository.RepositoryItemComboBox repositoryItemComboBox2;
+        private DevExpress.XtraEditors.LabelControl labelControl11;
+        private DevExpress.XtraEditors.TextEdit edtEquation;
     }
 }

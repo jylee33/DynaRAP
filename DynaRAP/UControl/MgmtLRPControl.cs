@@ -217,8 +217,8 @@ namespace DynaRAP.UControl
             ""dirName"":""{2}"",
             ""dirType"":""{3}"",
             ""dirIcon"":"""",
-            ""refSeq"":""0"",
-            ""refSubSeq"":""0""
+            ""refSeq"":null,
+            ""refSubSeq"":null
             }}"
                 , 1, pid, name, dirType);
 
@@ -533,7 +533,7 @@ namespace DynaRAP.UControl
 
         }
 
-        private bool AddModParameter(string opType, string paramKey, string tags, string extras, string paramPack = "")
+        private bool AddModParameter(string opType, string paramKey, string tags, string extras, string seq, string propSeq, string paramPack = "")
         {
             try
             {
@@ -553,9 +553,9 @@ namespace DynaRAP.UControl
                 string sendData = string.Format(@"
             {{
             ""command"":""{0}"",
-            ""seq"":"""",
+            ""seq"":""{15}"",
             ""paramPack"":""{1}"",
-            ""propSeq"":"""",
+            ""propSeq"":""{16}"",
             ""paramKey"":""{2}"",
             ""adamsKey"":""{3}"",
             ""zaeroKey"":""{4}"",
@@ -573,7 +573,38 @@ namespace DynaRAP.UControl
                 , opType, paramPack, paramKey, edtAdams.Text
                 , edtZaero.Text, edtGrt.Text, edtFltp.Text, edtFlts.Text
                 , cboPart.Text, cboPartLocation.Text
-                , edtLrpX.Text, edtLrpY.Text, edtLrpZ.Text, tags, extras);
+                , edtLrpX.Text, edtLrpY.Text, edtLrpZ.Text, tags, extras
+                , seq, propSeq);
+
+                if(opType.Equals("add"))
+                {
+                    // add 의 경우에는 seq, paramPack, propSeq 를 null 로 주거나 파라미터를 빼야 한다.
+                    sendData = string.Format(@"
+                    {{
+                    ""command"":""{0}"",
+                    ""seq"":null,
+                    ""paramPack"":null,
+                    ""propSeq"":null,
+                    ""paramKey"":""{2}"",
+                    ""adamsKey"":""{3}"",
+                    ""zaeroKey"":""{4}"",
+                    ""grtKey"":""{5}"",
+                    ""fltpKey"":""{6}"",
+                    ""fltsKey"":""{7}"",
+                    ""partInfo"":""{8}"",
+                    ""partInfoSub"":""{9}"",
+                    ""lrpX"":""{10}"",
+                    ""lrpY"":""{11}"",
+                    ""lrpZ"":""{12}"",
+                    ""tags"":""{13}"",
+                    ""extras"":{14}
+                    }}"
+                    , opType, paramPack, paramKey, edtAdams.Text
+                    , edtZaero.Text, edtGrt.Text, edtFltp.Text, edtFlts.Text
+                    , cboPart.Text, cboPartLocation.Text
+                    , edtLrpX.Text, edtLrpY.Text, edtLrpZ.Text, tags, extras
+                    , seq, propSeq);
+                }
 
                 log.Info("url : " + url);
                 log.Info(sendData);
@@ -1227,7 +1258,7 @@ namespace DynaRAP.UControl
 
                 extras = JsonConvert.SerializeObject(dicExtra);
 
-                bool bResult = AddModParameter("modify", paramKey, encTags, extras, param.paramPack);
+                bool bResult = AddModParameter("modify", paramKey, encTags, extras, param.seq, param.propSeq, param.paramPack);
 
                 if (bResult)
                 {
@@ -1299,7 +1330,7 @@ namespace DynaRAP.UControl
 
             extras = JsonConvert.SerializeObject(dicExtra);
 
-            bool bResult = AddModParameter("add", paramKey, encTags, extras);
+            bool bResult = AddModParameter("add", paramKey, encTags, extras, "0", "0");
 
             if (bResult)
             {

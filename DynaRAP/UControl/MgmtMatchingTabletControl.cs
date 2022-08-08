@@ -226,8 +226,8 @@ namespace DynaRAP.UControl
             ""dirName"":""{2}"",
             ""dirType"":""{3}"",
             ""dirIcon"":"""",
-            ""refSeq"":""0"",
-            ""refSubSeq"":""0""
+            ""refSeq"":null,
+            ""refSubSeq"":null
             }}"
                 , 1, pid, name, dirType);
 
@@ -555,16 +555,34 @@ namespace DynaRAP.UControl
                 string encName = Convert.ToBase64String(basebyte);
 
                 string url = ConfigurationManager.AppSettings["UrlPreset"];
+
+                string presetPackFrom = "";
+                if (preset != null)
+                    presetPackFrom = preset.presetPackFrom;
+
                 string sendData = string.Format(@"
             {{""command"":""{0}"",
             ""seq"":"""",
             ""presetPack"":""{1}"",
             ""presetName"":""{2}"",
-            ""presetPackFrom"":""""
+            ""presetPackFrom"":""{3}""
             }}"
-                , opType, presetPack, encName);
+                , opType, presetPack, encName, presetPackFrom);
 
-                log.Info("url : " + url);
+                if (opType.Equals("add"))
+                {
+                    // add 의 경우에는 seq, presetPack, propSeq 를 null 로 주거나 파라미터를 빼야 한다.
+                    sendData = string.Format(@"
+                    {{""command"":""{0}"",
+                    ""seq"":null,
+                    ""presetPack"":null,
+                    ""presetName"":""{2}"",
+                    ""presetPackFrom"":null
+                    }}"
+                        , opType, presetPack, encName);
+                }
+
+                    log.Info("url : " + url);
                 log.Info(sendData);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);

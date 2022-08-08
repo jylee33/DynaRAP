@@ -821,6 +821,7 @@ namespace DynaRAP.UControl
         {
             try
             {
+
                 if (string.IsNullOrEmpty(this.uploadSeq))
                 {
                     return;
