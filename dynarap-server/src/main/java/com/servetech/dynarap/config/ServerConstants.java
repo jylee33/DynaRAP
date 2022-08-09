@@ -9,7 +9,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ServerConstants {
@@ -78,13 +85,49 @@ public class ServerConstants {
             e.printStackTrace();
         }
          */
+        /*
         double jd = 31557600000L;
         double jdms = 3.1688087814029E-8 / 1000;
         System.out.println(jdms * (1640962800000L + 24 * 60 * 60 * 1000));
         System.out.println(jdms * (1672495200000L + 59 * 60 * 1000 + 59 * 1000 + 999));
         System.out.println(System.currentTimeMillis() / jd);
-
         System.out.println(getJulianTimeOffset("344:10:49:24.429500", "344:10:49:24.431500"));
+        */
+        String test = "${SN910P} + ${SN999S} * 1.2";
+        test = test.replaceAll("\\s+", "");
+
+        String loopTest = test;
+        List<String> params = extractParams(loopTest);
+        System.out.println(params);
+
+        loopTest = loopTest.replaceAll("\\$\\{" + "SN910P" + "\\}", "123.45");
+        loopTest = loopTest.replaceAll("\\$\\{" + "SN999S" + "\\}", "456.78");
+        System.out.println(loopTest);
+
+        try {
+            ScriptEngineManager mgr = new ScriptEngineManager();
+            ScriptEngine engine = mgr.getEngineByName("JavaScript");
+            Double qVal = (Double) engine.eval(loopTest);
+            System.out.println("qVal=" + qVal);
+        } catch(Exception e) {
+
+        }
+    }
+
+    private static List<String> extractParams(String source) {
+        String prefix = "${";
+        String postfix = "}";
+        int si = -1, ei = -1;
+
+        List<String> resultSet = new ArrayList<>();
+        String test = source;
+        while ((si = test.indexOf(prefix)) > -1) {
+            ei = test.indexOf(postfix, si + prefix.length());
+            if (ei == -1) break;
+            resultSet.add(test.substring(si + prefix.length(), ei));
+            test = test.substring(ei + postfix.length());
+        }
+        return resultSet;
     }
 
     private static double getJulianTimeOffset(String julianFrom, String julianCurrent) {

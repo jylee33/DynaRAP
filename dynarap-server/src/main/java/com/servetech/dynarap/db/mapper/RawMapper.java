@@ -134,7 +134,7 @@ public interface RawMapper {
                     "insert into dynarap_raw_upload (" +
                     "uploadName,dataType,storePath,fileSize,flightSeq,presetPack,presetSeq," +
                     "uploadedAt,flightAt,registerUid,uploadId,importDone," +
-                    "lpfN,lpfCutoff,lpfBtype,hpfN,hpfCutoff,hpfBtype,uploadPayload" +
+                    "lpfN,lpfCutoff,lpfBtype,hpfN,hpfCutoff,hpfBtype,uploadPayload,qEquation" +
                     ") values (" +
                     "#{uploadName,javaType=java.lang.String,jdbcType=VARCHAR,typeHandler=String64}" +
                     ",#{dataType}" +
@@ -151,6 +151,7 @@ public interface RawMapper {
                     ",#{lpfN},#{lpfCutoff},#{lpfBtype}" +
                     ",#{hpfN},#{hpfCutoff},#{hpfBtype}" +
                     ",#{uploadPayload,javaType=java.lang.String,jdbcType=VARCHAR,typeHandler=String64}" +
+                    ",#{qEquation}" +
                     ")" +
                     "</script>"
     })
@@ -172,6 +173,7 @@ public interface RawMapper {
                     ",lpfN = #{lpfN}, lpfCutoff = #{lpfCutoff}, lpfBtype = #{lpfBtype} " +
                     ",hpfN = #{hpfN}, hpfCutoff = #{hpfCutoff}, hpfBtype = #{hpfBtype} " +
                     ",uploadPayload = #{uploadPayload,javaType=java.lang.String,jdbcType=VARCHAR,typeHandler=String64} " +
+                    ",qEquation = #{qEquation} " +
                     " where seq = #{seq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
                     "</script>"
     })
