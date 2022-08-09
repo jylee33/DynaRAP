@@ -680,6 +680,7 @@ namespace DynaRAP.UControl
                 import.flightAt = string.Format("{0:yyyy-MM-dd}", DateTime.Now);
                 import.dataType = cboImportType.Text.ToLower();
                 import.forcedImport = chkForcedImport.Checked;
+                import.qEquation = edtEquation.Text;
                 import.lpfOption = new LpfOption();
                 import.hpfOption = new HpfOption();
                 import.tempMappingParams = new Dictionary<string, string>();

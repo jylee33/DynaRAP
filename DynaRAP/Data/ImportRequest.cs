@@ -16,6 +16,7 @@ namespace DynaRAP.Data
         public string flightAt { get; set; }
         public string dataType { get; set; }
         public bool forcedImport { get; set; }
+        public string qEquation { get; set; }
         public LpfOption lpfOption { get; set; }
         public HpfOption hpfOption { get; set; }
         public Dictionary<string, string> tempMappingParams { get; set; }
