@@ -58,6 +58,7 @@ public class RawVO implements IFlexibleValue {
         private String hpfN;
         private String hpfCutoff;
         private String hpfBtype;
+        private String qEquation;
 
         private PresetVO presetInfo;
         private transient UploadRequest uploadRequest;
@@ -82,6 +83,7 @@ public class RawVO implements IFlexibleValue {
         private String dataType;
         private List<UploadPart> parts;
         private boolean forcedImport;
+        private String qEquation;
 
         private Map<String, String> tempMappingParams;
 

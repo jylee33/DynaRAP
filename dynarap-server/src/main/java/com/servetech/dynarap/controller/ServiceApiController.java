@@ -945,6 +945,12 @@ public class ServiceApiController extends ApiController {
                 }
             }
 
+            List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
+            if (notMappedParams != null && notMappedParams.size() > 0) {
+                for (ParamVO p : notMappedParams)
+                    params.add(p);
+            }
+
             JsonArray jarrJulian = payload.get("julianRange").getAsJsonArray();
             String julianFrom = jarrJulian.get(0).getAsString();
             if (julianFrom == null || julianFrom.isEmpty()) {
@@ -1090,6 +1096,12 @@ public class ServiceApiController extends ApiController {
                 }
             }
 
+            List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
+            if (notMappedParams != null && notMappedParams.size() > 0) {
+                for (ParamVO p : notMappedParams)
+                    params.add(p);
+            }
+
             List<String> julianData = new ArrayList<>();
             LinkedHashMap<String, List<Double>> paramData = new LinkedHashMap<>();
             for (ParamVO p : params) {
@@ -1205,6 +1217,8 @@ public class ServiceApiController extends ApiController {
             if (!checkJsonEmpty(payload, "partSeq"))
                 partSeq = CryptoField.decode(payload.get("partSeq").getAsString(), 0L);
 
+            PartVO partInfo = getService(PartService.class).getPartBySeq(partSeq);
+
             JsonObject jobjParams = new JsonObject();
             List<ParamVO> resultParams = new ArrayList<>();
             List<CryptoField> paramList = getService(ParamService.class).getPartParamList(partSeq);
@@ -1219,6 +1233,12 @@ public class ServiceApiController extends ApiController {
                     if (param == null) continue;
                 }
                 resultParams.add(param);
+            }
+
+            List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
+            if (notMappedParams != null && notMappedParams.size() > 0) {
+                for (ParamVO p : notMappedParams)
+                    resultParams.add(p);
             }
 
             jobjParams.add("paramData", ServerConstants.GSON.toJsonTree(resultParams));
@@ -1335,6 +1355,12 @@ public class ServiceApiController extends ApiController {
                 }
             }
 
+            List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
+            if (notMappedParams != null && notMappedParams.size() > 0) {
+                for (ParamVO p : notMappedParams)
+                    params.add(p);
+            }
+
             JsonArray jarrJulian = payload.get("julianRange").getAsJsonArray();
             String julianFrom = jarrJulian.get(0).getAsString();
             if (julianFrom == null || julianFrom.isEmpty()) {
@@ -1448,6 +1474,12 @@ public class ServiceApiController extends ApiController {
                 }
             }
 
+            List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
+            if (notMappedParams != null && notMappedParams.size() > 0) {
+                for (ParamVO p : notMappedParams)
+                    params.add(p);
+            }
+
             List<String> julianData = new ArrayList<>();
             LinkedHashMap<String, List<Double>> paramData = new LinkedHashMap<>();
             for (ParamVO p : params) {
@@ -1499,6 +1531,7 @@ public class ServiceApiController extends ApiController {
                 filterType = payload.get("filterType").getAsString();
 
             ShortBlockVO blockInfo = getService(PartService.class).getShortBlockBySeq(blockSeq);
+            PartVO partInfo = getService(PartService.class).getPartBySeq(blockInfo.getPartSeq());
 
             // 요청 파라미터 셋.
             JsonObject jobjResult = new JsonObject();
@@ -1531,6 +1564,12 @@ public class ServiceApiController extends ApiController {
                     }
                     params.add(param);
                 }
+            }
+
+            List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
+            if (notMappedParams != null && notMappedParams.size() > 0) {
+                for (ParamVO p : notMappedParams)
+                    params.add(p);
             }
 
             JsonArray jarrJulian = payload.get("julianRange").getAsJsonArray();
@@ -1644,6 +1683,7 @@ public class ServiceApiController extends ApiController {
                 filterType = payload.get("filterType").getAsString();
 
             ShortBlockVO blockInfo = getService(PartService.class).getShortBlockBySeq(blockSeq);
+            PartVO partInfo = getService(PartService.class).getPartBySeq(blockInfo.getPartSeq());
 
             // 요청 파라미터 셋.
             JsonObject jobjResult = new JsonObject();
@@ -1676,6 +1716,12 @@ public class ServiceApiController extends ApiController {
                     }
                     params.add(param);
                 }
+            }
+
+            List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
+            if (notMappedParams != null && notMappedParams.size() > 0) {
+                for (ParamVO p : notMappedParams)
+                    params.add(p);
             }
 
             List<String> julianData = new ArrayList<>();
@@ -1794,6 +1840,9 @@ public class ServiceApiController extends ApiController {
             if (!checkJsonEmpty(payload, "blockSeq"))
                 blockSeq = CryptoField.decode(payload.get("blockSeq").getAsString(), 0L);
 
+            ShortBlockVO blockInfo = getService(PartService.class).getShortBlockBySeq(blockSeq);
+            PartVO partInfo = getService(PartService.class).getPartBySeq(blockInfo.getPartSeq());
+
             JsonObject jobjParams = new JsonObject();
             List<ParamVO> resultParams = new ArrayList<>();
             List<CryptoField> paramList = getService(ParamService.class).getShortBlockParamList(blockSeq);
@@ -1808,6 +1857,12 @@ public class ServiceApiController extends ApiController {
                     if (param == null) continue;
                 }
                 resultParams.add(param);
+            }
+
+            List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
+            if (notMappedParams != null && notMappedParams.size() > 0) {
+                for (ParamVO p : notMappedParams)
+                    resultParams.add(p);
             }
 
             jobjParams.add("paramData", ServerConstants.GSON.toJsonTree(resultParams));
@@ -1835,6 +1890,7 @@ public class ServiceApiController extends ApiController {
                 filterType = payload.get("filterType").getAsString();
 
             ShortBlockVO blockInfo = getService(PartService.class).getShortBlockBySeq(blockSeq);
+            PartVO partInfo = getService(PartService.class).getPartBySeq(blockInfo.getPartSeq());
 
             // 요청 파라미터 셋.
             JsonObject jobjResult = new JsonObject();
@@ -1867,6 +1923,12 @@ public class ServiceApiController extends ApiController {
                     }
                     params.add(param);
                 }
+            }
+
+            List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
+            if (notMappedParams != null && notMappedParams.size() > 0) {
+                for (ParamVO p : notMappedParams)
+                    params.add(p);
             }
 
             JsonArray jarrJulian = payload.get("julianRange").getAsJsonArray();
@@ -1948,6 +2010,7 @@ public class ServiceApiController extends ApiController {
                 filterType = payload.get("filterType").getAsString();
 
             ShortBlockVO blockInfo = getService(PartService.class).getShortBlockBySeq(blockSeq);
+            PartVO partInfo = getService(PartService.class).getPartBySeq(blockInfo.getPartSeq());
 
             // 요청 파라미터 셋.
             JsonObject jobjResult = new JsonObject();
@@ -1982,6 +2045,12 @@ public class ServiceApiController extends ApiController {
                 }
             }
 
+            List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
+            if (notMappedParams != null && notMappedParams.size() > 0) {
+                for (ParamVO p : notMappedParams)
+                    params.add(p);
+            }
+            
             List<String> julianData = new ArrayList<>();
             LinkedHashMap<String, List<Double>> paramData = new LinkedHashMap<>();
             for (ParamVO p : params) {

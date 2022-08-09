@@ -10,6 +10,7 @@ import com.servetech.dynarap.vo.ParamVO;
 import com.servetech.dynarap.vo.PartVO;
 import com.servetech.dynarap.vo.PresetVO;
 import com.servetech.dynarap.vo.RawVO;
+import org.apache.commons.codec.digest.Crypt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +21,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
 import javax.sql.DataSource;
 import java.io.*;
 import java.sql.Connection;
@@ -27,6 +30,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Component
 public class PartImportTask {
@@ -213,6 +218,46 @@ public class PartImportTask {
                         rawUpload.setNotMappedParams(notMappedParams);
                         rawUpload.setMappedParams(mappedParams);
 
+                        Map<String, List<String>> qMap = new LinkedHashMap<>();
+                        if (rawUpload.getUploadRequest().getQEquation() != null
+                            && !rawUpload.getUploadRequest().getQEquation().isEmpty()) {
+                            List<String> sensorParams = extractParams(rawUpload.getUploadRequest().getQEquation());
+                            if (sensorParams != null && sensorParams.size() > 0) {
+                                for (String sensor : sensorParams) {
+                                    ParamVO findParam = null;
+                                    for (ParamVO p : mappedParams) {
+                                        if (rawUpload.getDataType().equals("grt") && p.getGrtKey().equals(sensor)) {
+                                            findParam = p;
+                                            break;
+                                        }
+                                        if (rawUpload.getDataType().equals("fltp") && p.getFltpKey().equals(sensor)) {
+                                            findParam = p;
+                                            break;
+                                        }
+                                        if (rawUpload.getDataType().equals("flts") && p.getFltsKey().equals(sensor)) {
+                                            findParam = p;
+                                            break;
+                                        }
+                                    }
+                                    if (findParam == null) {
+                                        // 여기서 중단.
+                                        br.close();
+                                        fis.close();
+
+                                        rawUpload.setImportDone(false);
+                                        rawUpload.setStatus("error");
+                                        rawUpload.setStatusMessage("동압 식에 매핑되지 않은 센서 이름이 있습니다.");
+                                        rawService.updateRawUpload(rawUpload);
+
+                                        conn.setAutoCommit(true);
+                                        conn.close();
+                                        return;
+                                    }
+                                    qMap.put(sensor, new ArrayList<String>());
+                                }
+                            }
+                        }
+
                         if (notMappedParams.size() > 0) {
                             // 여기서 중단.
                             br.close();
@@ -242,6 +287,7 @@ public class PartImportTask {
 
                         // inbound row 찾기
                         List<PartVO> partList = new ArrayList<>();
+                        ParamVO qParam = null;
 
                         if (rawUpload.getUploadRequest().getParts() != null && rawUpload.getUploadRequest().getParts().size() > 0) {
 
@@ -307,6 +353,7 @@ public class PartImportTask {
                                     ") values (?,?,?,?,?,?,?,?,?)");
 
                             line = br.readLine();
+
                             while (line != null) {
                                 String[] splitData = line.trim().split(",");
 
@@ -350,6 +397,54 @@ public class PartImportTask {
                                         zsetOps.removeRangeByScore("P" + currentPart.getSeq().originOf() + ".L" + param.getReferenceSeq(), 0, Integer.MAX_VALUE);
                                         zsetOps.removeRangeByScore("P" + currentPart.getSeq().originOf() + ".H" + param.getReferenceSeq(), 0, Integer.MAX_VALUE);
                                     }
+
+                                    // 동압 있으면
+                                    if (rawUpload.getUploadRequest().getQEquation() != null && !rawUpload.getUploadRequest().getQEquation().isEmpty()) {
+                                        // 동압 파라미터 처리
+                                        Statement stmt_q = conn.createStatement();
+                                        ResultSet rs_q = stmt_q.executeQuery("select * from dynarap_param where paramKey = 'Dynamic Pressure' and appliedEndAt = 0 limit 0, 1");
+                                        qParam = null;
+
+                                        if (!rs_q.next()) {
+                                            rs_q.close();
+                                            stmt_q.executeUpdate("insert into dynarap_param (paramPack, paramKey, appliedAt, appliedEndAt) values (0, 'Dynamic Pressure', " + System.currentTimeMillis() + ", 0)");
+                                            rs_q = stmt_q.executeQuery("select last_insert_id() from dynarap_param limit 0, 1");
+                                            if (rs_q.next())
+                                                stmt_q.executeUpdate("update dynarap_param set paramPack = " + rs_q.getLong(1) + " where seq = " + rs_q.getLong(1));
+                                            rs_q.close();
+
+                                            rs_q = stmt_q.executeQuery("select * from dynarap_param where paramKey = 'Dynamic Pressure' and appliedEndAt = 0 limit 0, 1");
+                                            rs_q.next();
+                                        }
+
+                                        qParam = new ParamVO();
+                                        qParam.setSeq(new CryptoField(rs_q.getLong("seq")));
+                                        qParam.setParamPack(new CryptoField(rs_q.getLong("paramPack")));
+                                        qParam.setParamKey(rs_q.getString("paramKey"));
+                                        rs_q.close();
+
+                                        rs_q = stmt_q.executeQuery("select * from dynarap_notmapped_param where uploadSeq = " + rawUpload.getSeq().originOf()
+                                                        + " and paramSeq = " + qParam.getSeq().originOf()
+                                                        + " limit 0, 1");
+                                        if (!rs_q.next()) {
+                                            rs_q.close();
+                                            stmt_q.executeUpdate("insert into dynarap_notmapped_param (uploadSeq,paramPack,paramSeq,notMappedParamKey) " +
+                                                    "values (" + rawUpload.getSeq().originOf() + ", " + qParam.getSeq().originOf() + ", " + qParam.getParamPack().originOf() + ", 'Dynamic Pressure')");
+                                            rs_q = stmt_q.executeQuery("select last_insert_id() from dynarap_notmapped_param limit 0, 1");
+                                            rs_q.next();
+                                        }
+
+                                        qParam.setReferenceSeq(rs_q.getLong(1));
+                                        rs_q.close();
+
+                                        listOps.rightPush("P" + currentPart.getSeq().originOf(), "P" + qParam.getReferenceSeq());
+                                        zsetOps.removeRangeByScore("P" + currentPart.getSeq().originOf() + ".N" + qParam.getReferenceSeq(), 0, Integer.MAX_VALUE);
+                                        zsetOps.removeRangeByScore("P" + currentPart.getSeq().originOf() + ".L" + qParam.getReferenceSeq(), 0, Integer.MAX_VALUE);
+                                        zsetOps.removeRangeByScore("P" + currentPart.getSeq().originOf() + ".H" + qParam.getReferenceSeq(), 0, Integer.MAX_VALUE);
+
+                                        stmt_q.close();
+                                    }
+
                                     isInbound = true;
                                     jobStartAt = System.currentTimeMillis();
                                 }
@@ -408,6 +503,36 @@ public class PartImportTask {
                                     zsetOps.add(rowKey, julianTimeAt + ":" + Double.parseDouble(paramValStr), rowNo);
                                 }
 
+                                if (rawUpload.getUploadRequest().getQEquation() != null && !rawUpload.getUploadRequest().getQEquation().isEmpty()) {
+                                    // qParam은 설정되어 있음.
+                                    List<String> sensorParams = extractParams(rawUpload.getUploadRequest().getQEquation());
+                                    String equation = rawUpload.getUploadRequest().getQEquation();
+                                    for (String sensor : sensorParams) {
+                                        for (int i = 0; i < mappedParams.size(); i++) {
+                                            if ((rawUpload.getDataType().equals("grt") && mappedParams.get(i).getGrtKey().equals(sensor))
+                                                    || (rawUpload.getDataType().equals("fltp") && mappedParams.get(i).getFltpKey().equals(sensor))
+                                                    || (rawUpload.getDataType().equals("flts") && mappedParams.get(i).getFltsKey().equals(sensor))) {
+                                                int spi = mappedIndexes.get(i);
+                                                String paramValStr = splitData[spi];
+                                                equation = equation.replaceAll("\\$\\{" + sensor + "\\}", paramValStr);
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    Double qVal = 0.0;
+                                    try {
+                                        ScriptEngineManager mgr = new ScriptEngineManager();
+                                        ScriptEngine engine = mgr.getEngineByName("JavaScript");
+                                        qVal = (Double) engine.eval(equation);
+                                    } catch(Exception e) {
+                                        logger.debug("[[[[[ 동압 결과 오류... ");
+                                        qVal = 0.0;
+                                    }
+
+                                    String rowKey = "P" + currentPart.getSeq().originOf() + ".N" + qParam.getReferenceSeq();
+                                    zsetOps.add(rowKey, julianTimeAt + ":" + qVal, rowNo);
+                                }
+
                                 zsetOps.add("P" + currentPart.getSeq().originOf() + ".R", julianTimeAt, rowNo);
                                 logger.debug("[[[[[ " + "P" + currentPart.getSeq().originOf() + ".R, " + julianTimeAt + ", " + rowNo);
 
@@ -429,7 +554,12 @@ public class PartImportTask {
 
                         // 여기까지 오면 raw 데이터는 성공했음.
                         rawUpload.setImportDone(true);
+                        rawUpload.setQEquation(rawUpload.getUploadRequest().getQEquation());
                         rawService.updateRawUpload(rawUpload);
+
+                        // 동압 파라미터 추가.
+                        if (rawUpload.getUploadRequest().getQEquation() != null && !rawUpload.getUploadRequest().getQEquation().isEmpty())
+                            mappedParams.add(qParam);
 
                         // lpf, hpf 처리
                         for (PartVO part : partList) {
@@ -518,6 +648,22 @@ public class PartImportTask {
                 }
             }
         };
+    }
+
+    public static List<String> extractParams(String source) {
+        String prefix = "${";
+        String postfix = "}";
+        int si = -1, ei = -1;
+
+        List<String> resultSet = new ArrayList<>();
+        String test = source;
+        while ((si = test.indexOf(prefix)) > -1) {
+            ei = test.indexOf(postfix, si + prefix.length());
+            if (ei == -1) break;
+            resultSet.add(test.substring(si + prefix.length(), ei));
+            test = test.substring(ei + postfix.length());
+        }
+        return resultSet;
     }
 
     public static void applyFilterData(String processPath, ZSetOperations<String, String> zsetOps,
