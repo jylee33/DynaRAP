@@ -369,6 +369,7 @@ public interface ParamMapper {
             "<script>" +
                     " update dynarap_preset set " +
                     " presetPack = #{presetPack,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    ",presetPackFrom = #{presetPackFrom,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField}" +
                     ",presetName = #{presetName,javaType=java.lang.String,jdbcType=VARCHAR,typeHandler=String64} " +
                     ",appliedAt = #{appliedAt,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=LongDate} " +
                     ",appliedEndAt = #{appliedEndAt,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=LongDate} " +
