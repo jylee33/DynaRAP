@@ -536,6 +536,7 @@ public class ParamService {
             paramMapper.insertPreset(preset);
 
             preset.setPresetPack(preset.getSeq());
+            preset.setPresetPackFrom(CryptoField.LZERO);
             paramMapper.updatePresetNoRenew(preset);
 
             return preset;
