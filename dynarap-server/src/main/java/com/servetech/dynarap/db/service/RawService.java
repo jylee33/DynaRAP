@@ -711,15 +711,19 @@ public class RawService {
         }
     }
 
-    @Transactional
     public void insertDataProp(DataPropVO dataProp) throws HandledServiceException {
         try {
+
             DataPropVO existProp = getDataPropByName(dataProp.getReferenceType(),
                     dataProp.getReferenceKey(), dataProp.getPropName());
-            if (existProp != null)
-                throw new HandledServiceException(411, "이미 존재하는 이름입니다.");
-
-            rawMapper.insertDataProp(dataProp);
+            if (existProp != null) {
+                //중복될경우, 업데이트 하도록 수정. commented by sykim. 2022-08-07
+                // throw new HandledServiceException(411, "이미 존재하는 이름입니다.");
+                dataProp.setSeq(existProp.getSeq());
+                rawMapper.updateDataProp(dataProp);
+            } else {
+                rawMapper.insertDataProp(dataProp);
+            }
         } catch(Exception e) {
             throw new HandledServiceException(410, e.getMessage());
         }
