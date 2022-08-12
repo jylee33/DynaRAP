@@ -784,6 +784,7 @@ namespace DynaRAP.UControl
                     if (result.code != 200)
                     {
                         uploadSeq = String.Empty;
+                        log.Error(result.message);
                         MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return false;
                     }
@@ -891,6 +892,7 @@ namespace DynaRAP.UControl
                 {
                     if (result.code != 200)
                     {
+                        log.Error(result.message);
                         MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
@@ -1177,6 +1179,7 @@ namespace DynaRAP.UControl
                 {
                     if (result.code != 200)
                     {
+                        log.Error(result.message);
                         MessageBox.Show(result.message, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return false;
                     }
