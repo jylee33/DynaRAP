@@ -120,6 +120,70 @@ public class ServiceApiController extends ApiController {
         throw new HandledServiceException(411, "명령이 정의되지 않았습니다.");
     }
 
+    @RequestMapping(value = "/bin-table")
+    @ResponseBody
+    public Object apiBinTable(HttpServletRequest request, @PathVariable String serviceVersion,
+                            @RequestBody JsonObject payload, Authentication authentication) throws HandledServiceException {
+        /*
+        String accessToken = request.getHeader("Authorization");
+        if (accessToken == null || (!accessToken.startsWith("bearer") && !accessToken.startsWith("Bearer")))
+            return ResponseHelper.error(403, "권한이 없습니다.");
+
+        String username = authentication.getPrincipal().toString();
+        */
+        UserVO user = getService(UserService.class).getUser("admin@dynarap@dynarap");
+
+        if (checkJsonEmpty(payload, "command"))
+            throw new HandledServiceException(404, "파라미터를 확인하세요.");
+
+        String command = payload.get("command").getAsString();
+
+        if (command.equals("list")) {
+            List<BinTableVO> binTables = getService(BinTableService.class).getBinTableList();
+            List<BinTableVO> resultBinTables = new ArrayList<>();
+            if (binTables != null && binTables.size() > 0) {
+                for (BinTableVO binTable : binTables) {
+                    resultBinTables.add(getService(BinTableService.class).getBinTableBySeq(binTable.getSeq()));
+                }
+            }
+            return ResponseHelper.response(200, "Success - BinTable List", resultBinTables);
+        }
+
+        if (command.equals("detail")) {
+            CryptoField binMetaSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "binMetaSeq"))
+                binMetaSeq = CryptoField.decode(payload.get("binMetaSeq").getAsString(), 0L);
+
+            if (binMetaSeq == null || binMetaSeq.isEmpty())
+                throw new HandledServiceException(404, "파라미터를 확인하세요.");
+
+            BinTableVO binTable = getService(BinTableService.class).getBinTableBySeq(binMetaSeq);
+
+            return ResponseHelper.response(200, "Success - BinTable Detail", binTable);
+        }
+
+        if (command.equals("save")) {
+            BinTableVO.SaveRequest saveRequest = ServerConstants.GSON.fromJson(payload, BinTableVO.SaveRequest.class);
+            BinTableVO binTable = getService(BinTableService.class).saveBinTableMeta(user.getUid(), saveRequest);
+            return ResponseHelper.response(200, "Success - BinTable saved", binTable);
+        }
+
+        if (command.equals("remove")) {
+            CryptoField binMetaSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "binMetaSeq"))
+                binMetaSeq = CryptoField.decode(payload.get("binMetaSeq").getAsString(), 0L);
+
+            if (binMetaSeq == null || binMetaSeq.isEmpty())
+                throw new HandledServiceException(404, "파라미터를 확인하세요.");
+
+            getService(BinTableService.class).deleteBinTableMeta(binMetaSeq);
+
+            return ResponseHelper.response(200, "Success - BinTable Deleted", "");
+        }
+
+        throw new HandledServiceException(411, "명령이 정의되지 않았습니다.");
+    }
+
     @RequestMapping(value = "/param")
     @ResponseBody
     public Object apiParam(HttpServletRequest request, @PathVariable String serviceVersion,
@@ -2050,7 +2114,7 @@ public class ServiceApiController extends ApiController {
                 for (ParamVO p : notMappedParams)
                     params.add(p);
             }
-            
+
             List<String> julianData = new ArrayList<>();
             LinkedHashMap<String, List<Double>> paramData = new LinkedHashMap<>();
             for (ParamVO p : params) {
