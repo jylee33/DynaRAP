@@ -185,17 +185,24 @@ namespace DynaRAP.Forms
 
         private void InitializeProperty()
         {
-            propList.Clear();
-            propList = GetPropertyInfo();
-
-            foreach (ResponsePropList prop in propList)
+            try
             {
-                if (cboPropertyType.Properties.Items.Contains(prop.propType) == false && prop.deleted == false)
+                propList.Clear();
+                propList = GetPropertyInfo();
+
+                foreach (ResponsePropList prop in propList)
                 {
-                    cboPropertyType.Properties.Items.Add(prop.propType);
+                    if (cboPropertyType.Properties.Items.Contains(prop.propType) == false && prop.deleted == false)
+                    {
+                        cboPropertyType.Properties.Items.Add(prop.propType);
+                    }
                 }
+                cboPropertyType.SelectedIndex = -1;
             }
-            cboPropertyType.SelectedIndex = -1;
+            catch (Exception ex)
+            {
+                log.Error(ex.Message);
+            }
         }
 
         private List<ResponsePropList> GetPropertyInfo()

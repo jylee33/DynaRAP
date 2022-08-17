@@ -118,34 +118,42 @@ namespace DynaRAP.UControl
 
         private void InitializePresetList()
         {
-            luePresetList.Properties.DataSource = null;
-
-            presetList = GetPresetList();
-            pComboList = new List<PresetData>();
-
-            foreach (ResponsePreset list in presetList)
+            try
             {
-                //Decoding
-                byte[] byte64 = Convert.FromBase64String(list.presetName);
-                string decName = Encoding.UTF8.GetString(byte64);
+                luePresetList.Properties.DataSource = null;
 
-                pComboList.Add(new PresetData(decName, list.presetPack));
-            }
-            luePresetList.Properties.DataSource = pComboList;
+                presetList = GetPresetList();
+                pComboList = new List<PresetData>();
+
+                foreach (ResponsePreset list in presetList)
+                {
+                    //Decoding
+                    byte[] byte64 = Convert.FromBase64String(list.presetName);
+                    string decName = Encoding.UTF8.GetString(byte64);
+
+                    pComboList.Add(new PresetData(decName, list.presetPack));
+                }
+                luePresetList.Properties.DataSource = pComboList;
 #if !DEBUG
             luePresetList.Properties.PopulateColumns();
             luePresetList.Properties.ShowHeader = false;
             luePresetList.Properties.Columns["PresetPack"].Visible = false;
             luePresetList.Properties.ShowFooter = false;
 #else
-            luePresetList.Properties.PopulateColumns();
-            luePresetList.Properties.Columns["PresetName"].Width = 800;
+                luePresetList.Properties.PopulateColumns();
+                luePresetList.Properties.Columns["PresetName"].Width = 800;
 #endif
 
-            //luePresetList.EditValue = edtParamName.Text;
-            luePresetList.EditValue = "";
-            gridControl1.DataSource = null;
-            gridView1.RefreshData();
+                //luePresetList.EditValue = edtParamName.Text;
+                luePresetList.EditValue = "";
+                gridControl1.DataSource = null;
+                gridView1.RefreshData();
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex.Message);
+
+            }
         }
 
         private List<ResponseParam> GetParamList()
@@ -861,56 +869,63 @@ namespace DynaRAP.UControl
 
         private void InitializeGridControl()
         {
-            //paramList
-            //repositoryItemComboBox1.TextEditStyle = TextEditStyles.DisableTextEditor;
-            repositoryItemComboBox1.SelectedIndexChanged += RepositoryItemComboBox1_SelectedIndexChanged;
-            repositoryItemComboBox1.BeforePopup += RepositoryItemComboBox1_BeforePopup;
-            repositoryItemComboBox1.PopupFormMinSize = new System.Drawing.Size(0, 500);
-
-            foreach (ResponseParam param in paramList)
+            try
             {
-                repositoryItemComboBox1.Items.Add(param.paramKey);
+                //paramList
+                //repositoryItemComboBox1.TextEditStyle = TextEditStyles.DisableTextEditor;
+                repositoryItemComboBox1.SelectedIndexChanged += RepositoryItemComboBox1_SelectedIndexChanged;
+                repositoryItemComboBox1.BeforePopup += RepositoryItemComboBox1_BeforePopup;
+                repositoryItemComboBox1.PopupFormMinSize = new System.Drawing.Size(0, 500);
+
+                foreach (ResponseParam param in paramList)
+                {
+                    repositoryItemComboBox1.Items.Add(param.paramKey);
+                }
+
+                //gridView1.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+
+                gridView1.OptionsView.ShowColumnHeaders = true;
+                gridView1.OptionsView.ShowGroupPanel = false;
+                gridView1.OptionsView.ShowIndicator = true;
+                gridView1.IndicatorWidth = 40;
+                gridView1.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.False;
+                gridView1.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.False;
+                gridView1.OptionsView.ColumnAutoWidth = true;
+
+                gridView1.OptionsBehavior.ReadOnly = false;
+                //gridView1.OptionsBehavior.Editable = false;
+
+                gridView1.OptionsSelection.MultiSelectMode = DevExpress.XtraGrid.Views.Grid.GridMultiSelectMode.RowSelect;
+                gridView1.OptionsSelection.EnableAppearanceFocusedCell = false;
+
+                gridView1.CustomDrawRowIndicator += GridView1_CustomDrawRowIndicator;
+
+                GridColumn colName = gridView1.Columns["ParamKey"];
+                colName.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
+                colName.OptionsColumn.FixedWidth = true;
+                colName.Width = 240;
+                colName.Caption = "파라미터 이름";
+
+                GridColumn colDel = gridView1.Columns["Del"];
+                colDel.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
+                colDel.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
+                colDel.OptionsColumn.FixedWidth = true;
+                colDel.Width = 40;
+                colDel.Caption = "삭제";
+                colDel.OptionsColumn.ReadOnly = true;
+
+                this.repositoryItemImageComboBox1.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(0, 0));
+                this.repositoryItemImageComboBox1.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(1, 1));
+
+                this.repositoryItemImageComboBox1.GlyphAlignment = HorzAlignment.Center;
+                this.repositoryItemImageComboBox1.Buttons[0].Visible = false;
+
+                this.repositoryItemImageComboBox1.Click += RepositoryItemImageComboBox1_Click;
             }
-
-            //gridView1.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
-
-            gridView1.OptionsView.ShowColumnHeaders = true;
-            gridView1.OptionsView.ShowGroupPanel = false;
-            gridView1.OptionsView.ShowIndicator = true;
-            gridView1.IndicatorWidth = 40;
-            gridView1.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.False;
-            gridView1.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.False;
-            gridView1.OptionsView.ColumnAutoWidth = true;
-
-            gridView1.OptionsBehavior.ReadOnly = false;
-            //gridView1.OptionsBehavior.Editable = false;
-
-            gridView1.OptionsSelection.MultiSelectMode = DevExpress.XtraGrid.Views.Grid.GridMultiSelectMode.RowSelect;
-            gridView1.OptionsSelection.EnableAppearanceFocusedCell = false;
-
-            gridView1.CustomDrawRowIndicator += GridView1_CustomDrawRowIndicator;
-
-            GridColumn colName = gridView1.Columns["ParamKey"];
-            colName.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
-            colName.OptionsColumn.FixedWidth = true;
-            colName.Width = 240;
-            colName.Caption = "파라미터 이름";
-
-            GridColumn colDel = gridView1.Columns["Del"];
-            colDel.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
-            colDel.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
-            colDel.OptionsColumn.FixedWidth = true;
-            colDel.Width = 40;
-            colDel.Caption = "삭제";
-            colDel.OptionsColumn.ReadOnly = true;
-
-            this.repositoryItemImageComboBox1.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(0, 0));
-            this.repositoryItemImageComboBox1.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(1, 1));
-
-            this.repositoryItemImageComboBox1.GlyphAlignment = HorzAlignment.Center;
-            this.repositoryItemImageComboBox1.Buttons[0].Visible = false;
-
-            this.repositoryItemImageComboBox1.Click += RepositoryItemImageComboBox1_Click;
+            catch(Exception ex)
+            {
+                log.Error(ex.Message);
+            }
         }
 
         private void GridView1_CustomDrawRowIndicator(object sender, DevExpress.XtraGrid.Views.Grid.RowIndicatorCustomDrawEventArgs e)
@@ -1366,50 +1381,66 @@ namespace DynaRAP.UControl
 
         private void luePresetList_EditValueChanged(object sender, EventArgs e)
         {
-            gridList = null;
-            gridControl1.DataSource = null;
-
-            paramIndex = START_PARAM_INDEX;
-            //int reducedHeight = (paramHeight * flowLayoutPanel1.Controls.Count);
-            //flowLayoutPanel1.Height -= reducedHeight;
-            //flowLayoutPanel1.Controls.Clear();
-            //btnModifyParameter.Location = new Point(btnModifyParameter.Location.X, btnModifyParameter.Location.Y - reducedHeight);
-            //btnDeleteParameter.Location = new Point(btnDeleteParameter.Location.X, btnDeleteParameter.Location.Y - reducedHeight);
-            //btnSaveAsNewParameter.Location = new Point(btnSaveAsNewParameter.Location.X, btnSaveAsNewParameter.Location.Y - reducedHeight);
-
-            string presetPack = String.Empty;
-            if (luePresetList.GetColumnValue("PresetPack") != null)
-                presetPack = luePresetList.GetColumnValue("PresetPack").ToString();
-
-            presetParamList = null;
-            ResponsePreset preset = presetList.Find(x => x.presetPack.Equals(presetPack));
-
-            string presetName = String.Empty;
-
-            if (preset != null)
+            try
             {
-                //Decoding
-                byte[] byte64 = Convert.FromBase64String(preset.presetName);
-                string decName = Encoding.UTF8.GetString(byte64);
+                gridList = null;
+                gridControl1.DataSource = null;
 
-                presetName = decName;
+                paramIndex = START_PARAM_INDEX;
+                //int reducedHeight = (paramHeight * flowLayoutPanel1.Controls.Count);
+                //flowLayoutPanel1.Height -= reducedHeight;
+                //flowLayoutPanel1.Controls.Clear();
+                //btnModifyParameter.Location = new Point(btnModifyParameter.Location.X, btnModifyParameter.Location.Y - reducedHeight);
+                //btnDeleteParameter.Location = new Point(btnDeleteParameter.Location.X, btnDeleteParameter.Location.Y - reducedHeight);
+                //btnSaveAsNewParameter.Location = new Point(btnSaveAsNewParameter.Location.X, btnSaveAsNewParameter.Location.Y - reducedHeight);
 
-                presetParamList = GetPresetParamList(preset.presetPack);
-            }
+                string presetPack = String.Empty;
+                if (luePresetList.GetColumnValue("PresetPack") != null)
+                    presetPack = luePresetList.GetColumnValue("PresetPack").ToString();
 
-            if (presetParamList != null)
-            {
-                gridList = new List<PresetParamData>();
-                foreach (ResponseParam param in presetParamList)
+                presetParamList = null;
+                ResponsePreset preset = presetList.Find(x => x.presetPack.Equals(presetPack));
+
+                string presetName = String.Empty;
+
+                if (preset != null)
                 {
-                    //AddParameter(param);
-                    gridList.Add(new PresetParamData(param.paramKey, param.adamsKey, param.zaeroKey, param.grtKey, param.fltpKey, param.fltsKey, param.propInfo.propType, param.partInfo, param.seq, param.propInfo.seq, param.paramPack, 1));
+                    //Decoding
+                    byte[] byte64 = Convert.FromBase64String(preset.presetName);
+                    string decName = Encoding.UTF8.GetString(byte64);
+
+                    presetName = decName;
+
+                    presetParamList = GetPresetParamList(preset.presetPack);
                 }
 
-                this.gridControl1.DataSource = gridList;
+                if (presetParamList != null)
+                {
+                    gridList = new List<PresetParamData>();
+                    foreach (ResponseParam param in presetParamList)
+                    {
+                        //AddParameter(param);
+                        string propType = string.Empty;
+                        string propSeq = string.Empty;
+
+                        if(param.propInfo != null)
+                        {
+                            propType = param.propInfo.propType;
+                            propSeq = param.propInfo.seq;
+                        }
+
+                        gridList.Add(new PresetParamData(param.paramKey, param.adamsKey, param.zaeroKey, param.grtKey, param.fltpKey, param.fltsKey, propType, param.partInfo, param.seq, propSeq, param.paramPack, 1));
+                    }
+
+                    this.gridControl1.DataSource = gridList;
+                }
+                gridView1.RefreshData();
+                edtPresetName.Text = presetName;
             }
-            gridView1.RefreshData();
-            edtPresetName.Text = presetName;
+            catch (Exception ex)
+            {
+                log.Error(ex.Message);
+            }
         }
 
         private void RepositoryItemImageComboBox1_Click(object sender, EventArgs e)

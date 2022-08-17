@@ -723,15 +723,22 @@ namespace DynaRAP.UControl
 
         private void InitializeProperty()
         {
-            propList.Clear();
-            propList = GetPropertyInfo();
-
-            foreach (ResponsePropList prop in propList)
+            try
             {
-                if (cboPropertyType.Properties.Items.Contains(prop.propType) == false && prop.deleted == false)
+                propList.Clear();
+                propList = GetPropertyInfo();
+
+                foreach (ResponsePropList prop in propList)
                 {
-                    cboPropertyType.Properties.Items.Add(prop.propType);
+                    if (cboPropertyType.Properties.Items.Contains(prop.propType) == false && prop.deleted == false)
+                    {
+                        cboPropertyType.Properties.Items.Add(prop.propType);
+                    }
                 }
+            }
+            catch(Exception ex)
+            {
+                log.Error(ex.Message);
             }
         }
 
@@ -1258,7 +1265,15 @@ namespace DynaRAP.UControl
 
                 extras = JsonConvert.SerializeObject(dicExtra);
 
-                bool bResult = AddModParameter("modify", paramKey, encTags, extras, param.seq, param.propSeq, param.paramPack);
+                string propSeq = string.Empty;
+
+                ResponsePropList prop = propList.Find(x => x.propType.Equals(cboPropertyType.Text) && x.propCode.Equals(cboPropertyCode.Text));
+                if(prop != null)
+                {
+                    propSeq = prop.seq;
+                }
+
+                bool bResult = AddModParameter("modify", paramKey, encTags, extras, param.seq, propSeq, param.paramPack);
 
                 if (bResult)
                 {
