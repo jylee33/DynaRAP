@@ -412,6 +412,60 @@ create table `dynarap_data_prop`
 ) $$
 
 
+drop table if exists `dynarap_bin_meta` cascade $$
+
+create table `dynarap_bin_meta`
+(
+    `seq` bigint auto_increment not null            comment '일련번호',
+    `metaName` varchar(64) not null                 comment '구성 이름',
+    `createdAt` bigint default 0                    comment '생성일자',
+    constraint pk_dynarap_bin_meta primary key (`seq`)
+) $$
+
+drop table if exists `dynaprap_bin_data` cascade $$
+
+create table `dynarap_bin_data`
+(
+    `seq` bigint auto_increment not null            comment '일련번호',
+    `binMetaSeq` bigint not null                    comment '메타 정보',
+    `dataFrom` varchar(64) not null                 comment '기준 위치',
+    `refSeq` bigint default 0                       comment '참조 데이터',
+    constraint pk_dynarap_bin_data primary key (`seq`)
+) $$
+
+drop table if exists `dynarap_bin_param` cascade $$
+
+create table `dynarap_bin_param`
+(
+    `seq` bigint auto_increment not null            comment '일련번호',
+    `binMetaSeq` bigint not null                    comment '메타 정보',
+    `paramSeq` bigint default 0                     comment '선택 파라미터',
+    `paramPack` bigint default 0                    comment '선택 파라미터 그룹',
+    `fieldType` varchar(32)                         comment '파라미터 종류',
+    `fieldPropSeq` bigint default 0                 comment '특성 선택',
+    `paramKey` varchar(128)                         comment '파라미터 키',
+    `adamsKey` varchar(32)                          comment 'adams 키',
+    `zaeroKey` varchar(32)                          comment 'zaero 키',
+    `grtKey` varchar(32)                            comment 'grt 키',
+    `fltpKey` varchar(32)                           comment 'fltp 키',
+    `fltsKey` varchar(32)                           comment 'flts 키',
+    constraint pk_dynarap_bin_param primary key (`seq`)
+) $$
+
+drop table if exists `dynarap_bin_param_data` cascade $$
+
+create table `dynarap_bin_param_data`
+(
+    `seq` bigint auto_increment not null            comment '일련번호',
+    `binMetaSeq` bigint not null                    comment '메타정보',
+    `paramSeq` bigint default 0                     comment 'bin param seq',
+    `dataNominal` double default 0.0                comment 'nominal',
+    `dataMin` double default 0.0                    comment 'min',
+    `dataMax` double default 0.0                    comment 'max',
+    constraint pk_dynarap_bin_param_data primary key (`seq`)
+) $$
+
+
 
 delimiter ;
 
