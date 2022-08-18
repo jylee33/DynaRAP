@@ -113,9 +113,9 @@ public class PartImportTask {
                         Map<String, ParamVO> fltpMap = new LinkedHashMap<>();
                         Map<String, ParamVO> fltsMap = new LinkedHashMap<>();
                         for (ParamVO param : presetParams) {
-                            grtMap.put(param.getGrtKey(), param);
-                            fltpMap.put(param.getFltpKey() + "_" + param.getPropInfo().getParamUnit(), param);
-                            fltsMap.put(param.getFltsKey() + "_" + param.getPropInfo().getParamUnit(), param);
+                            if (rawUpload.getDataType().equals("grt")) grtMap.put(param.getGrtKey(), param);
+                            if (rawUpload.getDataType().equals("fltp")) fltpMap.put(param.getFltpKey() + "_" + param.getPropInfo().getParamUnit(), param);
+                            if (rawUpload.getDataType().equals("flts")) fltsMap.put(param.getFltsKey() + "_" + param.getPropInfo().getParamUnit(), param);
                         }
 
                         // File loading
