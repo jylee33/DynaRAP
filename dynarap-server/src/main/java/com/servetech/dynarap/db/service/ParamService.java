@@ -13,6 +13,7 @@ import com.servetech.dynarap.vo.ParamVO;
 import com.servetech.dynarap.vo.PartVO;
 import com.servetech.dynarap.vo.PresetVO;
 import com.servetech.dynarap.vo.RawVO;
+import org.apache.catalina.util.ParameterMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -192,6 +193,18 @@ public class ParamService {
         }
     }
 
+    public List<PresetVO> getPresetByParamPack(CryptoField paramPack, CryptoField oldParamSeq) throws HandledServiceException
+    {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("paramPack", paramPack);
+            params.put("oldParamSeq", oldParamSeq);
+            return paramMapper.selectPresetByParamPack(params);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
     @Transactional
     public ParamVO insertParam(ParamVO param) throws HandledServiceException {
         try {
@@ -208,6 +221,35 @@ public class ParamService {
             if (param.getParamPack() == null || param.getParamPack().isEmpty()) {
                 param.setParamPack(param.getSeq());
                 paramMapper.updateParamNoRenew(param);
+            }
+
+            // preset 에서 param을 가지고 있는 경우 처리.
+            List<PresetVO> presets = getPresetByParamPack(param.getParamPack(), oldParam.getSeq());
+            if (presets != null && presets.size() > 0) {
+                for (PresetVO preset : presets) {
+                    CryptoField oldSeq = preset.getSeq();
+
+                    preset = insertPreset(preset);
+                    if (!preset.getSeq().equals(oldSeq)) {
+                        // parameter copy
+                        List<ParamVO> presetParams = getPresetParamList(preset.getPresetPack(), oldSeq, null, null, 1, 999999);
+                        if (presetParams == null) presetParams = new ArrayList<>();
+                        for (ParamVO p : presetParams) {
+                            PresetVO.Param pparam = new PresetVO.Param();
+                            pparam.setPresetPack(preset.getPresetPack());
+                            pparam.setPresetSeq(preset.getSeq());
+                            if (p.getParamPack().equals(param.getParamPack())) {
+                                pparam.setParamPack(param.getParamPack());
+                                pparam.setParamSeq(param.getSeq());
+                            }
+                            else {
+                                pparam.setParamPack(p.getParamPack());
+                                pparam.setParamSeq(p.getSeq());
+                            }
+                            paramMapper.insertPresetParam(pparam);
+                        }
+                    }
+                }
             }
 
             // extra 처리.
