@@ -795,8 +795,8 @@ public class ServiceApiController extends ApiController {
                 Map<String, ParamVO> fltsMap = new LinkedHashMap<>();
                 for (ParamVO param : presetParams) {
                     grtMap.put(param.getGrtKey(), param);
-                    fltpMap.put(param.getFltpKey() + "_" + param.getPropInfo().getParamUnit(), param);
-                    fltsMap.put(param.getFltsKey() + "_" + param.getPropInfo().getParamUnit(), param);
+                    fltpMap.put(param.getFltpKey(), param);
+                    fltsMap.put(param.getFltsKey(), param);
                 }
 
                 String[] splitParam = headerRow.trim().split(",");
