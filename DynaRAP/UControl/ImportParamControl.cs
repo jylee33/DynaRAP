@@ -256,7 +256,8 @@ namespace DynaRAP.UControl
             if (this.DeleteBtnClicked != null)
                 this.DeleteBtnClicked(this, new EventArgs());
 
-            panelChart.Close();
+            if (panelChart != null)
+                panelChart.Close();
         }
 
         private void btnView_Click(object sender, EventArgs e)
