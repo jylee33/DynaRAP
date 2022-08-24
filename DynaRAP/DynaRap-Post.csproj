@@ -137,6 +137,7 @@
     <Compile Include="Common\SeriesPointData.cs" />
     <Compile Include="Data\DataPropResponse.cs" />
     <Compile Include="Data\DllParamDataAddBulkRequest.cs" />
+    <Compile Include="Data\CheckParamRequest.cs" />
     <Compile Include="Data\SBParamListResponse.cs" />
     <Compile Include="Data\DllParamDataResponse.cs" />
     <Compile Include="Data\DllParamDataListResponse.cs" />

@@ -61,7 +61,7 @@ namespace DynaRAP.UControl
 
             if (GetProgress())
             {
-                if (fetchCount >= totalFetchCount + 1)
+                if (fetchCount >= totalFetchCount)
                 {
                     progress = totalFetchCount;
                     isCompleted = true;
@@ -86,7 +86,7 @@ namespace DynaRAP.UControl
                 progressBar.Properties.Minimum = 0;
                 progressBar.Properties.Maximum = this.totalFetchCount;
 
-                if (fetchCount >= totalFetchCount + 1)
+                if (fetchCount >= totalFetchCount)
                 {
                     progress = totalFetchCount;
                     isCompleted = true;

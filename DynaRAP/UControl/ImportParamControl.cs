@@ -49,11 +49,11 @@ namespace DynaRAP.UControl
             set
             {
                 this.dicData = value;
-                List<string> paramList = value.Keys.ToList();
-                cboParameter.Properties.Items.AddRange(paramList);
-                cboParameter.Properties.Items.Remove("DATE");
+                //List<string> paramList = value.Keys.ToList();
+                //cboParameter.Properties.Items.AddRange(paramList);
+                //cboParameter.Properties.Items.Remove("DATE");
 
-                cboParameter.SelectedIndex = 0;
+                //cboParameter.SelectedIndex = 0;
             }
         }
 
@@ -79,6 +79,7 @@ namespace DynaRAP.UControl
             cboParameter.SelectedIndexChanged += cboParameter_SelectedIndexChanged;
 
             List<string> paramList = dicData.Keys.ToList();
+            cboParameter.Properties.Items.Clear();
             cboParameter.Properties.Items.AddRange(paramList);
             cboParameter.Properties.Items.Remove("DATE");
 

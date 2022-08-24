@@ -142,6 +142,9 @@ namespace DynaRAP.UControl
 
             paramList = GetParamList();
 
+            if (paramList == null)
+                return;
+
             repositoryItemComboBox1.Items.Clear();
             repositoryItemComboBox1.Items.Add("skip");
             foreach (ResponseParam param in paramList)
@@ -948,12 +951,12 @@ namespace DynaRAP.UControl
 
                 if (importType == ImportType.FLYING)
                 {
-                    csvFilePath = @"C:\temp\TEST_GRT_SL30_03_1st_FT_Load_1_edit220617.csv";
+                    csvFilePath = @"C:\temp\TEST_WING_RH_220823_EDIT.csv";
                     lblFlyingData.Text = csvFilePath;
                 }
                 else
                 {
-                    csvFilePath = @"C:\temp\NL01-BFP23-06025-P002_GRIDG_SOF.dat";
+                    csvFilePath = @"C:\temp\ANAYSIS_ZAERO_LOADMOD_WING_RH_220816.dat";
                     lblFlyingData.Text = csvFilePath;
                 }
                 StreamReader sr = new StreamReader(csvFilePath);
@@ -1116,35 +1119,27 @@ namespace DynaRAP.UControl
                 }
 
                 string url = ConfigurationManager.AppSettings["UrlImport"];
-                string sendData = String.Empty;
-                csvFilePath = csvFilePath.Replace("\\", "\\\\");
+                //csvFilePath = csvFilePath.Replace("\\", "\\\\");
+
+                CheckParamRequest checkParamRequest = new CheckParamRequest();
+                checkParamRequest.command = "check-param";
+                checkParamRequest.presetPack = presetPack;
+                checkParamRequest.presetSeq = null;
+                checkParamRequest.dataType = dataType;
+
                 if (importType == ImportType.FLYING) // 비행데이터 import
                 {
-                    sendData = string.Format(@"
-                {{
-                ""command"":""check-param"",
-                ""presetPack"":""{0}"",
-                ""presetSeq"":null,
-                ""dataType"":""{1}"",
-                ""headerRow"":""{2}""
-                }}"
-                    , presetPack, dataType, this.headerRow);
+                    checkParamRequest.headerRow = this.headerRow;
                 }
                 else // 해석데이터 import
                 {
-                    sendData = string.Format(@"
-                {{
-                ""command"":""check-param"",
-                ""presetPack"":""{0}"",
-                ""presetSeq"":null,
-                ""dataType"":""{1}"",
-                ""importFilePath"":""{2}""
-                }}"
-                    , presetPack, dataType, this.csvFilePath);
+                    checkParamRequest.importFilePath = this.csvFilePath;
                 }
 
+                var json = JsonConvert.SerializeObject(checkParamRequest);
+
                 log.Info("url : " + url);
-                log.Info(sendData);
+                log.Info(json);
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
                 request.Method = "POST";
@@ -1153,7 +1148,7 @@ namespace DynaRAP.UControl
                 //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
 
                 // POST할 데이타를 Request Stream에 쓴다
-                byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+                byte[] bytes = Encoding.ASCII.GetBytes(json);
                 request.ContentLength = bytes.Length; // 바이트수 지정
 
                 using (Stream reqStream = request.GetRequestStream())
