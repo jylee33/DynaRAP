@@ -135,6 +135,7 @@
     <Compile Include="Common\DrawTypes.cs" />
     <Compile Include="Common\ParamProperty.cs" />
     <Compile Include="Common\SeriesPointData.cs" />
+    <Compile Include="Data\BinTableSaveRequest.cs" />
     <Compile Include="Data\DataPropResponse.cs" />
     <Compile Include="Data\DllParamDataAddBulkRequest.cs" />
     <Compile Include="Data\CheckParamRequest.cs" />

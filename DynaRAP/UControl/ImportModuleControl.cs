@@ -951,7 +951,7 @@ namespace DynaRAP.UControl
 
                 if (importType == ImportType.FLYING)
                 {
-                    csvFilePath = @"C:\temp\TEST_WING_RH_220823_EDIT.csv";
+                    csvFilePath = @"C:\temp\a.xls";
                     lblFlyingData.Text = csvFilePath;
                 }
                 else
