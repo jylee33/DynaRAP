@@ -48,6 +48,7 @@ namespace DynaRAP
         MgmtMatchingTabletControl mgmtMatchingTableControl = null;
         //MgmtPresetGroupControl mgmtPresetGroupControl = null;
         PlotModuleControl plotModuleControl = null;
+        ParameterModuleControl parameterModuleControl = null;
 
         CsvTableControl csvTableControl = null;
 
@@ -108,6 +109,9 @@ namespace DynaRAP
         public PlotModuleControl PlotModuleControl { get => plotModuleControl; set => plotModuleControl = value; }
 
         //public MgmtPresetGroupControl MgmtPresetGroupControl { get => mgmtPresetGroupControl; set => mgmtPresetGroupControl = value; }
+
+        public ParameterModuleControl ParamModuleControl { get => parameterModuleControl; set => parameterModuleControl = value; }
+        
 
         public MainForm()
         {
@@ -256,6 +260,20 @@ namespace DynaRAP
             //{
             //    tabbedView1.ActivateDocument(mgmtPresetGroupControl);
             //}
+
+            if (parameterModuleControl == null)
+            {
+                parameterModuleControl = new ParameterModuleControl();
+                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(parameterModuleControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
+                doc.Tag = "Parameter Module";
+                doc.Caption = "Parameter Module";
+                tabbedView1.ActivateDocument(parameterModuleControl);
+            }
+            else
+            {
+                tabbedView1.ActivateDocument(parameterModuleControl);
+            }
+            
             */
 
 #if DEBUG
@@ -269,6 +287,7 @@ namespace DynaRAP
             tabbedView1.RemoveDocument(binModuleControl);
             tabbedView1.RemoveDocument(mgmtLRPControl);
             tabbedView1.RemoveDocument(plotModuleControl);
+            tabbedView1.RemoveDocument(parameterModuleControl);
             tabbedView1.ActivateDocument(startControl);
 #endif
 
@@ -385,7 +404,11 @@ namespace DynaRAP
             {
                 plotModuleControl = null;
             }
-            
+            else if (e.Document.Control is ParameterModuleControl)
+            {
+                parameterModuleControl = null;
+            }
+
             //else if (e.Document.Control is MgmtPresetGroupControl)
             //{
             //    mgmtPresetGroupControl = null;
@@ -1007,6 +1030,22 @@ namespace DynaRAP
             sbControl.Dock = DockStyle.Fill;
             panelSBList.Controls.Add(sbControl);
             panelSBList.ClosedPanel += PanelChart_ClosedPanel;
+        }
+
+        private void btnParamModule_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            if (parameterModuleControl == null)
+            {
+                parameterModuleControl = new ParameterModuleControl();
+                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(parameterModuleControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
+                doc.Tag = "Parameter Module";
+                doc.Caption = "Parameter Module";
+                tabbedView1.ActivateDocument(parameterModuleControl);
+            }
+            else
+            {
+                tabbedView1.ActivateDocument(parameterModuleControl);
+            }
         }
     }
 

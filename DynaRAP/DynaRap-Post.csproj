@@ -458,6 +458,30 @@
     <Compile Include="UControl\MyPotatoChart.Designer.cs">
       <DependentUpon>MyPotatoChart.cs</DependentUpon>
     </Compile>
+    <Compile Include="UControl\ParamDataSelectControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\ParamDataSelectControl.Designer.cs">
+      <DependentUpon>ParamDataSelectControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\ParameterModuleControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\ParameterModuleControl.Designer.cs">
+      <DependentUpon>ParameterModuleControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\ParamExpressionControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\ParamExpressionControl.Designer.cs">
+      <DependentUpon>ParamExpressionControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\ParamPlotControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\ParamPlotControl.Designer.cs">
+      <DependentUpon>ParamPlotControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="UControl\PlotModuleControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -725,6 +749,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\MyPotatoChart.resx">
       <DependentUpon>MyPotatoChart.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\ParamDataSelectControl.resx">
+      <DependentUpon>ParamDataSelectControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\ParameterModuleControl.resx">
+      <DependentUpon>ParameterModuleControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\ParamExpressionControl.resx">
+      <DependentUpon>ParamExpressionControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\ParamPlotControl.resx">
+      <DependentUpon>ParamPlotControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\PlotModuleControl.resx">
       <DependentUpon>PlotModuleControl.cs</DependentUpon>

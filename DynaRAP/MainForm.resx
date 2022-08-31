@@ -507,18 +507,6 @@
   <data name="btnStart.Caption" xml:space="preserve">
     <value>Start</value>
   </data>
-  <data name="barSubItem2.Caption" xml:space="preserve">
-    <value>Import</value>
-  </data>
-  <data name="btnImportDLL.Caption" xml:space="preserve">
-    <value>기준데이터</value>
-  </data>
-  <data name="btnImportFlying.Caption" xml:space="preserve">
-    <value>비행데이터</value>
-  </data>
-  <data name="btnImportAnalysis.Caption" xml:space="preserve">
-    <value>해석데이터</value>
-  </data>
   <data name="barSubItem3.Caption" xml:space="preserve">
     <value>Matching Table</value>
   </data>
@@ -530,6 +518,18 @@
   </data>
   <data name="btnMgmtPresetGroup.Caption" xml:space="preserve">
     <value>프리셋그룹 관리</value>
+  </data>
+  <data name="barSubItem2.Caption" xml:space="preserve">
+    <value>Import</value>
+  </data>
+  <data name="btnImportDLL.Caption" xml:space="preserve">
+    <value>기준데이터</value>
+  </data>
+  <data name="btnImportFlying.Caption" xml:space="preserve">
+    <value>비행데이터</value>
+  </data>
+  <data name="btnImportAnalysis.Caption" xml:space="preserve">
+    <value>해석데이터</value>
   </data>
   <data name="barSubItem1.Caption" xml:space="preserve">
     <value>고급후처리 과정</value>
@@ -545,6 +545,12 @@
   </data>
   <data name="btnBinModule.Caption" xml:space="preserve">
     <value>BIN 구성</value>
+  </data>
+  <data name="barSubItem6.Caption" xml:space="preserve">
+    <value>파라미터 모듈</value>
+  </data>
+  <data name="btnParamModule.Caption" xml:space="preserve">
+    <value>파라미터 모듈</value>
   </data>
   <data name="bar1.Text" xml:space="preserve">
     <value>Tools</value>
@@ -819,10 +825,22 @@
   <data name="&gt;&gt;barSubItem1.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.BarSubItem, DevExpress.XtraBars.v22.1, Version=22.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
+  <data name="&gt;&gt;barSubItem5.Name" xml:space="preserve">
+    <value>barSubItem5</value>
+  </data>
+  <data name="&gt;&gt;barSubItem5.Type" xml:space="preserve">
+    <value>DevExpress.XtraBars.BarSubItem, DevExpress.XtraBars.v22.1, Version=22.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  </data>
   <data name="&gt;&gt;btnSBModule.Name" xml:space="preserve">
     <value>btnSBModule</value>
   </data>
   <data name="&gt;&gt;btnSBModule.Type" xml:space="preserve">
+    <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v22.1, Version=22.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  </data>
+  <data name="&gt;&gt;btnSBInfoView.Name" xml:space="preserve">
+    <value>btnSBInfoView</value>
+  </data>
+  <data name="&gt;&gt;btnSBInfoView.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v22.1, Version=22.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
   <data name="&gt;&gt;btnBinModule.Name" xml:space="preserve">
@@ -867,16 +885,16 @@
   <data name="&gt;&gt;tabbedView1.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.Docking2010.Views.Tabbed.TabbedView, DevExpress.XtraBars.v22.1, Version=22.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
-  <data name="&gt;&gt;barSubItem5.Name" xml:space="preserve">
-    <value>barSubItem5</value>
+  <data name="&gt;&gt;barSubItem6.Name" xml:space="preserve">
+    <value>barSubItem6</value>
   </data>
-  <data name="&gt;&gt;barSubItem5.Type" xml:space="preserve">
+  <data name="&gt;&gt;barSubItem6.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.BarSubItem, DevExpress.XtraBars.v22.1, Version=22.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
-  <data name="&gt;&gt;btnSBInfoView.Name" xml:space="preserve">
-    <value>btnSBInfoView</value>
+  <data name="&gt;&gt;btnParamModule.Name" xml:space="preserve">
+    <value>btnParamModule</value>
   </data>
-  <data name="&gt;&gt;btnSBInfoView.Type" xml:space="preserve">
+  <data name="&gt;&gt;btnParamModule.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v22.1, Version=22.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
