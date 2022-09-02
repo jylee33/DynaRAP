@@ -38,6 +38,111 @@ public class ServiceApiController extends ApiController {
     @Value("${static.resource.location}")
     private String staticLocation;
 
+    @RequestMapping(value = "/param-module")
+    @ResponseBody
+    public Object apiParamModule(HttpServletRequest request, @PathVariable String serviceVersion,
+                         @RequestBody JsonObject payload, Authentication authentication) throws HandledServiceException {
+        /*
+        String accessToken = request.getHeader("Authorization");
+        if (accessToken == null || (!accessToken.startsWith("bearer") && !accessToken.startsWith("Bearer")))
+            return ResponseHelper.error(403, "권한이 없습니다.");
+
+        String username = authentication.getPrincipal().toString();
+        */
+        UserVO user = getService(UserService.class).getUser("admin@dynarap@dynarap");
+
+        if (checkJsonEmpty(payload, "command"))
+            throw new HandledServiceException(404, "파라미터를 확인하세요.");
+
+        String command = payload.get("command").getAsString();
+
+        if (command.equals("list")) {
+            return ResponseHelper.response(200, "Success - ParamModule List", "");
+        }
+
+        if (command.equals("add")) {
+            return ResponseHelper.response(200, "Success - ParamModule Added", "");
+        }
+
+        if (command.equals("modify")) {
+            return ResponseHelper.response(200, "Success - ParamModule Updated", "");
+        }
+
+        if (command.equals("remove")) {
+            return ResponseHelper.response(200, "Success - ParamModule Deleted", "");
+        }
+
+        if (command.equals("copy")) {
+            return ResponseHelper.response(200, "Success - ParamModule Copy", "");
+        }
+
+        if (command.equals("search")) {
+            return ResponseHelper.response(200, "Success - ParamModule Source Search", "");
+        }
+
+        if (command.equals("source-list")) {
+            return ResponseHelper.response(200, "Success - ParamModule Source List", "");
+        }
+
+        if (command.equals("save-source")) {
+            return ResponseHelper.response(200, "Success - ParamModule Save Source", "");
+        }
+
+        if (command.equals("save-source-single")) {
+            return ResponseHelper.response(200, "Success - ParamModule Save Source Single", "");
+        }
+
+        if (command.equals("eq-list")) {
+            return ResponseHelper.response(200, "Success - ParamModule Eq List", "");
+        }
+
+        if (command.equals("eq-data")) {
+            return ResponseHelper.response(200, "Success - ParamModule Eq Data", "");
+        }
+
+        if (command.equals("save-eq")) {
+            return ResponseHelper.response(200, "Success - ParamModule Save Eq", "");
+        }
+
+        if (command.equals("save-eq-single")) {
+            return ResponseHelper.response(200, "Success - ParamModule Save Eq Single", "");
+        }
+
+        if (command.equals("remove-eq")) {
+            return ResponseHelper.response(200, "Success - ParamModule Remove Eq", "");
+        }
+
+        if (command.equals("remove-eq-single")) {
+            return ResponseHelper.response(200, "Success - ParamModule Remove Eq Single", "");
+        }
+
+        if (command.equals("plot-list")) {
+            return ResponseHelper.response(200, "Success - ParamModule Plot List", "");
+        }
+
+        if (command.equals("plot-data")) {
+            return ResponseHelper.response(200, "Success - ParamModule Plot Data", "");
+        }
+
+        if (command.equals("save-plot")) {
+            return ResponseHelper.response(200, "Success - ParamModule Save Plot", "");
+        }
+
+        if (command.equals("save-plot-single")) {
+            return ResponseHelper.response(200, "Success - ParamModule Save Plot Single", "");
+        }
+
+        if (command.equals("remove-plot")) {
+            return ResponseHelper.response(200, "Success - ParamModule Remove Plot", "");
+        }
+
+        if (command.equals("remove-plot-single")) {
+            return ResponseHelper.response(200, "Success - ParamModule Remove Plot Single", "");
+        }
+
+        throw new HandledServiceException(411, "명령이 정의되지 않았습니다.");
+    }
+
     @RequestMapping(value = "/dir")
     @ResponseBody
     public Object apiDir(HttpServletRequest request, @PathVariable String serviceVersion,
