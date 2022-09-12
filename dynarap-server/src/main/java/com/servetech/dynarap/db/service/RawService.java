@@ -688,6 +688,20 @@ public class RawService {
     }
 
 
+    public Map<String, String> getDataPropListToMap(String referenceType, CryptoField referenceKey) throws HandledServiceException {
+        try {
+            List<DataPropVO> dataProps = getDataPropList(referenceType, referenceKey);
+            if (dataProps == null) dataProps = new ArrayList<>();
+            Map<String, String> retMap = new LinkedHashMap<>();
+            for (DataPropVO prop : dataProps) {
+                retMap.put(prop.getPropName().originOf(), prop.getPropValue().originOf());
+            }
+            return retMap;
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
     public List<DataPropVO> getDataPropList(String referenceType, CryptoField referenceKey) throws HandledServiceException {
         try {
             Map<String, Object> params = new HashMap<>();
