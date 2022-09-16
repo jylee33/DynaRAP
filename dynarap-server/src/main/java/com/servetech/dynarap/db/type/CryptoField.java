@@ -289,7 +289,7 @@ public class CryptoField {
     }
 
     public static void main(String[] args) {
-        System.out.println(new CryptoField(69L));
+        System.out.println(new CryptoField(1L));
         System.out.println(new CryptoField(71L));
     }
 }

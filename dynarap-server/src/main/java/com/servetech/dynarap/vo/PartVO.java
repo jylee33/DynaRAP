@@ -4,6 +4,8 @@ import com.servetech.dynarap.db.type.CryptoField;
 import com.servetech.dynarap.db.type.String64;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class PartVO {
     private CryptoField seq;
@@ -21,6 +23,32 @@ public class PartVO {
     private boolean hpfDone;
 
     private PresetVO presetInfo;
+    private List<ParamVO> params;
+
+    @Data
+    public static class DataSource {
+        protected String sourceType = "part";
+        protected CryptoField sourceSeq = null;
+        protected CryptoField paramPack;
+        protected CryptoField paramSeq;
+        protected String julianStartAt;
+        protected String julianEndAt;
+        protected double offsetStartAt;
+        protected double offsetEndAt;
+
+        public static DataSource getSource(PartVO part, ParamVO param) {
+            DataSource source = new DataSource();
+            source.setSourceType("part");
+            source.setSourceSeq(part.getSeq());
+            source.setParamPack(param.getParamPack());
+            source.setParamSeq(param.getSeq());
+            source.setJulianStartAt(part.getJulianStartAt());
+            source.setJulianEndAt(part.getJulianEndAt());
+            source.setOffsetStartAt(part.getOffsetStartAt());
+            source.setOffsetEndAt(part.getOffsetEndAt());
+            return source;
+        }
+    }
 
     @Data
     public static class Raw implements IFlexibleValue {
