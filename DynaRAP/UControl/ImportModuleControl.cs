@@ -956,7 +956,8 @@ namespace DynaRAP.UControl
                 }
                 else
                 {
-                    csvFilePath = @"C:\temp\ANAYSIS_ZAERO_LOADMOD_WING_RH_220816.dat";
+                    //csvFilePath = @"C:\temp\ANAYSIS_ZAERO_LOADMOD_WING_RH_220816.dat";
+                    csvFilePath = @"C:\temp\anaysis_zaero_loadmod_wing_rh_220816.dat";
                     lblFlyingData.Text = csvFilePath;
                 }
                 StreamReader sr = new StreamReader(csvFilePath);

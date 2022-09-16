@@ -37,21 +37,21 @@
             this.gridControl1 = new DevExpress.XtraGrid.GridControl();
             this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.gridColumn1 = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.repositoryItemComboBox1 = new DevExpress.XtraEditors.Repository.RepositoryItemComboBox();
             this.gridColumn2 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridColumn3 = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.repositoryItemComboBox2 = new DevExpress.XtraEditors.Repository.RepositoryItemComboBox();
             this.gridColumn4 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridColumn5 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridColumn6 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridColumn7 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemImageComboBox1 = new DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox();
             this.imageCollection1 = new DevExpress.Utils.ImageCollection(this.components);
+            this.gridColumn16 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.repositoryItemComboBox1 = new DevExpress.XtraEditors.Repository.RepositoryItemComboBox();
+            this.repositoryItemComboBox2 = new DevExpress.XtraEditors.Repository.RepositoryItemComboBox();
             this.btnAddAll = new DevExpress.XtraEditors.SimpleButton();
             this.labelControl3 = new DevExpress.XtraEditors.LabelControl();
             this.btnListSave = new DevExpress.XtraEditors.SimpleButton();
             this.btnDelAll = new DevExpress.XtraEditors.SimpleButton();
-            this.btnDelParamModule = new DevExpress.XtraEditors.SimpleButton();
             this.gridControl2 = new DevExpress.XtraGrid.GridControl();
             this.gridView2 = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.gridColumn8 = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -72,10 +72,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.edtSearch.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemComboBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemComboBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemImageComboBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemComboBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemComboBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemComboBox3)).BeginInit();
@@ -111,6 +111,7 @@
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Search)});
             this.edtSearch.Size = new System.Drawing.Size(301, 22);
             this.edtSearch.TabIndex = 4;
+            this.edtSearch.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.edtSearch_Click);
             // 
             // labelControl2
             // 
@@ -145,25 +146,18 @@
             this.gridColumn4,
             this.gridColumn5,
             this.gridColumn6,
-            this.gridColumn7});
+            this.gridColumn7,
+            this.gridColumn16});
             this.gridView1.GridControl = this.gridControl1;
             this.gridView1.Name = "gridView1";
             // 
             // gridColumn1
             // 
             this.gridColumn1.Caption = "데이터구분";
-            this.gridColumn1.ColumnEdit = this.repositoryItemComboBox1;
             this.gridColumn1.FieldName = "DataType";
             this.gridColumn1.Name = "gridColumn1";
             this.gridColumn1.Visible = true;
             this.gridColumn1.VisibleIndex = 0;
-            // 
-            // repositoryItemComboBox1
-            // 
-            this.repositoryItemComboBox1.AutoHeight = false;
-            this.repositoryItemComboBox1.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.repositoryItemComboBox1.Name = "repositoryItemComboBox1";
             // 
             // gridColumn2
             // 
@@ -176,42 +170,41 @@
             // gridColumn3
             // 
             this.gridColumn3.Caption = "파라미터";
-            this.gridColumn3.ColumnEdit = this.repositoryItemComboBox2;
-            this.gridColumn3.FieldName = "Parameter";
+            this.gridColumn3.FieldName = "ParamsCombo";
             this.gridColumn3.Name = "gridColumn3";
             this.gridColumn3.Visible = true;
             this.gridColumn3.VisibleIndex = 2;
-            // 
-            // repositoryItemComboBox2
-            // 
-            this.repositoryItemComboBox2.AutoHeight = false;
-            this.repositoryItemComboBox2.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.repositoryItemComboBox2.Name = "repositoryItemComboBox2";
             // 
             // gridColumn4
             // 
             this.gridColumn4.Caption = "선택구간(시작)";
             this.gridColumn4.FieldName = "SelectionStart";
+            this.gridColumn4.MinWidth = 80;
             this.gridColumn4.Name = "gridColumn4";
             this.gridColumn4.Visible = true;
             this.gridColumn4.VisibleIndex = 3;
+            this.gridColumn4.Width = 80;
             // 
             // gridColumn5
             // 
             this.gridColumn5.Caption = "선택구간(끝)";
             this.gridColumn5.FieldName = "SelectionEnd";
+            this.gridColumn5.MinWidth = 80;
             this.gridColumn5.Name = "gridColumn5";
             this.gridColumn5.Visible = true;
             this.gridColumn5.VisibleIndex = 4;
+            this.gridColumn5.Width = 80;
             // 
             // gridColumn6
             // 
             this.gridColumn6.Caption = "데이터 수";
             this.gridColumn6.FieldName = "DataCnt";
+            this.gridColumn6.MaxWidth = 80;
+            this.gridColumn6.MinWidth = 80;
             this.gridColumn6.Name = "gridColumn6";
             this.gridColumn6.Visible = true;
             this.gridColumn6.VisibleIndex = 5;
+            this.gridColumn6.Width = 80;
             // 
             // gridColumn7
             // 
@@ -235,6 +228,26 @@
             this.imageCollection1.ImageStream = ((DevExpress.Utils.ImageCollectionStreamer)(resources.GetObject("imageCollection1.ImageStream")));
             this.imageCollection1.Images.SetKeyName(0, "none.png");
             this.imageCollection1.Images.SetKeyName(1, "plus.png");
+            // 
+            // gridColumn16
+            // 
+            this.gridColumn16.Caption = "sourceSeq";
+            this.gridColumn16.FieldName = "sourceSeq";
+            this.gridColumn16.Name = "gridColumn16";
+            // 
+            // repositoryItemComboBox1
+            // 
+            this.repositoryItemComboBox1.AutoHeight = false;
+            this.repositoryItemComboBox1.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.repositoryItemComboBox1.Name = "repositoryItemComboBox1";
+            // 
+            // repositoryItemComboBox2
+            // 
+            this.repositoryItemComboBox2.AutoHeight = false;
+            this.repositoryItemComboBox2.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.repositoryItemComboBox2.Name = "repositoryItemComboBox2";
             // 
             // btnAddAll
             // 
@@ -272,15 +285,6 @@
             this.btnDelAll.TabIndex = 44;
             this.btnDelAll.Text = "전체 삭제";
             this.btnDelAll.Click += new System.EventHandler(this.btnDelAll_Click);
-            // 
-            // btnDelParamModule
-            // 
-            this.btnDelParamModule.Location = new System.Drawing.Point(246, 636);
-            this.btnDelParamModule.Name = "btnDelParamModule";
-            this.btnDelParamModule.Size = new System.Drawing.Size(115, 23);
-            this.btnDelParamModule.TabIndex = 44;
-            this.btnDelParamModule.Text = "파라미터모듈 삭제";
-            this.btnDelParamModule.Click += new System.EventHandler(this.btnDelParamModule_Click);
             // 
             // gridControl2
             // 
@@ -355,25 +359,32 @@
             // 
             this.gridColumn11.Caption = "선택구간(시작)";
             this.gridColumn11.FieldName = "SelectionStart";
+            this.gridColumn11.MinWidth = 100;
             this.gridColumn11.Name = "gridColumn11";
             this.gridColumn11.Visible = true;
             this.gridColumn11.VisibleIndex = 3;
+            this.gridColumn11.Width = 100;
             // 
             // gridColumn12
             // 
             this.gridColumn12.Caption = "선택구간(끝)";
             this.gridColumn12.FieldName = "SelectionEnd";
+            this.gridColumn12.MinWidth = 100;
             this.gridColumn12.Name = "gridColumn12";
             this.gridColumn12.Visible = true;
             this.gridColumn12.VisibleIndex = 4;
+            this.gridColumn12.Width = 100;
             // 
             // gridColumn13
             // 
             this.gridColumn13.Caption = "데이터 수";
             this.gridColumn13.FieldName = "DataCnt";
+            this.gridColumn13.MaxWidth = 80;
+            this.gridColumn13.MinWidth = 80;
             this.gridColumn13.Name = "gridColumn13";
             this.gridColumn13.Visible = true;
             this.gridColumn13.VisibleIndex = 5;
+            this.gridColumn13.Width = 80;
             // 
             // gridColumn14
             // 
@@ -425,7 +436,6 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.btnDelParamModule);
             this.Controls.Add(this.btnDelAll);
             this.Controls.Add(this.btnListSave);
             this.Controls.Add(this.btnAddAll);
@@ -443,10 +453,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.edtSearch.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemComboBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemComboBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemImageComboBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemComboBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemComboBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemComboBox3)).EndInit();
@@ -474,7 +484,6 @@
         private DevExpress.XtraEditors.LabelControl labelControl3;
         private DevExpress.XtraEditors.SimpleButton btnListSave;
         private DevExpress.XtraEditors.SimpleButton btnDelAll;
-        private DevExpress.XtraEditors.SimpleButton btnDelParamModule;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn2;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn3;
         private DevExpress.XtraEditors.Repository.RepositoryItemComboBox repositoryItemComboBox2;
@@ -500,5 +509,6 @@
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn15;
         private DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox repositoryItemImageComboBox3;
         private DevExpress.Utils.ImageCollection imageCollection3;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn16;
     }
 }

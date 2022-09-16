@@ -41,8 +41,8 @@
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.labelControl1 = new DevExpress.XtraEditors.LabelControl();
-            this.edtModuleName = new DevExpress.XtraEditors.TextEdit();
             this.labelControl3 = new DevExpress.XtraEditors.LabelControl();
+            this.moduleNameList = new DevExpress.XtraEditors.LookUpEdit();
             this.xtraTabControl1 = new DevExpress.XtraTab.XtraTabControl();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection2)).BeginInit();
@@ -50,7 +50,7 @@
             this.tableLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.edtModuleName.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.moduleNameList.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xtraTabControl1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -165,8 +165,8 @@
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel2.Controls.Add(this.labelControl1, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.edtModuleName, 1, 0);
             this.tableLayoutPanel2.Controls.Add(this.labelControl3, 1, 1);
+            this.tableLayoutPanel2.Controls.Add(this.moduleNameList, 1, 0);
             this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 98);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 2;
@@ -186,14 +186,6 @@
             this.labelControl1.TabIndex = 15;
             this.labelControl1.Text = "모듈 이름";
             // 
-            // edtModuleName
-            // 
-            this.edtModuleName.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.edtModuleName.Location = new System.Drawing.Point(103, 3);
-            this.edtModuleName.Name = "edtModuleName";
-            this.edtModuleName.Size = new System.Drawing.Size(438, 22);
-            this.edtModuleName.TabIndex = 16;
-            // 
             // labelControl3
             // 
             this.labelControl3.Anchor = System.Windows.Forms.AnchorStyles.Left;
@@ -202,6 +194,15 @@
             this.labelControl3.Size = new System.Drawing.Size(300, 15);
             this.labelControl3.TabIndex = 18;
             this.labelControl3.Text = "지정한 이름으로 아래 선택 데이터 및 수식을 저장합니다.";
+            // 
+            // moduleNameList
+            // 
+            this.moduleNameList.Location = new System.Drawing.Point(103, 3);
+            this.moduleNameList.Name = "moduleNameList";
+            this.moduleNameList.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.moduleNameList.Size = new System.Drawing.Size(438, 22);
+            this.moduleNameList.TabIndex = 25;
             // 
             // xtraTabControl1
             // 
@@ -227,7 +228,7 @@
             this.flowLayoutPanel1.PerformLayout();
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.edtModuleName.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.moduleNameList.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xtraTabControl1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -247,8 +248,8 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private DevExpress.XtraEditors.LabelControl labelControl1;
-        private DevExpress.XtraEditors.TextEdit edtModuleName;
         private DevExpress.XtraEditors.LabelControl labelControl3;
         private DevExpress.XtraTab.XtraTabControl xtraTabControl1;
+        private DevExpress.XtraEditors.LookUpEdit moduleNameList;
     }
 }

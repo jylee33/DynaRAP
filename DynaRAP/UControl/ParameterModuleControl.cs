@@ -1,8 +1,12 @@
 ﻿using DevExpress.XtraEditors;
 using DevExpress.XtraTab;
+using DynaRAP.Data;
+using DynaRAP.UTIL;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
 using System.Linq;
@@ -17,6 +21,10 @@ namespace DynaRAP.UControl
         ParamDataSelectControl dataSelectionControl = null;
         ParamExpressionControl expressionControl = null;
         ParamPlotControl plotControl = null;
+        ParamModuleSelectControl paramModuleControl = null;
+
+        private ListParamModuleResponse paramModuleList = null;
+        private List<ParamModuleData> paramModuleCombo = null;
 
         public ParameterModuleControl()
         {
@@ -25,6 +33,7 @@ namespace DynaRAP.UControl
             dataSelectionControl = new ParamDataSelectControl();
             expressionControl = new ParamExpressionControl();
             plotControl = new ParamPlotControl();
+            paramModuleControl = new ParamModuleSelectControl(this);
         }
 
         private void ParameterModuleControl_Load(object sender, EventArgs e)
@@ -32,9 +41,20 @@ namespace DynaRAP.UControl
             //xtraTabControl1.ClosePageButtonShowMode = ClosePageButtonShowMode.InActiveTabPageHeaderAndOnMouseHover;
             //xtraTabControl1.CloseButtonClick += XtraTabControl1_CloseButtonClick;
 
+            AddTabPage("ParamModuleSelect", "파라미터모듈선택", paramModuleControl);
             AddTabPage("ParamDataSelect", "데이터 선택", dataSelectionControl);
             AddTabPage("ParamExpression", "수식 관리", expressionControl);
             AddTabPage("ParamPlot", "PLOT 구성", plotControl);
+
+
+            moduleNameList.Properties.DisplayMember = "ModuleName";
+            moduleNameList.Properties.ValueMember = "Seq";
+            moduleNameList.Properties.NullText = "";
+            SetListParamModule();
+        }
+
+        private void InitializeParamModuleDataList()
+        {
 
         }
 
@@ -53,6 +73,32 @@ namespace DynaRAP.UControl
             ctrl.Dock = DockStyle.Fill;
             tabPage.Controls.Add(ctrl);
         }
+        public void SetListParamModule()
+        {
+            moduleNameList.Properties.DataSource = null;
+            string sendData = string.Format(@"
+                {{
+                ""command"":""list""
+                }}");
+            string responseData = Utils.GetPostData(ConfigurationManager.AppSettings["UrlParamModule"], sendData);
+            if (responseData != null && responseData != "")
+            {
+                paramModuleList = new ListParamModuleResponse();
+                paramModuleCombo = new List<ParamModuleData>();
 
+                paramModuleList = JsonConvert.DeserializeObject<ListParamModuleResponse>(responseData);
+                foreach (ListParamModule list in paramModuleList.response)
+                {
+                    byte[] byte64 = Convert.FromBase64String(list.moduleName);
+                    string moduleName = Encoding.UTF8.GetString(byte64);
+                    list.moduleName = moduleName;
+                    paramModuleCombo.Add(new ParamModuleData(list.seq, list.moduleName, list.copyFromSeq));
+                }
+                moduleNameList.Properties.DataSource = paramModuleCombo;
+                moduleNameList.EditValue = "";
+                moduleNameList.Properties.PopulateColumns();
+                moduleNameList.Properties.Columns["ModuleName"].Width = 800;
+            }
+        }
     }
 }
