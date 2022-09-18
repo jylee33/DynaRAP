@@ -1,6 +1,7 @@
 # This is a sample Python script.
 import sys
 import numpy as np
+import os
 from scipy import signal
 
 
@@ -71,11 +72,12 @@ if __name__ == '__main__':
     arg4 = float(sys.argv[4])  # LPF/HPF의 경우 필터계수
     arg5 = sys.argv[5]  # LOW / HIGH
 
-    # for test
-    # with open("/Users/sykim/PycharmProjects/pythonProject/x.txt") as f:
-    #    arg2 = f.read()
+    with open(arg2) as f:
+        data = f.read()
 
-    str_x = np.array(arg2.split(","))
+    os.remove(arg2)
+
+    str_x = np.array(data.split(","))
     x = str_x.astype(np.float)
 
     result1 = ""
