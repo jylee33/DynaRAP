@@ -91,10 +91,10 @@
             this.edtHPFcutoff = new DevExpress.XtraEditors.TextEdit();
             this.cboHPFbtype = new DevExpress.XtraEditors.ComboBoxEdit();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
+            this.chkCustomFilter = new DevExpress.XtraEditors.CheckEdit();
             this.btnSaveSplittedInterval = new DevExpress.XtraEditors.ButtonEdit();
             this.chkForcedImport = new DevExpress.XtraEditors.CheckEdit();
             this.imageCollection1 = new DevExpress.Utils.ImageCollection(this.components);
-            this.chkCustomFilter = new DevExpress.XtraEditors.CheckEdit();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.separatorControl1)).BeginInit();
             this.flowLayoutPanel1.SuspendLayout();
@@ -126,10 +126,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.edtHPFcutoff.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cboHPFbtype.Properties)).BeginInit();
             this.tableLayoutPanel5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chkCustomFilter.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnSaveSplittedInterval.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chkForcedImport.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.chkCustomFilter.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -805,6 +805,16 @@
             this.tableLayoutPanel5.Size = new System.Drawing.Size(788, 26);
             this.tableLayoutPanel5.TabIndex = 33;
             // 
+            // chkCustomFilter
+            // 
+            this.chkCustomFilter.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.chkCustomFilter.Location = new System.Drawing.Point(3, 3);
+            this.chkCustomFilter.Name = "chkCustomFilter";
+            this.chkCustomFilter.Properties.Caption = "Custom Filter";
+            this.chkCustomFilter.Size = new System.Drawing.Size(94, 19);
+            this.chkCustomFilter.TabIndex = 2;
+            this.chkCustomFilter.CheckedChanged += new System.EventHandler(this.chkCustomFilter_CheckedChanged);
+            // 
             // btnSaveSplittedInterval
             // 
             this.btnSaveSplittedInterval.EditValue = "분할구간 저장";
@@ -832,16 +842,6 @@
             this.imageCollection1.ImageStream = ((DevExpress.Utils.ImageCollectionStreamer)(resources.GetObject("imageCollection1.ImageStream")));
             this.imageCollection1.Images.SetKeyName(0, "none.png");
             this.imageCollection1.Images.SetKeyName(1, "view.png");
-            // 
-            // chkCustomFilter
-            // 
-            this.chkCustomFilter.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.chkCustomFilter.Location = new System.Drawing.Point(3, 3);
-            this.chkCustomFilter.Name = "chkCustomFilter";
-            this.chkCustomFilter.Properties.Caption = "Custom Filter";
-            this.chkCustomFilter.Size = new System.Drawing.Size(94, 19);
-            this.chkCustomFilter.TabIndex = 2;
-            this.chkCustomFilter.CheckedChanged += new System.EventHandler(this.chkCustomFilter_CheckedChanged);
             // 
             // ImportModuleControl
             // 
@@ -891,10 +891,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.edtHPFcutoff.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cboHPFbtype.Properties)).EndInit();
             this.tableLayoutPanel5.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.chkCustomFilter.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnSaveSplittedInterval.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chkForcedImport.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.chkCustomFilter.Properties)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

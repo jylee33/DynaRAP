@@ -112,7 +112,6 @@ namespace DynaRAP.UControl
             chartControl.Series.Clear();
 
             Series series = new Series("Series1", ViewType.Line);
-            series.View.Color = Color.Red;
             chartControl.Series.Add(series);
             dt = GetChartValues(strKey);
             series.DataSource = dt;
