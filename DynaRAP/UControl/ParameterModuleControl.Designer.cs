@@ -203,6 +203,7 @@
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.moduleNameList.Size = new System.Drawing.Size(438, 22);
             this.moduleNameList.TabIndex = 25;
+            this.moduleNameList.EditValueChanged += new System.EventHandler(this.moduleNameList_EditValueChanged);
             // 
             // xtraTabControl1
             // 

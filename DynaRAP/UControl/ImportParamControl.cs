@@ -102,6 +102,7 @@ namespace DynaRAP.UControl
 
             if (chartControl != null)
             {
+                chartControl.Series.Clear();
                 chartControl.Dispose();
                 chartControl = null;
             }
@@ -111,8 +112,8 @@ namespace DynaRAP.UControl
             chartControl.Series.Clear();
 
             Series series = new Series("Series1", ViewType.Line);
+            series.View.Color = Color.Red;
             chartControl.Series.Add(series);
-
             dt = GetChartValues(strKey);
             series.DataSource = dt;
 
@@ -123,9 +124,8 @@ namespace DynaRAP.UControl
 
             //((XYDiagram)chartControl.Diagram).AxisY.Visibility = DevExpress.Utils.DefaultBoolean.False;
             chartControl.Legend.Visibility = DevExpress.Utils.DefaultBoolean.False;
-
+               
             XYDiagram diagram = (XYDiagram)chartControl.Diagram;
-
             diagram.EnableAxisXScrolling = true;
             diagram.EnableAxisXZooming = true;
             diagram.AxisX.DateTimeScaleOptions.ScaleMode = ScaleMode.Manual;
@@ -138,7 +138,7 @@ namespace DynaRAP.UControl
 
             this.rangeControl1.Client = chartControl;
             rangeControl1.RangeChanged += RangeControl1_RangeChanged;
-            rangeControl1.ShowLabels = true;
+            rangeControl1.ShowLabels = false;
             diagram.RangeControlDateTimeGridOptions.GridMode = ChartRangeControlClientGridMode.Manual;
             diagram.RangeControlDateTimeGridOptions.GridOffset = 1;
             diagram.RangeControlDateTimeGridOptions.GridSpacing = 60;

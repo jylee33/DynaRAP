@@ -25,6 +25,7 @@ namespace DynaRAP.UControl
 
         private ListParamModuleResponse paramModuleList = null;
         private List<ParamModuleData> paramModuleCombo = null;
+        private int beforeSelectIndex = -1;
 
         public ParameterModuleControl()
         {
@@ -95,9 +96,26 @@ namespace DynaRAP.UControl
                     paramModuleCombo.Add(new ParamModuleData(list.seq, list.moduleName, list.copyFromSeq));
                 }
                 moduleNameList.Properties.DataSource = paramModuleCombo;
-                moduleNameList.EditValue = "";
                 moduleNameList.Properties.PopulateColumns();
                 moduleNameList.Properties.Columns["ModuleName"].Width = 800;
+            }
+        }
+
+        public void moduleNameList_EditValueChanged(object sender, EventArgs e)
+        {
+            string parammoduleSeq = null;
+            if (moduleNameList.GetColumnValue("Seq") != null && moduleNameList.ItemIndex != beforeSelectIndex)
+            {
+                if (beforeSelectIndex == -1 || MessageBox.Show("저장되지 않은 선택 데이터는 삭제됩니다. 파라미터를 변경하시겠습니까?", "데이터선택", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    parammoduleSeq = moduleNameList.GetColumnValue("Seq").ToString();
+                    dataSelectionControl.SetSelectDataSource(parammoduleSeq);
+                    beforeSelectIndex = moduleNameList.ItemIndex;
+                }
+                else
+                {
+                    moduleNameList.ItemIndex = beforeSelectIndex;
+                }
             }
         }
     }

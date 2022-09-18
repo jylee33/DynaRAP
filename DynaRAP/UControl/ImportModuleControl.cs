@@ -951,7 +951,8 @@ namespace DynaRAP.UControl
 
                 if (importType == ImportType.FLYING)
                 {
-                    csvFilePath = @"C:\temp\a.xls";
+                    //csvFilePath = @"C:\temp\a.xls";
+                    csvFilePath = @"C:\temp\XFA1_0001_1(원본).csv";
                     lblFlyingData.Text = csvFilePath;
                 }
                 else
@@ -1259,6 +1260,22 @@ namespace DynaRAP.UControl
         private void cboImportType_SelectedIndexChanged(object sender, EventArgs e)
         {
             CheckParam();
+        }
+
+        private void chkCustomFilter_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkCustomFilter.Checked)
+            {
+                chkHPF.Checked = false;
+                chkLPF.Checked = false;
+                chkHPF.Enabled = false;
+                chkLPF.Enabled = false;
+            }
+            else
+            {
+                chkHPF.Enabled = true;
+                chkLPF.Enabled = true;
+            }
         }
     }
 

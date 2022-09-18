@@ -10,7 +10,6 @@ namespace DynaRAP.Data
     {
         string dataType = string.Empty;
         string dataName = string.Empty;
-        List<GridParam> paramList = null;
         string selectionStart;
         string selectionEnd;
         string dataCnt = string.Empty;
@@ -28,7 +27,6 @@ namespace DynaRAP.Data
 
         public string DataType { get => dataType; set => dataType = value; }
         public string DataName { get => dataName; set => dataName = value; }
-        public List<GridParam> ParamList { get => paramList; set => paramList = value; }
         public string SelectionStart { get => selectionStart; set => selectionStart = value; }
         public string SelectionEnd { get => selectionEnd; set => selectionEnd = value; }
         public string DataCnt { get => dataCnt; set => dataCnt = value; }
@@ -48,7 +46,7 @@ namespace DynaRAP.Data
         {
         }
 
-        public ParamDataSelectionData(string dataType, string dataName, string selectionStart, string selectionEnd, string dataCnt, string sourceSeq, int view = 1, List<GridParam> paramList = null)
+        public ParamDataSelectionData(string dataType, string dataName, string selectionStart, string selectionEnd, string dataCnt, string sourceSeq, int view = 1)
         {
             this.dataType = dataType;
             this.dataName = dataName;
@@ -58,13 +56,11 @@ namespace DynaRAP.Data
             this.dataCnt = dataCnt;
             this.sourceSeq = sourceSeq;
             this.view = view;
-            this.paramList = paramList;
+        }     
     }
-
-        public class GridParam
-        {
-            public string paramKey { get; set; }
-            public string seq { get; set; }
-        }
+    public class GridParam
+    {
+        public string paramKey { get; set; }
+        public string seq { get; set; }
     }
 }

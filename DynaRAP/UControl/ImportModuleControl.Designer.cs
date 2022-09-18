@@ -94,6 +94,7 @@
             this.btnSaveSplittedInterval = new DevExpress.XtraEditors.ButtonEdit();
             this.chkForcedImport = new DevExpress.XtraEditors.CheckEdit();
             this.imageCollection1 = new DevExpress.Utils.ImageCollection(this.components);
+            this.chkCustomFilter = new DevExpress.XtraEditors.CheckEdit();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.separatorControl1)).BeginInit();
             this.flowLayoutPanel1.SuspendLayout();
@@ -128,6 +129,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.btnSaveSplittedInterval.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chkForcedImport.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chkCustomFilter.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -793,6 +795,7 @@
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 110F));
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 110F));
+            this.tableLayoutPanel5.Controls.Add(this.chkCustomFilter, 0, 0);
             this.tableLayoutPanel5.Controls.Add(this.btnSaveSplittedInterval, 4, 0);
             this.tableLayoutPanel5.Controls.Add(this.chkForcedImport, 3, 0);
             this.tableLayoutPanel5.Location = new System.Drawing.Point(3, 679);
@@ -829,6 +832,16 @@
             this.imageCollection1.ImageStream = ((DevExpress.Utils.ImageCollectionStreamer)(resources.GetObject("imageCollection1.ImageStream")));
             this.imageCollection1.Images.SetKeyName(0, "none.png");
             this.imageCollection1.Images.SetKeyName(1, "view.png");
+            // 
+            // chkCustomFilter
+            // 
+            this.chkCustomFilter.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.chkCustomFilter.Location = new System.Drawing.Point(3, 3);
+            this.chkCustomFilter.Name = "chkCustomFilter";
+            this.chkCustomFilter.Properties.Caption = "Custom Filter";
+            this.chkCustomFilter.Size = new System.Drawing.Size(94, 19);
+            this.chkCustomFilter.TabIndex = 2;
+            this.chkCustomFilter.CheckedChanged += new System.EventHandler(this.chkCustomFilter_CheckedChanged);
             // 
             // ImportModuleControl
             // 
@@ -881,6 +894,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.btnSaveSplittedInterval.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chkForcedImport.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chkCustomFilter.Properties)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -952,5 +966,6 @@
         private DevExpress.XtraEditors.Repository.RepositoryItemComboBox repositoryItemComboBox2;
         private DevExpress.XtraEditors.LabelControl labelControl11;
         private DevExpress.XtraEditors.TextEdit edtEquation;
+        private DevExpress.XtraEditors.CheckEdit chkCustomFilter;
     }
 }

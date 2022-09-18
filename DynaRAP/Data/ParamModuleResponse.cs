@@ -25,6 +25,44 @@ namespace DynaRAP.Data
         public CreatedAt createdAt { get; set; }
 
     }
+
+    public class SaveParamModuleSelectDataRequest
+    {
+        public string command { get; set; }
+        public string moduleSeq { get; set; }
+        public List<SaveParamModuleSelectDataSource> sources { get; set; }
+
+    }
+    
+    public class SaveParamModuleSelectDataResponse
+    {
+        public int code { get; set; }
+        public string message { get; set; }
+        public List<SaveParamModuleSelectDataSource> response { get; set; }
+    }
+    public class SaveParamModuleSelectDataSource
+    {
+        public string sourceType { get; set; }
+        public string sourceSeq { get; set; }
+        public string paramPack { get; set; }
+        public string paramSeq { get; set; }
+        public string julianStartAt { get; set; }
+        public string julianEndAt { get; set; }
+        public double offsetStartAt { get; set; }
+        public double offsetEndAt { get; set; }
+        public string moduleSeq { get; set; }
+        public SaveParamModuleSelectDataSource(string sourceType, string sourceSeq, string paramPack = null, string paramSeq = null, string julianStartAt = null,string julianEndAt= null, double offsetStartAt = 0.0, double offsetEndAt = 0.0)
+        {
+            this.sourceType = sourceType;
+            this.sourceSeq = sourceSeq;
+            this.paramPack = paramPack;
+            this.paramSeq = paramSeq;
+            this.julianStartAt = julianStartAt;
+            this.julianEndAt = julianEndAt;
+            this.offsetStartAt = offsetStartAt;
+            this.offsetEndAt = offsetEndAt;
+        }
+    }
     public class SearchParamModuleResponse //parts
     {
         public int code { get; set; }
