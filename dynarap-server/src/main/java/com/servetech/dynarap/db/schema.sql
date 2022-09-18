@@ -467,5 +467,90 @@ create table `dynarap_bin_param_data`
 
 
 
+-- 파라미터 모듈
+-- 검색
+-- 선택목록 저장
+-- 수식 저장
+-- 플랏 저장
+-- 수식 조회
+-- 플랏 조회
+delimiter $$
+
+
+drop table if exists `dynarap_param_module` cascade $$
+
+create table `dynarap_param_module`
+(
+    `seq` bigint auto_increment not null,
+    `moduleName` varchar(128) not null,
+    `copyFromSeq` bigint default 0,
+    `createdAt` bigint default 0,
+    `referenced` tinyint default 0,
+    `deleted` tinyint default 0,
+    constraint pk_dynarap_param_module primary key (`seq`)
+) $$
+
+drop table if exists `dynarap_param_module_source` cascade $$
+
+create table `dynarap_param_module_source`
+(
+    `seq` bigint auto_increment not null,
+    `moduleSeq` bigint not null,
+    `sourceType` varchar(32) not null, -- part, shortblock, dll, parammodule, eq
+    `sourceSeq` bigint default 0,
+    `paramPack` bigint default 0,
+    `paramSeq` bigint default 0,
+    `julianStartAt` varchar(64),
+    `julianEndAt` varchar(64),
+    `offsetStartAt` double default 0,
+    `offsetEndAt` double default 0,
+    constraint pk_dynarap_param_module_source primary key(`seq`)
+) $$
+
+drop table if exists `dynarap_param_module_eq` cascade $$
+
+create table `dynarap_param_module_eq`
+(
+    `seq` bigint auto_increment not null,
+    `moduleSeq` bigint not null,
+    `eqName` varchar(64) not null,
+    `equation` varchar(2048) not null,
+    `julianStartAt` varchar(64),
+    `julianEndAt` varchar(64),
+    `offsetStartAt` double default 0,
+    `offsetEndAt` double default 0,
+    constraint pk_dynarap_param_module_eq primary key (`seq`)
+) $$
+
+drop table if exists `dynarap_param_module_plot` cascade $$
+
+create table `dynarap_param_module_plot`
+(
+    `seq` bigint auto_increment not null,
+    `moduleSeq` bigint not null,
+    `plotName` varchar(64) not null,
+    `createdAt` bigint default 0,
+    constraint pk_dynarp_param_module_plot primary key (`seq`)
+) $$
+
+drop table if exists `dynarap_param_module_plot_source` cascade $$
+
+create table `dynarap_param_module_plot_source`
+(
+    `seq` bigint auto_increment not null,
+    `moduleSeq` bigint not null,
+    `plotSeq` bigint not null,
+    `sourceType` varchar(32) not null,
+    `sourceSeq` bigint default 0,
+    `paramPack` bigint default 0,
+    `paramSeq` bigint default 0,
+    `julianStartAt` varchar(64),
+    `julianEndAt` varchar(64),
+    `offsetStartAt` double default 0,
+    `offsetEndAt` double default 0,
+    constraint pk_dynarap_param_module_plot_source primary key (`seq`)
+) $$
+
+
 delimiter ;
 

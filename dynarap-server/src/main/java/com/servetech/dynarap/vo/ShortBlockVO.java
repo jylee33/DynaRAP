@@ -22,6 +22,32 @@ public class ShortBlockVO {
 
     private Meta blockMetaInfo;
     private PartVO partInfo;
+    private List<Param> params;
+
+    @Data
+    public static class DataSource {
+        protected String sourceType = "shortblock";
+        protected CryptoField sourceSeq = null;
+        protected CryptoField paramPack;
+        protected CryptoField paramSeq;
+        protected String julianStartAt;
+        protected String julianEndAt;
+        protected double offsetStartAt;
+        protected double offsetEndAt;
+
+        public static ShortBlockVO.DataSource getSource(ShortBlockVO shortBlock, Param param) {
+            ShortBlockVO.DataSource source = new ShortBlockVO.DataSource();
+            source.setSourceType("shortblock");
+            source.setSourceSeq(shortBlock.getSeq());
+            source.setParamPack(param.getParamPack());
+            source.setParamSeq(param.getSeq());
+            source.setJulianStartAt(shortBlock.getJulianStartAt());
+            source.setJulianEndAt(shortBlock.getJulianEndAt());
+            source.setOffsetStartAt(shortBlock.getOffsetStartAt());
+            source.setOffsetEndAt(shortBlock.getOffsetEndAt());
+            return source;
+        }
+    }
 
     @Data
     public static class Meta {

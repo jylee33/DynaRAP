@@ -63,7 +63,9 @@ namespace DynaRAP
             this.btnMgmtPreset = new DevExpress.XtraBars.BarButtonItem();
             this.btnMgmtPresetGroup = new DevExpress.XtraBars.BarButtonItem();
             this.barSubItem1 = new DevExpress.XtraBars.BarSubItem();
+            this.barSubItem5 = new DevExpress.XtraBars.BarSubItem();
             this.btnSBModule = new DevExpress.XtraBars.BarButtonItem();
+            this.btnSBInfoView = new DevExpress.XtraBars.BarButtonItem();
             this.btnBinModule = new DevExpress.XtraBars.BarButtonItem();
             this.bar2 = new DevExpress.XtraBars.Bar();
             this.Workspace = new DevExpress.XtraBars.BarWorkspaceMenuItem();
@@ -91,8 +93,8 @@ namespace DynaRAP
             this.controlContainer2 = new DevExpress.XtraBars.Docking.ControlContainer();
             this.tabbedView1 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.TabbedView(this.components);
             this.panelContainer1 = new DevExpress.XtraBars.Docking.DockPanel();
-            this.barSubItem5 = new DevExpress.XtraBars.BarSubItem();
-            this.btnSBInfoView = new DevExpress.XtraBars.BarButtonItem();
+            this.barSubItem6 = new DevExpress.XtraBars.BarSubItem();
+            this.btnParamModule = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.documentManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dockManager1)).BeginInit();
@@ -161,9 +163,11 @@ namespace DynaRAP
             this.barButtonItem3,
             this.barButtonItem4,
             this.barSubItem5,
-            this.btnSBInfoView});
+            this.btnSBInfoView,
+            this.barSubItem6,
+            this.btnParamModule});
             this.barManager1.MainMenu = this.bar2;
-            this.barManager1.MaxItemId = 38;
+            this.barManager1.MaxItemId = 40;
             this.barManager1.StatusBar = this.bar3;
             // 
             // bar1
@@ -176,9 +180,10 @@ namespace DynaRAP
             this.bar1.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
             new DevExpress.XtraBars.LinkPersistInfo(this.barSubItemTest),
             new DevExpress.XtraBars.LinkPersistInfo(this.btnStart),
-            new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem2),
             new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem3),
-            new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem1)});
+            new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem2),
+            new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem1),
+            new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem6)});
             resources.ApplyResources(this.bar1, "bar1");
             // 
             // barSubItemTest
@@ -387,12 +392,28 @@ namespace DynaRAP
             new DevExpress.XtraBars.LinkPersistInfo(this.btnBinModule)});
             this.barSubItem1.Name = "barSubItem1";
             // 
+            // barSubItem5
+            // 
+            resources.ApplyResources(this.barSubItem5, "barSubItem5");
+            this.barSubItem5.Id = 36;
+            this.barSubItem5.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+            new DevExpress.XtraBars.LinkPersistInfo(this.btnSBModule),
+            new DevExpress.XtraBars.LinkPersistInfo(this.btnSBInfoView)});
+            this.barSubItem5.Name = "barSubItem5";
+            // 
             // btnSBModule
             // 
             resources.ApplyResources(this.btnSBModule, "btnSBModule");
             this.btnSBModule.Id = 14;
             this.btnSBModule.Name = "btnSBModule";
             this.btnSBModule.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnSBModule_ItemClick);
+            // 
+            // btnSBInfoView
+            // 
+            resources.ApplyResources(this.btnSBInfoView, "btnSBInfoView");
+            this.btnSBInfoView.Id = 37;
+            this.btnSBInfoView.Name = "btnSBInfoView";
+            this.btnSBInfoView.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnSBInfoView_ItemClick);
             // 
             // btnBinModule
             // 
@@ -615,21 +636,20 @@ namespace DynaRAP
             this.panelContainer1.Name = "panelContainer1";
             this.panelContainer1.OriginalSize = new System.Drawing.Size(200, 200);
             // 
-            // barSubItem5
+            // barSubItem6
             // 
-            resources.ApplyResources(this.barSubItem5, "barSubItem5");
-            this.barSubItem5.Id = 36;
-            this.barSubItem5.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
-            new DevExpress.XtraBars.LinkPersistInfo(this.btnSBModule),
-            new DevExpress.XtraBars.LinkPersistInfo(this.btnSBInfoView)});
-            this.barSubItem5.Name = "barSubItem5";
+            resources.ApplyResources(this.barSubItem6, "barSubItem6");
+            this.barSubItem6.Id = 38;
+            this.barSubItem6.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+            new DevExpress.XtraBars.LinkPersistInfo(this.btnParamModule)});
+            this.barSubItem6.Name = "barSubItem6";
             // 
-            // btnSBInfoView
+            // btnParamModule
             // 
-            resources.ApplyResources(this.btnSBInfoView, "btnSBInfoView");
-            this.btnSBInfoView.Id = 37;
-            this.btnSBInfoView.Name = "btnSBInfoView";
-            this.btnSBInfoView.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnSBInfoView_ItemClick);
+            resources.ApplyResources(this.btnParamModule, "btnParamModule");
+            this.btnParamModule.Id = 39;
+            this.btnParamModule.Name = "btnParamModule";
+            this.btnParamModule.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnParamModule_ItemClick);
             // 
             // MainForm
             // 
@@ -726,6 +746,8 @@ namespace DynaRAP
         private DevExpress.XtraBars.BarButtonItem barButtonItem4;
         private DevExpress.XtraBars.BarSubItem barSubItem5;
         private DevExpress.XtraBars.BarButtonItem btnSBInfoView;
+        private DevExpress.XtraBars.BarSubItem barSubItem6;
+        private DevExpress.XtraBars.BarButtonItem btnParamModule;
 
         public TabbedView TabbedView1 { get => tabbedView1; set => tabbedView1 = value; }
     }

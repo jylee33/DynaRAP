@@ -3,6 +3,7 @@ package com.servetech.dynarap.controller;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import com.google.gson.reflect.TypeToken;
 import com.servetech.dynarap.config.ServerConstants;
 import com.servetech.dynarap.db.service.*;
 import com.servetech.dynarap.db.service.task.PartImportTask;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -37,6 +39,616 @@ public class ServiceApiController extends ApiController {
 
     @Value("${static.resource.location}")
     private String staticLocation;
+
+    @RequestMapping(value = "/param-module")
+    @ResponseBody
+    public Object apiParamModule(HttpServletRequest request, @PathVariable String serviceVersion,
+                         @RequestBody JsonObject payload, Authentication authentication) throws HandledServiceException {
+        /*
+        String accessToken = request.getHeader("Authorization");
+        if (accessToken == null || (!accessToken.startsWith("bearer") && !accessToken.startsWith("Bearer")))
+            return ResponseHelper.error(403, "권한이 없습니다.");
+
+        String username = authentication.getPrincipal().toString();
+        */
+        UserVO user = getService(UserService.class).getUser("admin@dynarap@dynarap");
+
+        if (checkJsonEmpty(payload, "command"))
+            throw new HandledServiceException(404, "파라미터를 확인하세요.");
+
+        String command = payload.get("command").getAsString();
+
+        if (command.equals("list")) {
+            List<ParamModuleVO> paramModules = getService(ParamModuleService.class).getParamModuleList();
+            return ResponseHelper.response(200, "Success - ParamModule List", paramModules);
+        }
+
+        if (command.equals("add")) {
+            ParamModuleVO paramModule = ServerConstants.GSON.fromJson(payload, ParamModuleVO.class);
+            if (paramModule == null)
+                throw new HandledServiceException(411, "저장 데이터의 형식이 맞지 않습니다.");
+
+            if (paramModule.getModuleName() == null || paramModule.getModuleName().isEmpty())
+                throw new HandledServiceException(411, "파라미터 모듈의 이름을 입력하세요.");
+
+            paramModule.setCreatedAt(LongDate.now());
+            getService(ParamModuleService.class).insertParamModule(paramModule);
+
+            if (paramModule.getDataProp() != null && paramModule.getDataProp().size() > 0) {
+                Set<String> keys = paramModule.getDataProp().keySet();
+                Iterator<String> iterKeys = keys.iterator();
+                while (iterKeys.hasNext()) {
+                    String key = iterKeys.next();
+                    String value = paramModule.getDataProp().get(key);
+
+                    DataPropVO dataProp = new DataPropVO();
+                    dataProp.setPropName(new String64(key));
+                    dataProp.setPropValue(new String64(value));
+                    dataProp.setReferenceType("parammodule");
+                    dataProp.setReferenceKey(paramModule.getSeq());
+                    dataProp.setUpdatedAt(LongDate.now());
+                    getService(RawService.class).insertDataProp(dataProp);
+                }
+            }
+
+            paramModule = getService(ParamModuleService.class).getParamModuleBySeq(paramModule.getSeq());
+
+            return ResponseHelper.response(200, "Success - ParamModule Added", paramModule);
+        }
+
+        if (command.equals("modify")) {
+            CryptoField moduleSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "moduleSeq"))
+                moduleSeq = CryptoField.decode(payload.get("moduleSeq").getAsString(), 0L);
+
+            if (moduleSeq == null || moduleSeq.isEmpty())
+                throw new HandledServiceException(411, "파라미터를 확인하세요.");
+
+            ParamModuleVO paramModule = ServerConstants.GSON.fromJson(payload, ParamModuleVO.class);
+            if (paramModule == null)
+                throw new HandledServiceException(411, "저장 데이터의 형식이 맞지 않습니다.");
+
+            paramModule.setSeq(moduleSeq);
+            getService(ParamModuleService.class).updateParamModule(paramModule);
+
+            List<DataPropVO> props = getService(RawService.class).getDataPropList("parammodule", moduleSeq);
+            if (props == null) props = new ArrayList<>();
+
+            if (paramModule.getDataProp() != null && paramModule.getDataProp().size() > 0) {
+                for (DataPropVO prop : props)
+                    prop.setMarked(false);
+
+                Set<String> keys = paramModule.getDataProp().keySet();
+                Iterator<String> iterKeys = keys.iterator();
+                while (iterKeys.hasNext()) {
+                    String key = iterKeys.next();
+                    String value = paramModule.getDataProp().get(key);
+
+                    DataPropVO oldProp = null;
+                    for (DataPropVO prop : props) {
+                        if (prop.getPropName().originOf().equals(key)) {
+                            oldProp = prop;
+                            break;
+                        }
+                    }
+
+                    if (oldProp != null) {
+                        oldProp.setMarked(true);
+                        oldProp.setPropValue(new String64(value));
+                        oldProp.setUpdatedAt(LongDate.now());
+                        getService(RawService.class).updateDataProp(oldProp);
+                    }
+                    else {
+                        DataPropVO dataProp = new DataPropVO();
+                        dataProp.setPropName(new String64(key));
+                        dataProp.setPropValue(new String64(value));
+                        dataProp.setReferenceType("parammodule");
+                        dataProp.setReferenceKey(paramModule.getSeq());
+                        dataProp.setUpdatedAt(LongDate.now());
+                        getService(RawService.class).insertDataProp(dataProp);
+                    }
+                }
+
+                for (DataPropVO prop : props) {
+                    if (prop.isMarked() == false)
+                        getService(RawService.class).deleteDataPropBySeq(prop.getSeq());
+                }
+            }
+            else {
+                if (props.size() > 0) {
+                    for (DataPropVO prop : props)
+                        getService(RawService.class).deleteDataPropBySeq(prop.getSeq());
+                }
+            }
+
+            paramModule = getService(ParamModuleService.class).getParamModuleBySeq(moduleSeq);
+
+            return ResponseHelper.response(200, "Success - ParamModule Updated", paramModule);
+        }
+
+        if (command.equals("remove")) {
+            CryptoField moduleSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "moduleSeq"))
+                moduleSeq = CryptoField.decode(payload.get("moduleSeq").getAsString(), 0L);
+
+            if (moduleSeq == null || moduleSeq.isEmpty())
+                throw new HandledServiceException(411, "파라미터를 확인하세요.");
+
+            ParamModuleVO paramModule = getService(ParamModuleService.class).getParamModuleBySeq(moduleSeq);
+            if (paramModule.isReferenced()) {
+                // 레퍼런스가 있으면 삭제 플래그만
+                paramModule.setDeleted(true);
+                getService(ParamModuleService.class).updateParamModule(paramModule);
+            }
+            else {
+                // 레퍼런스가 없으면 완전 삭제
+                getService(ParamModuleService.class).deleteParamModule(moduleSeq);
+            }
+            return ResponseHelper.response(200, "Success - ParamModule Deleted", "");
+        }
+
+        if (command.equals("copy")) {
+            CryptoField moduleSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "moduleSeq"))
+                moduleSeq = CryptoField.decode(payload.get("moduleSeq").getAsString(), 0L);
+
+            if (moduleSeq == null || moduleSeq.isEmpty())
+                throw new HandledServiceException(411, "파라미터를 확인하세요.");
+
+            ParamModuleVO oldParamModule = getService(ParamModuleService.class).getParamModuleBySeq(moduleSeq);
+
+            ParamModuleVO paramModule = getService(ParamModuleService.class).getParamModuleBySeq(moduleSeq);
+            paramModule.setCopyFromSeq(oldParamModule.getSeq());
+            paramModule.setOriginInfo(oldParamModule);
+            paramModule.setCreatedAt(LongDate.now());
+            getService(ParamModuleService.class).insertParamModule(paramModule);
+            if (paramModule.getDataProp() != null && paramModule.getDataProp().size() > 0) {
+                Set<String> keys = paramModule.getDataProp().keySet();
+                Iterator<String> iterKeys = keys.iterator();
+                while (iterKeys.hasNext()) {
+                    String key = iterKeys.next();
+                    String value = paramModule.getDataProp().get(key);
+
+                    DataPropVO dataProp = new DataPropVO();
+                    dataProp.setPropName(new String64(key));
+                    dataProp.setPropValue(new String64(value));
+                    dataProp.setReferenceType("parammodule");
+                    dataProp.setReferenceKey(paramModule.getSeq());
+                    dataProp.setUpdatedAt(LongDate.now());
+                    getService(RawService.class).insertDataProp(dataProp);
+                }
+                paramModule = getService(ParamModuleService.class).getParamModuleBySeq(paramModule.getSeq());
+            }
+
+            oldParamModule.setReferenced(true);
+            getService(ParamModuleService.class).updateParamModule(oldParamModule);
+
+            // TODO: copy data
+
+            return ResponseHelper.response(200, "Success - ParamModule Copy", paramModule);
+        }
+
+        if (command.equals("search")) {
+            String sourceType = "";
+            if (!checkJsonEmpty(payload, "sourceType"))
+                sourceType = payload.get("sourceType").getAsString();
+
+            if (sourceType == null || sourceType.isEmpty())
+                throw new HandledServiceException(411, "검색을 원하는 소스를 선택하세요.");
+
+            String keyword = "";
+            if (!checkJsonEmpty(payload, "keyword"))
+                keyword = payload.get("keyword").getAsString();
+
+            if (keyword == null || keyword.isEmpty())
+                throw new HandledServiceException(411, "검색 키워드를 입력하세요.");
+
+            if (sourceType.equalsIgnoreCase("part")) {
+                List<PartVO> parts = getService(ParamModuleService.class).getPartListByKeyword(keyword);
+                if (parts == null) parts = new ArrayList<>();
+                for (PartVO part : parts) {
+                    part.setParams(getService(ParamService.class).getPresetParamList(
+                            part.getPresetPack(), part.getPresetSeq(), CryptoField.LZERO, CryptoField.LZERO, 1, 999999));
+                }
+                return ResponseHelper.response(200, "Success - ParamModule Source Search", parts);
+            }
+            else if (sourceType.equalsIgnoreCase("shortblock")) {
+                List<ShortBlockVO> shortBlocks = getService(ParamModuleService.class).getShortBlockListByKeyword(keyword);
+                if (shortBlocks == null) shortBlocks = new ArrayList<>();
+                for (ShortBlockVO shortBlock : shortBlocks) {
+                    shortBlock.setParams(getService(PartService.class).getShortBlockParamList(shortBlock.getBlockMetaSeq()));
+                }
+                return ResponseHelper.response(200, "Success - ParamModule Source Search", shortBlocks);
+            }
+            else if (sourceType.equalsIgnoreCase("dll")) {
+                List<DLLVO> dlls = getService(ParamModuleService.class).getDLLListByKeyword(keyword);
+                if (dlls == null) dlls = new ArrayList<>();
+                for (DLLVO dll : dlls) {
+                    dll.setParams(getService(DLLService.class).getDLLParamList(dll.getSeq()));
+                }
+                return ResponseHelper.response(200, "Success - ParamModule Source Search", dlls);
+            }
+            else if (sourceType.equalsIgnoreCase("parammodule")) {
+                List<ParamModuleVO> paramModules = getService(ParamModuleService.class).getParamModuleListByKeyword(keyword);
+                if (paramModules == null) paramModules = new ArrayList<>();
+                for (ParamModuleVO paramModule : paramModules) {
+                    paramModule.setEquations(getService(ParamModuleService.class).getParamModuleEqList(paramModule.getSeq()));
+                }
+                return ResponseHelper.response(200, "Success - ParamModule Source Search", paramModules);
+            }
+
+            throw new HandledServiceException(411, "지원하지 않는 소스 형식입니다.");
+        }
+
+        if (command.equals("source-list")) {
+            CryptoField moduleSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "moduleSeq"))
+                moduleSeq = CryptoField.decode(payload.get("moduleSeq").getAsString(), 0L);
+
+            if (moduleSeq == null || moduleSeq.isEmpty())
+                throw new HandledServiceException(411, "파라미터를 확인하세요.");
+
+            List<ParamModuleVO.Source> sources = getService(ParamModuleService.class).getParamModuleSourceList(moduleSeq);
+            if (sources == null) sources = new ArrayList<>();
+
+            return ResponseHelper.response(200, "Success - ParamModule Source List", sources);
+        }
+
+        if (command.equals("save-source")) {
+            CryptoField moduleSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "moduleSeq"))
+                moduleSeq = CryptoField.decode(payload.get("moduleSeq").getAsString(), 0L);
+
+            if (moduleSeq == null || moduleSeq.isEmpty())
+                throw new HandledServiceException(411, "파라미터를 확인하세요.");
+
+            ParamModuleVO paramModule = getService(ParamModuleService.class).getParamModuleBySeq(moduleSeq);
+            if (paramModule == null)
+                throw new HandledServiceException(411, "파라미터 모듈을 찾을 수 없습니다.");
+
+            if (paramModule.isDeleted())
+                throw new HandledServiceException(411, "이미 삭제된 프로젝트입니다.");
+
+            if (paramModule.isReferenced())
+                throw new HandledServiceException(411, "파라미터 모듈을 참조하는 프로젝트가 있습니다. 복사 후 새로 작업하세요.");
+
+            // 기존 소스 삭제 함.
+            getService(ParamModuleService.class).deleteParamModuleSourceByModuleSeq(moduleSeq);
+
+            JsonArray jarrSources = null;
+            if (!checkJsonEmpty(payload, "sources"))
+                jarrSources = payload.get("sources").getAsJsonArray();
+
+            List<String> sourceTypes = Arrays.asList("part", "shortblock", "dll", "parammodule");
+
+            if (jarrSources.size() > 0) {
+                for (int i = 0; i < jarrSources.size(); i++) {
+                    JsonObject jobjSource = jarrSources.get(i).getAsJsonObject();
+                    ParamModuleVO.Source moduleSource = ServerConstants.GSON.fromJson(jobjSource, ParamModuleVO.Source.class);
+                    if (moduleSource == null) continue;
+                    if (moduleSource.getSourceType() == null || moduleSource.getSourceType().isEmpty()
+                            || !sourceTypes.contains(moduleSource.getSourceType())
+                            || moduleSource.getSourceSeq() == null || moduleSource.getSourceSeq().isEmpty()) {
+                        // 잘못된 소스 데이터는 스킵함.
+                        continue;
+                    }
+                    moduleSource.setModuleSeq(moduleSeq);
+                    getService(ParamModuleService.class).insertParamModuleSource(moduleSource);
+                }
+            }
+
+            paramModule.setSources(getService(ParamModuleService.class).getParamModuleSourceList(moduleSeq));
+
+            return ResponseHelper.response(200, "Success - ParamModule Save Source", paramModule);
+        }
+
+        if (command.equals("save-source-single")) {
+            CryptoField moduleSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "moduleSeq"))
+                moduleSeq = CryptoField.decode(payload.get("moduleSeq").getAsString(), 0L);
+
+            if (moduleSeq == null || moduleSeq.isEmpty())
+                throw new HandledServiceException(411, "파라미터를 확인하세요.");
+
+            ParamModuleVO paramModule = getService(ParamModuleService.class).getParamModuleBySeq(moduleSeq);
+            if (paramModule == null)
+                throw new HandledServiceException(411, "파라미터 모듈을 찾을 수 없습니다.");
+
+            if (paramModule.isDeleted())
+                throw new HandledServiceException(411, "이미 삭제된 프로젝트입니다.");
+
+            if (paramModule.isReferenced())
+                throw new HandledServiceException(411, "파라미터 모듈을 참조하는 프로젝트가 있습니다. 복사 후 새로 작업하세요.");
+
+            JsonObject jobjSource = null;
+            if (!checkJsonEmpty(payload, "source"))
+                jobjSource = payload.get("source").getAsJsonObject();
+
+            if (jobjSource == null)
+                throw new HandledServiceException(411, "저장 형식이 올바르지 않습니다.");
+
+            List<String> sourceTypes = Arrays.asList("part", "shortblock", "dll", "parammodule");
+
+            ParamModuleVO.Source moduleSource = ServerConstants.GSON.fromJson(jobjSource, ParamModuleVO.Source.class);
+            if (moduleSource.getSourceType() == null || moduleSource.getSourceType().isEmpty()
+                    || !sourceTypes.contains(moduleSource.getSourceType())
+                    || moduleSource.getSourceSeq() == null || moduleSource.getSourceSeq().isEmpty()) {
+                throw new HandledServiceException(411, "저장 형식이 올바르지 않습니다.");
+            }
+            moduleSource.setModuleSeq(moduleSeq);
+            getService(ParamModuleService.class).insertParamModuleSource(moduleSource);
+
+            paramModule.setSources(getService(ParamModuleService.class).getParamModuleSourceList(moduleSeq));
+
+            return ResponseHelper.response(200, "Success - ParamModule Save Source Single", paramModule);
+        }
+
+        if (command.equals("eq-list")) {
+            CryptoField moduleSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "moduleSeq"))
+                moduleSeq = CryptoField.decode(payload.get("moduleSeq").getAsString(), 0L);
+
+            if (moduleSeq == null || moduleSeq.isEmpty())
+                throw new HandledServiceException(411, "파라미터를 확인하세요.");
+
+            List<ParamModuleVO.Equation> equations = getService(ParamModuleService.class).getParamModuleEqList(moduleSeq);
+
+            return ResponseHelper.response(200, "Success - ParamModule Eq List", equations);
+        }
+
+        if (command.equals("eq-data")) {
+
+            // TODO : eq data loading
+
+            return ResponseHelper.response(200, "Success - ParamModule Eq Data", "");
+        }
+
+        if (command.equals("save-eq")) {
+            //
+            // TODO : 여기서 계산.
+            //
+            return ResponseHelper.response(200, "Success - ParamModule Save Eq", "");
+        }
+
+        if (command.equals("save-eq-single")) {
+            //
+            // TODO : 계산 때문에 여기서 진행하기 어려움.
+            //
+            return ResponseHelper.response(200, "Success - ParamModule Save Eq Single", "");
+        }
+
+        if (command.equals("plot-list")) {
+            CryptoField moduleSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "moduleSeq"))
+                moduleSeq = CryptoField.decode(payload.get("moduleSeq").getAsString(), 0L);
+
+            if (moduleSeq == null || moduleSeq.isEmpty())
+                throw new HandledServiceException(411, "파라미터를 확인하세요.");
+
+            List<ParamModuleVO.Plot> plots = getService(ParamModuleService.class).getParamModulePlotList(moduleSeq);
+
+            return ResponseHelper.response(200, "Success - ParamModule Plot List", plots);
+        }
+
+        if (command.equals("plot-data")) {
+            //
+            // TODO : data loading from redis
+            //
+            return ResponseHelper.response(200, "Success - ParamModule Plot Data", "");
+        }
+
+        if (command.equals("save-plot")) {
+            CryptoField moduleSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "moduleSeq"))
+                moduleSeq = CryptoField.decode(payload.get("moduleSeq").getAsString(), 0L);
+
+            if (moduleSeq == null || moduleSeq.isEmpty())
+                throw new HandledServiceException(411, "파라미터를 확인하세요.");
+
+            // plot은 레퍼런스가 없음.
+            // 기존 플랏 삭제
+            getService(ParamModuleService.class).deleteParamModulePlotByModuleSeq(moduleSeq);
+
+            JsonArray jarrPlots = null;
+            if (!checkJsonEmpty(payload, "plots"))
+                jarrPlots = payload.get("plots").getAsJsonArray();
+
+            List<ParamModuleVO.Plot> plots = new ArrayList<>();
+            if (jarrPlots != null && jarrPlots.size() > 0) {
+                for (int i = 0; i < jarrPlots.size(); i++) {
+                    JsonObject jobjPlot = jarrPlots.get(i).getAsJsonObject();
+                    if (checkJsonEmpty(jobjPlot, "plotName")) continue;
+                    if (checkJsonEmpty(jobjPlot, "sources")) continue;
+
+                    ParamModuleVO.Plot plot = new ParamModuleVO.Plot();
+                    plot.setModuleSeq(moduleSeq);
+                    plot.setPlotName(String64.decode(jobjPlot.get("plotName").getAsString()));
+                    plot.setPlotOrder(plots.size() + 1);
+                    plot.setCreatedAt(LongDate.now());
+                    getService(ParamModuleService.class).insertParamModulePlot(plot);
+
+                    plots.add(plot);
+
+                    if (!checkJsonEmpty(jobjPlot, "dataProp")) {
+                        Type type = new TypeToken<Map<String, String>>(){}.getType();
+                        Map<String, String> dataProp = ServerConstants.GSON.fromJson(
+                                jobjPlot.get("dataProp").getAsJsonObject(), type);
+                        Set<String> keys = dataProp.keySet();
+                        Iterator<String> iterKeys = keys.iterator();
+                        while (iterKeys.hasNext()) {
+                            String key = iterKeys.next();
+                            String value = dataProp.get(key);
+
+                            DataPropVO saveProp = new DataPropVO();
+                            saveProp.setPropName(new String64(key));
+                            saveProp.setPropValue(new String64(value));
+                            saveProp.setReferenceType("plot");
+                            saveProp.setReferenceKey(plot.getSeq());
+                            saveProp.setUpdatedAt(LongDate.now());
+                            getService(RawService.class).insertDataProp(saveProp);
+                        }
+                        plot.setDataProp(getService(RawService.class).getDataPropListToMap("plot", plot.getSeq()));
+                    }
+
+                    JsonArray jarrSources = jobjPlot.get("sources").getAsJsonArray();
+                    List<String> sourceTypes = Arrays.asList("part", "shortblock", "dll", "parammodule");
+
+                    plot.setPlotSourceList(new ArrayList<>());
+                    if (jarrSources.size() > 0) {
+                        for (int j = 0; j < jarrSources.size(); j++) {
+                            JsonObject jobjSource = jarrSources.get(j).getAsJsonObject();
+                            ParamModuleVO.Plot.Source plotSource = ServerConstants.GSON.fromJson(jobjSource, ParamModuleVO.Plot.Source.class);
+                            if (plotSource == null) continue;
+                            if (plotSource.getSourceType() == null || plotSource.getSourceType().isEmpty()
+                                    || !sourceTypes.contains(plotSource.getSourceType())
+                                    || plotSource.getSourceSeq() == null || plotSource.getSourceSeq().isEmpty()) {
+                                // 잘못된 소스 데이터는 스킵함.
+                                continue;
+                            }
+                            plotSource.setPlotSeq(plot.getSeq());
+                            plotSource.setModuleSeq(moduleSeq);
+                            getService(ParamModuleService.class).insertParamModulePlotSource(plotSource);
+
+                            plot.getPlotSourceList().add(plotSource);
+                        }
+                    }
+                }
+            }
+
+            return ResponseHelper.response(200, "Success - ParamModule Save Plot", plots);
+        }
+
+        if (command.equals("save-plot-single")) {
+            CryptoField moduleSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "moduleSeq"))
+                moduleSeq = CryptoField.decode(payload.get("moduleSeq").getAsString(), 0L);
+
+            if (moduleSeq == null || moduleSeq.isEmpty())
+                throw new HandledServiceException(411, "파라미터를 확인하세요.");
+
+            if (checkJsonEmpty(payload, "plot"))
+                throw new HandledServiceException(411, "저장할 데이터가 없습니다.");
+
+            JsonObject jobjPlot = payload.get("plot").getAsJsonObject();
+            if (checkJsonEmpty(jobjPlot, "plotName") || checkJsonEmpty(jobjPlot, "sources"))
+                throw new HandledServiceException(411, "Plot 데이터 형식에 맞지 않습니다.");
+
+            CryptoField plotSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(jobjPlot, "plotSeq"))
+                plotSeq = CryptoField.decode(jobjPlot.get("plotSeq").getAsString(), 0L);
+
+            List<ParamModuleVO.Plot> plots = getService(ParamModuleService.class).getParamModulePlotList(moduleSeq);
+            if (plots == null) plots = new ArrayList<>();
+
+            ParamModuleVO.Plot plot = null;
+            if (plotSeq != null && !plotSeq.isEmpty()) {
+                for (ParamModuleVO.Plot p : plots) {
+                    if (p.getSeq().equals(plotSeq)) {
+                        plot = p;
+                        break;
+                    }
+                }
+                if (plot == null)
+                    throw new HandledServiceException(411, "해당 파라미터 모듈의 Plot 이 아닙니다.");
+            }
+            else {
+                plot = new ParamModuleVO.Plot();
+                plot.setModuleSeq(moduleSeq);
+                plot.setPlotName(String64.decode(jobjPlot.get("plotName").getAsString()));
+                plot.setPlotOrder(plots.size() + 1);
+                plot.setCreatedAt(LongDate.now());
+                getService(ParamModuleService.class).insertParamModulePlot(plot);
+
+                plots.add(plot);
+            }
+
+            if (!checkJsonEmpty(jobjPlot, "dataProp")) {
+                getService(RawService.class).deleteDataPropByType("plot", plot.getSeq());
+
+                Type type = new TypeToken<Map<String, String>>(){}.getType();
+                Map<String, String> dataProp = ServerConstants.GSON.fromJson(
+                        jobjPlot.get("dataProp").getAsJsonObject(), type);
+                Set<String> keys = dataProp.keySet();
+                Iterator<String> iterKeys = keys.iterator();
+                while (iterKeys.hasNext()) {
+                    String key = iterKeys.next();
+                    String value = dataProp.get(key);
+
+                    DataPropVO saveProp = new DataPropVO();
+                    saveProp.setPropName(new String64(key));
+                    saveProp.setPropValue(new String64(value));
+                    saveProp.setReferenceType("plot");
+                    saveProp.setReferenceKey(plot.getSeq());
+                    saveProp.setUpdatedAt(LongDate.now());
+                    getService(RawService.class).insertDataProp(saveProp);
+                }
+                plot.setDataProp(getService(RawService.class).getDataPropListToMap("plot", plot.getSeq()));
+            }
+
+            JsonArray jarrSources = jobjPlot.get("sources").getAsJsonArray();
+            List<String> sourceTypes = Arrays.asList("part", "shortblock", "dll", "parammodule");
+
+            // 기존 소스 삭제.
+            getService(ParamModuleService.class).deleteParamModulePlotSourceByPlotSeq(moduleSeq, plotSeq);
+
+            plot.setPlotSourceList(new ArrayList<>());
+            if (jarrSources.size() > 0) {
+                for (int j = 0; j < jarrSources.size(); j++) {
+                    JsonObject jobjSource = jarrSources.get(j).getAsJsonObject();
+                    ParamModuleVO.Plot.Source plotSource = ServerConstants.GSON.fromJson(jobjSource, ParamModuleVO.Plot.Source.class);
+                    if (plotSource == null) continue;
+                    if (plotSource.getSourceType() == null || plotSource.getSourceType().isEmpty()
+                            || !sourceTypes.contains(plotSource.getSourceType())
+                            || plotSource.getSourceSeq() == null || plotSource.getSourceSeq().isEmpty()) {
+                        // 잘못된 소스 데이터는 스킵함.
+                        continue;
+                    }
+                    plotSource.setPlotSeq(plot.getSeq());
+                    plotSource.setModuleSeq(moduleSeq);
+                    getService(ParamModuleService.class).insertParamModulePlotSource(plotSource);
+
+                    plot.getPlotSourceList().add(plotSource);
+                }
+            }
+
+            return ResponseHelper.response(200, "Success - ParamModule Save Plot Single", plot);
+        }
+
+        if (command.equals("remove-plot")) {
+            CryptoField moduleSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "moduleSeq"))
+                moduleSeq = CryptoField.decode(payload.get("moduleSeq").getAsString(), 0L);
+
+            if (moduleSeq == null || moduleSeq.isEmpty())
+                throw new HandledServiceException(411, "파라미터를 확인하세요.");
+
+            getService(ParamModuleService.class).deleteParamModulePlotByModuleSeq(moduleSeq);
+
+            return ResponseHelper.response(200, "Success - ParamModule Remove Plot", "");
+        }
+
+        if (command.equals("remove-plot-single")) {
+            CryptoField moduleSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "moduleSeq"))
+                moduleSeq = CryptoField.decode(payload.get("moduleSeq").getAsString(), 0L);
+
+            if (moduleSeq == null || moduleSeq.isEmpty())
+                throw new HandledServiceException(411, "파라미터를 확인하세요.");
+
+            CryptoField plotSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "plotSeq"))
+                plotSeq = CryptoField.decode(payload.get("plotSeq").getAsString(), 0L);
+
+            if (plotSeq == null || plotSeq.isEmpty())
+                throw new HandledServiceException(411, "파라미터를 확인하세요.");
+
+            getService(ParamModuleService.class).deleteParamModulePlot(plotSeq);
+
+            return ResponseHelper.response(200, "Success - ParamModule Remove Plot Single", "");
+        }
+
+        throw new HandledServiceException(411, "명령이 정의되지 않았습니다.");
+    }
 
     @RequestMapping(value = "/dir")
     @ResponseBody
@@ -795,8 +1407,8 @@ public class ServiceApiController extends ApiController {
                 Map<String, ParamVO> fltsMap = new LinkedHashMap<>();
                 for (ParamVO param : presetParams) {
                     grtMap.put(param.getGrtKey(), param);
-                    fltpMap.put(param.getFltpKey() + "_" + param.getPropInfo().getParamUnit(), param);
-                    fltsMap.put(param.getFltsKey() + "_" + param.getPropInfo().getParamUnit(), param);
+                    fltpMap.put(param.getFltpKey(), param);
+                    fltsMap.put(param.getFltsKey(), param);
                 }
 
                 String[] splitParam = headerRow.trim().split(",");

@@ -91,6 +91,7 @@
             this.edtHPFcutoff = new DevExpress.XtraEditors.TextEdit();
             this.cboHPFbtype = new DevExpress.XtraEditors.ComboBoxEdit();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
+            this.chkCustomFilter = new DevExpress.XtraEditors.CheckEdit();
             this.btnSaveSplittedInterval = new DevExpress.XtraEditors.ButtonEdit();
             this.chkForcedImport = new DevExpress.XtraEditors.CheckEdit();
             this.imageCollection1 = new DevExpress.Utils.ImageCollection(this.components);
@@ -125,6 +126,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.edtHPFcutoff.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cboHPFbtype.Properties)).BeginInit();
             this.tableLayoutPanel5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chkCustomFilter.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnSaveSplittedInterval.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chkForcedImport.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).BeginInit();
@@ -603,7 +605,7 @@
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Plus)});
             this.edtTag.Size = new System.Drawing.Size(301, 22);
             this.edtTag.TabIndex = 3;
-            this.edtTag.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.edtTag_ButtonClick);
+            this.edtTag.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.removeTag_ButtonClick);
             this.edtTag.KeyUp += new System.Windows.Forms.KeyEventHandler(this.edtTag_KeyUp);
             // 
             // panelTag
@@ -793,6 +795,7 @@
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 110F));
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 110F));
+            this.tableLayoutPanel5.Controls.Add(this.chkCustomFilter, 0, 0);
             this.tableLayoutPanel5.Controls.Add(this.btnSaveSplittedInterval, 4, 0);
             this.tableLayoutPanel5.Controls.Add(this.chkForcedImport, 3, 0);
             this.tableLayoutPanel5.Location = new System.Drawing.Point(3, 679);
@@ -801,6 +804,16 @@
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel5.Size = new System.Drawing.Size(788, 26);
             this.tableLayoutPanel5.TabIndex = 33;
+            // 
+            // chkCustomFilter
+            // 
+            this.chkCustomFilter.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.chkCustomFilter.Location = new System.Drawing.Point(3, 3);
+            this.chkCustomFilter.Name = "chkCustomFilter";
+            this.chkCustomFilter.Properties.Caption = "Custom Filter";
+            this.chkCustomFilter.Size = new System.Drawing.Size(94, 19);
+            this.chkCustomFilter.TabIndex = 2;
+            this.chkCustomFilter.CheckedChanged += new System.EventHandler(this.chkCustomFilter_CheckedChanged);
             // 
             // btnSaveSplittedInterval
             // 
@@ -878,6 +891,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.edtHPFcutoff.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cboHPFbtype.Properties)).EndInit();
             this.tableLayoutPanel5.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.chkCustomFilter.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnSaveSplittedInterval.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chkForcedImport.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).EndInit();
@@ -952,5 +966,6 @@
         private DevExpress.XtraEditors.Repository.RepositoryItemComboBox repositoryItemComboBox2;
         private DevExpress.XtraEditors.LabelControl labelControl11;
         private DevExpress.XtraEditors.TextEdit edtEquation;
+        private DevExpress.XtraEditors.CheckEdit chkCustomFilter;
     }
 }

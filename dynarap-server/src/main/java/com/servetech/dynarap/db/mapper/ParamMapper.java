@@ -538,4 +538,13 @@ public interface ParamMapper {
     })
     List<CryptoField> selectShortBlockParamList(Map<String, Object> params) throws Exception;
 
+
+    @Select({
+            "<script>" +
+                    "select distinct * from dynarap_preset_param " +
+                    "where paramPack = #{paramPack,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "and paramSeq = #{paramSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "</script>"
+    })
+    List<PresetVO> selectPresetByParamPack(Map<String, Object> params) throws Exception;
 }

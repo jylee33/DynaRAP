@@ -128,7 +128,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;edtId.Type" xml:space="preserve">
-    <value>DevExpress.XtraEditors.TextEdit, DevExpress.XtraEditors.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+    <value>DevExpress.XtraEditors.TextEdit, DevExpress.XtraEditors.v22.1, Version=22.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
   <data name="btnLogin.Location" type="System.Drawing.Point, System.Drawing">
     <value>285, 211</value>
@@ -150,7 +150,7 @@
     <value>0</value>
   </data>
   <data name="&gt;&gt;labelControl2.Type" xml:space="preserve">
-    <value>DevExpress.XtraEditors.LabelControl, DevExpress.XtraEditors.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+    <value>DevExpress.XtraEditors.LabelControl, DevExpress.XtraEditors.v22.1, Version=22.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
   <data name="&gt;&gt;labelControl2.ZOrder" xml:space="preserve">
     <value>4</value>
@@ -213,7 +213,7 @@
     <value>LoginForm</value>
   </data>
   <data name="&gt;&gt;btnCancel.Type" xml:space="preserve">
-    <value>DevExpress.XtraEditors.SimpleButton, DevExpress.XtraEditors.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+    <value>DevExpress.XtraEditors.SimpleButton, DevExpress.XtraEditors.v22.1, Version=22.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
   <data name="btnCancel.Size" type="System.Drawing.Size, System.Drawing">
     <value>97, 23</value>
@@ -228,7 +228,7 @@
     <value>5</value>
   </data>
   <data name="&gt;&gt;edtPassword.Type" xml:space="preserve">
-    <value>DevExpress.XtraEditors.TextEdit, DevExpress.XtraEditors.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+    <value>DevExpress.XtraEditors.TextEdit, DevExpress.XtraEditors.v22.1, Version=22.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
   <data name="labelControl1.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -247,16 +247,16 @@
     <value>3</value>
   </data>
   <data name="&gt;&gt;btnLogin.Type" xml:space="preserve">
-    <value>DevExpress.XtraEditors.SimpleButton, DevExpress.XtraEditors.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+    <value>DevExpress.XtraEditors.SimpleButton, DevExpress.XtraEditors.v22.1, Version=22.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
   <data name="&gt;&gt;$this.Type" xml:space="preserve">
-    <value>DevExpress.XtraEditors.XtraForm, DevExpress.Utils.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+    <value>DevExpress.XtraEditors.XtraForm, DevExpress.Utils.v22.1, Version=22.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
   <data name="btnCancel.Text" xml:space="preserve">
     <value>Cancel</value>
   </data>
   <data name="&gt;&gt;labelControl1.Type" xml:space="preserve">
-    <value>DevExpress.XtraEditors.LabelControl, DevExpress.XtraEditors.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+    <value>DevExpress.XtraEditors.LabelControl, DevExpress.XtraEditors.v22.1, Version=22.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
   <data name="&gt;&gt;btnLogin.Parent" xml:space="preserve">
     <value>$this</value>

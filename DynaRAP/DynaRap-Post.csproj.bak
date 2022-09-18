@@ -1,0 +1,819 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C1DAD7DA-48EC-4A98-BD79-02B7D9D591B8}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>DynaRAP</RootNamespace>
+    <AssemblyName>DynaRap-Post</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <PublishUrl>게시\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>7.1</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>7.1</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>DynaRAP.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DevExpress.Charts.v21.2.Core, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Data.Desktop.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Data.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Images.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Office.v21.2.Core, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Pdf.v21.2.Core, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Printing.v21.2.Core, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.RichEdit.v21.2.Core, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Utils.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Utils.v21.2.UI, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.XtraBars.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraCharts.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.XtraCharts.v21.2.UI, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraCharts.v21.2.Wizard, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.XtraEditors.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.XtraGrid.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraLayout.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.XtraPrinting.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.XtraRichEdit.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraTreeList.v21.2, Version=21.2.6.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="IronPython, Version=2.7.12.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\IronPython.2.7.12\lib\net45\IronPython.dll</HintPath>
+    </Reference>
+    <Reference Include="IronPython.Modules, Version=2.7.12.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\IronPython.2.7.12\lib\net45\IronPython.Modules.dll</HintPath>
+    </Reference>
+    <Reference Include="IronPython.SQLite, Version=2.7.12.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\IronPython.2.7.12\lib\net45\IronPython.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="IronPython.Wpf, Version=2.7.12.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\IronPython.2.7.12\lib\net45\IronPython.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=2.0.14.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.14\lib\net45\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="MathNet.Filtering, Version=0.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MathNet.Filtering.0.7.0\lib\net461\MathNet.Filtering.dll</HintPath>
+    </Reference>
+    <Reference Include="MathNet.Numerics, Version=4.9.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MathNet.Numerics.4.9.1\lib\net461\MathNet.Numerics.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Dynamic, Version=1.3.1.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamicLanguageRuntime.1.3.1\lib\net45\Microsoft.Dynamic.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting, Version=1.3.1.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamicLanguageRuntime.1.3.1\lib\net45\Microsoft.Scripting.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting.Metadata, Version=1.3.1.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamicLanguageRuntime.1.3.1\lib\net45\Microsoft.Scripting.Metadata.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Common\DLL_DATA.cs" />
+    <Compile Include="Common\ImportType.cs" />
+    <Compile Include="Common\DrawTypes.cs" />
+    <Compile Include="Common\ParamProperty.cs" />
+    <Compile Include="Common\SeriesPointData.cs" />
+    <Compile Include="Data\BinTableSaveRequest.cs" />
+    <Compile Include="Data\DataPropResponse.cs" />
+    <Compile Include="Data\DllParamDataAddBulkRequest.cs" />
+    <Compile Include="Data\CheckParamRequest.cs" />
+    <Compile Include="Data\SBParamListResponse.cs" />
+    <Compile Include="Data\DllParamDataResponse.cs" />
+    <Compile Include="Data\DllParamDataListResponse.cs" />
+    <Compile Include="Data\DllParamListResponse.cs" />
+    <Compile Include="Data\DllParamResponse.cs" />
+    <Compile Include="Data\DllResponse.cs" />
+    <Compile Include="Data\DllListResponse.cs" />
+    <Compile Include="Data\PresetParamAddBulk.cs" />
+    <Compile Include="Data\SBData.cs" />
+    <Compile Include="Data\UnmappedParamData.cs" />
+    <Compile Include="Data\ImportIntervalData.cs" />
+    <Compile Include="Data\SBListResponse.cs" />
+    <Compile Include="Data\PartInfoResponse.cs" />
+    <Compile Include="Data\PropListResponse.cs" />
+    <Compile Include="Data\PresetParamData.cs" />
+    <Compile Include="Forms\AddDllParamForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AddDllParamForm.Designer.cs">
+      <DependentUpon>AddDllParamForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\AddDllForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AddDllForm.Designer.cs">
+      <DependentUpon>AddDllForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\CreateScenarioProgressForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\CreateScenarioProgressForm.Designer.cs">
+      <DependentUpon>CreateScenarioProgressForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Data\CreateShortBlockRequest.cs" />
+    <Compile Include="Data\CreateShortBlockResponse.cs" />
+    <Compile Include="Data\DirData.cs" />
+    <Compile Include="Data\ImportRequest.cs" />
+    <Compile Include="Data\ImportResponse.cs" />
+    <Compile Include="Data\JsonData.cs" />
+    <Compile Include="Data\OverviewDataPoint.cs" />
+    <Compile Include="Data\DataSlicing.cs" />
+    <Compile Include="Data\FlyingData.cs" />
+    <Compile Include="Data\PartListResponse.cs" />
+    <Compile Include="Data\PresetData.cs" />
+    <Compile Include="Data\ProjectData.cs" />
+    <Compile Include="Data\RecentProject.cs" />
+    <Compile Include="Data\SalesData.cs" />
+    <Compile Include="Data\SBResult.cs" />
+    <Compile Include="Data\TestData.cs" />
+    <Compile Include="Data\SplittedSB.cs" />
+    <Compile Include="Data\SBParameter.cs" />
+    <Compile Include="Data\SplittedInterval.cs" />
+    <Compile Include="EventData\LoginResultEventArgs.cs" />
+    <Compile Include="EventData\SelectedRangeEventArgs.cs" />
+    <Compile Include="Forms\PropertyConfigForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\PropertyConfigForm.Designer.cs">
+      <DependentUpon>PropertyConfigForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SBViewForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SBViewForm.Designer.cs">
+      <DependentUpon>SBViewForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PlotForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PlotForm.Designer.cs">
+      <DependentUpon>PlotForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TEST\TestChartLine.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TEST\TestChartLine.Designer.cs">
+      <DependentUpon>TestChartLine.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TEST\TestChartPotato.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TEST\TestChartPotato.Designer.cs">
+      <DependentUpon>TestChartPotato.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TEST\TestGrid4Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TEST\TestGrid4Form.Designer.cs">
+      <DependentUpon>TestGrid4Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TEST\TestMsChartForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TEST\TestMsChartForm.Designer.cs">
+      <DependentUpon>TestMsChartForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GridCheckMarksSelection.cs" />
+    <Compile Include="LoginForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LoginForm.Designer.cs">
+      <DependentUpon>LoginForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MainStarter.cs" />
+    <Compile Include="Forms\NewSenarioForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\NewSenarioForm.Designer.cs">
+      <DependentUpon>NewSenarioForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Forms\SelectSBForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SelectSBForm.Designer.cs">
+      <DependentUpon>SelectSBForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TEST\GridGroupingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TEST\GridGroupingForm.Designer.cs">
+      <DependentUpon>GridGroupingForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TEST\TestFilter2Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TEST\TestFilter2Form.designer.cs">
+      <DependentUpon>TestFilter2Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TEST\TestChartForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TEST\TestChartForm.Designer.cs">
+      <DependentUpon>TestChartForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TEST\TestFilterForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TEST\TestFilterForm.Designer.cs">
+      <DependentUpon>TestFilterForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TEST\TestForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TEST\TestForm.Designer.cs">
+      <DependentUpon>TestForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TEST\TestGrid2Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TEST\TestGrid2Form.Designer.cs">
+      <DependentUpon>TestGrid2Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TEST\TestGrid3Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TEST\TestGrid3Form.Designer.cs">
+      <DependentUpon>TestGrid3Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TEST\TestGridForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TEST\TestGridForm.Designer.cs">
+      <DependentUpon>TestGridForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TEST\TestSplitContainerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TEST\TestSplitContainerForm.Designer.cs">
+      <DependentUpon>TestSplitContainerForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TEST\TestTab1Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TEST\TestTab1Form.Designer.cs">
+      <DependentUpon>TestTab1Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TEST\TestWebForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TEST\TestWebForm.Designer.cs">
+      <DependentUpon>TestWebForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\BinParameterControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\BinParameterControl.Designer.cs">
+      <DependentUpon>BinParameterControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\BinSBInfoControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\BinSBInfoControl.Designer.cs">
+      <DependentUpon>BinSBInfoControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\BinSBTabControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\BinSBTabControl.Designer.cs">
+      <DependentUpon>BinSBTabControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\BinTableControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\BinTableControl.Designer.cs">
+      <DependentUpon>BinTableControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\CreateSBProgressForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UControl\CreateSBProgressForm.Designer.cs">
+      <DependentUpon>CreateSBProgressForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\DllParamControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\DllParamControl.Designer.cs">
+      <DependentUpon>DllParamControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\ImportDLLControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\ImportDLLControl.Designer.cs">
+      <DependentUpon>ImportDLLControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\ImportProgressForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UControl\ImportProgressForm.Designer.cs">
+      <DependentUpon>ImportProgressForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\CsvTableControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\CsvTableControl.Designer.cs">
+      <DependentUpon>CsvTableControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\CustomSimpleButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UControl\BinModuleControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\BinModuleControl.Designer.cs">
+      <DependentUpon>BinModuleControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\DXChartControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\DXChartControl.Designer.cs">
+      <DependentUpon>DXChartControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\ImportParamControl3.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\ImportParamControl3.Designer.cs">
+      <DependentUpon>ImportParamControl3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\ImportParamControl2.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\ImportParamControl2.Designer.cs">
+      <DependentUpon>ImportParamControl2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\MgmtLRPControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\MgmtLRPControl.Designer.cs">
+      <DependentUpon>MgmtLRPControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\MgmtMatchingTabletControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\MgmtMatchingTabletControl.Designer.cs">
+      <DependentUpon>MgmtMatchingTabletControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\MgmtPresetGroupControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\MgmtPresetGroupControl.Designer.cs">
+      <DependentUpon>MgmtPresetGroupControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\MgmtLRPExtraControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\MgmtLRPExtraControl.Designer.cs">
+      <DependentUpon>MgmtLRPExtraControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\MgmtPresetParameterControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\MgmtPresetParameterControl.Designer.cs">
+      <DependentUpon>MgmtPresetParameterControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\MyChartControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\MyChartControl.Designer.cs">
+      <DependentUpon>MyChartControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\MyLineChart.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\MyLineChart.Designer.cs">
+      <DependentUpon>MyLineChart.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\MyPotatoChart.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\MyPotatoChart.Designer.cs">
+      <DependentUpon>MyPotatoChart.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\PlotModuleControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\PlotModuleControl.Designer.cs">
+      <DependentUpon>PlotModuleControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\SBListControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\SBListControl.Designer.cs">
+      <DependentUpon>SBListControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\SBParamControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\SBParamControl.Designer.cs">
+      <DependentUpon>SBParamControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\SBIntervalControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\SBIntervalControl.Designer.cs">
+      <DependentUpon>SBIntervalControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\BinSelectSBControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\BinSelectSBControl.Designer.cs">
+      <DependentUpon>BinSelectSBControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\SBModuleControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\SBModuleControl.Designer.cs">
+      <DependentUpon>SBModuleControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\ImportModuleControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\ImportModuleControl.Designer.cs">
+      <DependentUpon>ImportModuleControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\ImportParamControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\ImportParamControl.Designer.cs">
+      <DependentUpon>ImportParamControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\ImportIntervalControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\ImportIntervalControl.Designer.cs">
+      <DependentUpon>ImportIntervalControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\StartScreenControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\StartScreenControl.Designer.cs">
+      <DependentUpon>StartScreenControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\ProjectListControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\ProjectListControl.Designer.cs">
+      <DependentUpon>ProjectListControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.ko-KR.Designer.cs">
+      <DependentUpon>Resources.ko-KR.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TEST\TreeTestForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TEST\TreeTestForm.Designer.cs">
+      <DependentUpon>TreeTestForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\ScenarioSummaryControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\ScenarioSummaryControl.Designer.cs">
+      <DependentUpon>ScenarioSummaryControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControl1.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControl1.Designer.cs">
+      <DependentUpon>UserControl1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControl2.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControl2.Designer.cs">
+      <DependentUpon>UserControl2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UTIL\Prompt.cs" />
+    <Compile Include="UTIL\Utils.cs" />
+    <Compile Include="XtraForm1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="XtraForm1.Designer.cs">
+      <DependentUpon>XtraForm1.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Forms\AddDllParamForm.resx">
+      <DependentUpon>AddDllParamForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AddDllForm.resx">
+      <DependentUpon>AddDllForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\CreateScenarioProgressForm.resx">
+      <DependentUpon>CreateScenarioProgressForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\PropertyConfigForm.resx">
+      <DependentUpon>PropertyConfigForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SBViewForm.resx">
+      <DependentUpon>SBViewForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PlotForm.resx">
+      <DependentUpon>PlotForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TEST\TestChartLine.resx">
+      <DependentUpon>TestChartLine.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TEST\TestChartPotato.resx">
+      <DependentUpon>TestChartPotato.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TEST\TestGrid4Form.resx">
+      <DependentUpon>TestGrid4Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TEST\TestMsChartForm.resx">
+      <DependentUpon>TestMsChartForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LoginForm.ko-KR.resx">
+      <DependentUpon>LoginForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LoginForm.resx">
+      <DependentUpon>LoginForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.ko-KR.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\NewSenarioForm.resx">
+      <DependentUpon>NewSenarioForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\licenses.licx" />
+    <EmbeddedResource Include="Properties\Resources.ko-KR.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.ko-KR.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="Forms\SelectSBForm.resx">
+      <DependentUpon>SelectSBForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TEST\GridGroupingForm.resx">
+      <DependentUpon>GridGroupingForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TEST\TestFilter2Form.resx">
+      <DependentUpon>TestFilter2Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TEST\TestChartForm.resx">
+      <DependentUpon>TestChartForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TEST\TestFilterForm.resx">
+      <DependentUpon>TestFilterForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TEST\TestForm.resx">
+      <DependentUpon>TestForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TEST\TestGrid2Form.resx">
+      <DependentUpon>TestGrid2Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TEST\TestGrid3Form.resx">
+      <DependentUpon>TestGrid3Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TEST\TestGridForm.resx">
+      <DependentUpon>TestGridForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TEST\TestSplitContainerForm.resx">
+      <DependentUpon>TestSplitContainerForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TEST\TestTab1Form.resx">
+      <DependentUpon>TestTab1Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TEST\TestWebForm.resx">
+      <DependentUpon>TestWebForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TEST\TreeTestForm.resx">
+      <DependentUpon>TreeTestForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\BinModuleControl.resx">
+      <DependentUpon>BinModuleControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\BinParameterControl.resx">
+      <DependentUpon>BinParameterControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\BinSBInfoControl.resx">
+      <DependentUpon>BinSBInfoControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\BinSBTabControl.resx">
+      <DependentUpon>BinSBTabControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\BinTableControl.resx">
+      <DependentUpon>BinTableControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\CreateSBProgressForm.resx">
+      <DependentUpon>CreateSBProgressForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\DllParamControl.resx">
+      <DependentUpon>DllParamControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\ImportDLLControl.resx">
+      <DependentUpon>ImportDLLControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\ImportProgressForm.resx">
+      <DependentUpon>ImportProgressForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\CsvTableControl.resx">
+      <DependentUpon>CsvTableControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\DXChartControl.resx">
+      <DependentUpon>DXChartControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\ImportParamControl3.resx">
+      <DependentUpon>ImportParamControl3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\ImportParamControl2.resx">
+      <DependentUpon>ImportParamControl2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\MgmtLRPControl.resx">
+      <DependentUpon>MgmtLRPControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\MgmtMatchingTabletControl.resx">
+      <DependentUpon>MgmtMatchingTabletControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\MgmtPresetGroupControl.resx">
+      <DependentUpon>MgmtPresetGroupControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\MyChartControl.resx">
+      <DependentUpon>MyChartControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\MgmtLRPExtraControl.resx">
+      <DependentUpon>MgmtLRPExtraControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\MyLineChart.resx">
+      <DependentUpon>MyLineChart.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\MyPotatoChart.resx">
+      <DependentUpon>MyPotatoChart.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\PlotModuleControl.resx">
+      <DependentUpon>PlotModuleControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\SBListControl.resx">
+      <DependentUpon>SBListControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\SBParamControl.resx">
+      <DependentUpon>SBParamControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\SBIntervalControl.resx">
+      <DependentUpon>SBIntervalControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\BinSelectSBControl.resx">
+      <DependentUpon>BinSelectSBControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\SBModuleControl.resx">
+      <DependentUpon>SBModuleControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\ImportModuleControl.resx">
+      <DependentUpon>ImportModuleControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\ImportParamControl.resx">
+      <DependentUpon>ImportParamControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\ImportIntervalControl.resx">
+      <DependentUpon>ImportIntervalControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\StartScreenControl.resx">
+      <DependentUpon>StartScreenControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\ProjectListControl.resx">
+      <DependentUpon>ProjectListControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\ScenarioSummaryControl.resx">
+      <DependentUpon>ScenarioSummaryControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControl1.resx">
+      <DependentUpon>UserControl1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="XtraForm1.resx">
+      <DependentUpon>XtraForm1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\MgmtPresetParameterControl.resx">
+      <DependentUpon>MgmtPresetParameterControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="DynaRAP.ico" />
+    <Content Include="log4net.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Python\Calculator.py">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <EmbeddedResource Include="Resources\file.png" />
+    <EmbeddedResource Include="Resources\folder.png" />
+    <EmbeddedResource Include="Resources\change.png" />
+    <EmbeddedResource Include="Resources\delete.png" />
+    <EmbeddedResource Include="Resources\view.png" />
+    <EmbeddedResource Include="Resources\link.png" />
+    <EmbeddedResource Include="Resources\none.png" />
+    <EmbeddedResource Include="Resources\login.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.7.2%28x86 및 x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

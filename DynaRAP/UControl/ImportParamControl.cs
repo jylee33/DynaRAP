@@ -49,11 +49,11 @@ namespace DynaRAP.UControl
             set
             {
                 this.dicData = value;
-                List<string> paramList = value.Keys.ToList();
-                cboParameter.Properties.Items.AddRange(paramList);
-                cboParameter.Properties.Items.Remove("DATE");
+                //List<string> paramList = value.Keys.ToList();
+                //cboParameter.Properties.Items.AddRange(paramList);
+                //cboParameter.Properties.Items.Remove("DATE");
 
-                cboParameter.SelectedIndex = 0;
+                //cboParameter.SelectedIndex = 0;
             }
         }
 
@@ -79,6 +79,7 @@ namespace DynaRAP.UControl
             cboParameter.SelectedIndexChanged += cboParameter_SelectedIndexChanged;
 
             List<string> paramList = dicData.Keys.ToList();
+            cboParameter.Properties.Items.Clear();
             cboParameter.Properties.Items.AddRange(paramList);
             cboParameter.Properties.Items.Remove("DATE");
 
@@ -101,6 +102,7 @@ namespace DynaRAP.UControl
 
             if (chartControl != null)
             {
+                chartControl.Series.Clear();
                 chartControl.Dispose();
                 chartControl = null;
             }
@@ -111,7 +113,6 @@ namespace DynaRAP.UControl
 
             Series series = new Series("Series1", ViewType.Line);
             chartControl.Series.Add(series);
-
             dt = GetChartValues(strKey);
             series.DataSource = dt;
 
@@ -122,9 +123,8 @@ namespace DynaRAP.UControl
 
             //((XYDiagram)chartControl.Diagram).AxisY.Visibility = DevExpress.Utils.DefaultBoolean.False;
             chartControl.Legend.Visibility = DevExpress.Utils.DefaultBoolean.False;
-
+               
             XYDiagram diagram = (XYDiagram)chartControl.Diagram;
-
             diagram.EnableAxisXScrolling = true;
             diagram.EnableAxisXZooming = true;
             diagram.AxisX.DateTimeScaleOptions.ScaleMode = ScaleMode.Manual;
@@ -137,7 +137,7 @@ namespace DynaRAP.UControl
 
             this.rangeControl1.Client = chartControl;
             rangeControl1.RangeChanged += RangeControl1_RangeChanged;
-            rangeControl1.ShowLabels = true;
+            rangeControl1.ShowLabels = false;
             diagram.RangeControlDateTimeGridOptions.GridMode = ChartRangeControlClientGridMode.Manual;
             diagram.RangeControlDateTimeGridOptions.GridOffset = 1;
             diagram.RangeControlDateTimeGridOptions.GridSpacing = 60;
@@ -255,7 +255,8 @@ namespace DynaRAP.UControl
             if (this.DeleteBtnClicked != null)
                 this.DeleteBtnClicked(this, new EventArgs());
 
-            panelChart.Close();
+            if (panelChart != null)
+                panelChart.Close();
         }
 
         private void btnView_Click(object sender, EventArgs e)

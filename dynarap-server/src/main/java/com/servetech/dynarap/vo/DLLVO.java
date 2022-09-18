@@ -5,6 +5,8 @@ import com.servetech.dynarap.db.type.LongDate;
 import com.servetech.dynarap.db.type.String64;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class DLLVO {
     private CryptoField seq;
@@ -14,6 +16,29 @@ public class DLLVO {
     private CryptoField.NAuth registerUid;
     private LongDate createdAt;
     private String64 tags;
+
+    private List<Param> params;
+
+    @Data
+    public static class DataSource {
+        protected String sourceType = "dll";
+        protected CryptoField sourceSeq = null;
+        protected CryptoField paramPack;
+        protected CryptoField paramSeq;
+        protected String julianStartAt;
+        protected String julianEndAt;
+        protected double offsetStartAt;
+        protected double offsetEndAt;
+
+        public static DLLVO.DataSource getSource(DLLVO dll, DLLVO.Param param) {
+            DLLVO.DataSource source = new DLLVO.DataSource();
+            source.setSourceType("dll");
+            source.setSourceSeq(dll.getSeq());
+            source.setParamPack(param.getSeq());
+            source.setParamSeq(param.getSeq());
+            return source;
+        }
+    }
 
     @Data
     public static class Param {

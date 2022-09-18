@@ -13,4 +13,6 @@ public class DataPropVO {
     private String referenceType;
     private CryptoField referenceKey;
     private LongDate updatedAt;
+
+    private boolean marked = false;
 }
