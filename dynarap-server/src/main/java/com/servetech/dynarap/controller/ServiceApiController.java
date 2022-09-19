@@ -182,6 +182,7 @@ public class ServiceApiController extends ApiController {
             }
             else {
                 // 레퍼런스가 없으면 완전 삭제
+                // TODO : 데이터 삭제 redis
                 getService(ParamModuleService.class).deleteParamModule(moduleSeq);
             }
             return ResponseHelper.response(200, "Success - ParamModule Deleted", "");
