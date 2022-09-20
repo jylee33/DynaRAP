@@ -249,6 +249,10 @@ public class ServiceApiController extends ApiController {
                 if (parts == null) parts = new ArrayList<>();
                 for (PartVO part : parts) {
                     part.setParams(getService(ParamService.class).getPresetParamListBySource(part.getPresetPack(), part.getPresetSeq()));
+                    if (part.getParams() == null || part.getParams().size() == 0) continue;
+                    for (PresetVO.Param pparam : part.getParams()) {
+                        pparam.setParamInfo(getService(ParamService.class).getParamBySeq(pparam.getParamSeq()));
+                    }
                 }
                 return ResponseHelper.response(200, "Success - ParamModule Source Search", parts);
             }
