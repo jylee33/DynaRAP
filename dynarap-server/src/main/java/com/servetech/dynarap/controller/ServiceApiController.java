@@ -262,6 +262,7 @@ public class ServiceApiController extends ApiController {
                     for (ShortBlockVO.Param sparam : sparams) {
                         ParamVO param = getService(ParamService.class).getParamBySeq(sparam.getParamSeq());
                         if (param != null) sparam.setParamInfo(param);
+                        sparam.setParamSearchSeq(new CryptoField(sparam.getUnionParamSeq()));
                     }
                     shortBlock.setParams(sparams);
                 }

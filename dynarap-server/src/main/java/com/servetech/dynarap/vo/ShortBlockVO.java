@@ -82,6 +82,7 @@ public class ShortBlockVO {
         private CryptoField paramSeq;
 
         private Long unionParamSeq;
+        private CryptoField paramSearchSeq;
 
         private String64 paramName;
         private String paramKey;
