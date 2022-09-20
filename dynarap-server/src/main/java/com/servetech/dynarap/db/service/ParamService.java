@@ -694,6 +694,7 @@ public class ParamService {
 
             Long referenceSeq = paramMapper.selectReferenceSeq(params);
             current.setReferenceSeq(referenceSeq);
+            current.setParamSearchSeq(new CryptoField(referenceSeq));
 
             params.put("propSeq", current.getPropSeq());
             current.setPropInfo(paramMapper.selectParamPropBySeq(params));

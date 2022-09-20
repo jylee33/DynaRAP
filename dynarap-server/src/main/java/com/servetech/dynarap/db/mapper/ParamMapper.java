@@ -381,7 +381,7 @@ public interface ParamMapper {
 
     @Select({
             "<script>" +
-                    "select c.*, a.presetPack, a.presetSeq, a.seq as referenceSeq " +
+                    "select c.*, a.presetPack, a.presetSeq, a.seq as referenceSeq, a.seq as paramSearchSeq " +
                     "from dynarap_preset_param a, dynarap_preset b, dynarap_param c " +
                     "where a.presetPack = b.presetPack and a.presetSeq = b.seq " +
                     "and b.presetPack = #{presetPack,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
@@ -443,7 +443,7 @@ public interface ParamMapper {
 
     @Select({
             "<script>" +
-                    "select c.*, a.seq as referenceSeq " +
+                    "select c.*, a.seq as referenceSeq, a.seq as paramSearchSeq " +
                     "from dynarap_notmapped_param a, dynarap_param c " +
                     "where a.uploadSeq = #{uploadSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
                     "and a.paramPack = c.paramPack " +
@@ -455,7 +455,7 @@ public interface ParamMapper {
 
     @Select({
             "<script>" +
-                    "select a.*, b.seq as referenceSeq, b.presetPack, b.presetSeq from dynarap_param a, dynarap_preset_param b " +
+                    "select a.*, b.seq as referenceSeq, b.seq as paramSearchSeq, b.presetPack, b.presetSeq from dynarap_param a, dynarap_preset_param b " +
                     "where a.seq = b.paramSeq " +
                     "and a.paramPack = b.paramPack " +
                     "and b.seq = #{seq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
@@ -479,7 +479,7 @@ public interface ParamMapper {
 
     @Select({
             "<script>" +
-                    "select a.*, b.seq as referenceSeq, 0 as presetPack, 0 as presetSeq from dynarap_param a, dynarap_notmapped_param b " +
+                    "select a.*, b.seq as referenceSeq, b.seq as paramSearchSeq, 0 as presetPack, 0 as presetSeq from dynarap_param a, dynarap_notmapped_param b " +
                     "where a.seq = b.paramSeq " +
                     "and a.paramPack = b.paramPack " +
                     "and b.seq = #{seq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
