@@ -259,15 +259,11 @@ public class ServiceApiController extends ApiController {
                 for (ShortBlockVO shortBlock : shortBlocks) {
                     List<ShortBlockVO.Param> sparams = getService(PartService.class).getShortBlockParamList(shortBlock.getBlockMetaSeq());
                     if (sparams == null) sparams = new ArrayList<>();
-                    List<ParamVO> params = new ArrayList<>();
                     for (ShortBlockVO.Param sparam : sparams) {
                         ParamVO param = getService(ParamService.class).getParamBySeq(sparam.getParamSeq());
-                        if (param != null) {
-                            param.setReferenceSeq(sparam.getUnionParamSeq());
-                            params.add(param);
-                        }
+                        if (param != null) sparam.setParamInfo(param);
                     }
-                    shortBlock.setParams(params);
+                    shortBlock.setParams(sparams);
                 }
                 return ResponseHelper.response(200, "Success - ParamModule Source Search", shortBlocks);
             }
