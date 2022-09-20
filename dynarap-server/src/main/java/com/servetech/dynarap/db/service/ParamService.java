@@ -9,10 +9,7 @@ import com.servetech.dynarap.db.mapper.RawMapper;
 import com.servetech.dynarap.db.type.CryptoField;
 import com.servetech.dynarap.db.type.LongDate;
 import com.servetech.dynarap.ext.HandledServiceException;
-import com.servetech.dynarap.vo.ParamVO;
-import com.servetech.dynarap.vo.PartVO;
-import com.servetech.dynarap.vo.PresetVO;
-import com.servetech.dynarap.vo.RawVO;
+import com.servetech.dynarap.vo.*;
 import org.apache.catalina.util.ParameterMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -890,6 +887,17 @@ public class ParamService {
             Map<String, Object> params = new HashMap<>();
             params.put("blockSeq", blockSeq);
             return paramMapper.selectShortBlockParamList(params);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+
+    public ShortBlockVO.Param getShortBlockParamBySeq(CryptoField blockParamSeq) throws HandledServiceException {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("blockParamSeq", blockParamSeq);
+            return paramMapper.selectShortBlockParamBySeq(params);
         } catch(Exception e) {
             throw new HandledServiceException(410, e.getMessage());
         }

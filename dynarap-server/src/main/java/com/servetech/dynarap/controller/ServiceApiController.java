@@ -257,7 +257,17 @@ public class ServiceApiController extends ApiController {
                 List<ShortBlockVO> shortBlocks = getService(ParamModuleService.class).getShortBlockListByKeyword(keyword);
                 if (shortBlocks == null) shortBlocks = new ArrayList<>();
                 for (ShortBlockVO shortBlock : shortBlocks) {
-                    shortBlock.setParams(getService(PartService.class).getShortBlockParamList(shortBlock.getBlockMetaSeq()));
+                    List<ShortBlockVO.Param> sparams = getService(PartService.class).getShortBlockParamList(shortBlock.getBlockMetaSeq());
+                    if (sparams == null) sparams = new ArrayList<>();
+                    List<ParamVO> params = new ArrayList<>();
+                    for (ShortBlockVO.Param sparam : sparams) {
+                        ParamVO param = getService(ParamService.class).getParamBySeq(sparam.getParamSeq());
+                        if (param != null) {
+                            param.setReferenceSeq(sparam.getUnionParamSeq());
+                            params.add(param);
+                        }
+                    }
+                    shortBlock.setParams(params);
                 }
                 return ResponseHelper.response(200, "Success - ParamModule Source Search", shortBlocks);
             }
@@ -2233,20 +2243,19 @@ public class ServiceApiController extends ApiController {
             else {
                 for (int i = 0; i < jarrParams.size(); i++) {
                     Long paramKey = CryptoField.decode(jarrParams.get(i).getAsString(), 0L).originOf();
-                    ParamVO param = getService(ParamService.class).getPresetParamBySeq(new CryptoField(paramKey));
-                    if (param == null) {
-                        param = getService(ParamService.class).getNotMappedParamBySeq(
-                                new CryptoField(paramKey));
-                        if (param == null) continue;
+                    ShortBlockVO.Param sparam = getService(ParamService.class).getShortBlockParamBySeq(new CryptoField(paramKey));
+                    ParamVO param = getService(ParamService.class).getParamBySeq(sparam.getParamSeq());
+                    if (param != null) {
+                        param.setReferenceSeq(sparam.getUnionParamSeq());
+                        params.add(param);
                     }
-                    params.add(param);
                 }
-            }
 
-            List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
-            if (notMappedParams != null && notMappedParams.size() > 0) {
-                for (ParamVO p : notMappedParams)
-                    params.add(p);
+                List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
+                if (notMappedParams != null && notMappedParams.size() > 0) {
+                    for (ParamVO p : notMappedParams)
+                        params.add(p);
+                }
             }
 
             JsonArray jarrJulian = payload.get("julianRange").getAsJsonArray();
@@ -2385,20 +2394,19 @@ public class ServiceApiController extends ApiController {
             else {
                 for (int i = 0; i < jarrParams.size(); i++) {
                     Long paramKey = CryptoField.decode(jarrParams.get(i).getAsString(), 0L).originOf();
-                    ParamVO param = getService(ParamService.class).getPresetParamBySeq(new CryptoField(paramKey));
-                    if (param == null) {
-                        param = getService(ParamService.class).getNotMappedParamBySeq(
-                                new CryptoField(paramKey));
-                        if (param == null) continue;
+                    ShortBlockVO.Param sparam = getService(ParamService.class).getShortBlockParamBySeq(new CryptoField(paramKey));
+                    ParamVO param = getService(ParamService.class).getParamBySeq(sparam.getParamSeq());
+                    if (param != null) {
+                        param.setReferenceSeq(sparam.getUnionParamSeq());
+                        params.add(param);
                     }
-                    params.add(param);
                 }
-            }
 
-            List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
-            if (notMappedParams != null && notMappedParams.size() > 0) {
-                for (ParamVO p : notMappedParams)
-                    params.add(p);
+                List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
+                if (notMappedParams != null && notMappedParams.size() > 0) {
+                    for (ParamVO p : notMappedParams)
+                        params.add(p);
+                }
             }
 
             List<String> julianData = new ArrayList<>();
@@ -2525,26 +2533,34 @@ public class ServiceApiController extends ApiController {
             List<CryptoField> paramList = getService(ParamService.class).getShortBlockParamList(blockSeq);
             if (paramList == null) paramList = new ArrayList<>();
 
-            jobjParams.add("paramSet", ServerConstants.GSON.toJsonTree(paramList));
+            List<ParamVO> presetParams = getService(ParamService.class).getPresetParamList(
+                    partInfo.getPresetPack(), partInfo.getPresetSeq(), CryptoField.LZERO, CryptoField.LZERO, 1, 9999);
+            if (presetParams == null) presetParams = new ArrayList<>();
 
             for (CryptoField seq : paramList) {
-                ParamVO param = getService(ParamService.class).getPresetParamBySeq(seq);
-                if (param == null) {
-                    param = getService(ParamService.class).getNotMappedParamBySeq(seq);
-                    if (param == null) continue;
+                ShortBlockVO.Param sparam = getService(ParamService.class).getShortBlockParamBySeq(seq);
+                ParamVO param = null;
+                for (ParamVO p : presetParams) {
+                    if (p.getParamPack().equals(sparam.getParamPack()) && p.getSeq().equals(sparam.getParamSeq())) {
+                        param = p;
+                        break;
+                    }
                 }
-                resultParams.add(param);
+                if (param != null) resultParams.add(param);
             }
 
             List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
             if (notMappedParams != null && notMappedParams.size() > 0) {
-                for (ParamVO p : notMappedParams)
+                for (ParamVO p : notMappedParams) {
+                    paramList.add(p.getSeq());
                     resultParams.add(p);
+                }
             }
 
+            jobjParams.add("paramSet", ServerConstants.GSON.toJsonTree(paramList));
             jobjParams.add("paramData", ServerConstants.GSON.toJsonTree(resultParams));
 
-            return ResponseHelper.response(200, "Success - Part Info", jobjParams);
+            return ResponseHelper.response(200, "Success - Shortblock Param List", jobjParams);
         }
 
         if (command.equals("remove-meta")) {
@@ -2592,20 +2608,19 @@ public class ServiceApiController extends ApiController {
             else {
                 for (int i = 0; i < jarrParams.size(); i++) {
                     Long paramKey = CryptoField.decode(jarrParams.get(i).getAsString(), 0L).originOf();
-                    ParamVO param = getService(ParamService.class).getPresetParamBySeq(new CryptoField(paramKey));
-                    if (param == null) {
-                        param = getService(ParamService.class).getNotMappedParamBySeq(
-                                new CryptoField(paramKey));
-                        if (param == null) continue;
+                    ShortBlockVO.Param sparam = getService(ParamService.class).getShortBlockParamBySeq(new CryptoField(paramKey));
+                    ParamVO param = getService(ParamService.class).getParamBySeq(sparam.getParamSeq());
+                    if (param != null) {
+                        param.setReferenceSeq(sparam.getUnionParamSeq());
+                        params.add(param);
                     }
-                    params.add(param);
                 }
-            }
 
-            List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
-            if (notMappedParams != null && notMappedParams.size() > 0) {
-                for (ParamVO p : notMappedParams)
-                    params.add(p);
+                List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
+                if (notMappedParams != null && notMappedParams.size() > 0) {
+                    for (ParamVO p : notMappedParams)
+                        params.add(p);
+                }
             }
 
             JsonArray jarrJulian = payload.get("julianRange").getAsJsonArray();
@@ -2712,20 +2727,19 @@ public class ServiceApiController extends ApiController {
             else {
                 for (int i = 0; i < jarrParams.size(); i++) {
                     Long paramKey = CryptoField.decode(jarrParams.get(i).getAsString(), 0L).originOf();
-                    ParamVO param = getService(ParamService.class).getPresetParamBySeq(new CryptoField(paramKey));
-                    if (param == null) {
-                        param = getService(ParamService.class).getNotMappedParamBySeq(
-                                new CryptoField(paramKey));
-                        if (param == null) continue;
+                    ShortBlockVO.Param sparam = getService(ParamService.class).getShortBlockParamBySeq(new CryptoField(paramKey));
+                    ParamVO param = getService(ParamService.class).getParamBySeq(sparam.getParamSeq());
+                    if (param != null) {
+                        param.setReferenceSeq(sparam.getUnionParamSeq());
+                        params.add(param);
                     }
-                    params.add(param);
                 }
-            }
 
-            List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
-            if (notMappedParams != null && notMappedParams.size() > 0) {
-                for (ParamVO p : notMappedParams)
-                    params.add(p);
+                List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
+                if (notMappedParams != null && notMappedParams.size() > 0) {
+                    for (ParamVO p : notMappedParams)
+                        params.add(p);
+                }
             }
 
             List<String> julianData = new ArrayList<>();

@@ -3,6 +3,7 @@ package com.servetech.dynarap.db.mapper;
 import com.servetech.dynarap.db.type.CryptoField;
 import com.servetech.dynarap.vo.ParamVO;
 import com.servetech.dynarap.vo.PresetVO;
+import com.servetech.dynarap.vo.ShortBlockVO;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -537,6 +538,15 @@ public interface ParamMapper {
                     "</script>"
     })
     List<CryptoField> selectShortBlockParamList(Map<String, Object> params) throws Exception;
+
+    @Select({
+            "<script>" +
+                    "select * from dynarap_sblock_param " +
+                    "where seq = #{blockParamSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "limit 0, 1" +
+                    "</script>"
+    })
+    ShortBlockVO.Param selectShortBlockParamBySeq(Map<String, Object> params) throws Exception;
 
 
     @Select({

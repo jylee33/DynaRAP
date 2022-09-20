@@ -22,7 +22,7 @@ public class ShortBlockVO {
 
     private Meta blockMetaInfo;
     private PartVO partInfo;
-    private List<Param> params;
+    private List<ParamVO> params;
 
     @Data
     public static class DataSource {
