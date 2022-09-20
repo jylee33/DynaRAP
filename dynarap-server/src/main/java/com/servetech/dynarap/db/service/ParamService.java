@@ -706,6 +706,31 @@ public class ParamService {
         }
     }
 
+    public List<PresetVO.Param> getPresetParamListBySource(CryptoField presetPack, CryptoField presetSeq) throws HandledServiceException {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("presetPack", presetPack);
+            params.put("presetSeq", presetSeq == null || presetSeq.isEmpty() ? null : presetSeq);
+
+            List<PresetVO.Param> paramList = paramMapper.selectPresetParamListBySource(params);
+
+            return paramList;
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    public PresetVO.Param getPresetParamBySource(CryptoField presetParamSeq) throws  HandledServiceException {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("presetParamSeq", presetParamSeq);
+            return paramMapper.selectPresetParamBySource(params);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+
     public List<ParamVO> getPresetParamList(CryptoField presetPack, CryptoField presetSeq,
                                              CryptoField paramPack, CryptoField paramSeq,
                                              int pageNo, int pageSize) throws HandledServiceException {

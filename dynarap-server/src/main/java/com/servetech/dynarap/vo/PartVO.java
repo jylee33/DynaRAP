@@ -23,7 +23,7 @@ public class PartVO {
     private boolean hpfDone;
 
     private PresetVO presetInfo;
-    private List<ParamVO> params;
+    private List<PresetVO.Param> params;
 
     @Data
     public static class DataSource {

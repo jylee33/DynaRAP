@@ -443,6 +443,25 @@ public interface ParamMapper {
 
     @Select({
             "<script>" +
+                    "select * from dynarap_preset_param " +
+                    "where presetPack = #{presetPack,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "and presetSeq = #{presetSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "order by seq asc" +
+                    "</script>"
+    })
+    List<PresetVO.Param> selectPresetParamListBySource(Map<String, Object> params) throws Exception;
+
+    @Select({
+            "<script>" +
+                    "select * from dynarap_preset_param " +
+                    "where seq = #{presetParamSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "limit 0, 1 " +
+                    "</script>"
+    })
+    PresetVO.Param selectPresetParamBySource(Map<String, Object> params) throws Exception;
+
+    @Select({
+            "<script>" +
                     "select c.*, a.seq as referenceSeq, a.seq as paramSearchSeq " +
                     "from dynarap_notmapped_param a, dynarap_param c " +
                     "where a.uploadSeq = #{uploadSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +

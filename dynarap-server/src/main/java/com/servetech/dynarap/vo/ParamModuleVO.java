@@ -58,6 +58,12 @@ public class ParamModuleVO {
         private String julianEndAt;
         private double offsetStartAt;
         private double offsetEndAt;
+
+        private String64 sourceName;
+        private String paramKey;
+        private int dataCount;
+
+        private transient boolean mark;
     }
 
     @Data

@@ -34,6 +34,16 @@ public class DLLService {
         }
     }
 
+    public DLLVO getDLLBySeq(CryptoField dllSeq) throws HandledServiceException {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("dllSeq", dllSeq);
+            return dllMapper.selectDLLBySeq(params);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
     @Transactional
     public DLLVO insertDLL(CryptoField.NAuth uid, JsonObject payload) throws HandledServiceException {
         try {

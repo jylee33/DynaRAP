@@ -21,6 +21,15 @@ public interface DLLMapper {
     })
     List<DLLVO> selectDLLList() throws Exception;
 
+    @Select({
+            "<script>" +
+                    "select * from dynarap_dll " +
+                    "where seq = #{dllSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "limit 0, 1" +
+                    "</script>"
+    })
+    DLLVO selectDLLBySeq(Map<String, Object> params) throws Exception;
+
     @Insert({
             "<script>" +
                     "insert into dynarap_dll (" +

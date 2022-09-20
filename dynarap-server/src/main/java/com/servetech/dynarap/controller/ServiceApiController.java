@@ -248,8 +248,7 @@ public class ServiceApiController extends ApiController {
                 List<PartVO> parts = getService(ParamModuleService.class).getPartListByKeyword(keyword);
                 if (parts == null) parts = new ArrayList<>();
                 for (PartVO part : parts) {
-                    part.setParams(getService(ParamService.class).getPresetParamList(
-                            part.getPresetPack(), part.getPresetSeq(), CryptoField.LZERO, CryptoField.LZERO, 1, 999999));
+                    part.setParams(getService(ParamService.class).getPresetParamListBySource(part.getPresetPack(), part.getPresetSeq()));
                 }
                 return ResponseHelper.response(200, "Success - ParamModule Source Search", parts);
             }
@@ -299,7 +298,68 @@ public class ServiceApiController extends ApiController {
             List<ParamModuleVO.Source> sources = getService(ParamModuleService.class).getParamModuleSourceList(moduleSeq);
             if (sources == null) sources = new ArrayList<>();
 
-            return ResponseHelper.response(200, "Success - ParamModule Source List", sources);
+            for (ParamModuleVO.Source source : sources) {
+                if (source.getSourceType().equals("part")) {
+                    PartVO partInfo = getService(PartService.class).getPartBySeq(source.getSourceSeq());
+                    if (partInfo == null) {
+                        source.setMark(true);
+                        continue;
+                    }
+                    source.setSourceName(partInfo.getPartName());
+
+                    // presetParamSeq 값으로 처리됨.
+                    PresetVO.Param pparam = getService(ParamService.class).getPresetParamBySource(source.getParamSeq());
+                    ParamVO param = getService(ParamService.class).getParamBySeq(pparam.getParamSeq());
+                    source.setParamKey(param.getParamKey());
+                }
+                else if (source.getSourceType().equals("shortblock")) {
+                    ShortBlockVO blockInfo = getService(PartService.class).getShortBlockBySeq(source.getSourceSeq());
+                    if (blockInfo == null) {
+                        source.setMark(true);
+                        continue;
+                    }
+                    source.setSourceName(blockInfo.getBlockName());
+
+                    // blockParamSeq 값으로 처리됨.
+                    ShortBlockVO.Param blockParam = getService(ParamService.class).getShortBlockParamBySeq(source.getParamSeq());
+                    ParamVO param = getService(ParamService.class).getParamBySeq(blockParam.getParamSeq());
+                    source.setParamKey(param.getParamKey());
+                }
+                else if (source.getSourceType().equals("dll")) {
+                    DLLVO dllInfo = getService(DLLService.class).getDLLBySeq(source.getSourceSeq());
+                    if (dllInfo == null) {
+                        source.setMark(true);
+                        continue;
+                    }
+                    source.setSourceName(dllInfo.getDataSetName());
+
+                    DLLVO.Param dllParam = getService(DLLService.class).getDLLParamBySeq(source.getParamSeq());
+                    source.setParamKey(dllParam.getParamName().originOf());
+                }
+                else if (source.getSourceType().equals("parammodule")) {
+                    ParamModuleVO moduleInfo = getService(ParamModuleService.class).getParamModuleBySeq(source.getSourceSeq());
+                    if (moduleInfo == null) {
+                        source.setMark(true);
+                        continue;
+                    }
+                    source.setSourceName(moduleInfo.getModuleName());
+
+                    ParamModuleVO.Equation eq = getService(ParamModuleService.class).getParamModuleEqBySeq(source.getParamSeq());
+                    source.setParamKey(eq.getEqName().originOf());
+                }
+            }
+
+            List<ParamModuleVO.Source> availSources = new ArrayList<>();
+            for (ParamModuleVO.Source source : sources) {
+                if (source.isMark() == false)
+                    availSources.add(source);
+            }
+
+            return ResponseHelper.response(200, "Success - ParamModule Source List", availSources);
+        }
+
+        if (command.equals("source-count")) {
+            return ResponseHelper.response(200, "Success - ParamModule Source Count", 0);
         }
 
         if (command.equals("save-source")) {
@@ -1627,12 +1687,12 @@ public class ServiceApiController extends ApiController {
                     }
                     params.add(param);
                 }
-            }
 
-            List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
-            if (notMappedParams != null && notMappedParams.size() > 0) {
-                for (ParamVO p : notMappedParams)
-                    params.add(p);
+                List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
+                if (notMappedParams != null && notMappedParams.size() > 0) {
+                    for (ParamVO p : notMappedParams)
+                        params.add(p);
+                }
             }
 
             JsonArray jarrJulian = payload.get("julianRange").getAsJsonArray();
@@ -1778,12 +1838,12 @@ public class ServiceApiController extends ApiController {
                     }
                     params.add(param);
                 }
-            }
 
-            List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
-            if (notMappedParams != null && notMappedParams.size() > 0) {
-                for (ParamVO p : notMappedParams)
-                    params.add(p);
+                List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
+                if (notMappedParams != null && notMappedParams.size() > 0) {
+                    for (ParamVO p : notMappedParams)
+                        params.add(p);
+                }
             }
 
             List<String> julianData = new ArrayList<>();
@@ -2037,12 +2097,12 @@ public class ServiceApiController extends ApiController {
                     }
                     params.add(param);
                 }
-            }
 
-            List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
-            if (notMappedParams != null && notMappedParams.size() > 0) {
-                for (ParamVO p : notMappedParams)
-                    params.add(p);
+                List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
+                if (notMappedParams != null && notMappedParams.size() > 0) {
+                    for (ParamVO p : notMappedParams)
+                        params.add(p);
+                }
             }
 
             JsonArray jarrJulian = payload.get("julianRange").getAsJsonArray();
@@ -2156,12 +2216,12 @@ public class ServiceApiController extends ApiController {
                     }
                     params.add(param);
                 }
-            }
 
-            List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
-            if (notMappedParams != null && notMappedParams.size() > 0) {
-                for (ParamVO p : notMappedParams)
-                    params.add(p);
+                List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
+                if (notMappedParams != null && notMappedParams.size() > 0) {
+                    for (ParamVO p : notMappedParams)
+                        params.add(p);
+                }
             }
 
             List<String> julianData = new ArrayList<>();
