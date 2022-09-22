@@ -24,6 +24,7 @@ public class PartVO {
 
     private PresetVO presetInfo;
     private List<PresetVO.Param> params;
+    private String useTime;
 
     @Data
     public static class DataSource {

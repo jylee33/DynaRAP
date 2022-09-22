@@ -220,6 +220,14 @@ public class ParamModuleService {
             if (plots == null) plots = new ArrayList<>();
             for (ParamModuleVO.Plot plot : plots) {
                 plot.setDataProp(rawService.getDataPropListToMap("plot", plot.getSeq()));
+
+                List<ParamModuleVO.Plot.Source> plotSources = getParamModulePlotSourceList(plot.getModuleSeq(), plot.getSeq());
+                if (plotSources == null) plotSources = new ArrayList<>();
+                plot.setPlotSourceList(plotSources);
+                plot.setPlotSources(new ArrayList<>());
+                for (ParamModuleVO.Plot.Source plotSource : plotSources) {
+                    plot.getPlotSources().add(ParamModuleVO.Plot.Source.getSimple(plotSource));
+                }
             }
             return plots;
         } catch(Exception e) {

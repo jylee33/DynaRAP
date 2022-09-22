@@ -248,7 +248,13 @@ public class ServiceApiController extends ApiController {
                 List<PartVO> parts = getService(ParamModuleService.class).getPartListByKeyword(keyword);
                 if (parts == null) parts = new ArrayList<>();
                 for (PartVO part : parts) {
+                    RawVO.Upload rawUpload = getService(RawService.class).getUploadBySeq(part.getUploadSeq());
                     part.setParams(getService(ParamService.class).getPresetParamListBySource(part.getPresetPack(), part.getPresetSeq()));
+
+                    part.setUseTime("julian");
+                    if (rawUpload.getDataType().equalsIgnoreCase("adams") || rawUpload.getDataType().equalsIgnoreCase("zaero"))
+                        part.setUseTime("offset");
+
                     if (part.getParams() == null || part.getParams().size() == 0) continue;
                     for (PresetVO.Param pparam : part.getParams()) {
                         pparam.setParamInfo(getService(ParamService.class).getParamBySeq(pparam.getParamSeq()));
@@ -260,6 +266,13 @@ public class ServiceApiController extends ApiController {
                 List<ShortBlockVO> shortBlocks = getService(ParamModuleService.class).getShortBlockListByKeyword(keyword);
                 if (shortBlocks == null) shortBlocks = new ArrayList<>();
                 for (ShortBlockVO shortBlock : shortBlocks) {
+                    PartVO partInfo = getService(PartService.class).getPartBySeq(shortBlock.getPartSeq());
+                    RawVO.Upload rawUpload = getService(RawService.class).getUploadBySeq(partInfo.getUploadSeq());
+
+                    shortBlock.setUseTime("julian");
+                    if (rawUpload.getDataType().equalsIgnoreCase("adams") || rawUpload.getDataType().equalsIgnoreCase("zaero"))
+                        shortBlock.setUseTime("offset");
+
                     List<ShortBlockVO.Param> sparams = getService(PartService.class).getShortBlockParamList(shortBlock.getBlockMetaSeq());
                     if (sparams == null) sparams = new ArrayList<>();
                     for (ShortBlockVO.Param sparam : sparams) {
@@ -310,6 +323,11 @@ public class ServiceApiController extends ApiController {
                         continue;
                     }
                     source.setSourceName(partInfo.getPartName());
+                    RawVO.Upload rawUpload = getService(RawService.class).getUploadBySeq(partInfo.getUploadSeq());
+
+                    source.setUseTime("julian");
+                    if (rawUpload.getDataType().equalsIgnoreCase("adams") || rawUpload.getDataType().equalsIgnoreCase("zaero"))
+                        source.setUseTime("offset");
 
                     // presetParamSeq 값으로 처리됨.
                     PresetVO.Param pparam = getService(ParamService.class).getPresetParamBySource(source.getParamSeq());
@@ -323,6 +341,13 @@ public class ServiceApiController extends ApiController {
                         continue;
                     }
                     source.setSourceName(blockInfo.getBlockName());
+
+                    PartVO partInfo = getService(PartService.class).getPartBySeq(blockInfo.getPartSeq());
+                    RawVO.Upload rawUpload = getService(RawService.class).getUploadBySeq(partInfo.getUploadSeq());
+
+                    source.setUseTime("julian");
+                    if (rawUpload.getDataType().equalsIgnoreCase("adams") || rawUpload.getDataType().equalsIgnoreCase("zaero"))
+                        source.setUseTime("offset");
 
                     // blockParamSeq 값으로 처리됨.
                     ShortBlockVO.Param blockParam = getService(ParamService.class).getShortBlockParamBySeq(source.getParamSeq());
@@ -482,11 +507,11 @@ public class ServiceApiController extends ApiController {
             return ResponseHelper.response(200, "Success - ParamModule Save Eq", "");
         }
 
-        if (command.equals("save-eq-single")) {
+        if (command.equals("evaluation")) {
             //
             // TODO : 계산 때문에 여기서 진행하기 어려움.
             //
-            return ResponseHelper.response(200, "Success - ParamModule Save Eq Single", "");
+            return ResponseHelper.response(200, "Success - ParamModule Eq Evaluation", "");
         }
 
         if (command.equals("plot-list")) {
@@ -532,9 +557,14 @@ public class ServiceApiController extends ApiController {
                     if (checkJsonEmpty(jobjPlot, "plotName")) continue;
                     if (checkJsonEmpty(jobjPlot, "sources")) continue;
 
+                    String plotType = "";
+                    if (!checkJsonEmpty(jobjPlot, "plotType"))
+                        plotType = jobjPlot.get("plotType").getAsString();
+
                     ParamModuleVO.Plot plot = new ParamModuleVO.Plot();
                     plot.setModuleSeq(moduleSeq);
                     plot.setPlotName(String64.decode(jobjPlot.get("plotName").getAsString()));
+                    plot.setPlotType(plotType);
                     plot.setPlotOrder(plots.size() + 1);
                     plot.setCreatedAt(LongDate.now());
                     getService(ParamModuleService.class).insertParamModulePlot(plot);
@@ -563,25 +593,54 @@ public class ServiceApiController extends ApiController {
                     }
 
                     JsonArray jarrSources = jobjPlot.get("sources").getAsJsonArray();
-                    List<String> sourceTypes = Arrays.asList("part", "shortblock", "dll", "parammodule");
+                    List<String> sourceTypes = Arrays.asList("part", "shortblock", "dll", "parammodule", "eq");
 
                     plot.setPlotSourceList(new ArrayList<>());
                     if (jarrSources.size() > 0) {
                         for (int j = 0; j < jarrSources.size(); j++) {
                             JsonObject jobjSource = jarrSources.get(j).getAsJsonObject();
-                            ParamModuleVO.Plot.Source plotSource = ServerConstants.GSON.fromJson(jobjSource, ParamModuleVO.Plot.Source.class);
-                            if (plotSource == null) continue;
-                            if (plotSource.getSourceType() == null || plotSource.getSourceType().isEmpty()
-                                    || !sourceTypes.contains(plotSource.getSourceType())
-                                    || plotSource.getSourceSeq() == null || plotSource.getSourceSeq().isEmpty()) {
-                                // 잘못된 소스 데이터는 스킵함.
-                                continue;
-                            }
-                            plotSource.setPlotSeq(plot.getSeq());
-                            plotSource.setModuleSeq(moduleSeq);
-                            getService(ParamModuleService.class).insertParamModulePlotSource(plotSource);
+                            String sourceType = "";
+                            if (!checkJsonEmpty(jobjSource, "sourceType"))
+                                sourceType = jobjSource.get("sourceType").getAsString();
 
+                            CryptoField sourceSeq = CryptoField.LZERO;
+                            if (!checkJsonEmpty(jobjSource, "sourceSeq"))
+                                sourceSeq = CryptoField.decode(jobjSource.get("sourceSeq").getAsString(), 0L);
+
+                            ParamModuleVO.Plot.Source plotSource = new ParamModuleVO.Plot.Source();
+                            if (!sourceType.equals("eq")) {
+                                ParamModuleVO.Source paramSource = getService(ParamModuleService.class).getParamModuleSourceBySeq(sourceSeq);
+                                if (paramSource == null) continue;
+                                plotSource.setModuleSeq(moduleSeq);
+                                plotSource.setPlotSeq(plot.getSeq());
+                                plotSource.setSourceType(sourceType);
+                                plotSource.setSourceSeq(sourceSeq);
+                                plotSource.setJulianStartAt(paramSource.getJulianStartAt());
+                                plotSource.setJulianEndAt(paramSource.getJulianEndAt());
+                                plotSource.setOffsetStartAt(paramSource.getOffsetStartAt());
+                                plotSource.setOffsetEndAt(paramSource.getOffsetEndAt());
+                            }
+                            else {
+                                ParamModuleVO.Equation eq = getService(ParamModuleService.class).getParamModuleEqBySeq(sourceSeq);
+                                if (eq == null) continue;
+                                plotSource.setModuleSeq(moduleSeq);
+                                plotSource.setPlotSeq(plot.getSeq());
+                                plotSource.setSourceType(sourceType);
+                                plotSource.setSourceSeq(sourceSeq);
+                                plotSource.setJulianStartAt(eq.getJulianStartAt());
+                                plotSource.setJulianEndAt(eq.getJulianEndAt());
+                                plotSource.setOffsetStartAt(eq.getOffsetStartAt());
+                                plotSource.setOffsetEndAt(eq.getOffsetEndAt());
+                            }
+                            getService(ParamModuleService.class).insertParamModulePlotSource(plotSource);
                             plot.getPlotSourceList().add(plotSource);
+                        }
+
+                        if (plot.getPlotSourceList().size() > 0) {
+                            plot.setPlotSources(new ArrayList<>());
+                            for (ParamModuleVO.Plot.Source plotSource : plot.getPlotSourceList()) {
+                                plot.getPlotSources().add(ParamModuleVO.Plot.Source.getSimple(plotSource));
+                            }
                         }
                     }
                 }
@@ -658,7 +717,7 @@ public class ServiceApiController extends ApiController {
             }
 
             JsonArray jarrSources = jobjPlot.get("sources").getAsJsonArray();
-            List<String> sourceTypes = Arrays.asList("part", "shortblock", "dll", "parammodule");
+            List<String> sourceTypes = Arrays.asList("part", "shortblock", "dll", "parammodule", "eq");
 
             // 기존 소스 삭제.
             getService(ParamModuleService.class).deleteParamModulePlotSourceByPlotSeq(moduleSeq, plotSeq);
@@ -667,19 +726,48 @@ public class ServiceApiController extends ApiController {
             if (jarrSources.size() > 0) {
                 for (int j = 0; j < jarrSources.size(); j++) {
                     JsonObject jobjSource = jarrSources.get(j).getAsJsonObject();
-                    ParamModuleVO.Plot.Source plotSource = ServerConstants.GSON.fromJson(jobjSource, ParamModuleVO.Plot.Source.class);
-                    if (plotSource == null) continue;
-                    if (plotSource.getSourceType() == null || plotSource.getSourceType().isEmpty()
-                            || !sourceTypes.contains(plotSource.getSourceType())
-                            || plotSource.getSourceSeq() == null || plotSource.getSourceSeq().isEmpty()) {
-                        // 잘못된 소스 데이터는 스킵함.
-                        continue;
-                    }
-                    plotSource.setPlotSeq(plot.getSeq());
-                    plotSource.setModuleSeq(moduleSeq);
-                    getService(ParamModuleService.class).insertParamModulePlotSource(plotSource);
+                    String sourceType = "";
+                    if (!checkJsonEmpty(jobjSource, "sourceType"))
+                        sourceType = jobjSource.get("sourceType").getAsString();
 
+                    CryptoField sourceSeq = CryptoField.LZERO;
+                    if (!checkJsonEmpty(jobjSource, "sourceSeq"))
+                        sourceSeq = CryptoField.decode(jobjSource.get("sourceSeq").getAsString(), 0L);
+
+                    ParamModuleVO.Plot.Source plotSource = new ParamModuleVO.Plot.Source();
+                    if (!sourceType.equals("eq")) {
+                        ParamModuleVO.Source paramSource = getService(ParamModuleService.class).getParamModuleSourceBySeq(sourceSeq);
+                        if (paramSource == null) continue;
+                        plotSource.setModuleSeq(moduleSeq);
+                        plotSource.setPlotSeq(plot.getSeq());
+                        plotSource.setSourceType(sourceType);
+                        plotSource.setSourceSeq(sourceSeq);
+                        plotSource.setJulianStartAt(paramSource.getJulianStartAt());
+                        plotSource.setJulianEndAt(paramSource.getJulianEndAt());
+                        plotSource.setOffsetStartAt(paramSource.getOffsetStartAt());
+                        plotSource.setOffsetEndAt(paramSource.getOffsetEndAt());
+                    }
+                    else {
+                        ParamModuleVO.Equation eq = getService(ParamModuleService.class).getParamModuleEqBySeq(sourceSeq);
+                        if (eq == null) continue;
+                        plotSource.setModuleSeq(moduleSeq);
+                        plotSource.setPlotSeq(plot.getSeq());
+                        plotSource.setSourceType(sourceType);
+                        plotSource.setSourceSeq(sourceSeq);
+                        plotSource.setJulianStartAt(eq.getJulianStartAt());
+                        plotSource.setJulianEndAt(eq.getJulianEndAt());
+                        plotSource.setOffsetStartAt(eq.getOffsetStartAt());
+                        plotSource.setOffsetEndAt(eq.getOffsetEndAt());
+                    }
+                    getService(ParamModuleService.class).insertParamModulePlotSource(plotSource);
                     plot.getPlotSourceList().add(plotSource);
+                }
+
+                if (plot.getPlotSourceList().size() > 0) {
+                    plot.setPlotSources(new ArrayList<>());
+                    for (ParamModuleVO.Plot.Source plotSource : plot.getPlotSourceList()) {
+                        plot.getPlotSources().add(ParamModuleVO.Plot.Source.getSimple(plotSource));
+                    }
                 }
             }
 

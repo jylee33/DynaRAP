@@ -232,10 +232,11 @@ public interface ParamModuleMapper {
     @Insert({
             "<script>" +
                     "insert into dynarap_param_module_plot (" +
-                    "moduleSeq,plotName,plotOrder,createdAt" +
+                    "moduleSeq,plotName,plotType,plotOrder,createdAt" +
                     ") values (" +
                     "#{moduleSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField}" +
                     ",#{plotName,javaType=java.lang.String,jdbcType=VARCHAR,typeHandler=String64}" +
+                    ",#{plotType}" +
                     ",#{plotOrder}" +
                     ",#{createdAt,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=LongDate}" +
                     ")" +
@@ -251,6 +252,7 @@ public interface ParamModuleMapper {
                     " update dynarap_param_module_plot set " +
                     " plotName = #{plotName,javaType=java.lang.String,jdbcType=VARCHAR,typeHandler=String64} " +
                     ",plotOrder = #{plotOrder} " +
+                    ",plotType = #{plotType} " +
                     " where seq = #{seq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
                     "</script>"
     })
