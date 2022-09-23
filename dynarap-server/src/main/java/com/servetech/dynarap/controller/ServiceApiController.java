@@ -247,31 +247,44 @@ public class ServiceApiController extends ApiController {
             if (sourceType.equalsIgnoreCase("part")) {
                 List<PartVO> parts = getService(ParamModuleService.class).getPartListByKeyword(keyword);
                 if (parts == null) parts = new ArrayList<>();
+
+                List<PartVO> availParts = new ArrayList<>();
+
                 for (PartVO part : parts) {
                     RawVO.Upload rawUpload = getService(RawService.class).getUploadBySeq(part.getUploadSeq());
+                    if (rawUpload == null) continue;
+
                     part.setParams(getService(ParamService.class).getPresetParamListBySource(part.getPresetPack(), part.getPresetSeq()));
 
                     part.setUseTime("julian");
                     if (rawUpload.getDataType().equalsIgnoreCase("adams") || rawUpload.getDataType().equalsIgnoreCase("zaero"))
                         part.setUseTime("offset");
 
+                    availParts.add(part);
+
                     if (part.getParams() == null || part.getParams().size() == 0) continue;
                     for (PresetVO.Param pparam : part.getParams()) {
                         pparam.setParamInfo(getService(ParamService.class).getParamBySeq(pparam.getParamSeq()));
                     }
                 }
-                return ResponseHelper.response(200, "Success - ParamModule Source Search", parts);
+                return ResponseHelper.response(200, "Success - ParamModule Source Search", availParts);
             }
             else if (sourceType.equalsIgnoreCase("shortblock")) {
                 List<ShortBlockVO> shortBlocks = getService(ParamModuleService.class).getShortBlockListByKeyword(keyword);
                 if (shortBlocks == null) shortBlocks = new ArrayList<>();
+
+                List<ShortBlockVO> availBlocks = new ArrayList<>();
+
                 for (ShortBlockVO shortBlock : shortBlocks) {
                     PartVO partInfo = getService(PartService.class).getPartBySeq(shortBlock.getPartSeq());
                     RawVO.Upload rawUpload = getService(RawService.class).getUploadBySeq(partInfo.getUploadSeq());
+                    if (rawUpload == null) continue;
 
                     shortBlock.setUseTime("julian");
                     if (rawUpload.getDataType().equalsIgnoreCase("adams") || rawUpload.getDataType().equalsIgnoreCase("zaero"))
                         shortBlock.setUseTime("offset");
+
+                    availBlocks.add(shortBlock);
 
                     List<ShortBlockVO.Param> sparams = getService(PartService.class).getShortBlockParamList(shortBlock.getBlockMetaSeq());
                     if (sparams == null) sparams = new ArrayList<>();
@@ -282,7 +295,7 @@ public class ServiceApiController extends ApiController {
                     }
                     shortBlock.setParams(sparams);
                 }
-                return ResponseHelper.response(200, "Success - ParamModule Source Search", shortBlocks);
+                return ResponseHelper.response(200, "Success - ParamModule Source Search", availBlocks);
             }
             else if (sourceType.equalsIgnoreCase("dll")) {
                 List<DLLVO> dlls = getService(ParamModuleService.class).getDLLListByKeyword(keyword);
@@ -324,6 +337,10 @@ public class ServiceApiController extends ApiController {
                     }
                     source.setSourceName(partInfo.getPartName());
                     RawVO.Upload rawUpload = getService(RawService.class).getUploadBySeq(partInfo.getUploadSeq());
+                    if (rawUpload == null) {
+                        source.setMark(true);
+                        continue;
+                    }
 
                     source.setUseTime("julian");
                     if (rawUpload.getDataType().equalsIgnoreCase("adams") || rawUpload.getDataType().equalsIgnoreCase("zaero"))
@@ -344,6 +361,10 @@ public class ServiceApiController extends ApiController {
 
                     PartVO partInfo = getService(PartService.class).getPartBySeq(blockInfo.getPartSeq());
                     RawVO.Upload rawUpload = getService(RawService.class).getUploadBySeq(partInfo.getUploadSeq());
+                    if (rawUpload == null) {
+                        source.setMark(true);
+                        continue;
+                    }
 
                     source.setUseTime("julian");
                     if (rawUpload.getDataType().equalsIgnoreCase("adams") || rawUpload.getDataType().equalsIgnoreCase("zaero"))
