@@ -502,9 +502,46 @@ public class ServiceApiController extends ApiController {
 
         if (command.equals("save-eq")) {
             //
-            // TODO : 여기서 계산.
+            // TODO : 여기서 계산. => 계산 없이 저장만 일단.
             //
-            return ResponseHelper.response(200, "Success - ParamModule Save Eq", "");
+            CryptoField moduleSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "moduleSeq"))
+                moduleSeq = CryptoField.decode(payload.get("moduleSeq").getAsString(), 0L);
+
+            JsonArray jarrEquations = null;
+            if (!checkJsonEmpty(payload, "equations"))
+                jarrEquations = payload.get("equations").getAsJsonArray();
+
+            if (moduleSeq == null || moduleSeq.isEmpty() || jarrEquations == null)
+                throw new HandledServiceException(411, "파라미터를 확인하세요.");
+
+            // 기존 수식 삭제.
+            getService(ParamModuleService.class).deleteParamModuleEqByModuleSeq(moduleSeq);
+
+            ParamModuleVO paramModule = getService(ParamModuleService.class).getParamModuleBySeq(moduleSeq);
+            paramModule.setEquations(new ArrayList<>());
+
+            for (int i = 0; i < jarrEquations.size(); i++) {
+                JsonObject jobjEquation = jarrEquations.get(i).getAsJsonObject();
+                ParamModuleVO.Equation equation = ServerConstants.GSON.fromJson(jobjEquation, ParamModuleVO.Equation.class);
+                if (equation == null
+                        || equation.getEqName() == null || equation.getEqName().isEmpty()
+                        || equation.getEquation() == null || equation.getEquation().isEmpty()) {
+                    // skip equation
+                    continue;
+                }
+                equation.setEqOrder(paramModule.getEquations().size() + 1);
+                equation.setModuleSeq(moduleSeq);
+
+                try {
+                    getService(ParamModuleService.class).insertParamModuleEq(equation);
+                } catch(HandledServiceException hse) {
+                    continue;
+                }
+                paramModule.getEquations().add(equation);
+            }
+
+            return ResponseHelper.response(200, "Success - ParamModule Save Eq", paramModule.getEquations());
         }
 
         if (command.equals("evaluation")) {
