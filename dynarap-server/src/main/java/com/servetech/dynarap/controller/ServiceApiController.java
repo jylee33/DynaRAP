@@ -538,6 +538,29 @@ public class ServiceApiController extends ApiController {
                 } catch(HandledServiceException hse) {
                     continue;
                 }
+
+                // dataProp 처리
+                if (!checkJsonEmpty(jobjEquation, "dataProp")) {
+                    Type type = new TypeToken<Map<String, String>>(){}.getType();
+                    Map<String, String> dataProp = ServerConstants.GSON.fromJson(
+                            jobjEquation.get("dataProp").getAsJsonObject(), type);
+                    Set<String> keys = dataProp.keySet();
+                    Iterator<String> iterKeys = keys.iterator();
+                    while (iterKeys.hasNext()) {
+                        String key = iterKeys.next();
+                        String value = dataProp.get(key);
+
+                        DataPropVO saveProp = new DataPropVO();
+                        saveProp.setPropName(new String64(key));
+                        saveProp.setPropValue(new String64(value));
+                        saveProp.setReferenceType("eq");
+                        saveProp.setReferenceKey(equation.getSeq());
+                        saveProp.setUpdatedAt(LongDate.now());
+                        getService(RawService.class).insertDataProp(saveProp);
+                    }
+                    equation.setDataProp(getService(RawService.class).getDataPropListToMap("eq", equation.getSeq()));
+                }
+
                 paramModule.getEquations().add(equation);
             }
 
