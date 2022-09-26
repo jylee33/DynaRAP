@@ -79,8 +79,10 @@ public class ParamModuleVO {
         private double offsetStartAt;
         private double offsetEndAt;
         private String useTime;
+        private int dataCount;
 
         private Map<String, String> dataProp;
+        private transient boolean mark;
     }
 
     @Data

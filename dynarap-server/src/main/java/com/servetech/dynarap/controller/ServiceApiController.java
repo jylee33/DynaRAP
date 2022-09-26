@@ -430,8 +430,7 @@ public class ServiceApiController extends ApiController {
             if (paramModule.isReferenced())
                 throw new HandledServiceException(411, "파라미터 모듈을 참조하는 프로젝트가 있습니다. 복사 후 새로 작업하세요.");
 
-            // 기존 소스 삭제 함.
-            getService(ParamModuleService.class).deleteParamModuleSourceByModuleSeq(moduleSeq);
+            List<ParamModuleVO.Source> paramSources = getService(ParamModuleService.class).getParamModuleSourceList(moduleSeq);
 
             JsonArray jarrSources = null;
             if (!checkJsonEmpty(payload, "sources"))
@@ -440,6 +439,10 @@ public class ServiceApiController extends ApiController {
             List<String> sourceTypes = Arrays.asList("part", "shortblock", "dll", "parammodule");
 
             if (jarrSources.size() > 0) {
+                if (paramSources == null) paramSources = new ArrayList<>();
+                for (ParamModuleVO.Source paramSource : paramSources)
+                    paramSource.setMark(false);
+
                 for (int i = 0; i < jarrSources.size(); i++) {
                     JsonObject jobjSource = jarrSources.get(i).getAsJsonObject();
                     ParamModuleVO.Source moduleSource = ServerConstants.GSON.fromJson(jobjSource, ParamModuleVO.Source.class);
@@ -450,9 +453,39 @@ public class ServiceApiController extends ApiController {
                         // 잘못된 소스 데이터는 스킵함.
                         continue;
                     }
-                    moduleSource.setModuleSeq(moduleSeq);
-                    getService(ParamModuleService.class).insertParamModuleSource(moduleSource);
+
+                    ParamModuleVO.Source findSource = null;
+                    for (ParamModuleVO.Source paramSource : paramSources) {
+                        if (paramSource.getSeq().equals(moduleSource.getSeq())) {
+                            paramSource.setMark(true);
+                            findSource = paramSource;
+                            break;
+                        }
+                    }
+
+                    moduleSource.setDataCount(getDataCount(
+                            moduleSource.getSourceType(), moduleSource.getSourceSeq(),
+                            moduleSource.getParamSeq()));
+
+                    if (findSource != null) {
+                        moduleSource.setModuleSeq(moduleSeq);
+                        getService(ParamModuleService.class).updateParamModuleSource(moduleSource);
+                    }
+                    else {
+                        moduleSource.setModuleSeq(moduleSeq);
+                        getService(ParamModuleService.class).insertParamModuleSource(moduleSource);
+                    }
                 }
+            }
+            else {
+                // 모두 삭제된 것으로 간주함.
+                getService(ParamModuleService.class).deleteParamModuleSourceByModuleSeq(moduleSeq);
+            }
+
+            // 요청에 없는 소스 삭제.
+            for (ParamModuleVO.Source paramSource : paramSources) {
+                if (paramSource.isMark() == false)
+                    getService(ParamModuleService.class).deleteParamModuleSource(paramSource.getSeq());
             }
 
             paramModule.setSources(getService(ParamModuleService.class).getParamModuleSourceList(moduleSeq));
@@ -493,8 +526,21 @@ public class ServiceApiController extends ApiController {
                     || moduleSource.getSourceSeq() == null || moduleSource.getSourceSeq().isEmpty()) {
                 throw new HandledServiceException(411, "저장 형식이 올바르지 않습니다.");
             }
-            moduleSource.setModuleSeq(moduleSeq);
-            getService(ParamModuleService.class).insertParamModuleSource(moduleSource);
+
+            ParamModuleVO.Source findSource = getService(ParamModuleService.class).getParamModuleSourceBySeq(moduleSource.getSeq());
+
+            moduleSource.setDataCount(getDataCount(
+                    moduleSource.getSourceType(), moduleSource.getSourceSeq(),
+                    moduleSource.getParamSeq()));
+
+            if (findSource != null) {
+                moduleSource.setModuleSeq(moduleSeq);
+                getService(ParamModuleService.class).updateParamModuleSource(moduleSource);
+            }
+            else {
+                moduleSource.setModuleSeq(moduleSeq);
+                getService(ParamModuleService.class).insertParamModuleSource(moduleSource);
+            }
 
             paramModule.setSources(getService(ParamModuleService.class).getParamModuleSourceList(moduleSeq));
 
@@ -508,6 +554,9 @@ public class ServiceApiController extends ApiController {
 
             if (moduleSeq == null || moduleSeq.isEmpty())
                 throw new HandledServiceException(411, "파라미터를 확인하세요.");
+
+            // load all sources and equations.
+            loadParamModuleCaches(moduleSeq);
 
             List<ParamModuleVO.Equation> equations = getService(ParamModuleService.class).getParamModuleEqList(moduleSeq);
 
@@ -525,6 +574,7 @@ public class ServiceApiController extends ApiController {
             //
             // TODO : 여기서 계산. => 계산 없이 저장만 일단.
             //
+
             CryptoField moduleSeq = CryptoField.LZERO;
             if (!checkJsonEmpty(payload, "moduleSeq"))
                 moduleSeq = CryptoField.decode(payload.get("moduleSeq").getAsString(), 0L);
@@ -536,53 +586,95 @@ public class ServiceApiController extends ApiController {
             if (moduleSeq == null || moduleSeq.isEmpty() || jarrEquations == null)
                 throw new HandledServiceException(411, "파라미터를 확인하세요.");
 
-            // 기존 수식 삭제.
-            getService(ParamModuleService.class).deleteParamModuleEqByModuleSeq(moduleSeq);
+            List<ParamModuleVO.Equation> paramEquations = getService(ParamModuleService.class).getParamModuleEqList(moduleSeq);
+            if (paramEquations == null) paramEquations = new ArrayList<>();
+            for (ParamModuleVO.Equation paramEquation : paramEquations)
+                paramEquation.setMark(false);
 
             ParamModuleVO paramModule = getService(ParamModuleService.class).getParamModuleBySeq(moduleSeq);
-            paramModule.setEquations(new ArrayList<>());
 
-            for (int i = 0; i < jarrEquations.size(); i++) {
-                JsonObject jobjEquation = jarrEquations.get(i).getAsJsonObject();
-                ParamModuleVO.Equation equation = ServerConstants.GSON.fromJson(jobjEquation, ParamModuleVO.Equation.class);
-                if (equation == null
-                        || equation.getEqName() == null || equation.getEqName().isEmpty()
-                        || equation.getEquation() == null || equation.getEquation().isEmpty()) {
-                    // skip equation
-                    continue;
-                }
-                equation.setEqOrder(paramModule.getEquations().size() + 1);
-                equation.setModuleSeq(moduleSeq);
-
-                try {
-                    getService(ParamModuleService.class).insertParamModuleEq(equation);
-                } catch(HandledServiceException hse) {
-                    continue;
-                }
-
-                // dataProp 처리
-                if (!checkJsonEmpty(jobjEquation, "dataProp")) {
-                    Type type = new TypeToken<Map<String, String>>(){}.getType();
-                    Map<String, String> dataProp = ServerConstants.GSON.fromJson(
-                            jobjEquation.get("dataProp").getAsJsonObject(), type);
-                    Set<String> keys = dataProp.keySet();
-                    Iterator<String> iterKeys = keys.iterator();
-                    while (iterKeys.hasNext()) {
-                        String key = iterKeys.next();
-                        String value = dataProp.get(key);
-
-                        DataPropVO saveProp = new DataPropVO();
-                        saveProp.setPropName(new String64(key));
-                        saveProp.setPropValue(new String64(value));
-                        saveProp.setReferenceType("eq");
-                        saveProp.setReferenceKey(equation.getSeq());
-                        saveProp.setUpdatedAt(LongDate.now());
-                        getService(RawService.class).insertDataProp(saveProp);
+            if (jarrEquations.size() > 0) {
+                paramModule.setEquations(new ArrayList<>());
+                for (int i = 0; i < jarrEquations.size(); i++) {
+                    JsonObject jobjEquation = jarrEquations.get(i).getAsJsonObject();
+                    ParamModuleVO.Equation equation = ServerConstants.GSON.fromJson(jobjEquation, ParamModuleVO.Equation.class);
+                    if (equation == null
+                            || equation.getEqName() == null || equation.getEqName().isEmpty()
+                            || equation.getEquation() == null || equation.getEquation().isEmpty()) {
+                        // skip equation
+                        continue;
                     }
-                    equation.setDataProp(getService(RawService.class).getDataPropListToMap("eq", equation.getSeq()));
+                    equation.setEqOrder(paramModule.getEquations().size() + 1);
+                    equation.setModuleSeq(moduleSeq);
+
+                    ParamModuleVO.Equation findEquation = null;
+                    for (ParamModuleVO.Equation paramEquation : paramEquations) {
+                        if (paramEquation.getSeq().equals(equation.getSeq())) {
+                            paramEquation.setMark(true);
+                            findEquation = paramEquation;
+                            break;
+                        }
+                    }
+
+                    if (findEquation == null) {
+                        try {
+                            getService(ParamModuleService.class).insertParamModuleEq(equation);
+                        } catch (HandledServiceException hse) {
+                            continue;
+                        }
+                        findEquation = equation;
+                    }
+                    else {
+                        try {
+                            getService(ParamModuleService.class).updateParamModuleEq(equation);
+                        } catch (HandledServiceException hse) {
+                            continue;
+                        }
+                        // 저장이후...
+                        findEquation.setEqOrder(equation.getEqOrder());
+                        findEquation.setEqName(equation.getEqName());
+                        findEquation.setEquation(equation.getEquation());
+                    }
+
+                    findEquation.setDataCount(getDataCount("eq", paramModule.getSeq(), findEquation.getSeq()));
+                    getService(ParamModuleService.class).updateParamModuleEq(findEquation);
+
+                    // dataProp 처리
+                    if (!checkJsonEmpty(jobjEquation, "dataProp")) {
+                        Type type = new TypeToken<Map<String, String>>() {
+                        }.getType();
+                        Map<String, String> dataProp = ServerConstants.GSON.fromJson(
+                                jobjEquation.get("dataProp").getAsJsonObject(), type);
+                        Set<String> keys = dataProp.keySet();
+                        Iterator<String> iterKeys = keys.iterator();
+                        while (iterKeys.hasNext()) {
+                            String key = iterKeys.next();
+                            String value = dataProp.get(key);
+
+                            DataPropVO saveProp = new DataPropVO();
+                            saveProp.setPropName(new String64(key));
+                            saveProp.setPropValue(new String64(value));
+                            saveProp.setReferenceType("eq");
+                            saveProp.setReferenceKey(findEquation.getSeq());
+                            saveProp.setUpdatedAt(LongDate.now());
+                            getService(RawService.class).insertDataProp(saveProp);
+                        }
+                        findEquation.setDataProp(getService(RawService.class).getDataPropListToMap("eq", findEquation.getSeq()));
+                    }
+
+                    paramModule.getEquations().add(findEquation);
                 }
 
-                paramModule.getEquations().add(equation);
+                // 기존 것들 중에 제외된거 지우기
+                for (ParamModuleVO.Equation paramEquation : paramEquations) {
+                    if (paramEquation.isMark() == false)
+                        getService(ParamModuleService.class).deleteParamModuleEq(paramEquation.getSeq());
+                }
+            }
+            else {
+                // 기존 수식 삭제. => 저장되는 equations가 없으면 모두 삭제.
+                getService(ParamModuleService.class).deleteParamModuleEqByModuleSeq(moduleSeq);
+                paramModule.setEquations(new ArrayList<>());
             }
 
             return ResponseHelper.response(200, "Success - ParamModule Save Eq", paramModule.getEquations());
@@ -3193,5 +3285,13 @@ public class ServiceApiController extends ApiController {
         part.setLpfDone(true);
         part.setHpfDone(true);
         getService(PartService.class).updatePart(part);
+    }
+
+    private int getDataCount(String sourceType, CryptoField sourceSeq, CryptoField paramSeq) {
+        return 0;
+    }
+
+    private void loadParamModuleCaches(CryptoField moduleSeq) throws HandledServiceException {
+
     }
 }

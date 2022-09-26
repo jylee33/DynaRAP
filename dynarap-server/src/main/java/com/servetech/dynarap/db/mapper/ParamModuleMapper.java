@@ -92,7 +92,7 @@ public interface ParamModuleMapper {
             "<script>" +
                     "insert into dynarap_param_module_source (" +
                     "moduleSeq,sourceType,sourceSeq,paramPack,paramSeq," +
-                    "julianStartAt,julianEndAt,offsetStartAt,offsetEndAt" +
+                    "julianStartAt,julianEndAt,offsetStartAt,offsetEndAt,dataCount" +
                     ") values (" +
                     "#{moduleSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField}" +
                     ",#{sourceType}" +
@@ -103,6 +103,7 @@ public interface ParamModuleMapper {
                     ",#{julianEndAt}" +
                     ",#{offsetStartAt}" +
                     ",#{offsetEndAt}" +
+                    ",#{dataCount}" +
                     ")" +
                     "</script>"
     })
@@ -118,6 +119,7 @@ public interface ParamModuleMapper {
                     ",julianEndAt = #{julianEndAt} " +
                     ",offsetStartAt = #{offsetStartAt} " +
                     ",offsetEndAt = #{offsetEndAt} " +
+                    ",dataCount = #{dataCount} " +
                     " where seq = #{seq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
                     "</script>"
     })
@@ -161,7 +163,7 @@ public interface ParamModuleMapper {
     @Insert({
             "<script>" +
                     "insert into dynarap_param_module_eq (" +
-                    "moduleSeq,eqName,equation,eqOrder,julianStartAt,julianEndAt,offsetStartAt,offsetEndAt" +
+                    "moduleSeq,eqName,equation,eqOrder,julianStartAt,julianEndAt,offsetStartAt,offsetEndAt,dataCount" +
                     ") values (" +
                     "#{moduleSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField}" +
                     ",#{eqName,javaType=java.lang.String,jdbcType=VARCHAR,typeHandler=String64}" +
@@ -171,6 +173,7 @@ public interface ParamModuleMapper {
                     ",#{julianEndAt}" +
                     ",#{offsetStartAt}" +
                     ",#{offsetEndAt}" +
+                    ",#{dataCount}" +
                     ")" +
                     "</script>"
     })
@@ -189,6 +192,7 @@ public interface ParamModuleMapper {
                     ",julianEndAt = #{julianEndAt} " +
                     ",offsetStartAt = #{offsetStartAt} " +
                     ",offsetEndAt = #{offsetEndAt} " +
+                    ",dataCount = #{dataCount} " +
                     " where seq = #{seq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
                     "</script>"
     })
