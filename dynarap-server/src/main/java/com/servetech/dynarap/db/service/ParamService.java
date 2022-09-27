@@ -9,10 +9,7 @@ import com.servetech.dynarap.db.mapper.RawMapper;
 import com.servetech.dynarap.db.type.CryptoField;
 import com.servetech.dynarap.db.type.LongDate;
 import com.servetech.dynarap.ext.HandledServiceException;
-import com.servetech.dynarap.vo.ParamVO;
-import com.servetech.dynarap.vo.PartVO;
-import com.servetech.dynarap.vo.PresetVO;
-import com.servetech.dynarap.vo.RawVO;
+import com.servetech.dynarap.vo.*;
 import org.apache.catalina.util.ParameterMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -697,6 +694,7 @@ public class ParamService {
 
             Long referenceSeq = paramMapper.selectReferenceSeq(params);
             current.setReferenceSeq(referenceSeq);
+            current.setParamSearchSeq(new CryptoField(referenceSeq));
 
             params.put("propSeq", current.getPropSeq());
             current.setPropInfo(paramMapper.selectParamPropBySeq(params));
@@ -707,6 +705,31 @@ public class ParamService {
             throw new HandledServiceException(410, e.getMessage());
         }
     }
+
+    public List<PresetVO.Param> getPresetParamListBySource(CryptoField presetPack, CryptoField presetSeq) throws HandledServiceException {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("presetPack", presetPack);
+            params.put("presetSeq", presetSeq == null || presetSeq.isEmpty() ? null : presetSeq);
+
+            List<PresetVO.Param> paramList = paramMapper.selectPresetParamListBySource(params);
+
+            return paramList;
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    public PresetVO.Param getPresetParamBySource(CryptoField presetParamSeq) throws  HandledServiceException {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("presetParamSeq", presetParamSeq);
+            return paramMapper.selectPresetParamBySource(params);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
 
     public List<ParamVO> getPresetParamList(CryptoField presetPack, CryptoField presetSeq,
                                              CryptoField paramPack, CryptoField paramSeq,
@@ -890,6 +913,17 @@ public class ParamService {
             Map<String, Object> params = new HashMap<>();
             params.put("blockSeq", blockSeq);
             return paramMapper.selectShortBlockParamList(params);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+
+    public ShortBlockVO.Param getShortBlockParamBySeq(CryptoField blockParamSeq) throws HandledServiceException {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("blockParamSeq", blockParamSeq);
+            return paramMapper.selectShortBlockParamBySeq(params);
         } catch(Exception e) {
             throw new HandledServiceException(410, e.getMessage());
         }

@@ -31,6 +31,8 @@ public class ParamVO {
     private String64 tags;
 
     private Long referenceSeq;
+    private CryptoField paramSearchSeq;
+
     private CryptoField presetPack;
     private CryptoField presetSeq;
 

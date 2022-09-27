@@ -206,6 +206,14 @@ public class ParamModuleService {
         try {
             Map<String, Object> params = new HashMap<>();
             params.put("moduleSeq", moduleSeq);
+
+            // dataProp 삭제.
+            List<ParamModuleVO.Equation> equations = getParamModuleEqList(moduleSeq);
+            if (equations == null) equations = new ArrayList<>();
+            for (ParamModuleVO.Equation eq : equations) {
+                rawService.deleteDataPropByType("eq", eq.getSeq());
+            }
+
             paramModuleMapper.deleteParamModuleEqByModuleSeq(params);
         } catch(Exception e) {
             throw new HandledServiceException(410, e.getMessage());
@@ -220,6 +228,14 @@ public class ParamModuleService {
             if (plots == null) plots = new ArrayList<>();
             for (ParamModuleVO.Plot plot : plots) {
                 plot.setDataProp(rawService.getDataPropListToMap("plot", plot.getSeq()));
+
+                List<ParamModuleVO.Plot.Source> plotSources = getParamModulePlotSourceList(plot.getModuleSeq(), plot.getSeq());
+                if (plotSources == null) plotSources = new ArrayList<>();
+                plot.setPlotSourceList(plotSources);
+                plot.setPlotSources(new ArrayList<>());
+                for (ParamModuleVO.Plot.Source plotSource : plotSources) {
+                    plot.getPlotSources().add(ParamModuleVO.Plot.Source.getSimple(plotSource));
+                }
             }
             return plots;
         } catch(Exception e) {
@@ -283,6 +299,13 @@ public class ParamModuleService {
 
             // 모든 소스 지우기.
             deleteParamModulePlotSourceByModuleSeq(moduleSeq);
+
+            // dataProp 삭제.
+            List<ParamModuleVO.Plot> plots = getParamModulePlotList(moduleSeq);
+            if (plots == null) plots = new ArrayList<>();
+            for (ParamModuleVO.Plot plot : plots) {
+                rawService.deleteDataPropByType("plot", plot.getSeq());
+            }
 
             paramModuleMapper.deleteParamModulePlotByModuleSeq(params);
         } catch(Exception e) {

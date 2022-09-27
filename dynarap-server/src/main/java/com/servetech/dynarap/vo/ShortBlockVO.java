@@ -23,6 +23,7 @@ public class ShortBlockVO {
     private Meta blockMetaInfo;
     private PartVO partInfo;
     private List<Param> params;
+    private String useTime;
 
     @Data
     public static class DataSource {
@@ -82,6 +83,7 @@ public class ShortBlockVO {
         private CryptoField paramSeq;
 
         private Long unionParamSeq;
+        private CryptoField paramSearchSeq;
 
         private String64 paramName;
         private String paramKey;

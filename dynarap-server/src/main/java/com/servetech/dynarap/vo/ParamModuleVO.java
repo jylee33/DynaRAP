@@ -58,6 +58,13 @@ public class ParamModuleVO {
         private String julianEndAt;
         private double offsetStartAt;
         private double offsetEndAt;
+
+        private String64 sourceName;
+        private String paramKey;
+        private int dataCount;
+        private String useTime;
+
+        private transient boolean mark;
     }
 
     @Data
@@ -71,8 +78,11 @@ public class ParamModuleVO {
         private String julianEndAt;
         private double offsetStartAt;
         private double offsetEndAt;
+        private String useTime;
+        private int dataCount;
 
         private Map<String, String> dataProp;
+        private transient boolean mark;
     }
 
     @Data
@@ -80,10 +90,12 @@ public class ParamModuleVO {
         private CryptoField seq;
         private CryptoField moduleSeq;
         private String64 plotName;
+        private String plotType;
         private LongDate createdAt;
         private int plotOrder;
 
         private List<Source> plotSourceList;
+        private List<PlotSource> plotSources;
         private Map<String, String> dataProp;
 
         @Data
@@ -99,6 +111,21 @@ public class ParamModuleVO {
             private String julianEndAt;
             private double offsetStartAt;
             private double offsetEndAt;
+
+            public static PlotSource getSimple(Source source) {
+                PlotSource plotSource = new PlotSource();
+                plotSource.setSeq(source.getSeq());
+                plotSource.setSourceType(source.getSourceType());
+                plotSource.setSourceSeq(source.getSourceSeq());
+                return plotSource;
+            }
+        }
+
+        @Data
+        public static class PlotSource {
+            private CryptoField seq;
+            private String sourceType;
+            private CryptoField sourceSeq; /* source-list의 seq, eq-list 의 seq */
         }
     }
 }

@@ -3,6 +3,7 @@ package com.servetech.dynarap.db.mapper;
 import com.servetech.dynarap.db.type.CryptoField;
 import com.servetech.dynarap.vo.ParamVO;
 import com.servetech.dynarap.vo.PresetVO;
+import com.servetech.dynarap.vo.ShortBlockVO;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -380,7 +381,7 @@ public interface ParamMapper {
 
     @Select({
             "<script>" +
-                    "select c.*, a.presetPack, a.presetSeq, a.seq as referenceSeq " +
+                    "select c.*, a.presetPack, a.presetSeq, a.seq as referenceSeq, a.seq as paramSearchSeq " +
                     "from dynarap_preset_param a, dynarap_preset b, dynarap_param c " +
                     "where a.presetPack = b.presetPack and a.presetSeq = b.seq " +
                     "and b.presetPack = #{presetPack,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
@@ -442,7 +443,26 @@ public interface ParamMapper {
 
     @Select({
             "<script>" +
-                    "select c.*, a.seq as referenceSeq " +
+                    "select * from dynarap_preset_param " +
+                    "where presetPack = #{presetPack,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "and presetSeq = #{presetSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "order by seq asc" +
+                    "</script>"
+    })
+    List<PresetVO.Param> selectPresetParamListBySource(Map<String, Object> params) throws Exception;
+
+    @Select({
+            "<script>" +
+                    "select * from dynarap_preset_param " +
+                    "where seq = #{presetParamSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "limit 0, 1 " +
+                    "</script>"
+    })
+    PresetVO.Param selectPresetParamBySource(Map<String, Object> params) throws Exception;
+
+    @Select({
+            "<script>" +
+                    "select c.*, a.seq as referenceSeq, a.seq as paramSearchSeq " +
                     "from dynarap_notmapped_param a, dynarap_param c " +
                     "where a.uploadSeq = #{uploadSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
                     "and a.paramPack = c.paramPack " +
@@ -454,7 +474,7 @@ public interface ParamMapper {
 
     @Select({
             "<script>" +
-                    "select a.*, b.seq as referenceSeq, b.presetPack, b.presetSeq from dynarap_param a, dynarap_preset_param b " +
+                    "select a.*, b.seq as referenceSeq, b.seq as paramSearchSeq, b.presetPack, b.presetSeq from dynarap_param a, dynarap_preset_param b " +
                     "where a.seq = b.paramSeq " +
                     "and a.paramPack = b.paramPack " +
                     "and b.seq = #{seq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
@@ -478,7 +498,7 @@ public interface ParamMapper {
 
     @Select({
             "<script>" +
-                    "select a.*, b.seq as referenceSeq, 0 as presetPack, 0 as presetSeq from dynarap_param a, dynarap_notmapped_param b " +
+                    "select a.*, b.seq as referenceSeq, b.seq as paramSearchSeq, 0 as presetPack, 0 as presetSeq from dynarap_param a, dynarap_notmapped_param b " +
                     "where a.seq = b.paramSeq " +
                     "and a.paramPack = b.paramPack " +
                     "and b.seq = #{seq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
@@ -537,6 +557,15 @@ public interface ParamMapper {
                     "</script>"
     })
     List<CryptoField> selectShortBlockParamList(Map<String, Object> params) throws Exception;
+
+    @Select({
+            "<script>" +
+                    "select * from dynarap_sblock_param " +
+                    "where seq = #{blockParamSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "limit 0, 1" +
+                    "</script>"
+    })
+    ShortBlockVO.Param selectShortBlockParamBySeq(Map<String, Object> params) throws Exception;
 
 
     @Select({

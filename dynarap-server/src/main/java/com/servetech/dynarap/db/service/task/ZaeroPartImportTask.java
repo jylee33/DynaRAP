@@ -507,13 +507,20 @@ public class ZaeroPartImportTask {
         // get console run python
         ProcessBuilder builder = new ProcessBuilder();
 
+        File fTemp = new File(processPath, part.getSeq().valueOf() + ".dat");
+        FileOutputStream fos = new FileOutputStream(fTemp);
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
+        bw.write(join(pvs, ","));
+        bw.flush();
+        bw.close();
+
         if (filterType.equals("lpf")) {
-            builder.command(processPath + "/lpf_filter.sh",
-                    join(pvs, ","), "10", "0.4");
+            builder.command(processPath + "lpf_filter.sh",
+                    fTemp.getAbsolutePath(), "10", "0.4");
         }
         else if (filterType.equals("hpf")) {
-            builder.command(processPath + "/hpf_filter.sh",
-                    join(pvs, ","), "10", "0.02");
+            builder.command(processPath + "hpf_filter.sh",
+                    fTemp.getAbsolutePath(), "10", "0.02");
         }
 
         Process process = builder.start();

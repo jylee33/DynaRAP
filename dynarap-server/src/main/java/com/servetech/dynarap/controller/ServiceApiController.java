@@ -182,6 +182,7 @@ public class ServiceApiController extends ApiController {
             }
             else {
                 // 레퍼런스가 없으면 완전 삭제
+                // TODO : 데이터 삭제 redis
                 getService(ParamModuleService.class).deleteParamModule(moduleSeq);
             }
             return ResponseHelper.response(200, "Success - ParamModule Deleted", "");
@@ -246,19 +247,55 @@ public class ServiceApiController extends ApiController {
             if (sourceType.equalsIgnoreCase("part")) {
                 List<PartVO> parts = getService(ParamModuleService.class).getPartListByKeyword(keyword);
                 if (parts == null) parts = new ArrayList<>();
+
+                List<PartVO> availParts = new ArrayList<>();
+
                 for (PartVO part : parts) {
-                    part.setParams(getService(ParamService.class).getPresetParamList(
-                            part.getPresetPack(), part.getPresetSeq(), CryptoField.LZERO, CryptoField.LZERO, 1, 999999));
+                    RawVO.Upload rawUpload = getService(RawService.class).getUploadBySeq(part.getUploadSeq());
+                    if (rawUpload == null) continue;
+
+                    part.setParams(getService(ParamService.class).getPresetParamListBySource(part.getPresetPack(), part.getPresetSeq()));
+
+                    part.setUseTime("julian");
+                    if (rawUpload.getDataType().equalsIgnoreCase("adams") || rawUpload.getDataType().equalsIgnoreCase("zaero"))
+                        part.setUseTime("offset");
+
+                    availParts.add(part);
+
+                    if (part.getParams() == null || part.getParams().size() == 0) continue;
+                    for (PresetVO.Param pparam : part.getParams()) {
+                        pparam.setParamInfo(getService(ParamService.class).getParamBySeq(pparam.getParamSeq()));
+                    }
                 }
-                return ResponseHelper.response(200, "Success - ParamModule Source Search", parts);
+                return ResponseHelper.response(200, "Success - ParamModule Source Search", availParts);
             }
             else if (sourceType.equalsIgnoreCase("shortblock")) {
                 List<ShortBlockVO> shortBlocks = getService(ParamModuleService.class).getShortBlockListByKeyword(keyword);
                 if (shortBlocks == null) shortBlocks = new ArrayList<>();
+
+                List<ShortBlockVO> availBlocks = new ArrayList<>();
+
                 for (ShortBlockVO shortBlock : shortBlocks) {
-                    shortBlock.setParams(getService(PartService.class).getShortBlockParamList(shortBlock.getBlockMetaSeq()));
+                    PartVO partInfo = getService(PartService.class).getPartBySeq(shortBlock.getPartSeq());
+                    RawVO.Upload rawUpload = getService(RawService.class).getUploadBySeq(partInfo.getUploadSeq());
+                    if (rawUpload == null) continue;
+
+                    shortBlock.setUseTime("julian");
+                    if (rawUpload.getDataType().equalsIgnoreCase("adams") || rawUpload.getDataType().equalsIgnoreCase("zaero"))
+                        shortBlock.setUseTime("offset");
+
+                    availBlocks.add(shortBlock);
+
+                    List<ShortBlockVO.Param> sparams = getService(PartService.class).getShortBlockParamList(shortBlock.getBlockMetaSeq());
+                    if (sparams == null) sparams = new ArrayList<>();
+                    for (ShortBlockVO.Param sparam : sparams) {
+                        ParamVO param = getService(ParamService.class).getParamBySeq(sparam.getParamSeq());
+                        if (param != null) sparam.setParamInfo(param);
+                        sparam.setParamSearchSeq(new CryptoField(sparam.getUnionParamSeq()));
+                    }
+                    shortBlock.setParams(sparams);
                 }
-                return ResponseHelper.response(200, "Success - ParamModule Source Search", shortBlocks);
+                return ResponseHelper.response(200, "Success - ParamModule Source Search", availBlocks);
             }
             else if (sourceType.equalsIgnoreCase("dll")) {
                 List<DLLVO> dlls = getService(ParamModuleService.class).getDLLListByKeyword(keyword);
@@ -291,7 +328,88 @@ public class ServiceApiController extends ApiController {
             List<ParamModuleVO.Source> sources = getService(ParamModuleService.class).getParamModuleSourceList(moduleSeq);
             if (sources == null) sources = new ArrayList<>();
 
-            return ResponseHelper.response(200, "Success - ParamModule Source List", sources);
+            for (ParamModuleVO.Source source : sources) {
+                if (source.getSourceType().equals("part")) {
+                    PartVO partInfo = getService(PartService.class).getPartBySeq(source.getSourceSeq());
+                    if (partInfo == null) {
+                        source.setMark(true);
+                        continue;
+                    }
+                    source.setSourceName(partInfo.getPartName());
+                    RawVO.Upload rawUpload = getService(RawService.class).getUploadBySeq(partInfo.getUploadSeq());
+                    if (rawUpload == null) {
+                        source.setMark(true);
+                        continue;
+                    }
+
+                    source.setUseTime("julian");
+                    if (rawUpload.getDataType().equalsIgnoreCase("adams") || rawUpload.getDataType().equalsIgnoreCase("zaero"))
+                        source.setUseTime("offset");
+
+                    // presetParamSeq 값으로 처리됨.
+                    PresetVO.Param pparam = getService(ParamService.class).getPresetParamBySource(source.getParamSeq());
+                    ParamVO param = getService(ParamService.class).getParamBySeq(pparam.getParamSeq());
+                    source.setParamKey(param.getParamKey());
+                }
+                else if (source.getSourceType().equals("shortblock")) {
+                    ShortBlockVO blockInfo = getService(PartService.class).getShortBlockBySeq(source.getSourceSeq());
+                    if (blockInfo == null) {
+                        source.setMark(true);
+                        continue;
+                    }
+                    source.setSourceName(blockInfo.getBlockName());
+
+                    PartVO partInfo = getService(PartService.class).getPartBySeq(blockInfo.getPartSeq());
+                    RawVO.Upload rawUpload = getService(RawService.class).getUploadBySeq(partInfo.getUploadSeq());
+                    if (rawUpload == null) {
+                        source.setMark(true);
+                        continue;
+                    }
+
+                    source.setUseTime("julian");
+                    if (rawUpload.getDataType().equalsIgnoreCase("adams") || rawUpload.getDataType().equalsIgnoreCase("zaero"))
+                        source.setUseTime("offset");
+
+                    // blockParamSeq 값으로 처리됨.
+                    ShortBlockVO.Param blockParam = getService(ParamService.class).getShortBlockParamBySeq(source.getParamSeq());
+                    ParamVO param = getService(ParamService.class).getParamBySeq(blockParam.getParamSeq());
+                    source.setParamKey(param.getParamKey());
+                }
+                else if (source.getSourceType().equals("dll")) {
+                    DLLVO dllInfo = getService(DLLService.class).getDLLBySeq(source.getSourceSeq());
+                    if (dllInfo == null) {
+                        source.setMark(true);
+                        continue;
+                    }
+                    source.setSourceName(dllInfo.getDataSetName());
+
+                    DLLVO.Param dllParam = getService(DLLService.class).getDLLParamBySeq(source.getParamSeq());
+                    source.setParamKey(dllParam.getParamName().originOf());
+                }
+                else if (source.getSourceType().equals("parammodule")) {
+                    ParamModuleVO moduleInfo = getService(ParamModuleService.class).getParamModuleBySeq(source.getSourceSeq());
+                    if (moduleInfo == null) {
+                        source.setMark(true);
+                        continue;
+                    }
+                    source.setSourceName(moduleInfo.getModuleName());
+
+                    ParamModuleVO.Equation eq = getService(ParamModuleService.class).getParamModuleEqBySeq(source.getParamSeq());
+                    source.setParamKey(eq.getEqName().originOf());
+                }
+            }
+
+            List<ParamModuleVO.Source> availSources = new ArrayList<>();
+            for (ParamModuleVO.Source source : sources) {
+                if (source.isMark() == false)
+                    availSources.add(source);
+            }
+
+            return ResponseHelper.response(200, "Success - ParamModule Source List", availSources);
+        }
+
+        if (command.equals("source-count")) {
+            return ResponseHelper.response(200, "Success - ParamModule Source Count", 0);
         }
 
         if (command.equals("save-source")) {
@@ -312,8 +430,7 @@ public class ServiceApiController extends ApiController {
             if (paramModule.isReferenced())
                 throw new HandledServiceException(411, "파라미터 모듈을 참조하는 프로젝트가 있습니다. 복사 후 새로 작업하세요.");
 
-            // 기존 소스 삭제 함.
-            getService(ParamModuleService.class).deleteParamModuleSourceByModuleSeq(moduleSeq);
+            List<ParamModuleVO.Source> paramSources = getService(ParamModuleService.class).getParamModuleSourceList(moduleSeq);
 
             JsonArray jarrSources = null;
             if (!checkJsonEmpty(payload, "sources"))
@@ -322,6 +439,10 @@ public class ServiceApiController extends ApiController {
             List<String> sourceTypes = Arrays.asList("part", "shortblock", "dll", "parammodule");
 
             if (jarrSources.size() > 0) {
+                if (paramSources == null) paramSources = new ArrayList<>();
+                for (ParamModuleVO.Source paramSource : paramSources)
+                    paramSource.setMark(false);
+
                 for (int i = 0; i < jarrSources.size(); i++) {
                     JsonObject jobjSource = jarrSources.get(i).getAsJsonObject();
                     ParamModuleVO.Source moduleSource = ServerConstants.GSON.fromJson(jobjSource, ParamModuleVO.Source.class);
@@ -332,9 +453,39 @@ public class ServiceApiController extends ApiController {
                         // 잘못된 소스 데이터는 스킵함.
                         continue;
                     }
-                    moduleSource.setModuleSeq(moduleSeq);
-                    getService(ParamModuleService.class).insertParamModuleSource(moduleSource);
+
+                    ParamModuleVO.Source findSource = null;
+                    for (ParamModuleVO.Source paramSource : paramSources) {
+                        if (paramSource.getSeq().equals(moduleSource.getSeq())) {
+                            paramSource.setMark(true);
+                            findSource = paramSource;
+                            break;
+                        }
+                    }
+
+                    moduleSource.setDataCount(getDataCount(
+                            moduleSource.getSourceType(), moduleSource.getSourceSeq(),
+                            moduleSource.getParamSeq()));
+
+                    if (findSource != null) {
+                        moduleSource.setModuleSeq(moduleSeq);
+                        getService(ParamModuleService.class).updateParamModuleSource(moduleSource);
+                    }
+                    else {
+                        moduleSource.setModuleSeq(moduleSeq);
+                        getService(ParamModuleService.class).insertParamModuleSource(moduleSource);
+                    }
                 }
+            }
+            else {
+                // 모두 삭제된 것으로 간주함.
+                getService(ParamModuleService.class).deleteParamModuleSourceByModuleSeq(moduleSeq);
+            }
+
+            // 요청에 없는 소스 삭제.
+            for (ParamModuleVO.Source paramSource : paramSources) {
+                if (paramSource.isMark() == false)
+                    getService(ParamModuleService.class).deleteParamModuleSource(paramSource.getSeq());
             }
 
             paramModule.setSources(getService(ParamModuleService.class).getParamModuleSourceList(moduleSeq));
@@ -375,8 +526,21 @@ public class ServiceApiController extends ApiController {
                     || moduleSource.getSourceSeq() == null || moduleSource.getSourceSeq().isEmpty()) {
                 throw new HandledServiceException(411, "저장 형식이 올바르지 않습니다.");
             }
-            moduleSource.setModuleSeq(moduleSeq);
-            getService(ParamModuleService.class).insertParamModuleSource(moduleSource);
+
+            ParamModuleVO.Source findSource = getService(ParamModuleService.class).getParamModuleSourceBySeq(moduleSource.getSeq());
+
+            moduleSource.setDataCount(getDataCount(
+                    moduleSource.getSourceType(), moduleSource.getSourceSeq(),
+                    moduleSource.getParamSeq()));
+
+            if (findSource != null) {
+                moduleSource.setModuleSeq(moduleSeq);
+                getService(ParamModuleService.class).updateParamModuleSource(moduleSource);
+            }
+            else {
+                moduleSource.setModuleSeq(moduleSeq);
+                getService(ParamModuleService.class).insertParamModuleSource(moduleSource);
+            }
 
             paramModule.setSources(getService(ParamModuleService.class).getParamModuleSourceList(moduleSeq));
 
@@ -390,6 +554,9 @@ public class ServiceApiController extends ApiController {
 
             if (moduleSeq == null || moduleSeq.isEmpty())
                 throw new HandledServiceException(411, "파라미터를 확인하세요.");
+
+            // load all sources and equations.
+            loadParamModuleCaches(moduleSeq);
 
             List<ParamModuleVO.Equation> equations = getService(ParamModuleService.class).getParamModuleEqList(moduleSeq);
 
@@ -405,16 +572,119 @@ public class ServiceApiController extends ApiController {
 
         if (command.equals("save-eq")) {
             //
-            // TODO : 여기서 계산.
+            // TODO : 여기서 계산. => 계산 없이 저장만 일단.
             //
-            return ResponseHelper.response(200, "Success - ParamModule Save Eq", "");
+
+            CryptoField moduleSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "moduleSeq"))
+                moduleSeq = CryptoField.decode(payload.get("moduleSeq").getAsString(), 0L);
+
+            JsonArray jarrEquations = null;
+            if (!checkJsonEmpty(payload, "equations"))
+                jarrEquations = payload.get("equations").getAsJsonArray();
+
+            if (moduleSeq == null || moduleSeq.isEmpty() || jarrEquations == null)
+                throw new HandledServiceException(411, "파라미터를 확인하세요.");
+
+            List<ParamModuleVO.Equation> paramEquations = getService(ParamModuleService.class).getParamModuleEqList(moduleSeq);
+            if (paramEquations == null) paramEquations = new ArrayList<>();
+            for (ParamModuleVO.Equation paramEquation : paramEquations)
+                paramEquation.setMark(false);
+
+            ParamModuleVO paramModule = getService(ParamModuleService.class).getParamModuleBySeq(moduleSeq);
+
+            if (jarrEquations.size() > 0) {
+                paramModule.setEquations(new ArrayList<>());
+                for (int i = 0; i < jarrEquations.size(); i++) {
+                    JsonObject jobjEquation = jarrEquations.get(i).getAsJsonObject();
+                    ParamModuleVO.Equation equation = ServerConstants.GSON.fromJson(jobjEquation, ParamModuleVO.Equation.class);
+                    if (equation == null
+                            || equation.getEqName() == null || equation.getEqName().isEmpty()
+                            || equation.getEquation() == null || equation.getEquation().isEmpty()) {
+                        // skip equation
+                        continue;
+                    }
+                    equation.setEqOrder(paramModule.getEquations().size() + 1);
+                    equation.setModuleSeq(moduleSeq);
+
+                    ParamModuleVO.Equation findEquation = null;
+                    for (ParamModuleVO.Equation paramEquation : paramEquations) {
+                        if (paramEquation.getSeq().equals(equation.getSeq())) {
+                            paramEquation.setMark(true);
+                            findEquation = paramEquation;
+                            break;
+                        }
+                    }
+
+                    if (findEquation == null) {
+                        try {
+                            getService(ParamModuleService.class).insertParamModuleEq(equation);
+                        } catch (HandledServiceException hse) {
+                            continue;
+                        }
+                        findEquation = equation;
+                    }
+                    else {
+                        try {
+                            getService(ParamModuleService.class).updateParamModuleEq(equation);
+                        } catch (HandledServiceException hse) {
+                            continue;
+                        }
+                        // 저장이후...
+                        findEquation.setEqOrder(equation.getEqOrder());
+                        findEquation.setEqName(equation.getEqName());
+                        findEquation.setEquation(equation.getEquation());
+                    }
+
+                    findEquation.setDataCount(getDataCount("eq", paramModule.getSeq(), findEquation.getSeq()));
+                    getService(ParamModuleService.class).updateParamModuleEq(findEquation);
+
+                    // dataProp 처리
+                    if (!checkJsonEmpty(jobjEquation, "dataProp")) {
+                        Type type = new TypeToken<Map<String, String>>() {
+                        }.getType();
+                        Map<String, String> dataProp = ServerConstants.GSON.fromJson(
+                                jobjEquation.get("dataProp").getAsJsonObject(), type);
+                        Set<String> keys = dataProp.keySet();
+                        Iterator<String> iterKeys = keys.iterator();
+                        while (iterKeys.hasNext()) {
+                            String key = iterKeys.next();
+                            String value = dataProp.get(key);
+
+                            DataPropVO saveProp = new DataPropVO();
+                            saveProp.setPropName(new String64(key));
+                            saveProp.setPropValue(new String64(value));
+                            saveProp.setReferenceType("eq");
+                            saveProp.setReferenceKey(findEquation.getSeq());
+                            saveProp.setUpdatedAt(LongDate.now());
+                            getService(RawService.class).insertDataProp(saveProp);
+                        }
+                        findEquation.setDataProp(getService(RawService.class).getDataPropListToMap("eq", findEquation.getSeq()));
+                    }
+
+                    paramModule.getEquations().add(findEquation);
+                }
+
+                // 기존 것들 중에 제외된거 지우기
+                for (ParamModuleVO.Equation paramEquation : paramEquations) {
+                    if (paramEquation.isMark() == false)
+                        getService(ParamModuleService.class).deleteParamModuleEq(paramEquation.getSeq());
+                }
+            }
+            else {
+                // 기존 수식 삭제. => 저장되는 equations가 없으면 모두 삭제.
+                getService(ParamModuleService.class).deleteParamModuleEqByModuleSeq(moduleSeq);
+                paramModule.setEquations(new ArrayList<>());
+            }
+
+            return ResponseHelper.response(200, "Success - ParamModule Save Eq", paramModule.getEquations());
         }
 
-        if (command.equals("save-eq-single")) {
+        if (command.equals("evaluation")) {
             //
             // TODO : 계산 때문에 여기서 진행하기 어려움.
             //
-            return ResponseHelper.response(200, "Success - ParamModule Save Eq Single", "");
+            return ResponseHelper.response(200, "Success - ParamModule Eq Evaluation", "");
         }
 
         if (command.equals("plot-list")) {
@@ -460,9 +730,14 @@ public class ServiceApiController extends ApiController {
                     if (checkJsonEmpty(jobjPlot, "plotName")) continue;
                     if (checkJsonEmpty(jobjPlot, "sources")) continue;
 
+                    String plotType = "";
+                    if (!checkJsonEmpty(jobjPlot, "plotType"))
+                        plotType = jobjPlot.get("plotType").getAsString();
+
                     ParamModuleVO.Plot plot = new ParamModuleVO.Plot();
                     plot.setModuleSeq(moduleSeq);
                     plot.setPlotName(String64.decode(jobjPlot.get("plotName").getAsString()));
+                    plot.setPlotType(plotType);
                     plot.setPlotOrder(plots.size() + 1);
                     plot.setCreatedAt(LongDate.now());
                     getService(ParamModuleService.class).insertParamModulePlot(plot);
@@ -491,25 +766,54 @@ public class ServiceApiController extends ApiController {
                     }
 
                     JsonArray jarrSources = jobjPlot.get("sources").getAsJsonArray();
-                    List<String> sourceTypes = Arrays.asList("part", "shortblock", "dll", "parammodule");
+                    List<String> sourceTypes = Arrays.asList("part", "shortblock", "dll", "parammodule", "eq");
 
                     plot.setPlotSourceList(new ArrayList<>());
                     if (jarrSources.size() > 0) {
                         for (int j = 0; j < jarrSources.size(); j++) {
                             JsonObject jobjSource = jarrSources.get(j).getAsJsonObject();
-                            ParamModuleVO.Plot.Source plotSource = ServerConstants.GSON.fromJson(jobjSource, ParamModuleVO.Plot.Source.class);
-                            if (plotSource == null) continue;
-                            if (plotSource.getSourceType() == null || plotSource.getSourceType().isEmpty()
-                                    || !sourceTypes.contains(plotSource.getSourceType())
-                                    || plotSource.getSourceSeq() == null || plotSource.getSourceSeq().isEmpty()) {
-                                // 잘못된 소스 데이터는 스킵함.
-                                continue;
-                            }
-                            plotSource.setPlotSeq(plot.getSeq());
-                            plotSource.setModuleSeq(moduleSeq);
-                            getService(ParamModuleService.class).insertParamModulePlotSource(plotSource);
+                            String sourceType = "";
+                            if (!checkJsonEmpty(jobjSource, "sourceType"))
+                                sourceType = jobjSource.get("sourceType").getAsString();
 
+                            CryptoField sourceSeq = CryptoField.LZERO;
+                            if (!checkJsonEmpty(jobjSource, "sourceSeq"))
+                                sourceSeq = CryptoField.decode(jobjSource.get("sourceSeq").getAsString(), 0L);
+
+                            ParamModuleVO.Plot.Source plotSource = new ParamModuleVO.Plot.Source();
+                            if (!sourceType.equals("eq")) {
+                                ParamModuleVO.Source paramSource = getService(ParamModuleService.class).getParamModuleSourceBySeq(sourceSeq);
+                                if (paramSource == null) continue;
+                                plotSource.setModuleSeq(moduleSeq);
+                                plotSource.setPlotSeq(plot.getSeq());
+                                plotSource.setSourceType(sourceType);
+                                plotSource.setSourceSeq(sourceSeq);
+                                plotSource.setJulianStartAt(paramSource.getJulianStartAt());
+                                plotSource.setJulianEndAt(paramSource.getJulianEndAt());
+                                plotSource.setOffsetStartAt(paramSource.getOffsetStartAt());
+                                plotSource.setOffsetEndAt(paramSource.getOffsetEndAt());
+                            }
+                            else {
+                                ParamModuleVO.Equation eq = getService(ParamModuleService.class).getParamModuleEqBySeq(sourceSeq);
+                                if (eq == null) continue;
+                                plotSource.setModuleSeq(moduleSeq);
+                                plotSource.setPlotSeq(plot.getSeq());
+                                plotSource.setSourceType(sourceType);
+                                plotSource.setSourceSeq(sourceSeq);
+                                plotSource.setJulianStartAt(eq.getJulianStartAt());
+                                plotSource.setJulianEndAt(eq.getJulianEndAt());
+                                plotSource.setOffsetStartAt(eq.getOffsetStartAt());
+                                plotSource.setOffsetEndAt(eq.getOffsetEndAt());
+                            }
+                            getService(ParamModuleService.class).insertParamModulePlotSource(plotSource);
                             plot.getPlotSourceList().add(plotSource);
+                        }
+
+                        if (plot.getPlotSourceList().size() > 0) {
+                            plot.setPlotSources(new ArrayList<>());
+                            for (ParamModuleVO.Plot.Source plotSource : plot.getPlotSourceList()) {
+                                plot.getPlotSources().add(ParamModuleVO.Plot.Source.getSimple(plotSource));
+                            }
                         }
                     }
                 }
@@ -586,7 +890,7 @@ public class ServiceApiController extends ApiController {
             }
 
             JsonArray jarrSources = jobjPlot.get("sources").getAsJsonArray();
-            List<String> sourceTypes = Arrays.asList("part", "shortblock", "dll", "parammodule");
+            List<String> sourceTypes = Arrays.asList("part", "shortblock", "dll", "parammodule", "eq");
 
             // 기존 소스 삭제.
             getService(ParamModuleService.class).deleteParamModulePlotSourceByPlotSeq(moduleSeq, plotSeq);
@@ -595,19 +899,48 @@ public class ServiceApiController extends ApiController {
             if (jarrSources.size() > 0) {
                 for (int j = 0; j < jarrSources.size(); j++) {
                     JsonObject jobjSource = jarrSources.get(j).getAsJsonObject();
-                    ParamModuleVO.Plot.Source plotSource = ServerConstants.GSON.fromJson(jobjSource, ParamModuleVO.Plot.Source.class);
-                    if (plotSource == null) continue;
-                    if (plotSource.getSourceType() == null || plotSource.getSourceType().isEmpty()
-                            || !sourceTypes.contains(plotSource.getSourceType())
-                            || plotSource.getSourceSeq() == null || plotSource.getSourceSeq().isEmpty()) {
-                        // 잘못된 소스 데이터는 스킵함.
-                        continue;
-                    }
-                    plotSource.setPlotSeq(plot.getSeq());
-                    plotSource.setModuleSeq(moduleSeq);
-                    getService(ParamModuleService.class).insertParamModulePlotSource(plotSource);
+                    String sourceType = "";
+                    if (!checkJsonEmpty(jobjSource, "sourceType"))
+                        sourceType = jobjSource.get("sourceType").getAsString();
 
+                    CryptoField sourceSeq = CryptoField.LZERO;
+                    if (!checkJsonEmpty(jobjSource, "sourceSeq"))
+                        sourceSeq = CryptoField.decode(jobjSource.get("sourceSeq").getAsString(), 0L);
+
+                    ParamModuleVO.Plot.Source plotSource = new ParamModuleVO.Plot.Source();
+                    if (!sourceType.equals("eq")) {
+                        ParamModuleVO.Source paramSource = getService(ParamModuleService.class).getParamModuleSourceBySeq(sourceSeq);
+                        if (paramSource == null) continue;
+                        plotSource.setModuleSeq(moduleSeq);
+                        plotSource.setPlotSeq(plot.getSeq());
+                        plotSource.setSourceType(sourceType);
+                        plotSource.setSourceSeq(sourceSeq);
+                        plotSource.setJulianStartAt(paramSource.getJulianStartAt());
+                        plotSource.setJulianEndAt(paramSource.getJulianEndAt());
+                        plotSource.setOffsetStartAt(paramSource.getOffsetStartAt());
+                        plotSource.setOffsetEndAt(paramSource.getOffsetEndAt());
+                    }
+                    else {
+                        ParamModuleVO.Equation eq = getService(ParamModuleService.class).getParamModuleEqBySeq(sourceSeq);
+                        if (eq == null) continue;
+                        plotSource.setModuleSeq(moduleSeq);
+                        plotSource.setPlotSeq(plot.getSeq());
+                        plotSource.setSourceType(sourceType);
+                        plotSource.setSourceSeq(sourceSeq);
+                        plotSource.setJulianStartAt(eq.getJulianStartAt());
+                        plotSource.setJulianEndAt(eq.getJulianEndAt());
+                        plotSource.setOffsetStartAt(eq.getOffsetStartAt());
+                        plotSource.setOffsetEndAt(eq.getOffsetEndAt());
+                    }
+                    getService(ParamModuleService.class).insertParamModulePlotSource(plotSource);
                     plot.getPlotSourceList().add(plotSource);
+                }
+
+                if (plot.getPlotSourceList().size() > 0) {
+                    plot.setPlotSources(new ArrayList<>());
+                    for (ParamModuleVO.Plot.Source plotSource : plot.getPlotSourceList()) {
+                        plot.getPlotSources().add(ParamModuleVO.Plot.Source.getSimple(plotSource));
+                    }
                 }
             }
 
@@ -1619,12 +1952,12 @@ public class ServiceApiController extends ApiController {
                     }
                     params.add(param);
                 }
-            }
 
-            List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
-            if (notMappedParams != null && notMappedParams.size() > 0) {
-                for (ParamVO p : notMappedParams)
-                    params.add(p);
+                List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
+                if (notMappedParams != null && notMappedParams.size() > 0) {
+                    for (ParamVO p : notMappedParams)
+                        params.add(p);
+                }
             }
 
             JsonArray jarrJulian = payload.get("julianRange").getAsJsonArray();
@@ -1770,12 +2103,12 @@ public class ServiceApiController extends ApiController {
                     }
                     params.add(param);
                 }
-            }
 
-            List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
-            if (notMappedParams != null && notMappedParams.size() > 0) {
-                for (ParamVO p : notMappedParams)
-                    params.add(p);
+                List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
+                if (notMappedParams != null && notMappedParams.size() > 0) {
+                    for (ParamVO p : notMappedParams)
+                        params.add(p);
+                }
             }
 
             List<String> julianData = new ArrayList<>();
@@ -2029,12 +2362,12 @@ public class ServiceApiController extends ApiController {
                     }
                     params.add(param);
                 }
-            }
 
-            List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
-            if (notMappedParams != null && notMappedParams.size() > 0) {
-                for (ParamVO p : notMappedParams)
-                    params.add(p);
+                List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
+                if (notMappedParams != null && notMappedParams.size() > 0) {
+                    for (ParamVO p : notMappedParams)
+                        params.add(p);
+                }
             }
 
             JsonArray jarrJulian = payload.get("julianRange").getAsJsonArray();
@@ -2148,12 +2481,12 @@ public class ServiceApiController extends ApiController {
                     }
                     params.add(param);
                 }
-            }
 
-            List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
-            if (notMappedParams != null && notMappedParams.size() > 0) {
-                for (ParamVO p : notMappedParams)
-                    params.add(p);
+                List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
+                if (notMappedParams != null && notMappedParams.size() > 0) {
+                    for (ParamVO p : notMappedParams)
+                        params.add(p);
+                }
             }
 
             List<String> julianData = new ArrayList<>();
@@ -2232,20 +2565,19 @@ public class ServiceApiController extends ApiController {
             else {
                 for (int i = 0; i < jarrParams.size(); i++) {
                     Long paramKey = CryptoField.decode(jarrParams.get(i).getAsString(), 0L).originOf();
-                    ParamVO param = getService(ParamService.class).getPresetParamBySeq(new CryptoField(paramKey));
-                    if (param == null) {
-                        param = getService(ParamService.class).getNotMappedParamBySeq(
-                                new CryptoField(paramKey));
-                        if (param == null) continue;
+                    ShortBlockVO.Param sparam = getService(ParamService.class).getShortBlockParamBySeq(new CryptoField(paramKey));
+                    ParamVO param = getService(ParamService.class).getParamBySeq(sparam.getParamSeq());
+                    if (param != null) {
+                        param.setReferenceSeq(sparam.getUnionParamSeq());
+                        params.add(param);
                     }
-                    params.add(param);
                 }
-            }
 
-            List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
-            if (notMappedParams != null && notMappedParams.size() > 0) {
-                for (ParamVO p : notMappedParams)
-                    params.add(p);
+                List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
+                if (notMappedParams != null && notMappedParams.size() > 0) {
+                    for (ParamVO p : notMappedParams)
+                        params.add(p);
+                }
             }
 
             JsonArray jarrJulian = payload.get("julianRange").getAsJsonArray();
@@ -2384,20 +2716,19 @@ public class ServiceApiController extends ApiController {
             else {
                 for (int i = 0; i < jarrParams.size(); i++) {
                     Long paramKey = CryptoField.decode(jarrParams.get(i).getAsString(), 0L).originOf();
-                    ParamVO param = getService(ParamService.class).getPresetParamBySeq(new CryptoField(paramKey));
-                    if (param == null) {
-                        param = getService(ParamService.class).getNotMappedParamBySeq(
-                                new CryptoField(paramKey));
-                        if (param == null) continue;
+                    ShortBlockVO.Param sparam = getService(ParamService.class).getShortBlockParamBySeq(new CryptoField(paramKey));
+                    ParamVO param = getService(ParamService.class).getParamBySeq(sparam.getParamSeq());
+                    if (param != null) {
+                        param.setReferenceSeq(sparam.getUnionParamSeq());
+                        params.add(param);
                     }
-                    params.add(param);
                 }
-            }
 
-            List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
-            if (notMappedParams != null && notMappedParams.size() > 0) {
-                for (ParamVO p : notMappedParams)
-                    params.add(p);
+                List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
+                if (notMappedParams != null && notMappedParams.size() > 0) {
+                    for (ParamVO p : notMappedParams)
+                        params.add(p);
+                }
             }
 
             List<String> julianData = new ArrayList<>();
@@ -2524,26 +2855,34 @@ public class ServiceApiController extends ApiController {
             List<CryptoField> paramList = getService(ParamService.class).getShortBlockParamList(blockSeq);
             if (paramList == null) paramList = new ArrayList<>();
 
-            jobjParams.add("paramSet", ServerConstants.GSON.toJsonTree(paramList));
+            List<ParamVO> presetParams = getService(ParamService.class).getPresetParamList(
+                    partInfo.getPresetPack(), partInfo.getPresetSeq(), CryptoField.LZERO, CryptoField.LZERO, 1, 9999);
+            if (presetParams == null) presetParams = new ArrayList<>();
 
             for (CryptoField seq : paramList) {
-                ParamVO param = getService(ParamService.class).getPresetParamBySeq(seq);
-                if (param == null) {
-                    param = getService(ParamService.class).getNotMappedParamBySeq(seq);
-                    if (param == null) continue;
+                ShortBlockVO.Param sparam = getService(ParamService.class).getShortBlockParamBySeq(seq);
+                ParamVO param = null;
+                for (ParamVO p : presetParams) {
+                    if (p.getParamPack().equals(sparam.getParamPack()) && p.getSeq().equals(sparam.getParamSeq())) {
+                        param = p;
+                        break;
+                    }
                 }
-                resultParams.add(param);
+                if (param != null) resultParams.add(param);
             }
 
             List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
             if (notMappedParams != null && notMappedParams.size() > 0) {
-                for (ParamVO p : notMappedParams)
+                for (ParamVO p : notMappedParams) {
+                    paramList.add(p.getSeq());
                     resultParams.add(p);
+                }
             }
 
+            jobjParams.add("paramSet", ServerConstants.GSON.toJsonTree(paramList));
             jobjParams.add("paramData", ServerConstants.GSON.toJsonTree(resultParams));
 
-            return ResponseHelper.response(200, "Success - Part Info", jobjParams);
+            return ResponseHelper.response(200, "Success - Shortblock Param List", jobjParams);
         }
 
         if (command.equals("remove-meta")) {
@@ -2591,20 +2930,19 @@ public class ServiceApiController extends ApiController {
             else {
                 for (int i = 0; i < jarrParams.size(); i++) {
                     Long paramKey = CryptoField.decode(jarrParams.get(i).getAsString(), 0L).originOf();
-                    ParamVO param = getService(ParamService.class).getPresetParamBySeq(new CryptoField(paramKey));
-                    if (param == null) {
-                        param = getService(ParamService.class).getNotMappedParamBySeq(
-                                new CryptoField(paramKey));
-                        if (param == null) continue;
+                    ShortBlockVO.Param sparam = getService(ParamService.class).getShortBlockParamBySeq(new CryptoField(paramKey));
+                    ParamVO param = getService(ParamService.class).getParamBySeq(sparam.getParamSeq());
+                    if (param != null) {
+                        param.setReferenceSeq(sparam.getUnionParamSeq());
+                        params.add(param);
                     }
-                    params.add(param);
                 }
-            }
 
-            List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
-            if (notMappedParams != null && notMappedParams.size() > 0) {
-                for (ParamVO p : notMappedParams)
-                    params.add(p);
+                List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
+                if (notMappedParams != null && notMappedParams.size() > 0) {
+                    for (ParamVO p : notMappedParams)
+                        params.add(p);
+                }
             }
 
             JsonArray jarrJulian = payload.get("julianRange").getAsJsonArray();
@@ -2711,20 +3049,19 @@ public class ServiceApiController extends ApiController {
             else {
                 for (int i = 0; i < jarrParams.size(); i++) {
                     Long paramKey = CryptoField.decode(jarrParams.get(i).getAsString(), 0L).originOf();
-                    ParamVO param = getService(ParamService.class).getPresetParamBySeq(new CryptoField(paramKey));
-                    if (param == null) {
-                        param = getService(ParamService.class).getNotMappedParamBySeq(
-                                new CryptoField(paramKey));
-                        if (param == null) continue;
+                    ShortBlockVO.Param sparam = getService(ParamService.class).getShortBlockParamBySeq(new CryptoField(paramKey));
+                    ParamVO param = getService(ParamService.class).getParamBySeq(sparam.getParamSeq());
+                    if (param != null) {
+                        param.setReferenceSeq(sparam.getUnionParamSeq());
+                        params.add(param);
                     }
-                    params.add(param);
                 }
-            }
 
-            List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
-            if (notMappedParams != null && notMappedParams.size() > 0) {
-                for (ParamVO p : notMappedParams)
-                    params.add(p);
+                List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
+                if (notMappedParams != null && notMappedParams.size() > 0) {
+                    for (ParamVO p : notMappedParams)
+                        params.add(p);
+                }
             }
 
             List<String> julianData = new ArrayList<>();
@@ -2948,5 +3285,13 @@ public class ServiceApiController extends ApiController {
         part.setLpfDone(true);
         part.setHpfDone(true);
         getService(PartService.class).updatePart(part);
+    }
+
+    private int getDataCount(String sourceType, CryptoField sourceSeq, CryptoField paramSeq) {
+        return 0;
+    }
+
+    private void loadParamModuleCaches(CryptoField moduleSeq) throws HandledServiceException {
+
     }
 }
