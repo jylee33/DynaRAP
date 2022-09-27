@@ -3,6 +3,7 @@ using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Controls;
 using DynaRAP.Data;
 using DynaRAP.UTIL;
+using log4net.Config;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -35,6 +36,7 @@ namespace DynaRAP.UControl
         private void ParamDataSelectControl_Load(object sender, EventArgs e)
         {
             SetListParamModuleList();
+            XmlConfigurator.Configure(new FileInfo("log4net.xml"));
         }
 
         private void edtSearch_Click(object sender, ButtonPressedEventArgs e)

@@ -981,7 +981,7 @@ namespace DynaRAP.UControl
 
                         if (j == 0)
                         {
-                            this.startTime = dt;
+                            this.startTime = dt;    
                         }
                         this.endTime = dt;
 

@@ -25,15 +25,16 @@ namespace DynaRAP.UControl
 
         private ListParamModuleResponse paramModuleList = null;
         private List<ParamModuleData> paramModuleCombo = null;
+        private List<ParamDataSelectionData> selectDataList = null;
         private int beforeSelectIndex = -1;
 
         public ParameterModuleControl()
         {
             InitializeComponent();
 
-            dataSelectionControl = new ParamDataSelectControl();
-            expressionControl = new ParamExpressionControl();
-            plotControl = new ParamPlotControl();
+            dataSelectionControl = new ParamDataSelectControl(this);
+            expressionControl = new ParamExpressionControl(this);
+            plotControl = new ParamPlotControl(this);
             paramModuleControl = new ParamModuleSelectControl(this);
         }
 
@@ -106,17 +107,80 @@ namespace DynaRAP.UControl
             string parammoduleSeq = null;
             if (moduleNameList.GetColumnValue("Seq") != null && moduleNameList.ItemIndex != beforeSelectIndex)
             {
-                if (beforeSelectIndex == -1 || MessageBox.Show("저장되지 않은 선택 데이터는 삭제됩니다. 파라미터를 변경하시겠습니까?", "데이터선택", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (beforeSelectIndex == -1)
                 {
                     parammoduleSeq = moduleNameList.GetColumnValue("Seq").ToString();
+                    GetSelectDataList(parammoduleSeq);
                     dataSelectionControl.SetSelectDataSource(parammoduleSeq);
+                    expressionControl.SetSelectDataSource(parammoduleSeq);
+                    plotControl.SetSelectDataSource(parammoduleSeq);
                     beforeSelectIndex = moduleNameList.ItemIndex;
                 }
                 else
                 {
-                    moduleNameList.ItemIndex = beforeSelectIndex;
+                    DialogResult result = MessageBox.Show("저장되지 않은 선택 데이터 및 수식, PLOT은 삭제됩니다. \n파라미터를 저장 후 변경하시겠습니까?", "파라미터모듈 변경", MessageBoxButtons.YesNoCancel);
+                    bool resultFlag = true;
+                    if (result == DialogResult.Yes)
+                    {
+                        resultFlag = dataSelectionControl.SelectDataSaveRequest();
+                        resultFlag = plotControl.PlotSaveRequest();
+                        if (!resultFlag)
+                        {
+                            moduleNameList.ItemIndex = beforeSelectIndex;
+                            MessageBox.Show("저장에 실패했습니다.");
+                            return;
+                        }
+                        parammoduleSeq = moduleNameList.GetColumnValue("Seq").ToString();
+                        GetSelectDataList(parammoduleSeq);
+                        dataSelectionControl.SetSelectDataSource(parammoduleSeq);
+                        expressionControl.SetSelectDataSource(parammoduleSeq);
+                        plotControl.SetSelectDataSource(parammoduleSeq);
+                        beforeSelectIndex = moduleNameList.ItemIndex;
+                    }
+                    else if (result == DialogResult.No)
+                    {
+                        parammoduleSeq = moduleNameList.GetColumnValue("Seq").ToString();
+                        GetSelectDataList(parammoduleSeq);
+                        dataSelectionControl.SetSelectDataSource(parammoduleSeq);
+                        expressionControl.SetSelectDataSource(parammoduleSeq);
+                        plotControl.SetSelectDataSource(parammoduleSeq);
+                        beforeSelectIndex = moduleNameList.ItemIndex;
+                    }
+                    else
+                    {
+                        moduleNameList.ItemIndex = beforeSelectIndex;
+                    }
                 }
             }
+        }
+
+        private void GetSelectDataList(string paramModuleSeq)
+        {
+            string sendData = string.Format(@"
+                {{
+                ""command"":""source-list"",
+                ""moduleSeq"": ""{0}""
+                }}", paramModuleSeq);
+            string responseData = Utils.GetPostData(ConfigurationManager.AppSettings["UrlParamModule"], sendData);
+            if (responseData != null)
+            {
+                selectDataList = new List<ParamDataSelectionData>();
+                SaveParamModuleSelectDataResponse paramModuleResponse = JsonConvert.DeserializeObject<SaveParamModuleSelectDataResponse>(responseData);
+                if (paramModuleResponse.response != null && paramModuleResponse.response.Count() != 0)
+                {
+                    foreach (var list in paramModuleResponse.response)
+                    {
+                        selectDataList.Add(new ParamDataSelectionData(list.sourceType, Utils.base64StringDecoding(list.sourceName), list.paramKey, list.julianStartAt, list.julianEndAt, list.dataCount, list.sourceSeq, list.useTime, list.seq, list.sourceType == "parammodule" ? 0 : 1, list.paramSeq));
+                    }
+                }
+                this.gridControl1.DataSource = selectDataList;
+
+                //MessageBox.Show(responseData);
+            }
+        }
+        public void SaveChangePlotFromEQ(string paramModuleSeq)
+        {
+            plotControl.SetSelectDataSource(paramModuleSeq);
         }
     }
 }

@@ -42,16 +42,21 @@ namespace DynaRAP.Data
     }
     public class SaveParamModuleSelectDataSource
     {
+        public string seq { get; set; }
         public string sourceType { get; set; }
+        public string sourceName { get; set; }
         public string sourceSeq { get; set; }
         public string paramPack { get; set; }
         public string paramSeq { get; set; }
+        public string paramKey { get; set; }
         public string julianStartAt { get; set; }
         public string julianEndAt { get; set; }
         public double offsetStartAt { get; set; }
         public double offsetEndAt { get; set; }
         public string moduleSeq { get; set; }
-        public SaveParamModuleSelectDataSource(string sourceType, string sourceSeq, string paramPack = null, string paramSeq = null, string julianStartAt = null,string julianEndAt= null, double offsetStartAt = 0.0, double offsetEndAt = 0.0)
+        public string dataCount { get; set; }
+        public string useTime { get; set; }
+        public SaveParamModuleSelectDataSource(string sourceType, string sourceSeq, string seq, string paramPack = null, string paramSeq = null, string julianStartAt = null,string julianEndAt= null, double offsetStartAt = 0.0, double offsetEndAt = 0.0)
         {
             this.sourceType = sourceType;
             this.sourceSeq = sourceSeq;
@@ -61,6 +66,10 @@ namespace DynaRAP.Data
             this.julianEndAt = julianEndAt;
             this.offsetStartAt = offsetStartAt;
             this.offsetEndAt = offsetEndAt;
+            this.seq = seq;
+        }
+        public SaveParamModuleSelectDataSource()
+        {
         }
     }
     public class SearchParamModuleResponse //parts
@@ -96,18 +105,23 @@ namespace DynaRAP.Data
         public string moduleName { get; set; }
         public string copyFromSeq { get; set; }
         public bool referenced { get; set; }
-        
+        public string dataCount { get; set; }
+
+
         public List<Equation> equations { get; set; }
         public CreatedAt createdAt { get; set; }
         public List<SearchParams> @params { get; set; }
+        public string useTime { get; set; }
     }
     public class SearchParams
-    {
+    { 
         public string seq { get; set; }
-        public string blockMetaSeq { get; set; }
-        public int paramNo { get; set; }
+        public string presetPack { get; set; }
+        public string presetSeq { get; set; }
         public string paramPack { get; set; }
         public string paramSeq { get; set; }
+        public string blockMetaSeq { get; set; }
+        public int paramNo { get; set; }
         public int unionParamSeq { get; set; }
         public string paramKey { get; set; }
         public string adamsKey { get; set; }
@@ -124,12 +138,27 @@ namespace DynaRAP.Data
         public Extras extras { get; set; }
         public string tags { get; set; }
         public int referenceSeq { get; set; }
-        public string presetPack { get; set; }
-        public string presetSeq { get; set; }
         public PropInfo propInfo { get; set; }
         public string dllSeq { get; set; }
         public string paramName { get; set; }
         public string paramType { get; set; }
+        public PartInfos paramInfo { get; set; }
+    }
+
+    public class PartInfos
+    {
+        public string seq { get; set; }
+        public string paramPack { get; set; }
+        public string propSeq { get; set; }
+        public string paramKey { get; set; }
+        public string adamsKey { get; set; }
+        public string zaeroKey { get; set; }
+        public string grtKey { get; set; }
+        public string fltpKey { get; set; }
+        public string fltsKey { get; set; }
+        public string partInfo { get; set; }
+        public string partInfoSub { get; set; }
+        public string registerUid { get; set; }
     }
 
     public class Equation

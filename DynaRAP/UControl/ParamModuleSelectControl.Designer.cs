@@ -83,7 +83,7 @@
             this.repositoryItemComboBox1,
             this.repositoryItemComboBox2,
             this.repositoryItemImageComboBox1});
-            this.gridControl1.Size = new System.Drawing.Size(750, 367);
+            this.gridControl1.Size = new System.Drawing.Size(973, 367);
             this.gridControl1.TabIndex = 43;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
@@ -236,7 +236,7 @@
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Plus)});
             this.edtTag.Size = new System.Drawing.Size(263, 22);
             this.edtTag.TabIndex = 47;
-            this.edtTag.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.removeTag_ButtonClick);
+            this.edtTag.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.edtTag_ButtonClick);
             this.edtTag.KeyUp += new System.Windows.Forms.KeyEventHandler(this.edtTag_KeyUp);
             // 
             // panelTag
@@ -272,7 +272,7 @@
             this.Controls.Add(this.gridControl1);
             this.Controls.Add(this.labelControl2);
             this.Name = "ParamModuleSelectControl";
-            this.Size = new System.Drawing.Size(770, 694);
+            this.Size = new System.Drawing.Size(991, 694);
             this.Load += new System.EventHandler(this.ParamDataSelectControl_Load);
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();

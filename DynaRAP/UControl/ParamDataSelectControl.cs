@@ -8,6 +8,7 @@ using DevExpress.XtraGrid.Columns;
 using DevExpress.XtraGrid.Views.Grid;
 using DynaRAP.Data;
 using DynaRAP.UTIL;
+using log4net.Config;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -28,10 +29,11 @@ namespace DynaRAP.UControl
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private List<ParamDataSelectionData> paramDataList = null;
-        private List<ParamDataSelectionData> selectParamDataList = null;
+        private List<ParamDataSelectionData> selectParamDataList = new List<ParamDataSelectionData>();
         private Dictionary<string, RepositoryItemComboBox> comboDic = null;
         private Dictionary<string, RepositoryItemComboBox> selectComboDic = null;
-        private Dictionary<string, List<GridParam>> gridPramDic = new Dictionary<string, List<GridParam>>();
+        private Dictionary<string, List<GridParam>> gridPramDic = null;
+        private Dictionary<string, List<GridParam>> gridSelectPramDic = null;
         private string paramModuleSeq = null;
         private List<double> chartData = null;
         ChartControl chartControl = null;
@@ -39,10 +41,13 @@ namespace DynaRAP.UControl
         DateTime endTime = DateTime.Now;
         DataTable dt = null;
         DockPanel panelChart = null;
+        ParameterModuleControl parameterModuleControl = null;
 
-        public ParamDataSelectControl()
+        public ParamDataSelectControl(ParameterModuleControl parameterModuleControl)
         {
+            this.parameterModuleControl = parameterModuleControl;
             InitializeComponent();
+            XmlConfigurator.Configure(new FileInfo("log4net.xml"));
         }
 
         private void ParamDataSelectControl_Load(object sender, EventArgs e)
@@ -53,9 +58,9 @@ namespace DynaRAP.UControl
             comboBoxEdit1.Properties.Items.Add("DLL");
             comboBoxEdit1.Properties.Items.Add("PARAMMODULE");
 
-            selectParamDataList = new List<ParamDataSelectionData>();
+         
             selectComboDic = new Dictionary<string, RepositoryItemComboBox>();
-
+            gridSelectPramDic = new Dictionary<string, List<GridParam>>();
             InitializeGridControl1();
             InitializeGridControl2();
         }
@@ -93,25 +98,11 @@ namespace DynaRAP.UControl
             {
                 GridView view = sender as GridView;
 
-                if (e.Column.FieldName == "ParamsCombo")
+                if (e.Column.FieldName == "paramKey")
                 {
-                   
                     ParamDataSelectionData paramData = (ParamDataSelectionData)gridView1.GetFocusedRow();
-                    this.gridColumn3.ColumnEdit = comboDic[paramData.SourceSeq];
                     e.RepositoryItem = comboDic[paramData.SourceSeq];
-
-                    //방법2
-                    //RepositoryItemLookUpEdit riLookup1 = new RepositoryItemLookUpEdit();
-
-                    //riLookup1.DisplayMember = "paramKey";
-
-                    //riLookup1.ValueMember = "paramKey";
-
-                    //riLookup1.DataSource = gridPramDic[paramData.SourceSeq];
-
-                    //e.RepositoryItem = riLookup1;
                 }
-
             };
         }
         private void InitializeGridControl2()
@@ -162,13 +153,15 @@ namespace DynaRAP.UControl
 
             gridView2.CustomRowCellEditForEditing += (sender, e) =>
             {
-
                 GridView view = sender as GridView;
 
-                if (e.Column.FieldName == "ParamsCombo")
+                if (e.Column.FieldName == "paramKey")
                 {
                     ParamDataSelectionData paramData = (ParamDataSelectionData)gridView2.GetFocusedRow();
-                    e.RepositoryItem = selectComboDic[paramData.SourceSeq];
+                    if (selectComboDic.ContainsKey(paramData.SourceSeq))
+                    {
+                        e.RepositoryItem = selectComboDic[paramData.SourceSeq];
+                    }
                 }
             };
         }
@@ -181,7 +174,6 @@ namespace DynaRAP.UControl
                 return;
             }
             ParamDataSelectionData selectData = (ParamDataSelectionData)gridView1.GetFocusedRow();
-            //selectParamDataList.Find(selectData)
             if (selectParamDataList.FindIndex(x => x.SourceSeq == selectData.SourceSeq) != -1)
             {
                 MessageBox.Show("이미 추가된 데이터 입니다.");
@@ -189,41 +181,58 @@ namespace DynaRAP.UControl
             else 
             {
                 selectParamDataList.Add(selectData);
-
-                //RepositoryItemComboBox repositoryItemComboBox = new RepositoryItemComboBox();
-                //foreach (var parameter in selectData.Parameter)
-                //{
-                //    repositoryItemComboBox.Items.Add(parameter.paramKey);
-                //}
-                //selectComboDic.Add(selectData.SourceSeq, repositoryItemComboBox);
+                if (selectData.DataType == "part" || selectData.DataType == "shortblock")
+                {
+                    selectComboDic.Add(selectData.SourceSeq, comboDic[selectData.SourceSeq]);
+                    gridSelectPramDic.Add(selectData.SourceSeq, gridPramDic[selectData.SourceSeq]);
+                }
                 this.gridControl2.DataSource = selectParamDataList;
                 gridView2.RefreshData();
-            }//this.gridView
-           
-            //     (ListParamModule)gridView1.GetFocusedRow()
-            ////gridView2.DeleteRow(gridView2.FocusedRowHandle);
-            ////lblSplitCount.Text = string.Format(Properties.Resources.StringSplitCount, intervalList.Count);
-            //MessageBox.Show("test");
+            }
         }
 
         private void RepositoryItemImageComboBox2_Click(object sender, EventArgs e)
         {
-            selectParamDataList.Remove((ParamDataSelectionData)gridView2.GetFocusedRow());
+            ParamDataSelectionData paramData = (ParamDataSelectionData)gridView2.GetFocusedRow();
+            selectParamDataList.Remove(paramData);
+            if (paramData.DataType == "part" || paramData.DataType == "shortblock")
+            {
+                selectComboDic.Remove(paramData.SourceSeq);
+                gridSelectPramDic.Remove(paramData.SourceSeq);
+            }
             this.gridControl2.DataSource = selectParamDataList;
             //gridView2.DeleteRow(gridView2.FocusedRowHandle);
             gridView2.RefreshData();
         }
         private void RepositoryItemImageComboBox3_Click(object sender, EventArgs e)
         {
-            AddChartData("Shear RH Wing BL3405");
+            SetDataTableValue();
+            //AddChartData("Shear RH Wing BL3405");
+            //dt = GetChartValues(keyValue, GetPartInfo("9c98259720fbac084d0e4ceb28fc0ec822138353257f3a986f77961aedf67ded"));
         }
 
-        //RepositoryItemComboBox UserCombo = new RepositoryItemComboBox();
-        //UserCombo.Items.Add("1");
-        //    UserCombo.Items.Add("2");
-            
-        //    UserCombo.AllowDropDownWhenReadOnly = DevExpress.Utils.DefaultBoolean.True;
-        //    gridView1.Columns["Id"].ColumnEdit = UserCombo;
+        private void SetDataTableValue()
+        {
+            ParamDataSelectionData paramDataSelection = (ParamDataSelectionData)gridView2.GetFocusedRow();
+            if ((paramDataSelection.paramKey == null || paramDataSelection.paramKey == ""))
+            {
+                MessageBox.Show("파라미터를 선택 후 보기를 눌러주세요.");
+                return;
+            }
+            string sourceSeq = paramDataSelection.SourceSeq;
+            string paramSeq = null;
+            string paramKey = paramDataSelection.paramKey;
+            if (gridSelectPramDic.ContainsKey(sourceSeq))
+            {
+                paramSeq = gridSelectPramDic[sourceSeq].Find(x => x.paramKey == paramKey).seq;
+            }else
+            {
+                paramSeq = paramDataSelection.paramSeq;
+            }
+            dt = GetChartValues(paramKey, GetPartInfo(sourceSeq, paramSeq, paramDataSelection.DataType));
+            AddChartData(paramKey);
+
+        }
         private void edtSearch_Click(object sender, ButtonPressedEventArgs e)
         {
             if (comboBoxEdit1.Text.Equals("") || edtSearch.Text.Equals(""))
@@ -244,6 +253,7 @@ namespace DynaRAP.UControl
                 {
                     SearchParamModuleResponse paramModuleResponse = JsonConvert.DeserializeObject<SearchParamModuleResponse>(responseData);
                     comboDic = new Dictionary<string, RepositoryItemComboBox>();
+                    gridPramDic = new Dictionary<string, List<GridParam>>();
                     paramDataList = new List<ParamDataSelectionData>();
                     switch (comboBoxEdit1.Text)
                     {
@@ -255,15 +265,13 @@ namespace DynaRAP.UControl
                                 DateTime? endTime = null;
                                 RepositoryItemComboBox repositoryItemComboBox = new RepositoryItemComboBox();
                                 repositoryItemComboBox.SelectedIndexChanged += RepositoryItemComboBox_SelectedIndexChanged;
-                                repositoryItemComboBox.ReadOnly = false;
-                                repositoryItemComboBox.ReadOnly = false;
                                 repositoryItemComboBox.AllowDropDownWhenReadOnly = DefaultBoolean.True;
                                 repositoryItemComboBox.TextEditStyle = TextEditStyles.DisableTextEditor;
                                 foreach (var parameter in list.@params)
                                 {
                                     GridParam param = new GridParam();
                                     param.seq = parameter.seq;
-                                    param.paramKey = parameter.paramKey;
+                                    param.paramKey = parameter.paramInfo.paramKey;
                                     paramList.Add(param);
                                     repositoryItemComboBox.Items.Add(param.paramKey);
                                 }
@@ -279,7 +287,9 @@ namespace DynaRAP.UControl
                                     endTime = Utils.GetDateFromJulian(list.julianEndAt);
                                 }
                                 //paramDataList.Add(new ParamDataSelectionData("part", Utils.base64StringDecoding(list.partName), string.Format("{0:yyyy-MM-dd hh:mm:ss.ffffff}", startTime), string.Format("{0:yyyy-MM-dd hh:mm:ss.ffffff}", endTime) , "",list.seq,1));
-                                paramDataList.Add(new ParamDataSelectionData("part", Utils.base64StringDecoding(list.partName), list.julianStartAt, list.julianEndAt, "",list.seq,1));
+                                //paramDataList.Add(new ParamDataSelectionData("part", Utils.base64StringDecoding(list.partName), list.julianStartAt, list.julianEndAt, "",list.seq,1));
+                                paramDataList.Add(new ParamDataSelectionData("part", Utils.base64StringDecoding(list.partName), list.useTime == "julian"? list.julianStartAt: list.offsetStartAt.ToString(),
+                                    list.useTime == "julian" ? list.julianEndAt : list.offsetEndAt.ToString(),  list.dataCount ,list.seq,1,list.useTime,list.julianStartAt,list.julianEndAt,list.offsetStartAt.ToString(),list.offsetEndAt.ToString()));
                             }
                             break;
                         case "SHORTBLOCK":
@@ -289,6 +299,8 @@ namespace DynaRAP.UControl
                                 DateTime? startTime = null;
                                 DateTime? endTime = null;
                                 RepositoryItemComboBox repositoryItemComboBox = new RepositoryItemComboBox();
+                                repositoryItemComboBox.SelectedIndexChanged += RepositoryItemComboBox_SelectedIndexChanged;
+                                repositoryItemComboBox.AllowDropDownWhenReadOnly = DefaultBoolean.True;
                                 repositoryItemComboBox.TextEditStyle = TextEditStyles.DisableTextEditor;
                                 foreach (var parameter in list.@params)
                                 {
@@ -296,8 +308,9 @@ namespace DynaRAP.UControl
                                     param.seq = parameter.seq;
                                     param.paramKey = parameter.paramKey;
                                     paramList.Add(param);
-                                    repositoryItemComboBox1.Items.Add(param.paramKey);
+                                    repositoryItemComboBox.Items.Add(param.paramKey);
                                 }
+                                gridPramDic.Add(list.seq, paramList);
                                 comboDic.Add(list.seq, repositoryItemComboBox);
 
                                 if (list.julianStartAt != "")
@@ -309,7 +322,7 @@ namespace DynaRAP.UControl
                                     endTime = Utils.GetDateFromJulian(list.julianEndAt);
                                 }
                                 //paramDataList.Add(new ParamDataSelectionData("shortblock", Utils.base64StringDecoding(list.blockName), string.Format("{0:yyyy-MM-dd hh:mm:ss.ffffff}", startTime), string.Format("{0:yyyy-MM-dd hh:mm:ss.ffffff}", endTime), "", list.seq,1));
-                                paramDataList.Add(new ParamDataSelectionData("shortblock", Utils.base64StringDecoding(list.blockName), list.julianStartAt, list.julianEndAt, "", list.seq,1));
+                                paramDataList.Add(new ParamDataSelectionData("shortblock", Utils.base64StringDecoding(list.blockName), list.julianStartAt, list.julianEndAt, list.dataCount, list.seq,1, list.partSeq));
                             }
                             break;
                         case "DLL":
@@ -353,27 +366,53 @@ namespace DynaRAP.UControl
 
         private void btnListSave_Click(object sender, EventArgs e)
         {
+
             if (paramModuleSeq == null)
             {
                 MessageBox.Show("파라미터모듈을 먼저 선택 후 추가해주세요.");
                 return;
             }
+            MessageBox.Show("선택 데이터에 새로운 데이터 추가, 삭제, 저장시에는 수식, PLOT을 재설정 해주어야 합니다.");
+            SaveSelectData("save");
+        }
+
+        private void SaveSelectData(string type)
+        {
             SaveParamModuleSelectDataRequest requestParam = new SaveParamModuleSelectDataRequest();
             requestParam.sources = new List<SaveParamModuleSelectDataSource>();
+
             requestParam.command = "save-source";
             requestParam.moduleSeq = paramModuleSeq;
             List<ParamDataSelectionData> selectDataList = (List<ParamDataSelectionData>)this.gridControl2.DataSource;
-            foreach(var list in selectDataList)
-            {   
+
+            foreach (var list in selectDataList)
+            {
                 switch (list.DataType)
                 {
+                    case "part":
+                        if(list.useTime == "julian")
+                        {
+                            requestParam.sources.Add(new SaveParamModuleSelectDataSource(list.DataType, list.SourceSeq, list.Seq, list.paramSeq, list.paramSeq, list.SelectionStart, list.SelectionEnd, list.offsetStartAt== null? 0.0: double.Parse(list.offsetStartAt), list.offsetEndAt == null ? 0.0 : double.Parse(list.offsetEndAt)));
+                        }
+                        else
+                        {
+                            requestParam.sources.Add(new SaveParamModuleSelectDataSource(list.DataType, list.SourceSeq, list.Seq, list.paramSeq, list.paramSeq, list.julianStartAt, list.julianEndAt, list.SelectionStart ==null ? 0.0 :  double.Parse(list.SelectionStart), list.SelectionEnd == null ? 0.0 : double.Parse(list.SelectionEnd)));
+                        }
+                        break;
+                    case "shortblock":
+                        requestParam.sources.Add(new SaveParamModuleSelectDataSource(list.DataType, list.SourceSeq, list.Seq,list.paramSeq, list.paramSeq, list.SelectionStart, list.SelectionEnd));
+                        break;
                     case "parammodule":
-                        requestParam.sources.Add(new SaveParamModuleSelectDataSource(list.DataType, list.SourceSeq));
+                        requestParam.sources.Add(new SaveParamModuleSelectDataSource(list.DataType, list.SourceSeq , list.Seq));
                         break;
                     case "dll":
-                        requestParam.sources.Add(new SaveParamModuleSelectDataSource(list.DataType, list.SourceSeq));
+                        requestParam.sources.Add(new SaveParamModuleSelectDataSource(list.DataType, list.SourceSeq, list.Seq));
                         break;
                 }
+            }
+            if (selectDataList.Count == 0)
+            {
+                requestParam.sources.Add(new SaveParamModuleSelectDataSource());
             }
             var json = JsonConvert.SerializeObject(requestParam);
 
@@ -386,15 +425,85 @@ namespace DynaRAP.UControl
 
             string responseData = Utils.GetPostData(ConfigurationManager.AppSettings["UrlParamModule"], json);
             if (responseData != null)
-            {;
-                MessageBox.Show(responseData);
+            {
+                JsonData result = JsonConvert.DeserializeObject<JsonData>(responseData);
+                if (result.code == 200)
+                {
+                    MessageBox.Show(type=="save"? "저장 성공": "전체삭제 성공");
+                    GetSelectDataList(paramModuleSeq);
+                }
+                else
+                {
+                    MessageBox.Show(type == "save" ? "저장 실패" : "전체삭제 실패");
+                }
             }
 
         }
 
+        public bool SelectDataSaveRequest()
+        {
+            SaveParamModuleSelectDataRequest requestParam = new SaveParamModuleSelectDataRequest();
+            requestParam.sources = new List<SaveParamModuleSelectDataSource>();
+
+            requestParam.command = "save-source";
+            requestParam.moduleSeq = paramModuleSeq;
+            List<ParamDataSelectionData> selectDataList = (List<ParamDataSelectionData>)this.gridControl2.DataSource;
+
+            foreach (var list in selectDataList)
+            {
+                switch (list.DataType)
+                {
+                    case "part":
+                    case "shortblock":
+                        requestParam.sources.Add(new SaveParamModuleSelectDataSource(list.DataType, list.SourceSeq,list.Seq, list.paramSeq, list.paramSeq, list.SelectionStart, list.SelectionEnd));
+                        break;
+                    case "parammodule":
+                        requestParam.sources.Add(new SaveParamModuleSelectDataSource(list.DataType, list.SourceSeq, list.Seq));
+                        break;
+                    case "dll":
+                        requestParam.sources.Add(new SaveParamModuleSelectDataSource(list.DataType, list.SourceSeq, list.Seq));
+                        break;
+                }
+            }
+            if (selectDataList.Count == 0)
+            {
+                requestParam.sources.Add(new SaveParamModuleSelectDataSource());
+            }
+            var json = JsonConvert.SerializeObject(requestParam);
+
+            string responseData = Utils.GetPostData(ConfigurationManager.AppSettings["UrlParamModule"], json);
+            if (responseData != null)
+            {
+                JsonData result = JsonConvert.DeserializeObject<JsonData>(responseData);
+                if (result.code == 200)
+                {
+                    selectComboDic = new Dictionary<string, RepositoryItemComboBox>();
+                    gridSelectPramDic = new Dictionary<string, List<GridParam>>();
+                    selectParamDataList = new List<ParamDataSelectionData>();
+                    this.gridControl2.DataSource = selectParamDataList;
+                    this.gridView2.RefreshData();
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return false;
+
+        }
         private void btnDelAll_Click(object sender, EventArgs e)
         {
-            AddChartData("Shear RH Wing BL3405");
+            if (selectParamDataList.Count() != 0 && MessageBox.Show("선택된 데이터가 전체 삭제됩니다. 삭제하시겠습니까?", "전체삭제", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                selectParamDataList.Clear();
+                selectComboDic.Clear();
+                gridSelectPramDic.Clear();
+                this.gridControl2.DataSource = selectParamDataList;
+                //gridView2.DeleteRow(gridView2.FocusedRowHandle);
+                gridView2.RefreshData();
+                SaveSelectData("deleteAll");
+            }
         }
 
         private void RepositoryItemComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -406,14 +515,21 @@ namespace DynaRAP.UControl
             var combo = sender as ComboBoxEdit;
             if (combo.SelectedIndex != -1)
             {
-                string paramKey = combo.SelectedItem as string;
-                var test = comboDic;
-                //gridView1.Columns.
-                gridView1.SetRowCellValue(gridView1.FocusedRowHandle, "DataCnt", paramKey);
-                gridView1.SetRowCellValue(gridView1.FocusedRowHandle, "ParamsCombo", paramKey);
-                //gridView1.RefreshData();
+                ParamDataSelectionData paramDataSelection = (ParamDataSelectionData)gridView1.GetFocusedRow();
+                string paramSeq = gridPramDic[paramDataSelection.SourceSeq].Find(x => x.paramKey == combo.SelectedItem.ToString()).seq;
+                gridView1.SetRowCellValue(gridView1.FocusedRowHandle, "paramSeq", paramSeq);
             }
-            //gridView1.Columns["Parameter"].ColumnEdit = combo;
+        }
+
+        private void RepositoryItemComboBox_SelectedIndexChanged1(object sender, EventArgs e)
+        {
+            var combo = sender as ComboBoxEdit;
+            if (combo.SelectedIndex != -1)
+            {
+                ParamDataSelectionData paramDataSelection = (ParamDataSelectionData)gridView2.GetFocusedRow();
+                string paramSeq = gridSelectPramDic[paramDataSelection.SourceSeq].Find(x => x.paramKey == combo.SelectedItem.ToString()).seq;
+                gridView2.SetRowCellValue(gridView2.FocusedRowHandle, "paramSeq", paramSeq);
+            }
         }
 
         public void SetSelectDataSource(string paramModuleSeq)
@@ -432,13 +548,15 @@ namespace DynaRAP.UControl
             string responseData = Utils.GetPostData(ConfigurationManager.AppSettings["UrlParamModule"], sendData);
             if (responseData != null)
             {
+                selectComboDic = new Dictionary<string, RepositoryItemComboBox>();
                 selectParamDataList = new List<ParamDataSelectionData>();
+                gridSelectPramDic = new Dictionary<string, List<GridParam>>();
                 SaveParamModuleSelectDataResponse paramModuleResponse = JsonConvert.DeserializeObject<SaveParamModuleSelectDataResponse>(responseData); 
                 if(paramModuleResponse.response != null && paramModuleResponse.response.Count() != 0)
                 {
                     foreach (var list in paramModuleResponse.response)
                     {
-                        selectParamDataList.Add(new ParamDataSelectionData(list.sourceType, list.sourceType, list.julianStartAt, list.julianEndAt, "", list.sourceSeq, 1));
+                        selectParamDataList.Add(new ParamDataSelectionData(list.sourceType, Utils.base64StringDecoding(list.sourceName), list.paramKey, list.julianStartAt, list.julianEndAt, list.dataCount, list.sourceSeq,list.useTime, list.seq, list.sourceType == "parammodule" ? 0 : 1, list.paramSeq));
                     }
                 }
                 this.gridControl2.DataSource = selectParamDataList;
@@ -447,19 +565,39 @@ namespace DynaRAP.UControl
             }
         }
         
-        private ResponsePartInfo GetPartInfo(string partSeq)
+        private ResponsePartInfo GetPartInfo(string partSeq,string paramSeq, string type)
         {
             try
             {
-                string url = ConfigurationManager.AppSettings["UrlPart"];
+                string url = string.Empty;
+                string sendData = string.Empty;
 
-                string sendData = string.Format(@"
-            {{
-            ""command"":""row-data"",
-            ""partSeq"":""{0}"",
-            ""julianRange"":["""", """"]
-            }}"
-                , partSeq);
+                if(type == "part")
+                {
+                    url = ConfigurationManager.AppSettings["UrlPart"];
+                    sendData = string.Format(@"
+                    {{
+                    ""command"":""row-data"",
+                    ""partSeq"":""{0}"",
+                    ""julianRange"":["""", """"],
+                    ""paramSet"": [""{1}""]
+                    }}"
+                        , partSeq, paramSeq);
+                }
+                else
+                {
+                    url = ConfigurationManager.AppSettings["UrlShortBlock"];
+                    sendData = string.Format(@"
+                    {{
+                    ""command"":""row-data"",
+                    ""blockSeq"":""{0}"",
+                    ""julianRange"":["""", """"],
+                    ""paramSet"": [""{1}""]
+                    }}"
+                        , partSeq, paramSeq);
+                }
+             
+
 
                 log.Info("url : " + url);
                 log.Info(sendData);
@@ -516,7 +654,7 @@ namespace DynaRAP.UControl
         }
 
 
-        private void AddChartData(string strKey)
+        private void AddChartData(string keyValue)
         {
             MainForm mainForm = this.ParentForm as MainForm;
 
@@ -533,7 +671,6 @@ namespace DynaRAP.UControl
             Series series = new Series("Series1", ViewType.Line);
             chartControl.Series.Add(series);
 
-            dt = GetChartValues(strKey, GetPartInfo("9c98259720fbac084d0e4ceb28fc0ec822138353257f3a986f77961aedf67ded"));
             series.DataSource = dt;
 
             series.ArgumentScaleType = ScaleType.DateTime;
@@ -573,16 +710,16 @@ namespace DynaRAP.UControl
                 panelChart = mainForm.DockManager1.AddPanel(DockingStyle.Float);
                 panelChart.FloatLocation = new Point(500, 100);
                 panelChart.FloatSize = new Size(1058, 528);
-                panelChart.Name = strKey;
-                panelChart.Text = strKey;
+                panelChart.Name = keyValue;
+                panelChart.Text = keyValue;
                 chartControl.Dock = DockStyle.Fill;
                 panelChart.Controls.Add(chartControl);
                 //panelChart.ClosedPanel += PanelChart_ClosedPanel;
             }
             else
             {
-                panelChart.Name = strKey;
-                panelChart.Text = strKey;
+                panelChart.Name = keyValue;
+                panelChart.Text = keyValue;
                 //panelChart.Controls.Clear();
                 chartControl.Dock = DockStyle.Fill;
                 panelChart.Controls.Add(chartControl);
@@ -607,7 +744,7 @@ namespace DynaRAP.UControl
 
             for (i = 0; i < partInfo.paramSet.Count; i++)
             {
-                if (partInfo.paramSet[i].paramKey.Equals(strParam))
+                if (partInfo.paramSet[i].paramKey.Equals(strParam) || partInfo.paramSet[i].paramPack.Equals(strParam))
                 {
                     int j = 0;
                     foreach (List<double> dataArr in partInfo.data)
@@ -637,6 +774,24 @@ namespace DynaRAP.UControl
             Console.WriteLine(string.Format("StartTime : {0}, EndTime : {1}", string.Format("{0:yyyy-MM-dd hh:mm:ss.ffffff}", startTime), string.Format("{0:yyyy-MM-dd hh:mm:ss.ffffff}", endTime)));
 
             return table;
+        }
+        private DataTable GetShortBlockData(DateTime sTime, DateTime eTime)
+        {
+            //string t1 = Utils.GetJulianFromDate(sTime);
+            //string t2 = Utils.GetJulianFromDate(eTime);
+
+            DataRow[] result = this.dt.Select(String.Format("Argument >= #{0}# AND Argument <= #{1}#", sTime.ToString("yyyy-MM-dd HH:mm:ss.ffffff"), eTime.ToString("yyyy-MM-dd HH:mm:ss.ffffff")));
+
+            DataTable table = new DataTable("Table1");
+            table.Columns.Add("Argument", typeof(DateTime));
+            table.Columns.Add("Value", typeof(double));
+
+            foreach (DataRow row in result)
+            {
+                table.ImportRow(row);
+            }
+            return table;
+
         }
     }
 }

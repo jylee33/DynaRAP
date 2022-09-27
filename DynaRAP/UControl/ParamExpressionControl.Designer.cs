@@ -30,6 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ParamExpressionControl));
+            this.imageCollection1 = new DevExpress.Utils.ImageCollection(this.components);
+            this.imageCollection2 = new DevExpress.Utils.ImageCollection(this.components);
             this.labelControl1 = new DevExpress.XtraEditors.LabelControl();
             this.gridControl1 = new DevExpress.XtraGrid.GridControl();
             this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
@@ -39,20 +41,37 @@
             this.gridColumn4 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridColumn5 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridColumn6 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.repositoryItemImageComboBox1 = new DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox();
             this.gridColumn7 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.repositoryItemImageComboBox2 = new DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox();
+            this.gridColumn8 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.btnSaveExpression = new DevExpress.XtraEditors.SimpleButton();
             this.btnInitAll = new DevExpress.XtraEditors.SimpleButton();
-            this.repositoryItemImageComboBox1 = new DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox();
-            this.repositoryItemImageComboBox2 = new DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox();
-            this.imageCollection1 = new DevExpress.Utils.ImageCollection(this.components);
-            this.imageCollection2 = new DevExpress.Utils.ImageCollection(this.components);
+            this.lblTag = new DevExpress.XtraEditors.LabelControl();
+            this.edtTag = new DevExpress.XtraEditors.ButtonEdit();
+            this.panelTag = new System.Windows.Forms.FlowLayoutPanel();
+            this.btnAddEQ = new DevExpress.XtraEditors.SimpleButton();
+            this.gridColumn9 = new DevExpress.XtraGrid.Columns.GridColumn();
+            ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.imageCollection2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemImageComboBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemImageComboBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.imageCollection2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.edtTag.Properties)).BeginInit();
             this.SuspendLayout();
+            // 
+            // imageCollection1
+            // 
+            this.imageCollection1.ImageStream = ((DevExpress.Utils.ImageCollectionStreamer)(resources.GetObject("imageCollection1.ImageStream")));
+            this.imageCollection1.Images.SetKeyName(0, "none.png");
+            this.imageCollection1.Images.SetKeyName(1, "delete.png");
+            // 
+            // imageCollection2
+            // 
+            this.imageCollection2.ImageStream = ((DevExpress.Utils.ImageCollectionStreamer)(resources.GetObject("imageCollection2.ImageStream")));
+            this.imageCollection2.Images.SetKeyName(0, "none.png");
+            this.imageCollection2.Images.SetKeyName(1, "view.png");
             // 
             // labelControl1
             // 
@@ -70,7 +89,7 @@
             this.gridControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemImageComboBox1,
             this.repositoryItemImageComboBox2});
-            this.gridControl1.Size = new System.Drawing.Size(750, 524);
+            this.gridControl1.Size = new System.Drawing.Size(973, 445);
             this.gridControl1.TabIndex = 44;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
@@ -84,14 +103,18 @@
             this.gridColumn4,
             this.gridColumn5,
             this.gridColumn6,
-            this.gridColumn7});
+            this.gridColumn7,
+            this.gridColumn8,
+            this.gridColumn9});
             this.gridView1.GridControl = this.gridControl1;
             this.gridView1.Name = "gridView1";
+            this.gridView1.OptionsBehavior.EditorShowMode = DevExpress.Utils.EditorShowMode.MouseUp;
+            this.gridView1.RowCellClick += new DevExpress.XtraGrid.Views.Grid.RowCellClickEventHandler(this.gridView1_RowCellClick);
             // 
             // gridColumn1
             // 
             this.gridColumn1.Caption = "수식이름";
-            this.gridColumn1.FieldName = "ExpressionName";
+            this.gridColumn1.FieldName = "eqName";
             this.gridColumn1.Name = "gridColumn1";
             this.gridColumn1.Visible = true;
             this.gridColumn1.VisibleIndex = 0;
@@ -99,7 +122,7 @@
             // gridColumn2
             // 
             this.gridColumn2.Caption = "수식";
-            this.gridColumn2.FieldName = "Expression";
+            this.gridColumn2.FieldName = "equation";
             this.gridColumn2.Name = "gridColumn2";
             this.gridColumn2.Visible = true;
             this.gridColumn2.VisibleIndex = 1;
@@ -137,6 +160,14 @@
             this.gridColumn6.Visible = true;
             this.gridColumn6.VisibleIndex = 5;
             // 
+            // repositoryItemImageComboBox1
+            // 
+            this.repositoryItemImageComboBox1.AutoHeight = false;
+            this.repositoryItemImageComboBox1.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.repositoryItemImageComboBox1.Name = "repositoryItemImageComboBox1";
+            this.repositoryItemImageComboBox1.SmallImages = this.imageCollection1;
+            // 
             // gridColumn7
             // 
             this.gridColumn7.Caption = " ";
@@ -146,32 +177,6 @@
             this.gridColumn7.Visible = true;
             this.gridColumn7.VisibleIndex = 6;
             // 
-            // btnSaveExpression
-            // 
-            this.btnSaveExpression.Location = new System.Drawing.Point(3, 554);
-            this.btnSaveExpression.Name = "btnSaveExpression";
-            this.btnSaveExpression.Size = new System.Drawing.Size(75, 23);
-            this.btnSaveExpression.TabIndex = 45;
-            this.btnSaveExpression.Text = "수식저장";
-            this.btnSaveExpression.Click += new System.EventHandler(this.btnSaveExpression_Click);
-            // 
-            // btnInitAll
-            // 
-            this.btnInitAll.Location = new System.Drawing.Point(84, 554);
-            this.btnInitAll.Name = "btnInitAll";
-            this.btnInitAll.Size = new System.Drawing.Size(75, 23);
-            this.btnInitAll.TabIndex = 45;
-            this.btnInitAll.Text = "전체초기화";
-            this.btnInitAll.Click += new System.EventHandler(this.btnInitAll_Click);
-            // 
-            // repositoryItemImageComboBox1
-            // 
-            this.repositoryItemImageComboBox1.AutoHeight = false;
-            this.repositoryItemImageComboBox1.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.repositoryItemImageComboBox1.Name = "repositoryItemImageComboBox1";
-            this.repositoryItemImageComboBox1.SmallImages = this.imageCollection1;
-            // 
             // repositoryItemImageComboBox2
             // 
             this.repositoryItemImageComboBox2.AutoHeight = false;
@@ -180,35 +185,97 @@
             this.repositoryItemImageComboBox2.Name = "repositoryItemImageComboBox2";
             this.repositoryItemImageComboBox2.SmallImages = this.imageCollection2;
             // 
-            // imageCollection1
+            // gridColumn8
             // 
-            this.imageCollection1.ImageStream = ((DevExpress.Utils.ImageCollectionStreamer)(resources.GetObject("imageCollection1.ImageStream")));
-            this.imageCollection1.Images.SetKeyName(0, "none.png");
-            this.imageCollection1.Images.SetKeyName(1, "delete.png");
+            this.gridColumn8.Caption = "gridColumn8";
+            this.gridColumn8.FieldName = "tags";
+            this.gridColumn8.Name = "gridColumn8";
             // 
-            // imageCollection2
+            // btnSaveExpression
             // 
-            this.imageCollection2.ImageStream = ((DevExpress.Utils.ImageCollectionStreamer)(resources.GetObject("imageCollection2.ImageStream")));
-            this.imageCollection2.Images.SetKeyName(0, "none.png");
-            this.imageCollection2.Images.SetKeyName(1, "view.png");
+            this.btnSaveExpression.Location = new System.Drawing.Point(3, 633);
+            this.btnSaveExpression.Name = "btnSaveExpression";
+            this.btnSaveExpression.Size = new System.Drawing.Size(75, 23);
+            this.btnSaveExpression.TabIndex = 45;
+            this.btnSaveExpression.Text = "수식저장";
+            this.btnSaveExpression.Click += new System.EventHandler(this.btnSaveExpression_Click);
+            // 
+            // btnInitAll
+            // 
+            this.btnInitAll.Location = new System.Drawing.Point(84, 633);
+            this.btnInitAll.Name = "btnInitAll";
+            this.btnInitAll.Size = new System.Drawing.Size(75, 23);
+            this.btnInitAll.TabIndex = 45;
+            this.btnInitAll.Text = "전체초기화";
+            this.btnInitAll.Click += new System.EventHandler(this.btnInitAll_Click);
+            // 
+            // lblTag
+            // 
+            this.lblTag.Appearance.Font = new System.Drawing.Font("Tahoma", 13F, System.Drawing.FontStyle.Bold);
+            this.lblTag.Appearance.Options.UseFont = true;
+            this.lblTag.Location = new System.Drawing.Point(3, 473);
+            this.lblTag.Name = "lblTag";
+            this.lblTag.Size = new System.Drawing.Size(26, 22);
+            this.lblTag.TabIndex = 54;
+            this.lblTag.Text = "태그";
+            // 
+            // edtTag
+            // 
+            this.edtTag.Location = new System.Drawing.Point(3, 503);
+            this.edtTag.Name = "edtTag";
+            this.edtTag.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Plus)});
+            this.edtTag.Size = new System.Drawing.Size(263, 22);
+            this.edtTag.TabIndex = 55;
+            this.edtTag.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.edtTag_ButtonClick);
+            this.edtTag.KeyUp += new System.Windows.Forms.KeyEventHandler(this.edtTag_KeyUp);
+            // 
+            // panelTag
+            // 
+            this.panelTag.AutoScroll = true;
+            this.panelTag.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelTag.Location = new System.Drawing.Point(3, 531);
+            this.panelTag.Name = "panelTag";
+            this.panelTag.Size = new System.Drawing.Size(750, 96);
+            this.panelTag.TabIndex = 56;
+            // 
+            // btnAddEQ
+            // 
+            this.btnAddEQ.Location = new System.Drawing.Point(637, 1);
+            this.btnAddEQ.Name = "btnAddEQ";
+            this.btnAddEQ.Size = new System.Drawing.Size(171, 22);
+            this.btnAddEQ.TabIndex = 57;
+            this.btnAddEQ.Text = "수식추가";
+            this.btnAddEQ.Click += new System.EventHandler(this.btnAddEQ_Click);
+            // 
+            // gridColumn9
+            // 
+            this.gridColumn9.Caption = "gridColumn9";
+            this.gridColumn9.FieldName = "Seq";
+            this.gridColumn9.Name = "gridColumn9";
             // 
             // ParamExpressionControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.btnAddEQ);
+            this.Controls.Add(this.lblTag);
+            this.Controls.Add(this.edtTag);
+            this.Controls.Add(this.panelTag);
             this.Controls.Add(this.btnInitAll);
             this.Controls.Add(this.btnSaveExpression);
             this.Controls.Add(this.gridControl1);
             this.Controls.Add(this.labelControl1);
             this.Name = "ParamExpressionControl";
-            this.Size = new System.Drawing.Size(770, 610);
+            this.Size = new System.Drawing.Size(991, 665);
             this.Load += new System.EventHandler(this.ParamExpressionControl_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.imageCollection2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemImageComboBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemImageComboBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.imageCollection2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.edtTag.Properties)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -228,9 +295,17 @@
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn7;
         private DevExpress.XtraEditors.SimpleButton btnSaveExpression;
         private DevExpress.XtraEditors.SimpleButton btnInitAll;
-        private DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox repositoryItemImageComboBox1;
-        private DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox repositoryItemImageComboBox2;
         private DevExpress.Utils.ImageCollection imageCollection1;
         private DevExpress.Utils.ImageCollection imageCollection2;
+        private DevExpress.XtraEditors.LabelControl lblTag;
+        private DevExpress.XtraEditors.ButtonEdit edtTag;
+        private System.Windows.Forms.FlowLayoutPanel panelTag;
+        private DevExpress.XtraEditors.SimpleButton btnAddEQ;
+        private DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox repositoryItemImageComboBox1;
+        private DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox repositoryItemImageComboBox2;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn8;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn9;
+        //private DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox repositoryItemImageComboBox3;
+        //private DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox repositoryItemImageComboBox1;
     }
 }
