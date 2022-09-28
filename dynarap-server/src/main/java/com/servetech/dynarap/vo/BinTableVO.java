@@ -16,7 +16,7 @@ public class BinTableVO {
 
     private List<BinData> parts;
     private List<BinData> selectedShortBlocks;
-    private List<DataPropVO> dataProps;
+    private Map<String, String> dataProps;
     private List<BinParam> pickUpParams;
 
     @Data
@@ -36,6 +36,8 @@ public class BinTableVO {
         private CryptoField binMetaSeq;
         private String dataFrom;
         private CryptoField refSeq;
+
+        private transient boolean mark;
     }
 
     @Data
@@ -54,6 +56,7 @@ public class BinTableVO {
         private String fltsKey;
 
         private List<BinParamData> userParamTable;
+        private transient boolean mark;
 
         @Data
         public static class BinParamData {
