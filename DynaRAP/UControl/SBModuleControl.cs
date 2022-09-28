@@ -128,6 +128,7 @@ namespace DynaRAP.UControl
             paramList = GetParamList();
 
             InitializeGridControl();
+
         }
 
         private List<ResponseParam> GetParamList()
@@ -1680,5 +1681,8 @@ namespace DynaRAP.UControl
         }
     }
 
+
     
+
+
 }
