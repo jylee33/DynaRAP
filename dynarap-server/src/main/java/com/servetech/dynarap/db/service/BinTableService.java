@@ -46,7 +46,7 @@ public class BinTableService {
             BinTableVO binTable = binTableMapper.selectBinTableMetaBySeq(params);
             binTable.setParts(getBinTableDataList(binTable.getSeq(), "part"));
             binTable.setSelectedShortBlocks(getBinTableDataList(binTable.getSeq(), "shortblock"));
-            binTable.setDataProps(rawService.getDataPropList("bintable", binTable.getSeq()));
+            binTable.setDataProps(rawService.getDataPropListToMap("bintable", binTable.getSeq()));
             binTable.setPickUpParams(getBinTableParamList(binTable.getSeq()));
             if (binTable.getPickUpParams() != null && binTable.getPickUpParams().size() > 0) {
                 for (BinTableVO.BinParam binParam : binTable.getPickUpParams()) {
@@ -316,6 +316,145 @@ public class BinTableService {
 
                 binTable.setMetaName(saveRequest.getMetaName());
                 binTableMapper.updateBinTableMeta(binTable);
+
+                // part
+                if (binTable.getParts() == null) binTable.setParts(new ArrayList<>());
+                for (BinTableVO.BinData partData : binTable.getParts())
+                    partData.setMark(false);
+
+                if (saveRequest.getParts() != null && saveRequest.getParts().size() > 0) {
+                    for (String partSeq : saveRequest.getParts()) {
+                        CryptoField seq = CryptoField.decode(partSeq, 0L);
+                        if (seq == null || seq.isEmpty()) continue;
+
+                        BinTableVO.BinData findPartData = null;
+                        for (BinTableVO.BinData partData : binTable.getParts()) {
+                            if (partData.getRefSeq().equals(seq)) {
+                                findPartData = partData;
+                                findPartData.setMark(true);
+                                break;
+                            }
+                        }
+
+                        if (findPartData == null) {
+                            BinTableVO.BinData binData = new BinTableVO.BinData();
+                            binData.setDataFrom("part");
+                            binData.setBinMetaSeq(binTable.getSeq());
+                            binData.setRefSeq(seq);
+                            insertBinTableData(binData);
+                        }
+                        else {
+                            // update 는 없음.
+                        }
+                    }
+
+                    for (BinTableVO.BinData partData : binTable.getParts()) {
+                        if (partData.isMark() == false)
+                            deleteBinTableData(partData.getSeq());
+                    }
+                }
+
+                // shortblock
+                if (binTable.getSelectedShortBlocks() == null) binTable.setSelectedShortBlocks(new ArrayList<>());
+                for (BinTableVO.BinData blockData : binTable.getSelectedShortBlocks())
+                    blockData.setMark(false);
+
+                if (saveRequest.getSelectedShortBlocks() != null && saveRequest.getSelectedShortBlocks().size() > 0) {
+                    for (String shortBlockSeq : saveRequest.getSelectedShortBlocks()) {
+                        CryptoField seq = CryptoField.decode(shortBlockSeq, 0L);
+                        if (seq == null || seq.isEmpty()) continue;
+
+                        BinTableVO.BinData findBlockData = null;
+                        for (BinTableVO.BinData blockData : binTable.getSelectedShortBlocks()) {
+                            if (blockData.getRefSeq().equals(seq)) {
+                                findBlockData = blockData;
+                                findBlockData.setMark(true);
+                                break;
+                            }
+                        }
+
+                        if (findBlockData == null) {
+                            BinTableVO.BinData binData = new BinTableVO.BinData();
+                            binData.setDataFrom("shortblock");
+                            binData.setBinMetaSeq(binTable.getSeq());
+                            binData.setRefSeq(seq);
+                            insertBinTableData(binData);
+                        }
+                        else {
+                            // update 는 없음.
+                        }
+                    }
+
+                    for (BinTableVO.BinData blockData : binTable.getSelectedShortBlocks()) {
+                        if (blockData.isMark() == false)
+                            deleteBinTableData(blockData.getSeq());
+                    }
+                }
+
+                // dataprop
+                rawService.deleteDataPropByType("bintable", binTable.getSeq());
+                binTable.setDataProps(null);
+
+                if (saveRequest.getDataProps() != null && saveRequest.getDataProps().size() > 0) {
+                    Set<String> propKeys = saveRequest.getDataProps().keySet();
+                    Iterator<String> iterPropKeys = propKeys.iterator();
+                    while (iterPropKeys.hasNext()) {
+                        String propKey = iterPropKeys.next();
+                        String propValue = saveRequest.getDataProps().get(propKey);
+                        DataPropVO dataProp = new DataPropVO();
+                        dataProp.setPropName(new String64(propKey));
+                        dataProp.setPropValue(new String64(propValue));
+                        dataProp.setReferenceType("bintable");
+                        dataProp.setReferenceKey(binTable.getSeq());
+                        dataProp.setUpdatedAt(LongDate.now());
+                        rawService.insertDataProp(dataProp);
+                    }
+                }
+
+                // pickupparams
+                if (binTable.getPickUpParams() == null) binTable.setPickUpParams(new ArrayList<>());
+                for (BinTableVO.BinParam binParam : binTable.getPickUpParams())
+                    binParam.setMark(false);
+
+                if (saveRequest.getPickUpParams() != null && saveRequest.getPickUpParams().size() > 0) {
+                    for (BinTableVO.BinParam binParam : saveRequest.getPickUpParams()) {
+                        BinTableVO.BinParam findParam = null;
+                        for (BinTableVO.BinParam param : binTable.getPickUpParams()) {
+                            if (param.getSeq().equals(binParam.getSeq())) {
+                                findParam = param;
+                                findParam.setMark(true);
+                                break;
+                            }
+                        }
+
+                        if (findParam == null) {
+                            binParam.setBinMetaSeq(binTable.getSeq());
+                            insertBinTableParam(binParam);
+                        }
+
+                        deleteBinTableParamDataByParam(binTable.getSeq(), binParam.getSeq());
+
+                        if (binParam.getUserParamTable() != null && binParam.getUserParamTable().size() > 0) {
+                            for (BinTableVO.BinParam.BinParamData binParamData : binParam.getUserParamTable()) {
+                                binParamData.setBinMetaSeq(binTable.getSeq());
+                                binParamData.setParamSeq(binParam.getSeq());
+                                binParamData.setDataNominal(binParamData.getNominal());
+                                binParamData.setDataMin(binParamData.getMin());
+                                binParamData.setDataMax(binParamData.getMax());
+                                insertBinTableParamData(binParamData);
+                            }
+                        }
+                    }
+
+                    for (BinTableVO.BinParam binParam : binTable.getPickUpParams()) {
+                        if (binParam.isMark() == false) {
+                            deleteBinTableParamDataByParam(binTable.getSeq(), binParam.getSeq());
+                            deleteBinTableParam(binParam.getSeq());
+                        }
+                    }
+                }
+
+                binTable = getBinTableBySeq(binTable.getSeq());
             }
 
             return binTable;
