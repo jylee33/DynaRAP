@@ -153,7 +153,7 @@ public interface BinTableMapper {
     @Select({
             "<script>" +
                     "select * from dynarap_bin_param_data " +
-                    "where binMetaData = #{binMetaData,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "where binMetaSeq = #{binMetaSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
                     "and paramSeq = #{paramSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
                     "order by dataNominal asc " +
                     "</script>"
@@ -165,7 +165,7 @@ public interface BinTableMapper {
                     "insert into dynarap_bin_param_data (" +
                     "binMetaSeq,paramSeq,dataNominal,dataMin,dataMax" +
                     ") values (" +
-                    "#{binMetaData,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField}" +
+                    "#{binMetaSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField}" +
                     ",#{paramSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField}" +
                     ",#{dataNominal}" +
                     ",#{dataMin}" +
