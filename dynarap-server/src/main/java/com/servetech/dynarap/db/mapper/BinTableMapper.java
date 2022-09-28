@@ -51,7 +51,7 @@ public interface BinTableMapper {
 
     @Delete({
             "<script>" +
-                    "delete from dynarap_bin_meta seq = #{seq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "delete from dynarap_bin_meta where seq = #{seq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
                     "</script>"
     })
     void deleteBinTableMeta(Map<String, Object> params) throws Exception;
