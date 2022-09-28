@@ -302,12 +302,12 @@ namespace DynaRAP
             panelBinTable.Controls.Add(binTableCtrl);
             panelBinTable.Hide();
 
-            panelBinSbList.Name = "panelBinSbList";
-            panelBinSbList.Text = "ShortBlockList";
-            BinSelectSBControl binSbListCtrl = new BinSelectSBControl();
-            binSbListCtrl.Dock = DockStyle.Fill;
-            panelBinSbList.Controls.Add(binSbListCtrl);
-            panelBinSbList.Hide();
+            //panelBinSbList.Name = "panelBinSbList";
+            //panelBinSbList.Text = "ShortBlockList";
+            //BinParameterSelectControl binSbListCtrl = new BinParameterSelectControl();
+            //binSbListCtrl.Dock = DockStyle.Fill;
+            //panelBinSbList.Controls.Add(binSbListCtrl);
+            //panelBinSbList.Hide();
 
             panelImportViewCsv.Name = "panelImportViewCsv";
             panelImportViewCsv.Text = "CSV TABLE";

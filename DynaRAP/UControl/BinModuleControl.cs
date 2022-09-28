@@ -5,7 +5,11 @@ using DevExpress.XtraEditors.Controls;
 using DevExpress.XtraEditors.Repository;
 using DevExpress.XtraGrid.Columns;
 using DevExpress.XtraGrid.Views.Grid;
+using DevExpress.XtraTreeList;
+using DevExpress.XtraTreeList.Columns;
+using DevExpress.XtraTreeList.Nodes;
 using DynaRAP.Data;
+using DynaRAP.UTIL;
 using log4net.Config;
 using Newtonsoft.Json;
 using System;
@@ -27,10 +31,14 @@ namespace DynaRAP.UControl
     public partial class BinModuleControl : DevExpress.XtraEditors.XtraUserControl
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-      
+
+        BinTableData binTableResponse = null;
         List<ResponsePreset> presetList = null;
         List<ResponseParam> paramList = null;
         List<PresetParamData> gridList = null;
+        List<BinGridData> binGridData = null;
+        List<ParamDatas> selectedParamDataList = new List<ParamDatas>();
+        string binMetaSeq = null;
 
         public BinModuleControl()
         {
@@ -41,7 +49,6 @@ namespace DynaRAP.UControl
 
         private void BinModuleControl_Load(object sender, EventArgs e)
         {
-            InitializeSBParamComboList();
 
             //DateTime dtNow = DateTime.Now;
             //string strNow = string.Format("{0:yyyy-MM-dd}", dtNow);
@@ -52,12 +59,11 @@ namespace DynaRAP.UControl
             flowLayoutPanel1.HorizontalScroll.Visible = false;
             flowLayoutPanel1.VerticalScroll.Visible = true;
 
-            btnAddParameter.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
-            btnAddParameter.Properties.AllowFocused = false;
-
             paramList = GetParamList();
-           
-            InitializeGridControl();
+
+            InitializeTreeDataList();
+
+            GetBinTableList();
         }
 
         private List<ResponseParam> GetParamList()
@@ -116,138 +122,89 @@ namespace DynaRAP.UControl
             return result.response;
 
         }
-
-        private void InitializeGridControl()
+        private void InitializeTreeDataList()
         {
-            //paramList
-            repositoryItemComboBox1.TextEditStyle = TextEditStyles.DisableTextEditor;
-            repositoryItemComboBox1.SelectedIndexChanged += RepositoryItemComboBox1_SelectedIndexChanged;
-            repositoryItemComboBox1.BeforePopup += RepositoryItemComboBox1_BeforePopup;
-            repositoryItemComboBox1.PopupFormMinSize = new System.Drawing.Size(0, 500);
+            //treeList1.Parent = this;
+            //treeList1.Dock = DockStyle.Fill;
+            treeList1.KeyFieldName = "ID";
+            treeList1.ParentFieldName = "ParentID";
+            treeList1.OptionsBehavior.PopulateServiceColumns = true;
 
-            foreach (ResponseParam param in paramList)
+            treeList1.DataSource = GetTreeList();
+            treeList1.ForceInitialize();
+
+            treeList1.RowHeight = 23;
+            treeList1.OptionsView.ShowColumns = false;
+            treeList1.OptionsView.ShowHorzLines = false;
+            treeList1.OptionsView.ShowVertLines = false;
+            treeList1.OptionsView.ShowIndicator = false;
+            treeList1.OptionsView.ShowTreeLines = DevExpress.Utils.DefaultBoolean.False;
+            treeList1.OptionsView.ShowFilterPanelMode = ShowFilterPanelMode.Never;
+            treeList1.OptionsView.ShowSummaryFooter = false;
+            treeList1.OptionsView.AutoWidth = false;
+
+            treeList1.OptionsFilter.AllowFilterEditor = false;
+
+            //Access the automatically created columns.
+            TreeListColumn colName = treeList1.Columns["TreeName"];
+            TreeListColumn colCheck = treeList1.Columns["Check"];
+
+            //Hide the key columns. An end-user can access them from the Customization Form.
+            treeList1.Columns[treeList1.KeyFieldName].Visible = false;
+            treeList1.Columns[treeList1.ParentFieldName].Visible = false;
+
+            //Make the Project column read-only.
+            colName.OptionsColumn.ReadOnly = true;
+            colCheck.OptionsColumn.ReadOnly = false;
+
+            colName.OptionsColumn.AllowEdit = false;
+
+            //Sort data against the Project column
+            colName.SortIndex = -1;// 0;
+
+            repositoryItemCheckEdit1.CheckBoxOptions.Style = DevExpress.XtraEditors.Controls.CheckBoxStyle.CheckBox;
+            repositoryItemCheckEdit1.EditValueChanged += repositoryItemCheckEdit1_EditValueChanged;
+            //treeList1.OptionsView.ShowCheckBoxes = true; // 제일 앞에 checkBox 붙이는 옵션
+            treeList1.CellValueChanged += treeList1_CellValueChanged;
+
+            //treeList1.ExpandAll();
+
+            //Calculate the optimal column widths after the treelist is shown.
+            this.BeginInvoke(new MethodInvoker(delegate
             {
-                repositoryItemComboBox1.Items.Add(param.paramKey);
-            }
+                treeList1.BestFitColumns();
+            }));
 
-            //gridView1.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
 
-            gridView1.OptionsView.ShowColumnHeaders = true;
-            gridView1.OptionsView.ShowGroupPanel = false;
-            gridView1.OptionsView.ShowIndicator = true;
-            gridView1.IndicatorWidth = 40;
-            gridView1.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.False;
-            gridView1.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.False;
-            gridView1.OptionsView.ColumnAutoWidth = true;
 
-            gridView1.OptionsBehavior.ReadOnly = false;
-            //gridView1.OptionsBehavior.Editable = false;
-
-            gridView1.OptionsSelection.MultiSelectMode = DevExpress.XtraGrid.Views.Grid.GridMultiSelectMode.RowSelect;
-            gridView1.OptionsSelection.EnableAppearanceFocusedCell = false;
-
-            gridView1.CustomDrawRowIndicator += GridView1_CustomDrawRowIndicator;
-
-            GridColumn colType = gridView1.Columns["ParamKey"];
-            colType.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
-            colType.OptionsColumn.FixedWidth = true;
-            colType.Width = 240;
-            colType.Caption = "Parameter Name";
-
-            GridColumn colDel = gridView1.Columns["Del"];
-            colDel.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
-            colDel.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
-            colDel.OptionsColumn.FixedWidth = true;
-            colDel.Width = 40;
-            colDel.Caption = "삭제";
-            colDel.OptionsColumn.ReadOnly = true;
-
-            this.repositoryItemImageComboBox1.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(0, 0));
-            this.repositoryItemImageComboBox1.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(1, 1));
-
-            this.repositoryItemImageComboBox1.GlyphAlignment = HorzAlignment.Center;
-            this.repositoryItemImageComboBox1.Buttons[0].Visible = false;
-
-            this.repositoryItemImageComboBox1.Click += RepositoryItemImageComboBox1_Click;
         }
 
-        private void RepositoryItemComboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void treeList1_CellValueChanged(object sender, DevExpress.XtraTreeList.CellValueChangedEventArgs e)
         {
-            var combo = sender as ComboBoxEdit;
-            if (combo.SelectedIndex != -1)
+            foreach (TreeListNode node in e.Node.Nodes)
+                node[e.Column] = e.Value;
+            TreeListNode parent = e.Node.ParentNode;
+            if (parent != null) // not a root node
             {
-                string paramKey = combo.SelectedItem as string;
-                if (string.IsNullOrEmpty(paramKey) == false)
+                bool checkedValue = false;
+                if (e.Value != null)
+                    checkedValue = (bool)e.Value;
+                foreach (TreeListNode node in parent.Nodes)
                 {
-                    //ResponsePreset preset = presetList.Find(x => x.presetPack.Equals(presetPack));
-                    ResponseParam param = paramList.Find(x => x.paramKey.Equals(paramKey));
-                    if (param != null)
+                    if ((bool)node[e.Column] != checkedValue)
                     {
-                        string adamsKey = param.adamsKey;
-                        string zaeroKey = param.zaeroKey;
-                        string grtKey = param.grtKey;
-                        string fltpKey = param.fltpKey;
-                        string fltsKey = param.fltsKey;
-                        string partInfo = param.partInfo;
-                        string partInfoSub = param.partInfoSub;
-
-                        bool bFind = false;
-
-                        for (int i = 0; i < gridView1.RowCount; i++)
-                        {
-                            string adams = gridView1.GetRowCellValue(i, "AdamsKey") == null ? "" : gridView1.GetRowCellValue(i, "AdamsKey").ToString();
-                            string zaero = gridView1.GetRowCellValue(i, "ZaeroKey") == null ? "" : gridView1.GetRowCellValue(i, "ZaeroKey").ToString();
-                            string grt = gridView1.GetRowCellValue(i, "GrtKey") == null ? "" : gridView1.GetRowCellValue(i, "GrtKey").ToString();
-                            string fltp = gridView1.GetRowCellValue(i, "FltpKey") == null ? "" : gridView1.GetRowCellValue(i, "FltpKey").ToString();
-                            string flts = gridView1.GetRowCellValue(i, "FltsKey") == null ? "" : gridView1.GetRowCellValue(i, "FltsKey").ToString();
-                            //string part1 = gridView1.GetRowCellValue(i, "PartInfo") == null ? "" : gridView1.GetRowCellValue(i, "PartInfo").ToString();
-                            //string part2 = gridView1.GetRowCellValue(i, "PartInfoSub") == null ? "" : gridView1.GetRowCellValue(i, "PartInfoSub").ToString();
-
-                            if ((string.IsNullOrEmpty(adams) == false && adams.Equals(adamsKey))
-                                || (string.IsNullOrEmpty(zaero) == false && zaero.Equals(zaeroKey))
-                                || (string.IsNullOrEmpty(grt) == false && grt.Equals(grtKey))
-                                || (string.IsNullOrEmpty(fltp) == false && fltp.Equals(fltpKey))
-                                || (string.IsNullOrEmpty(flts) == false && flts.Equals(fltsKey))
-                                //|| (string.IsNullOrEmpty(part1) == false && part1.Equals(partInfo))
-                                //|| (string.IsNullOrEmpty(part2) == false && part2.Equals(partInfoSub))
-                                )
-                            {
-                                bFind = true;
-                                break;
-                            }
-                        }
-
-                        if (bFind)
-                        {
-                            MessageBox.Show("항목의 중복이 허용되지 않습니다.");
-                            combo.SelectedIndex = prevSelected;
-                        }
-                        else
-                        {
-                            gridView1.SetRowCellValue(gridView1.FocusedRowHandle, "AdamsKey", adamsKey);
-                            gridView1.SetRowCellValue(gridView1.FocusedRowHandle, "ZaeroKey", zaeroKey);
-                            gridView1.SetRowCellValue(gridView1.FocusedRowHandle, "GrtKey", grtKey);
-                            gridView1.SetRowCellValue(gridView1.FocusedRowHandle, "FltpKey", fltpKey);
-                            gridView1.SetRowCellValue(gridView1.FocusedRowHandle, "FltsKey", fltsKey);
-                            gridView1.SetRowCellValue(gridView1.FocusedRowHandle, "PartInfo", partInfo);
-                            gridView1.SetRowCellValue(gridView1.FocusedRowHandle, "PartInfoSub", partInfoSub);
-                        }
-
+                        parent[e.Column] = null;
+                        break;
                     }
+                    else
+                        parent[e.Column] = checkedValue;
                 }
             }
         }
 
-        int prevSelected = -1;
-        private void RepositoryItemComboBox1_BeforePopup(object sender, EventArgs e)
+        private void repositoryItemCheckEdit1_EditValueChanged(object sender, EventArgs e)
         {
-            var combo = sender as ComboBoxEdit;
-            prevSelected = combo.SelectedIndex;
-        }
-
-        private void RepositoryItemImageComboBox1_Click(object sender, EventArgs e)
-        {
-            gridView1.DeleteRow(gridView1.FocusedRowHandle);
+            treeList1.PostEditor();
         }
 
         private void GridView1_CustomDrawRowIndicator(object sender, RowIndicatorCustomDrawEventArgs e)
@@ -256,26 +213,6 @@ namespace DynaRAP.UControl
                 e.Info.DisplayText = e.RowHandle.ToString();
         }
 
-        private void InitializeSBParamComboList()
-        {
-            cboSBParameter.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
-
-            cboSBParameter.SelectedIndexChanged += CboSBParameter_SelectedIndexChanged;
-
-            presetList = GetPresetList();
-
-            cboSBParameter.Properties.Items.Clear();
-
-            foreach(ResponsePreset preset in presetList)
-            {
-                //Decoding
-                byte[] byte64 = Convert.FromBase64String(preset.presetName);
-                string decName = Encoding.UTF8.GetString(byte64);
-                cboSBParameter.Properties.Items.Add(decName);
-            }
-
-            cboSBParameter.SelectedIndex = -1;
-        }
 
         private List<ResponsePreset> GetPresetList()
         {
@@ -332,40 +269,6 @@ namespace DynaRAP.UControl
 
             return result.response;
 
-        }
-
-        private void CboSBParameter_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            ComboBoxEdit cbo = sender as ComboBoxEdit;
-            string presetPack = String.Empty;
-            paramList = null;
-
-            if (cbo != null)
-            {
-                //Encoding
-                byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(cbo.Text);
-                string encName = Convert.ToBase64String(basebyte);
-
-                ResponsePreset preset = presetList.Find(x => x.presetName.Equals(encName));
-
-                if(preset != null)
-                {
-                    paramList = GetPresetParamList(preset.presetPack);
-
-                    if (paramList != null)
-                    {
-                        gridList = new List<PresetParamData>();
-                        foreach (ResponseParam param in paramList)
-                        {
-                            //AddParameter(param);
-                            gridList.Add(new PresetParamData(param.paramKey, param.adamsKey, param.zaeroKey, param.grtKey, param.fltpKey, param.fltsKey, param.propInfo.propType, param.partInfo, param.seq, param.propInfo.seq, param.paramPack, 1));
-                        }
-
-                        this.gridControl1.DataSource = gridList;
-                    }
-                }
-
-            }
         }
 
         private List<ResponseParam> GetPresetParamList(string presetPack)
@@ -429,19 +332,6 @@ namespace DynaRAP.UControl
             return result.response;
 
         }
-
-        private void btnAddParameter_ButtonClick(object sender, EventArgs e)
-        {
-            if (gridList == null)
-            {
-                gridList = new List<PresetParamData>();
-            }
-            gridList.Add(new PresetParamData("", "", "", "", "", "", "", "", "", "", "", 1));
-            this.gridControl1.DataSource = gridList;
-            //gridControl1.Update();
-            gridView1.RefreshData();
-        }
-
         private void hyperlinkBrowseSB_Click(object sender, EventArgs e)
         {
             MainForm mainForm = this.ParentForm as MainForm;
@@ -455,6 +345,459 @@ namespace DynaRAP.UControl
             MainForm mainForm = this.ParentForm as MainForm;
 
             mainForm.PanelBinTable.Show();
+        }
+
+
+
+        private void GetBinTableList()
+        {
+            string sendData = string.Format(@"
+                {{
+                ""command"":""list""
+                }}");
+            string responseData = Utils.GetPostData(ConfigurationManager.AppSettings["UrlBINTable"], sendData);
+            if (responseData != null)
+            {
+                binGridData = new List<BinGridData>();
+                binTableResponse = new BinTableData();
+                binTableResponse = JsonConvert.DeserializeObject<BinTableData>(responseData);
+                if (binTableResponse.response != null && binTableResponse.response.Count() != 0)
+                {
+                    foreach (var list in binTableResponse.response)
+                    {
+                        list.metaName = Utils.base64StringDecoding(list.metaName);
+                        BinGridData binData = new BinGridData();
+                        binData.seq = list.seq;
+                        binData.metaName = list.metaName;
+                        binData.tags = list.dataProps.tags;
+                        binGridData.Add(binData);
+                    }
+                }
+                this.gridControl2.DataSource = binGridData;
+                gridView2.RefreshData();
+            }
+        }
+
+        private BindingList<TreeData> GetTreeList()
+        {
+            BindingList<TreeData> list = new BindingList<TreeData>();
+            //list.Add(new FlyingData(1, 0, "Short Block", null));
+
+            try
+            {
+
+                string sendData = string.Format(@"
+                {{
+                ""command"":""list"",
+                ""registerUid"":"""",
+                ""uploadSeq"":"""",
+                ""pageNo"":1,
+                ""pageSize"":3000
+                }}");
+
+                string responseData = Utils.GetPostData(ConfigurationManager.AppSettings["UrlPart"], sendData);
+                if (responseData != null)
+                {
+                    PartListResponse partListResponse = JsonConvert.DeserializeObject<PartListResponse>(responseData);
+                    if (partListResponse.response != null && partListResponse.response.Count() != 0)
+                    {
+                        int i = 1;
+                        foreach (var partList in partListResponse.response)
+                        {
+                            byte[] byte64 = Convert.FromBase64String(partList.partName);
+                            string decName = Encoding.UTF8.GetString(byte64);
+                            TreeData data = new TreeData(i++,0,decName,partList.seq,"part",false);
+                            //data.ParentID = 0;
+                            //data.ID = i++;
+                            //data.Seq = partList.seq;
+                            //data.Type = 
+                            ////Decoding
+
+                            //data.TreeName = decName;
+                            //data.Check = false;
+                            list.Add(data);
+                            sendData = string.Format(@"
+                            {{
+                            ""command"":""list"",
+                            ""registerUid"":"""",
+                            ""partSeq"":""{0}"",
+                            ""pageNo"":1,
+                            ""pageSize"":3000
+                            }}", partList.seq );
+
+                           string shortBlockData =  Utils.GetPostData(ConfigurationManager.AppSettings["UrlShortBlock"], sendData);
+                            if (shortBlockData != null)
+                            {
+                                SBListResponse sbListReponse = JsonConvert.DeserializeObject<SBListResponse>(shortBlockData);
+                                if (partListResponse.response != null && partListResponse.response.Count() != 0)
+                                {
+                                    foreach(var sb in sbListReponse.response)
+                                    {
+                                        TreeData sbData = new TreeData();
+                                        sbData.ParentID = data.ID;
+                                        sbData.ID = i++;
+                                        sbData.Seq = sb.seq;
+                                        sbData.partSeq = sb.partSeq;
+                                        sbData.blockMetaSeq = sb.blockMetaSeq;
+                                        sbData.Type = "shortblock";
+                                        byte[] byteData = Convert.FromBase64String(sb.blockName);
+                                        string decoName = Encoding.UTF8.GetString(byteData);
+
+                                        sbData.TreeName = decoName;
+                                        sbData.Check = false;
+                                        list.Add(sbData);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex.Message);
+                MessageBox.Show(ex.Message);
+                return null;
+            }
+
+            return list;
+        }
+
+        private void btnListSave_Click(object sender, EventArgs e)
+        {
+            SaveBinTable("save");
+        }
+
+        private void SaveBinTable(string type)
+        {
+            BindingList<TreeData> treeDatas = treeList1.DataSource as BindingList<TreeData>;
+            var treeList = treeDatas.ToList();
+            var shortBlockList = treeList.FindAll(x => x.Check != false && x.Type == "shortblock");
+            var partList = treeList.FindAll(x => x.Check != false && x.Type == "part");
+            BinGridData binGridData = (BinGridData)gridView2.GetFocusedRow();
+            BinTableSaveRequest binSaveRequest = new BinTableSaveRequest();
+            binSaveRequest.parts = new List<string>();
+            binSaveRequest.selectedShortBlocks = new List<string>();
+            binSaveRequest.dataProps = new DataProps();
+            binSaveRequest.pickUpParams = new List<PickUpParam>();
+            if (type == "update")
+            {
+
+                binSaveRequest.binMetaSeq = binGridData.seq ;
+            }
+           
+            binSaveRequest.dataProps.key = "value";
+            binSaveRequest.dataProps.key2 = "value2";
+            binSaveRequest.dataProps.tags = binGridData.tags;
+            binSaveRequest.command = "save";
+            byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(binName.Text);
+            string encName = Convert.ToBase64String(basebyte);
+            binSaveRequest.metaName = encName;
+            foreach (var list in partList)
+            {
+                binSaveRequest.parts.Add(list.Seq);
+            }
+            foreach (var list in shortBlockList)
+            {
+                binSaveRequest.selectedShortBlocks.Add(list.Seq);
+            }
+            foreach(BinParameterSelectControl control in panelParamCnt.Controls)
+            {
+                binSaveRequest.pickUpParams.Add(control.SelectedParamLIst());
+            }
+            var json = JsonConvert.SerializeObject(binSaveRequest);
+
+            string responseData = Utils.GetPostData(ConfigurationManager.AppSettings["UrlBINTable"], json);
+            if (responseData != null)
+            {
+                JsonData result = JsonConvert.DeserializeObject<JsonData>(responseData);
+                if (result.code == 200)
+                {
+                    MessageBox.Show(type =="save" ? "저장 성공": "수정 성공");
+                }
+                else
+                {
+                    MessageBox.Show(type == "save" ? "저장 실패" : "수정 실패");
+                }
+            }
+        }
+
+        private void gridView2_RowCellClick(object sender, DevExpress.XtraGrid.Views.Grid.RowCellClickEventArgs e)
+        {
+            BinGridData binGridData = (BinGridData)gridView2.GetFocusedRow();
+            BindingList<TreeData> treeDatas = treeList1.DataSource as BindingList<TreeData>;
+            binName.Text = binGridData.metaName;
+            binMetaSeq = binGridData.seq;
+            var selectData = binTableResponse.response.Find(x => x.seq == binGridData.seq);
+            foreach (var treeData in treeDatas)
+            {
+                treeData.Check = false;
+            }
+            foreach (var list in selectData.selectedShortBlocks)
+            {
+                foreach(var treeData in treeDatas)
+                {
+                    if(treeData.Seq == list.refSeq && treeData.Type == "shortblock")
+                    {
+                        treeData.Check = true;
+                    }
+                }
+            }
+
+            foreach (var list in selectData.parts)
+            {
+                foreach (var treeData in treeDatas)
+                {
+                    if (treeData.Seq == list.refSeq && treeData.Type == "part")
+                    {
+                        treeData.Check = true;
+                    }
+                }
+            }
+            treeList1.DataSource = treeDatas;
+            treeList1.Refresh();
+
+            if (binGridData.tags != null && binGridData.tags != "")
+            {
+                string[] tagList = binGridData.tags.Split('|');
+
+                panelTag.Controls.Clear();
+                foreach (string value in tagList)
+                {
+                    addTag(value);
+                }
+            }
+            else
+            {
+                panelTag.Controls.Clear();
+            }
+        }
+
+        private void btnListModify_Click(object sender, EventArgs e)
+        {
+            SaveBinTable("update");
+        }
+
+        private void btnBinDelete_Click(object sender, EventArgs e)
+        {
+            if(binMetaSeq == null)
+            {
+                MessageBox.Show("선택된 BIN테이블이 없습니다. 선택 후 삭제해주세요.");
+                return;
+            }
+            if(MessageBox.Show(binName.Text +  "을(를) 삭제하시겠습니까?", "삭제",MessageBoxButtons.OKCancel) == DialogResult.OK)
+            {
+                string sendData = string.Format(@"
+                {{
+                ""command"":""remove"",
+                ""binMetaSeq"":""{0}""
+                }}", binMetaSeq);
+                string responseData = Utils.GetPostData(ConfigurationManager.AppSettings["UrlBINTable"], sendData);
+                if (responseData != null)
+                {
+                    JsonData result = JsonConvert.DeserializeObject<JsonData>(responseData);
+                    if (result.code == 200)
+                    {
+                        MessageBox.Show("삭제 성공");
+                        binMetaSeq = null;
+                        binName.Text = "";
+                        AllShortBlockUnChecked();
+                    }
+                    else
+                    {
+                        MessageBox.Show("삭제 실패");
+                    }
+                }
+            }
+        }
+
+        private void AllShortBlockUnChecked()
+        {
+            BindingList<TreeData> treeDataList = treeList1.DataSource as BindingList<TreeData>;
+            foreach(var treeData in treeDataList)
+            {
+                treeData.Check = false;
+            }
+        }
+        private void edtTag_ButtonClick(object sender, DevExpress.XtraEditors.Controls.ButtonPressedEventArgs e)
+        {
+            ButtonEdit me = sender as ButtonEdit;
+            if (me != null)
+            {
+                BinGridData binGridData = (BinGridData)gridView2.GetFocusedRow();
+                if (binGridData.tags != null && binGridData.tags != "")
+                {
+                    gridView2.SetRowCellValue(gridView2.FocusedRowHandle, "tags", binGridData.tags + "|" + me.Text);
+                }
+                else
+                {
+                    gridView2.SetRowCellValue(gridView2.FocusedRowHandle, "tags", me.Text);
+
+                }
+                addTag(me.Text);
+                me.Text = String.Empty;
+            }
+        }
+        private void edtTag_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode != Keys.Enter)
+                return;
+
+            ButtonEdit me = sender as ButtonEdit;
+            if (me != null)
+            {
+                BinGridData binGridData = (BinGridData)gridView2.GetFocusedRow();
+                if (binGridData.tags != null && binGridData.tags != "")
+                {
+                    gridView2.SetRowCellValue(gridView2.FocusedRowHandle, "tags", binGridData.tags + "|" + me.Text);
+                }
+                else
+                {
+                    gridView2.SetRowCellValue(gridView2.FocusedRowHandle, "tags", me.Text);
+
+                }
+                addTag(me.Text);
+                me.Text = String.Empty;
+            }
+        }
+
+        private void addTag(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+                return;
+
+            ButtonEdit btn = new ButtonEdit();
+            btn.Properties.Buttons[0].Kind = ButtonPredefines.Close;
+            btn.BorderStyle = BorderStyles.Simple;
+            btn.ForeColor = Color.White;
+            btn.Properties.Appearance.BorderColor = Color.White;
+            btn.Font = new Font(btn.Font, FontStyle.Bold);
+            btn.Properties.Appearance.TextOptions.HAlignment = HorzAlignment.Center;
+            //btn.ReadOnly = true;
+            btn.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
+            btn.Properties.AllowFocused = false;
+            btn.ButtonClick += removeTag_ButtonClick;
+            btn.Text = name;
+            panelTag.Controls.Add(btn);
+        }
+        public void removeControl(BinParameterSelectControl parameterSelectControl)
+        {
+            panelParamCnt.Controls.Remove(parameterSelectControl);
+        }
+        private void removeTag_ButtonClick(object sender, ButtonPressedEventArgs e)
+        {
+            ButtonEdit btn = sender as ButtonEdit;
+
+            BinGridData binGridData = (BinGridData)gridView2.GetFocusedRow();
+
+            List<string> tagList = new List<string>();
+            if (binGridData.tags != null && binGridData.tags != "")
+            {
+                tagList = binGridData.tags.Split('|').ToList();
+            }
+            tagList.Remove(btn.Text);
+            string tags = "";
+            foreach (var tag in tagList)
+            {
+                tags += (tag + "|");
+            }
+            if (tags != "")
+            {
+                tags = tags.Substring(0, tags.Length - 1);
+            }
+            gridView2.SetRowCellValue(gridView2.FocusedRowHandle, "tags", tags);
+            panelTag.Controls.Remove(btn);
+
+        }
+
+        private void btnParameterAdd_ButtonClick(object sender, ButtonPressedEventArgs e)
+        {
+
+            BinParameterSelectControl ct = new BinParameterSelectControl(this, GetParamListByPartsShortblock());
+            panelParamCnt.Controls.Add(ct);
+        }
+
+        private List<ParamDatas> GetParamListByPartsShortblock()
+        {
+            List<ParamDatas> responseParamList = new List<ParamDatas>();
+            BindingList<TreeData> treeDatas = treeList1.DataSource as BindingList<TreeData>;
+
+            var treeList = treeDatas.ToList();
+            var shortBlockList = treeList.FindAll(x => x.Check != false && x.Type == "shortblock");
+            var partList = treeList.FindAll(x => x.Check != false && x.Type == "part");
+            List<string> blockMetaSeq = new List<string>(); 
+            foreach(var part in partList)
+            {
+                string sendData = string.Format(@"
+                {{
+                ""command"":""param-list"",
+                ""partSeq"":""{0}""
+                }}", part.Seq);
+                string responseData = Utils.GetPostData(ConfigurationManager.AppSettings["UrlPart"], sendData);
+                if (responseData != null)
+                {
+                    ResponseParamList responseParam = JsonConvert.DeserializeObject<ResponseParamList>(responseData);
+                    if (responseParam.code == 200)
+                    {
+                        foreach (var paramData in responseParam.response.paramData)
+                        {
+                            if (responseParamList.FindIndex(x => x.seq == paramData.seq) == -1)
+                            {
+                                responseParamList.Add(paramData);
+                            }
+                        }
+                    }
+                }
+            }
+
+            foreach(var shortblock in shortBlockList)
+            {
+                if (!blockMetaSeq.Contains(shortblock.blockMetaSeq))
+                {
+                    blockMetaSeq.Add(shortblock.blockMetaSeq);
+                    string sendData = string.Format(@"
+                    {{
+                    ""command"":""param-list"",
+                    ""blockSeq"":""{0}""
+                    }}", shortblock.Seq);
+                    string responseData = Utils.GetPostData(ConfigurationManager.AppSettings["UrlShortBlock"], sendData);
+                    if (responseData != null)
+                    {
+                        ResponseParamList responseParam = JsonConvert.DeserializeObject<ResponseParamList>(responseData);
+                        if (responseParam.code == 200)
+                        {
+                            foreach (var paramData in responseParam.response.paramData)
+                            {
+                                if (responseParamList.FindIndex(x => x.seq == paramData.seq) == -1)
+                                {
+                                    responseParamList.Add(paramData);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return responseParamList;
+             
+        }
+
+        public bool SetSelectedParams(ParamDatas paramDatas)
+        {
+            if (selectedParamDataList.FindIndex(x => x.seq == paramDatas.seq) == -1)
+            {
+                selectedParamDataList.Add(paramDatas);
+                return true;
+            }
+            else
+            {
+
+                return false;
+            }
+        }
+        
+        public void RemoveSelectedParams(string seq)
+        {
+            selectedParamDataList.RemoveAt(selectedParamDataList.FindIndex(x => x.seq == seq));
         }
     }
 
