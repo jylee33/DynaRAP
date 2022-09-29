@@ -554,4 +554,17 @@ public class PartService {
 
         return jdCurrentMillis - jdFromMillis;
     }
+
+
+    public ShortBlockVO.ParamData getShortBlockParamData(CryptoField blockMetaSeq, CryptoField blockSeq, Long unionParamSeq) throws HandledServiceException {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("blockMetaSeq", blockMetaSeq);
+            params.put("blockSeq", blockSeq);
+            params.put("unionParamSeq", unionParamSeq);
+            return partMapper.selectShortBlockParamData(params);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
 }

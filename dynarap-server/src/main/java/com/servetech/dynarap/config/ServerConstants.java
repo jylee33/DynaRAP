@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.servetech.dynarap.db.type.*;
 import com.servetech.dynarap.security.HmacPasswordEncoder;
 import org.apache.commons.codec.binary.Hex;
+import org.jsoup.internal.StringUtil;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.crypto.KeyGenerator;
@@ -94,12 +95,47 @@ public class ServerConstants {
         System.out.println(getJulianTimeOffset("344:10:49:24.429500", "344:10:49:24.431500"));
         */
         String test = "${SN910P} + ${SN999S} * 1.2";
-        test = test.replaceAll("\\s+", "");
+        test = "${SN910P} + max(${SN999S}) + min(${SN912S} * max(${SW907P}) * 1.2) + 5.0";
+        //test = test.replaceAll("\\s+", "");
 
         String loopTest = test;
-        List<String> params = extractParams(loopTest);
-        System.out.println(params);
+        String findPrefix = "min(";
+        boolean passing = false;
+        while (loopTest.contains("min(") || loopTest.contains("max(") || loopTest.contains("avg(")) {
+            List<String> params = extractParams(loopTest, findPrefix, ")");
+            System.out.println(StringUtil.join(params, ", "));
 
+            for (String param : params) {
+                if (param.contains("min(") || param.contains("max(") || param.contains("avg(")) {
+                    if (findPrefix.equals("min(")) findPrefix = "max(";
+                    else if (findPrefix.equals("max(")) findPrefix = "avg(";
+                    else if (findPrefix.equals("avg(")) findPrefix = "min(";
+                    passing = true;
+                    break;
+                }
+                else {
+                    String replaceWhat = findPrefix.substring(0, findPrefix.length() - 1) + "\\(\\$\\{" + param.substring(2, param.length() - 1) + "\\}" + "\\)";
+                    loopTest = loopTest.replaceAll(replaceWhat, "(" + Math.random() + ")");
+                    System.out.println(loopTest);
+                }
+            }
+
+            if (passing == true) {
+                passing = false;
+                continue;
+            }
+
+            if (findPrefix.equals("min(")) findPrefix = "max(";
+            else if (findPrefix.equals("max(")) findPrefix = "avg(";
+            else if (findPrefix.equals("avg(")) findPrefix = "min(";
+        }
+
+        System.out.println(loopTest);
+
+        //List<String> params = extractParams(loopTest, "min(", ")");
+        //System.out.println(params);
+
+        /*
         loopTest = loopTest.replaceAll("\\$\\{" + "SN910P" + "\\}", "123.45");
         loopTest = loopTest.replaceAll("\\$\\{" + "SN999S" + "\\}", "456.78");
         System.out.println(loopTest);
@@ -111,12 +147,10 @@ public class ServerConstants {
             System.out.println("qVal=" + qVal);
         } catch(Exception e) {
 
-        }
+        } */
     }
 
-    private static List<String> extractParams(String source) {
-        String prefix = "${";
-        String postfix = "}";
+    public static List<String> extractParams(String source, String prefix, String postfix) {
         int si = -1, ei = -1;
 
         List<String> resultSet = new ArrayList<>();
@@ -124,9 +158,27 @@ public class ServerConstants {
         while ((si = test.indexOf(prefix)) > -1) {
             ei = test.indexOf(postfix, si + prefix.length());
             if (ei == -1) break;
-            resultSet.add(test.substring(si + prefix.length(), ei));
+            String part = test.substring(si + prefix.length(), ei);
             test = test.substring(ei + postfix.length());
+
+            int openCount = (int) part.chars().filter(ch -> ch == '(').count();
+            for (int i = 0; i < openCount; i++) {
+                ei = test.indexOf(postfix);
+                if (ei == -1) {
+                    resultSet.add(part);
+                    break;
+                }
+
+                String subPart = test.substring(0,  ei);
+                part = part + subPart;
+                test = test.substring(ei + postfix.length());
+            }
+
+            if (ei == -1) break;
+
+            resultSet.add(part);
         }
+
         return resultSet;
     }
 

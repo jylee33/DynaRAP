@@ -46,6 +46,16 @@ public class ApiController {
         return environment;
     }
 
+    public <T> T getOperation(String opType) {
+        if (opType.equals("list"))
+            return (T) listOps;
+        if (opType.equals("hash"))
+            return (T) hashOps;
+        if (opType.equals("zset"))
+            return (T) zsetOps;
+        return null;
+    }
+
     public static <T> T getController(Class<T> clazz) {
         return null;
     }

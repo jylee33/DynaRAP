@@ -13,7 +13,11 @@ import com.servetech.dynarap.db.type.String64;
 import com.servetech.dynarap.ext.HandledServiceException;
 import com.servetech.dynarap.ext.ResponseHelper;
 import com.servetech.dynarap.vo.*;
+import org.jsoup.internal.StringUtil;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.ListOperations;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -39,6 +43,11 @@ public class ServiceApiController extends ApiController {
 
     @Value("${static.resource.location}")
     private String staticLocation;
+
+    private EquationHelper equationHelper = new EquationHelper(
+            getOperation("list"),
+            getOperation("hash"),
+            getOperation("zset"));
 
     @RequestMapping(value = "/param-module")
     @ResponseBody
@@ -556,7 +565,7 @@ public class ServiceApiController extends ApiController {
                 throw new HandledServiceException(411, "파라미터를 확인하세요.");
 
             // load all sources and equations.
-            loadParamModuleCaches(moduleSeq);
+            equationHelper.loadParamModuleData(moduleSeq);
 
             List<ParamModuleVO.Equation> equations = getService(ParamModuleService.class).getParamModuleEqList(moduleSeq);
 
@@ -571,10 +580,6 @@ public class ServiceApiController extends ApiController {
         }
 
         if (command.equals("save-eq")) {
-            //
-            // TODO : 여기서 계산. => 계산 없이 저장만 일단.
-            //
-
             CryptoField moduleSeq = CryptoField.LZERO;
             if (!checkJsonEmpty(payload, "moduleSeq"))
                 moduleSeq = CryptoField.decode(payload.get("moduleSeq").getAsString(), 0L);
@@ -676,6 +681,8 @@ public class ServiceApiController extends ApiController {
                 getService(ParamModuleService.class).deleteParamModuleEqByModuleSeq(moduleSeq);
                 paramModule.setEquations(new ArrayList<>());
             }
+
+            equationHelper.calculateEquations(moduleSeq, paramModule.getEquations());
 
             return ResponseHelper.response(200, "Success - ParamModule Save Eq", paramModule.getEquations());
         }
@@ -2868,7 +2875,12 @@ public class ServiceApiController extends ApiController {
                         break;
                     }
                 }
-                if (param != null) resultParams.add(param);
+                if (param != null) {
+                    resultParams.add(param);
+
+                    param.setParamValueMap(getService(PartService.class).getShortBlockParamData(
+                            blockInfo.getBlockMetaSeq(), blockInfo.getSeq(), param.getReferenceSeq()));
+                }
             }
 
             List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
@@ -2876,6 +2888,9 @@ public class ServiceApiController extends ApiController {
                 for (ParamVO p : notMappedParams) {
                     paramList.add(p.getSeq());
                     resultParams.add(p);
+
+                    p.setParamValueMap(getService(PartService.class).getShortBlockParamData(
+                            blockInfo.getBlockMetaSeq(), blockInfo.getSeq(), p.getReferenceSeq()));
                 }
             }
 
@@ -3291,9 +3306,4 @@ public class ServiceApiController extends ApiController {
         return 0;
     }
 
-    private void loadParamModuleCaches(CryptoField moduleSeq) throws HandledServiceException {
-        // loading sources data
-        // loading base data
-        // loading eq data
-    }
 }

@@ -4,6 +4,7 @@ import com.servetech.dynarap.db.type.CryptoField;
 import com.servetech.dynarap.db.type.LongDate;
 import com.servetech.dynarap.db.type.String64;
 import lombok.Data;
+import lombok.Setter;
 
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,9 @@ public class ParamModuleVO {
 
     private List<Equation> equations;
     private List<Source> sources;
+
+    private transient Map<String, Source> paramData;
+    private transient Map<String, Equation> eqMap;
 
     @Data
     public static class DataSource {
@@ -65,6 +69,22 @@ public class ParamModuleVO {
         private String useTime;
 
         private transient boolean mark;
+
+        private List<String> timeSet;
+
+        @Setter
+        private List<Object> data;
+        public <T> List<T> getData() {
+            return (List<T>) data;
+        }
+
+        private List<Double> lpfData;
+        private List<Double> hpfData;
+
+        private ParamVO param;
+        private ShortBlockVO.ParamData paramData;
+        private DLLVO.Param dllParam;
+        private Equation equation;
     }
 
     @Data
@@ -83,6 +103,14 @@ public class ParamModuleVO {
 
         private Map<String, String> dataProp;
         private transient boolean mark;
+
+        private List<String> timeSet;
+
+        @Setter
+        private List<Object> data;
+        public <T> List<T> getData() {
+            return (List<T>) data;
+        }
     }
 
     @Data

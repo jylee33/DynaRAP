@@ -37,6 +37,7 @@ public class ParamVO {
     private CryptoField presetSeq;
 
     private Prop propInfo;
+    private ShortBlockVO.ParamData paramValueMap;
 
     @Data
     public static class Prop {

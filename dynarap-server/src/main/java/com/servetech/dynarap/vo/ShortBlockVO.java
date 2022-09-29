@@ -100,6 +100,29 @@ public class ShortBlockVO {
     }
 
     @Data
+    public static class ParamData {
+        private CryptoField seq;
+        private CryptoField blockMetaSeq;
+        private CryptoField blockSeq;
+        private Long unionParamSeq;
+        private double blockMin;
+        private double blockMax;
+        private double blockAvg;
+        private double psd;
+        private double rms;
+        private double n0;
+        private String zarray;
+        private double zPeak;
+        private double zValley;
+        private double blockLpfMin;
+        private double blockLpfMax;
+        private double blockLpfAvg;
+        private double blockHpfMin;
+        private double blockHpfMax;
+        private double blockHpfAvg;
+    }
+
+    @Data
     public static class Raw implements IFlexibleValue {
         private CryptoField seq;
         private CryptoField blockSeq;

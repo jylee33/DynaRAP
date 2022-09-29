@@ -344,4 +344,16 @@ public interface PartMapper {
     })
     PartVO.Raw selectPartRaw(Map<String, Object> params) throws Exception;
 
+
+    @Select({
+            "<script>" +
+                    "select * from dynarap_sblock_param_val " +
+                    "where blockMetaSeq = #{blockMetaSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "and blockSeq = #{blockSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "and unionParamSeq = #{unionParamSeq} " +
+                    "limit 0, 1" +
+                    "</script>"
+    })
+    ShortBlockVO.ParamData selectShortBlockParamData(Map<String, Object> params) throws Exception;
+
 }
