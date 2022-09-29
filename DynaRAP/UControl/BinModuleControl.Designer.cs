@@ -61,12 +61,12 @@
             this.btnListModify = new DevExpress.XtraEditors.SimpleButton();
             this.btnBinDelete = new DevExpress.XtraEditors.SimpleButton();
             this.btnListSave = new DevExpress.XtraEditors.SimpleButton();
-            this.labelControl13 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl18 = new DevExpress.XtraEditors.LabelControl();
             this.btnParameterAdd = new DevExpress.XtraEditors.ButtonEdit();
             this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
             this.panelParamCnt = new System.Windows.Forms.FlowLayoutPanel();
             this.btnCreateBIN = new DevExpress.XtraEditors.SimpleButton();
+            this.labelControl13 = new DevExpress.XtraEditors.LabelControl();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.treeList1 = new DevExpress.XtraTreeList.TreeList();
             this.ID = new DevExpress.XtraTreeList.Columns.TreeListColumn();
@@ -131,7 +131,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1329, 1327);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1298, 1172);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // separatorControl1
@@ -143,7 +143,7 @@
             this.separatorControl1.Name = "separatorControl1";
             this.separatorControl1.Padding = new System.Windows.Forms.Padding(9, 10, 9, 10);
             this.tableLayoutPanel1.SetRowSpan(this.separatorControl1, 3);
-            this.separatorControl1.Size = new System.Drawing.Size(1, 1279);
+            this.separatorControl1.Size = new System.Drawing.Size(1, 1124);
             this.separatorControl1.TabIndex = 0;
             // 
             // labelControl2
@@ -193,7 +193,7 @@
             this.flowLayoutPanel1.Location = new System.Drawing.Point(217, 24);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.tableLayoutPanel1.SetRowSpan(this.flowLayoutPanel1, 3);
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(1089, 1279);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(1058, 1124);
             this.flowLayoutPanel1.TabIndex = 4;
             this.flowLayoutPanel1.WrapContents = false;
             // 
@@ -320,7 +320,7 @@
             this.gridControl2.Location = new System.Drawing.Point(3, 208);
             this.gridControl2.MainView = this.gridView2;
             this.gridControl2.Name = "gridControl2";
-            this.gridControl2.Size = new System.Drawing.Size(905, 314);
+            this.gridControl2.Size = new System.Drawing.Size(905, 211);
             this.gridControl2.TabIndex = 49;
             this.gridControl2.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView2});
@@ -334,6 +334,7 @@
             this.gridView2.GridControl = this.gridControl2;
             this.gridView2.Name = "gridView2";
             this.gridView2.OptionsBehavior.EditorShowMode = DevExpress.Utils.EditorShowMode.MouseUp;
+            this.gridView2.OptionsView.ShowGroupPanel = false;
             this.gridView2.RowCellClick += new DevExpress.XtraGrid.Views.Grid.RowCellClickEventHandler(this.gridView2_RowCellClick);
             // 
             // gridColumn10
@@ -363,9 +364,9 @@
             this.flowLayoutPanel3.Controls.Add(this.edtTag);
             this.flowLayoutPanel3.Controls.Add(this.panelTag);
             this.flowLayoutPanel3.Controls.Add(this.tableLayoutPanel6);
-            this.flowLayoutPanel3.Location = new System.Drawing.Point(3, 528);
+            this.flowLayoutPanel3.Location = new System.Drawing.Point(3, 425);
             this.flowLayoutPanel3.Name = "flowLayoutPanel3";
-            this.flowLayoutPanel3.Size = new System.Drawing.Size(908, 222);
+            this.flowLayoutPanel3.Size = new System.Drawing.Size(908, 166);
             this.flowLayoutPanel3.TabIndex = 43;
             // 
             // tableLayoutPanel3
@@ -410,7 +411,7 @@
             this.panelTag.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelTag.Location = new System.Drawing.Point(3, 57);
             this.panelTag.Name = "panelTag";
-            this.panelTag.Size = new System.Drawing.Size(750, 96);
+            this.panelTag.Size = new System.Drawing.Size(750, 68);
             this.panelTag.TabIndex = 52;
             // 
             // tableLayoutPanel6
@@ -422,7 +423,7 @@
             this.tableLayoutPanel6.Controls.Add(this.btnListModify, 0, 0);
             this.tableLayoutPanel6.Controls.Add(this.btnBinDelete, 0, 0);
             this.tableLayoutPanel6.Controls.Add(this.btnListSave, 1, 0);
-            this.tableLayoutPanel6.Location = new System.Drawing.Point(3, 159);
+            this.tableLayoutPanel6.Location = new System.Drawing.Point(3, 131);
             this.tableLayoutPanel6.Name = "tableLayoutPanel6";
             this.tableLayoutPanel6.RowCount = 1;
             this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -456,19 +457,11 @@
             this.btnListSave.Text = "BIN 추가";
             this.btnListSave.Click += new System.EventHandler(this.btnListSave_Click);
             // 
-            // labelControl13
-            // 
-            this.labelControl13.Location = new System.Drawing.Point(3, 1185);
-            this.labelControl13.Name = "labelControl13";
-            this.labelControl13.Size = new System.Drawing.Size(153, 15);
-            this.labelControl13.TabIndex = 2;
-            this.labelControl13.Text = "                                                   ";
-            // 
             // labelControl18
             // 
             this.labelControl18.Appearance.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold);
             this.labelControl18.Appearance.Options.UseFont = true;
-            this.labelControl18.Location = new System.Drawing.Point(3, 756);
+            this.labelControl18.Location = new System.Drawing.Point(3, 597);
             this.labelControl18.Name = "labelControl18";
             this.labelControl18.Size = new System.Drawing.Size(92, 17);
             this.labelControl18.TabIndex = 3;
@@ -477,7 +470,7 @@
             // btnParameterAdd
             // 
             this.btnParameterAdd.EditValue = "파라미터 추가";
-            this.btnParameterAdd.Location = new System.Drawing.Point(3, 779);
+            this.btnParameterAdd.Location = new System.Drawing.Point(3, 620);
             this.btnParameterAdd.Name = "btnParameterAdd";
             this.btnParameterAdd.Properties.Appearance.Options.UseTextOptions = true;
             this.btnParameterAdd.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
@@ -491,9 +484,9 @@
             // flowLayoutPanel4
             // 
             this.flowLayoutPanel4.Controls.Add(this.panelParamCnt);
-            this.flowLayoutPanel4.Location = new System.Drawing.Point(3, 807);
+            this.flowLayoutPanel4.Location = new System.Drawing.Point(3, 648);
             this.flowLayoutPanel4.Name = "flowLayoutPanel4";
-            this.flowLayoutPanel4.Size = new System.Drawing.Size(1057, 341);
+            this.flowLayoutPanel4.Size = new System.Drawing.Size(1045, 174);
             this.flowLayoutPanel4.TabIndex = 58;
             // 
             // panelParamCnt
@@ -502,18 +495,26 @@
             this.panelParamCnt.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelParamCnt.Location = new System.Drawing.Point(3, 3);
             this.panelParamCnt.Name = "panelParamCnt";
-            this.panelParamCnt.Size = new System.Drawing.Size(1040, 327);
+            this.panelParamCnt.Size = new System.Drawing.Size(1030, 161);
             this.panelParamCnt.TabIndex = 53;
             // 
             // btnCreateBIN
             // 
             this.btnCreateBIN.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnCreateBIN.Location = new System.Drawing.Point(472, 1154);
+            this.btnCreateBIN.Location = new System.Drawing.Point(466, 828);
             this.btnCreateBIN.Name = "btnCreateBIN";
             this.btnCreateBIN.Size = new System.Drawing.Size(119, 25);
             this.btnCreateBIN.TabIndex = 41;
             this.btnCreateBIN.Text = "BIN 생성";
             this.btnCreateBIN.Click += new System.EventHandler(this.btnCreateBIN_Click);
+            // 
+            // labelControl13
+            // 
+            this.labelControl13.Location = new System.Drawing.Point(3, 859);
+            this.labelControl13.Name = "labelControl13";
+            this.labelControl13.Size = new System.Drawing.Size(153, 15);
+            this.labelControl13.TabIndex = 2;
+            this.labelControl13.Text = "                                                   ";
             // 
             // flowLayoutPanel2
             // 
@@ -521,7 +522,7 @@
             this.flowLayoutPanel2.Controls.Add(this.treeList1);
             this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 176);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(196, 672);
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(196, 972);
             this.flowLayoutPanel2.TabIndex = 42;
             // 
             // treeList1
@@ -535,7 +536,7 @@
             this.treeList1.Name = "treeList1";
             this.treeList1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemCheckEdit1});
-            this.treeList1.Size = new System.Drawing.Size(193, 657);
+            this.treeList1.Size = new System.Drawing.Size(193, 963);
             this.treeList1.TabIndex = 2;
             // 
             // ID
@@ -596,7 +597,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "BinModuleControl";
-            this.Size = new System.Drawing.Size(1332, 1705);
+            this.Size = new System.Drawing.Size(1340, 1705);
             this.Load += new System.EventHandler(this.BinModuleControl_Load);
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemComboBox3)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);

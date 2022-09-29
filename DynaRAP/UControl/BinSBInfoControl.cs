@@ -2,6 +2,8 @@
 using DevExpress.XtraEditors;
 using DevExpress.XtraGrid.Columns;
 using DynaRAP.Data;
+using DynaRAP.UTIL;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,8 +18,10 @@ namespace DynaRAP.UControl
 {
     public partial class BinSBInfoControl : DevExpress.XtraEditors.XtraUserControl
     {
-        public BinSBInfoControl()
+        string shortBlockSeq = null;
+        public BinSBInfoControl(string shortBlockSeq)
         {
+            this.shortBlockSeq = shortBlockSeq;
             InitializeComponent();
         }
 
@@ -75,25 +79,32 @@ namespace DynaRAP.UControl
 
         private void InitializeSBParamList()
         {
-            List<SBParameter> list = new List<SBParameter>();
+            List<SBParameter> SBParameterList = new List<SBParameter>();
+            List<SBResult> SBResultList = new List<SBResult>();
 
-            list.Add(new SBParameter("MACH", "SW903_NM", 0, 0, 0));
-            list.Add(new SBParameter("동압", "SW903_NM", 0, 0, 0));
-            list.Add(new SBParameter("고도", "SW903_NM", 0, 0, 0));
-            list.Add(new SBParameter("AOA", "SW903_NM", 0, 0, 0));
-            list.Add(new SBParameter("MACH", "SW903_NM", 0, 0, 0));
-            list.Add(new SBParameter("MACH", "SW903_NM", 0, 0, 0));
-            list.Add(new SBParameter("MACH", "SW903_NM", 0, 0, 0));
-            list.Add(new SBParameter("MACH", "SW903_NM", 0, 0, 0));
-            list.Add(new SBParameter("MACH", "SW903_NM", 0, 0, 0));
-            list.Add(new SBParameter("MACH", "SW903_NM", 0, 0, 0));
-            list.Add(new SBParameter("MACH", "SW903_NM", 0, 0, 0));
-            list.Add(new SBParameter("MACH", "SW903_NM", 0, 0, 0));
-            list.Add(new SBParameter("MACH", "SW903_NM", 0, 0, 0));
-            list.Add(new SBParameter("MACH", "SW903_NM", 0, 0, 0));
-            list.Add(new SBParameter("MACH", "SW903_NM", 0, 0, 0));
 
-            this.gridControl2.DataSource = list;
+            string sendData = string.Format(@"
+            {{
+            ""command"":""param-list"",
+            ""blockSeq"":""{0}""
+            }}", shortBlockSeq);
+            string responseData = Utils.GetPostData(System.Configuration.ConfigurationManager.AppSettings["UrlShortBlock"], sendData);
+            if (responseData != null)
+            {
+                ResponseParamList responseParam = JsonConvert.DeserializeObject<ResponseParamList>(responseData);
+                if (responseParam.code == 200)
+                {
+                    foreach(var paramList in responseParam.response.paramData)
+                    {
+                        SBParameterList.Add(new SBParameter( (paramList.propInfo==null? "": paramList.propInfo.propType) ,paramList.paramKey, paramList.paramValueMap.blockMin, paramList.paramValueMap.blockMax, paramList.paramValueMap.blockMax));
+                        SBResultList.Add(new SBResult(paramList.paramValueMap.psd, paramList.paramValueMap.rms, paramList.paramValueMap.n0, paramList.paramValueMap.zPeak, paramList.paramValueMap.zValley));
+
+                    }
+                }
+            }
+
+
+            this.gridControl2.DataSource = SBParameterList;
 
             //gridView2.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
 
@@ -155,15 +166,7 @@ namespace DynaRAP.UControl
             colAvg.OptionsColumn.ReadOnly = true;
 
 
-        }
-
-        private void InitializeSBResult()
-        {
-            List<SBResult> list = new List<SBResult>();
-
-            list.Add(new SBResult(-1, -1, -1, -1, -1));
-
-            this.gridControl3.DataSource = list;
+            this.gridControl3.DataSource = SBResultList;
 
             //gridView3.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
 
@@ -227,6 +230,12 @@ namespace DynaRAP.UControl
             //colResultValue.Width = 60;
             colResultValue.Caption = "ResultValue";
             colResultValue.OptionsColumn.ReadOnly = true;
+        }
+
+        private void InitializeSBResult()
+        {
+
+           
 
 
         }

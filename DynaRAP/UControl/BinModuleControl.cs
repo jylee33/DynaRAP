@@ -34,10 +34,10 @@ namespace DynaRAP.UControl
 
         BinTableData binTableResponse = null;
         List<ResponsePreset> presetList = null;
-        List<ResponseParam> paramList = null;
         List<PresetParamData> gridList = null;
         List<BinGridData> binGridData = null;
         List<ParamDatas> selectedParamDataList = new List<ParamDatas>();
+        List<ParamDatas> paramListData = null;
         string binMetaSeq = null;
 
         public BinModuleControl()
@@ -59,69 +59,11 @@ namespace DynaRAP.UControl
             flowLayoutPanel1.HorizontalScroll.Visible = false;
             flowLayoutPanel1.VerticalScroll.Visible = true;
 
-            paramList = GetParamList();
-
             InitializeTreeDataList();
 
             GetBinTableList();
         }
 
-        private List<ResponseParam> GetParamList()
-        {
-            ListParamJsonData result = null;
-
-            try
-            {
-                string url = ConfigurationManager.AppSettings["UrlParam"];
-                string sendData = @"
-                {
-                ""command"":""list"",
-                ""pageNo"":1,
-                ""pageSize"":3000
-                }";
-
-                log.Info("url : " + url);
-                log.Info(sendData);
-
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-                request.Method = "POST";
-                request.ContentType = "application/json";
-                request.Timeout = 30 * 1000;
-                //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
-
-                // POST할 데이타를 Request Stream에 쓴다
-                byte[] bytes = Encoding.ASCII.GetBytes(sendData);
-                request.ContentLength = bytes.Length; // 바이트수 지정
-
-                using (Stream reqStream = request.GetRequestStream())
-                {
-                    reqStream.Write(bytes, 0, bytes.Length);
-                }
-
-                // Response 처리
-                string responseText = string.Empty;
-                using (WebResponse resp = request.GetResponse())
-                {
-                    Stream respStream = resp.GetResponseStream();
-                    using (StreamReader sr = new StreamReader(respStream))
-                    {
-                        responseText = sr.ReadToEnd();
-                    }
-                }
-
-                //Console.WriteLine(responseText);
-                result = JsonConvert.DeserializeObject<ListParamJsonData>(responseText);
-            }
-            catch (Exception ex)
-            {
-                log.Error(ex.Message);
-                MessageBox.Show(ex.Message);
-                return null;
-            }
-
-            return result.response;
-
-        }
         private void InitializeTreeDataList()
         {
             //treeList1.Parent = this;
@@ -200,6 +142,25 @@ namespace DynaRAP.UControl
                         parent[e.Column] = checkedValue;
                 }
             }
+            List<ParamDatas> paramDatas = GetParamListByPartsShortblock();
+            if (paramListData != null)
+            {
+                List<string> seqList1 = paramListData.Select(item => item.seq).ToList();
+                List<string> seqList2 = paramDatas.Select(item => item.seq).ToList();
+
+
+                //bool test = (Enumerable.SequenceEqual(seqList1, seqList2));
+                if (!Enumerable.SequenceEqual(seqList1, seqList2))
+                {
+                    if (panelParamCnt.Controls.Count != 0)
+                    {
+                        MessageBox.Show("선택된 ShortBlock의 변경으로 \nparameter의 변경이 있어 선택된 parameter를 초기화 합니다.");
+                    }
+                    panelParamCnt.Controls.Clear();
+                    selectedParamDataList.Clear();
+                    paramListData = paramDatas;
+                }
+            }
         }
 
         private void repositoryItemCheckEdit1_EditValueChanged(object sender, EventArgs e)
@@ -213,125 +174,6 @@ namespace DynaRAP.UControl
                 e.Info.DisplayText = e.RowHandle.ToString();
         }
 
-
-        private List<ResponsePreset> GetPresetList()
-        {
-            ListPresetJsonData result = null;
-
-            try
-            {
-                string url = ConfigurationManager.AppSettings["UrlPreset"];
-                string sendData = @"
-                {
-                ""command"":""list"",
-                ""pageNo"":1,
-                ""pageSize"":3000
-                }";
-
-                log.Info("url : " + url);
-                log.Info(sendData);
-
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-                request.Method = "POST";
-                request.ContentType = "application/json";
-                request.Timeout = 30 * 1000;
-                //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
-
-                // POST할 데이타를 Request Stream에 쓴다
-                byte[] bytes = Encoding.ASCII.GetBytes(sendData);
-                request.ContentLength = bytes.Length; // 바이트수 지정
-
-                using (Stream reqStream = request.GetRequestStream())
-                {
-                    reqStream.Write(bytes, 0, bytes.Length);
-                }
-
-                // Response 처리
-                string responseText = string.Empty;
-                using (WebResponse resp = request.GetResponse())
-                {
-                    Stream respStream = resp.GetResponseStream();
-                    using (StreamReader sr = new StreamReader(respStream))
-                    {
-                        responseText = sr.ReadToEnd();
-                    }
-                }
-
-                //Console.WriteLine(responseText);
-                result = JsonConvert.DeserializeObject<ListPresetJsonData>(responseText);
-            }
-            catch (Exception ex)
-            {
-                log.Error(ex.Message);
-                MessageBox.Show(ex.Message);
-                return null;
-            }
-
-            return result.response;
-
-        }
-
-        private List<ResponseParam> GetPresetParamList(string presetPack)
-        {
-            ListParamJsonData result = null;
-
-            try
-            {
-                string url = ConfigurationManager.AppSettings["UrlPreset"];
-                string sendData = string.Format(@"
-                {{
-                ""command"":""param-list"",
-                ""presetPack"":""{0}"",
-                ""presetSeq"":"""",
-                ""paramPack"":"""",
-                ""paramSeq"":"""",
-                ""pageNo"":1,
-                ""pageSize"":3000
-                }}"
-                , presetPack);
-
-                log.Info("url : " + url);
-                log.Info(sendData);
-
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-                request.Method = "POST";
-                request.ContentType = "application/json";
-                request.Timeout = 30 * 1000;
-                //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
-
-                // POST할 데이타를 Request Stream에 쓴다
-                byte[] bytes = Encoding.ASCII.GetBytes(sendData);
-                request.ContentLength = bytes.Length; // 바이트수 지정
-
-                using (Stream reqStream = request.GetRequestStream())
-                {
-                    reqStream.Write(bytes, 0, bytes.Length);
-                }
-
-                // Response 처리
-                string responseText = string.Empty;
-                using (WebResponse resp = request.GetResponse())
-                {
-                    Stream respStream = resp.GetResponseStream();
-                    using (StreamReader sr = new StreamReader(respStream))
-                    {
-                        responseText = sr.ReadToEnd();
-                    }
-                }
-
-                //Console.WriteLine(responseText);
-                result = JsonConvert.DeserializeObject<ListParamJsonData>(responseText);
-            }
-            catch (Exception ex)
-            {
-                log.Error(ex.Message);
-                MessageBox.Show(ex.Message);
-                return null;
-            }
-
-            return result.response;
-
-        }
         private void hyperlinkBrowseSB_Click(object sender, EventArgs e)
         {
             MainForm mainForm = this.ParentForm as MainForm;
@@ -342,9 +184,45 @@ namespace DynaRAP.UControl
 
         private void btnCreateBIN_Click(object sender, EventArgs e)
         {
+           
+            if (panelParamCnt.Controls.Count < 2)
+            {
+                MessageBox.Show("파라미터가 2개 이상 선택되어야 BIN테이블 생성이 가능합니다.");
+                return;
+            }
+            List<PickUpParam> pickUpParamList = new List<PickUpParam>();
+            foreach (BinParameterSelectControl control in panelParamCnt.Controls)
+            {
+                PickUpParam pickUpParam = control.SelectedParamLIst();
+                if (pickUpParam != null)
+                {
+                    pickUpParamList.Add(pickUpParam);
+                }
+            }
+            BindingList<TreeData> treeDatas = treeList1.DataSource as BindingList<TreeData>;
+            var treeList = treeDatas.ToList();
+            List<TreeData> shortBlockList = treeList.FindAll(x => x.Check != false && x.Type == "shortblock");
+            List<string> shorBlockSeqList = shortBlockList.Select(x => x.Seq).ToList();
             MainForm mainForm = this.ParentForm as MainForm;
 
-            mainForm.PanelBinTable.Show();
+            mainForm.PanelBinTable.Text = "BIN TABLE";
+            BinTableControl binTableCtrl = new BinTableControl(selectedParamDataList, pickUpParamList, shorBlockSeqList, mainForm);
+            binTableCtrl.Dock = DockStyle.Fill;
+            //mainForm.PanelBinTable.Controls.Clear();
+            //mainForm.PanelBinTable.Controls.Add(binTableCtrl);
+            //mainForm.PanelBinTable.Show();
+
+            //mainForm.PanelBinTable.Hide();
+            DockPanel panelChart = new DockPanel();
+            panelChart = mainForm.DockManager1.AddPanel(DockingStyle.Float);
+            panelChart.FloatLocation = new Point(500, 100);
+            panelChart.FloatSize = new Size(1058, 528);
+            panelChart.Name = "BIN TABLE";
+            panelChart.Text = "BIN TABLE";
+            //chartControl.Dock = DockStyle.Fill;
+            panelChart.Controls.Add(binTableCtrl);
+            //binTableCtrl.Show();
+         
         }
 
 
@@ -358,8 +236,12 @@ namespace DynaRAP.UControl
             string responseData = Utils.GetPostData(ConfigurationManager.AppSettings["UrlBINTable"], sendData);
             if (responseData != null)
             {
+                binMetaSeq = null;
+                panelParamCnt.Controls.Clear();
+                selectedParamDataList.Clear();
                 binGridData = new List<BinGridData>();
                 binTableResponse = new BinTableData();
+
                 binTableResponse = JsonConvert.DeserializeObject<BinTableData>(responseData);
                 if (binTableResponse.response != null && binTableResponse.response.Count() != 0)
                 {
@@ -482,13 +364,27 @@ namespace DynaRAP.UControl
             binSaveRequest.pickUpParams = new List<PickUpParam>();
             if (type == "update")
             {
-
+                binSaveRequest.dataProps.tags = binGridData.tags;
                 binSaveRequest.binMetaSeq = binGridData.seq ;
             }
-           
+            else
+            {
+                string tags = "";
+                foreach(ButtonEdit btn in panelTag.Controls)
+                {
+                   tags += (btn.Text + "|");
+                  
+                }
+                if (tags != "")
+                {
+                    tags = tags.Substring(0, tags.Length - 1);
+                }
+                binSaveRequest.dataProps.tags = tags;
+            }
+
             binSaveRequest.dataProps.key = "value";
             binSaveRequest.dataProps.key2 = "value2";
-            binSaveRequest.dataProps.tags = binGridData.tags;
+
             binSaveRequest.command = "save";
             byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(binName.Text);
             string encName = Convert.ToBase64String(basebyte);
@@ -503,7 +399,11 @@ namespace DynaRAP.UControl
             }
             foreach(BinParameterSelectControl control in panelParamCnt.Controls)
             {
-                binSaveRequest.pickUpParams.Add(control.SelectedParamLIst());
+                PickUpParam pickUpParam = control.SelectedParamLIst();
+                if(pickUpParam != null)
+                {
+                    binSaveRequest.pickUpParams.Add(pickUpParam);
+                }
             }
             var json = JsonConvert.SerializeObject(binSaveRequest);
 
@@ -513,7 +413,9 @@ namespace DynaRAP.UControl
                 JsonData result = JsonConvert.DeserializeObject<JsonData>(responseData);
                 if (result.code == 200)
                 {
-                    MessageBox.Show(type =="save" ? "저장 성공": "수정 성공");
+                    MessageBox.Show(type == "save" ? "저장 성공" : "수정 성공");
+                    AllShortBlockUnChecked();
+                    GetBinTableList();
                 }
                 else
                 {
@@ -571,6 +473,15 @@ namespace DynaRAP.UControl
             {
                 panelTag.Controls.Clear();
             }
+
+            selectedParamDataList.Clear();
+            panelParamCnt.Controls.Clear();
+            paramListData = GetParamListByPartsShortblock();
+            foreach (var list in selectData.pickUpParams)
+            {
+                BinParameterSelectControl ct = new BinParameterSelectControl(this, paramListData,list);
+                panelParamCnt.Controls.Add(ct);
+            }
         }
 
         private void btnListModify_Click(object sender, EventArgs e)
@@ -602,6 +513,7 @@ namespace DynaRAP.UControl
                         binMetaSeq = null;
                         binName.Text = "";
                         AllShortBlockUnChecked();
+                        GetBinTableList();
                     }
                     else
                     {
@@ -680,8 +592,12 @@ namespace DynaRAP.UControl
             btn.Text = name;
             panelTag.Controls.Add(btn);
         }
-        public void removeControl(BinParameterSelectControl parameterSelectControl)
+        public void removeControl(BinParameterSelectControl parameterSelectControl, string seq = null)
         {
+            if(seq != null)
+            {
+                RemoveSelectedParams(seq);
+            }
             panelParamCnt.Controls.Remove(parameterSelectControl);
         }
         private void removeTag_ButtonClick(object sender, ButtonPressedEventArgs e)
@@ -712,45 +628,51 @@ namespace DynaRAP.UControl
 
         private void btnParameterAdd_ButtonClick(object sender, ButtonPressedEventArgs e)
         {
-
-            BinParameterSelectControl ct = new BinParameterSelectControl(this, GetParamListByPartsShortblock());
+            paramListData = GetParamListByPartsShortblock();
+            if(paramListData.Count == 0)
+            {
+                MessageBox.Show("선택된 shortblock에 공통된 파라미터가 없습니다.");
+                return;
+            }
+            BinParameterSelectControl ct = new BinParameterSelectControl(this, paramListData);
             panelParamCnt.Controls.Add(ct);
         }
 
         private List<ParamDatas> GetParamListByPartsShortblock()
         {
-            List<ParamDatas> responseParamList = new List<ParamDatas>();
+            //List<ParamDatas> responseParamList = new List<ParamDatas>();
             BindingList<TreeData> treeDatas = treeList1.DataSource as BindingList<TreeData>;
 
             var treeList = treeDatas.ToList();
             var shortBlockList = treeList.FindAll(x => x.Check != false && x.Type == "shortblock");
             var partList = treeList.FindAll(x => x.Check != false && x.Type == "part");
-            List<string> blockMetaSeq = new List<string>(); 
-            foreach(var part in partList)
-            {
-                string sendData = string.Format(@"
-                {{
-                ""command"":""param-list"",
-                ""partSeq"":""{0}""
-                }}", part.Seq);
-                string responseData = Utils.GetPostData(ConfigurationManager.AppSettings["UrlPart"], sendData);
-                if (responseData != null)
-                {
-                    ResponseParamList responseParam = JsonConvert.DeserializeObject<ResponseParamList>(responseData);
-                    if (responseParam.code == 200)
-                    {
-                        foreach (var paramData in responseParam.response.paramData)
-                        {
-                            if (responseParamList.FindIndex(x => x.seq == paramData.seq) == -1)
-                            {
-                                responseParamList.Add(paramData);
-                            }
-                        }
-                    }
-                }
-            }
-
-            foreach(var shortblock in shortBlockList)
+            List<string> blockMetaSeq = new List<string>();
+            //foreach (var part in partList)
+                //{
+                //    string sendData = string.Format(@"
+                //    {{
+                //    ""command"":""param-list"",
+                //    ""partSeq"":""{0}""
+                //    }}", part.Seq);
+                //    string responseData = Utils.GetPostData(ConfigurationManager.AppSettings["UrlPart"], sendData);
+                //    if (responseData != null)
+                //    {
+                //        ResponseParamList responseParam = JsonConvert.DeserializeObject<ResponseParamList>(responseData);
+                //        if (responseParam.code == 200)
+                //        {
+                //            foreach (var paramData in responseParam.response.paramData)
+                //            {
+                //                if (responseParamList.FindIndex(x => x.seq == paramData.seq) == -1)
+                //                {
+                //                    responseParamList.Add(paramData);
+                //                }
+                //            }
+                //        }
+                //    }
+                //}
+            Dictionary<ParamDatas, int> paramSeqDic = new Dictionary<ParamDatas, int>();
+            int i = 0;
+            foreach (var shortblock in shortBlockList)
             {
                 if (!blockMetaSeq.Contains(shortblock.blockMetaSeq))
                 {
@@ -768,17 +690,28 @@ namespace DynaRAP.UControl
                         {
                             foreach (var paramData in responseParam.response.paramData)
                             {
-                                if (responseParamList.FindIndex(x => x.seq == paramData.seq) == -1)
+                                if (paramSeqDic.Where(paramD => paramD.Key.seq == paramData.seq).Count() != 0)
                                 {
-                                    responseParamList.Add(paramData);
+                                    ParamDatas selectedParam = paramSeqDic.Where(paramD => paramD.Key.seq == paramData.seq).Select(paramD => paramD.Key).ToList()[0];
+                                    paramSeqDic[selectedParam] = paramSeqDic[selectedParam] +1;
                                 }
+                                else
+                                {
+                                    paramSeqDic.Add(paramData, 1);
+                                }
+                                //if (responseParamList.FindIndex(x => x.seq == paramData.seq) == -1)
+                                //{
+                                //    responseParamList.Add(paramData);
+                                //}
                             }
                         }
+                        i++;
                     }
                 }
             }
-            return responseParamList;
-             
+
+            return paramSeqDic.Where(paramD => paramD.Value == i).Select(paramD => paramD.Key).ToList();
+
         }
 
         public bool SetSelectedParams(ParamDatas paramDatas)

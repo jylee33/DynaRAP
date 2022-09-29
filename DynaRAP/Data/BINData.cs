@@ -163,6 +163,30 @@ namespace DynaRAP.Data
         public string presetPack { get; set; }
         public string presetSeq { get; set; }
         public PropInfo propInfo { get; set; }
+        public ParamValueMap paramValueMap { get; set; }
+    }
+
+    public class ParamValueMap
+    {
+        public string seq { get; set; }
+        public string blockMetaSeq { get; set; }
+        public string blockSeq { get; set; }
+        public int unionParamSeq { get; set; }
+        public double blockMin { get; set; }
+        public double blockMax { get; set; }
+        public double blockAvg { get; set; }
+        public double psd { get; set; }
+        public double rms { get; set; }
+        public double n0 { get; set; }
+        public double zarray { get; set; }
+        public double zPeak { get; set; }
+        public double zValley { get; set; }
+        public double blockLpfMin { get; set; }
+        public double blockLpfMax { get; set; }
+        public double blockLpfAvg { get; set; }
+        public double blockHpfMin { get; set; }
+        public double blockHpfMax { get; set; }
+        public double blockHpfAvg { get; set; }
     }
 
 
@@ -184,6 +208,19 @@ namespace DynaRAP.Data
         {
             this.seq = seq;
             this.paramKey = paramKey;
+        }
+    }
+
+    public class MinMaxRagne
+    {
+        public double min { get; set; }
+        public double max { get; set; }
+        public string range { get; set; }
+        public MinMaxRagne(double min, double max)
+        {
+            this.min = min;
+            this.max = max;
+            this.range = string.Format("{0}-{1}", min, max);
         }
     }
 }
