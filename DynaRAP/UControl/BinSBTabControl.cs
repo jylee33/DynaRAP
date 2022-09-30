@@ -60,7 +60,7 @@ namespace DynaRAP.UControl
                         byte[] byte64 = Convert.FromBase64String(responseParam.response.blockName);
                         string shorblockName = Encoding.UTF8.GetString(byte64);
 
-                        AddTabPage(shorblockName, shortblock);
+                        AddTabPage(responseParam.response.partSeq,shorblockName, shortblock);
 
 
                     }
@@ -85,14 +85,14 @@ namespace DynaRAP.UControl
             }
         }
 
-        private void AddTabPage(string tabName, string shortBlockSeq)
+        private void AddTabPage(string partSeq, string tabName, string shortBlockSeq)
         {
             XtraTabPage tabPage = new XtraTabPage();
             this.xtraTabControl1.TabPages.Add(tabPage);
             tabPage.Name = tabName;
             tabPage.Text = tabName;
 
-            BinSBInfoControl sbInfoControl = new BinSBInfoControl(shortBlockSeq);
+            BinSBInfoControl sbInfoControl = new BinSBInfoControl(partSeq, shortBlockSeq);
             sbInfoControl.Dock = DockStyle.Fill;
             tabPage.Controls.Add(sbInfoControl);
         }

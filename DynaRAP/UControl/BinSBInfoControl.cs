@@ -18,9 +18,14 @@ namespace DynaRAP.UControl
 {
     public partial class BinSBInfoControl : DevExpress.XtraEditors.XtraUserControl
     {
+        string paramSeq = null;
         string shortBlockSeq = null;
-        public BinSBInfoControl(string shortBlockSeq)
+        string partSeq = null;
+        List<string> paramNameList = null;
+
+        public BinSBInfoControl(string partSeq , string shortBlockSeq)
         {
+            this.partSeq = partSeq;
             this.shortBlockSeq = shortBlockSeq;
             InitializeComponent();
         }
@@ -36,12 +41,48 @@ namespace DynaRAP.UControl
         private void InitializeSBInfo()
         {
             DataTable dt = new DataTable();
-
             dt.Columns.Add("ColumnKey");
             dt.Columns.Add("ColumnValue");
+            string partName = null;
+            string updateName = null;
+            string sendData = string.Format(@"
+                {{
+                ""command"":""info"",
+                ""partSeq"":""{0}""
+                }}", partSeq);
+            string responseData = Utils.GetPostData(System.Configuration.ConfigurationManager.AppSettings["UrlPart"], sendData);
+            if (responseData != null)
+            {
+                SBPartInfoResponse responseParam = JsonConvert.DeserializeObject<SBPartInfoResponse>(responseData);
+                if (responseParam.code == 200)
+                {
 
-            dt.Rows.Add("비행데이터", "2022-03-03_형상A_1호기.bin");
-            dt.Rows.Add("비행분할데이터", "버펫팅_02.bpt");
+                    byte[] byte64 = Convert.FromBase64String(responseParam.response.partName);
+                    partName = Encoding.UTF8.GetString(byte64);
+
+
+                    string uploadSendData = string.Format(@"
+                    {{
+                    ""command"":""progress"",
+                    ""uploadSeq"":""{0}""
+                    }}", responseParam.response.uploadSeq);
+                    string responseText = Utils.GetPostData(System.Configuration.ConfigurationManager.AppSettings["UrlImport"], uploadSendData);
+                    if (responseText != null)
+                    {
+                        ImportResponse result = JsonConvert.DeserializeObject<ImportResponse>(responseText);
+                        if (result.code == 200)
+                        {
+                            byte[] updateByte64 = Convert.FromBase64String(result.response.uploadName);
+                            updateName = Encoding.UTF8.GetString(updateByte64);
+                        }
+                    }
+                   
+                   
+                }
+            }
+
+            dt.Rows.Add("비행데이터", updateName);
+            dt.Rows.Add("비행분할데이터", partName) ;
 
             dt.AcceptChanges();
 
@@ -81,7 +122,8 @@ namespace DynaRAP.UControl
         {
             List<SBParameter> SBParameterList = new List<SBParameter>();
             List<SBResult> SBResultList = new List<SBResult>();
-
+            paramSeq = string.Empty;
+            paramNameList = new List<string>();
 
             string sendData = string.Format(@"
             {{
@@ -94,15 +136,23 @@ namespace DynaRAP.UControl
                 ResponseParamList responseParam = JsonConvert.DeserializeObject<ResponseParamList>(responseData);
                 if (responseParam.code == 200)
                 {
-                    foreach(var paramList in responseParam.response.paramData)
+                    foreach (var paramList in responseParam.response.paramData)
                     {
-                        SBParameterList.Add(new SBParameter( (paramList.propInfo==null? "": paramList.propInfo.propType) ,paramList.paramKey, paramList.paramValueMap.blockMin, paramList.paramValueMap.blockMax, paramList.paramValueMap.blockMax));
+                        if(paramSeq == String.Empty)
+                        {
+                            paramSeq = string.Format(@"{0}""{1}""", paramSeq, paramList.seq);
+                        }
+                        else
+                        {
+                            paramSeq = string.Format(@"{0},""{1}""", paramSeq, paramList.seq);
+                        }
+                        paramNameList.Add(paramList.paramKey);
+                        SBParameterList.Add(new SBParameter((paramList.propInfo == null ? "" : paramList.propInfo.propType), paramList.paramKey, paramList.paramValueMap.blockMin, paramList.paramValueMap.blockMax, paramList.paramValueMap.blockMax));
                         SBResultList.Add(new SBResult(paramList.paramValueMap.psd, paramList.paramValueMap.rms, paramList.paramValueMap.n0, paramList.paramValueMap.zPeak, paramList.paramValueMap.zValley));
 
                     }
                 }
             }
-
 
             this.gridControl2.DataSource = SBParameterList;
 
@@ -185,8 +235,6 @@ namespace DynaRAP.UControl
             gridView3.OptionsSelection.EnableAppearanceFocusedRow = false;
             gridView3.OptionsSelection.EnableAppearanceHideSelection = false;
 
-            gridView3.HorzScrollVisibility = DevExpress.XtraGrid.Views.Base.ScrollVisibility.Never;
-            gridView3.VertScrollVisibility = DevExpress.XtraGrid.Views.Base.ScrollVisibility.Never;
 
             gridView3.OptionsSelection.MultiSelectMode = DevExpress.XtraGrid.Views.Grid.GridMultiSelectMode.RowSelect;
             gridView3.OptionsSelection.EnableAppearanceFocusedCell = false;
@@ -242,27 +290,44 @@ namespace DynaRAP.UControl
 
         private void InitializeSBData()
         {
-            List<SBParameter> list = new List<SBParameter>();
+            DataTable dt = new DataTable();
+            dt.Columns.Add("julianTime");
+            foreach(var paramName in paramNameList)
+            {
+                dt.Columns.Add(paramName);
+            }
+            string sendData = string.Format(@"
+             {{
+                ""command"":""row-data"",
+                ""blockSeq"":""{0}"",
+                ""julianRange"":["""", """"]
+            }}", shortBlockSeq);
+            string responseData = Utils.GetPostData(System.Configuration.ConfigurationManager.AppSettings["UrlShortBlock"], sendData);
+            if (responseData != null)
+            {
+                PartInfoResponse responseParam = JsonConvert.DeserializeObject<PartInfoResponse>(responseData);
+                if (responseParam.code == 200)
+                {
+                    for(int i= 0; i< responseParam.response.julianSet[0].Count(); i++)
+                    {
 
-            list.Add(new SBParameter("MACH", "SW903_NM", 0, 0, 0));
-            list.Add(new SBParameter("동압", "SW903_NM", 0, 0, 0));
-            list.Add(new SBParameter("고도", "SW903_NM", 0, 0, 0));
-            list.Add(new SBParameter("AOA", "SW903_NM", 0, 0, 0));
-            list.Add(new SBParameter("MACH", "SW903_NM", 0, 0, 0));
-            list.Add(new SBParameter("MACH", "SW903_NM", 0, 0, 0));
-            list.Add(new SBParameter("MACH", "SW903_NM", 0, 0, 0));
-            list.Add(new SBParameter("MACH", "SW903_NM", 0, 0, 0));
-            list.Add(new SBParameter("MACH", "SW903_NM", 0, 0, 0));
-            list.Add(new SBParameter("MACH", "SW903_NM", 0, 0, 0));
-            list.Add(new SBParameter("MACH", "SW903_NM", 0, 0, 0));
-            list.Add(new SBParameter("MACH", "SW903_NM", 0, 0, 0));
-            list.Add(new SBParameter("MACH", "SW903_NM", 0, 0, 0));
-            list.Add(new SBParameter("MACH", "SW903_NM", 0, 0, 0));
-            list.Add(new SBParameter("MACH", "SW903_NM", 0, 0, 0));
+                        DataRow dataRow = dt.NewRow();
+                        dataRow["julianTime"] = responseParam.response.julianSet[0][i];
+                        for(int j=0;j<paramNameList.Count();j++)
+                        {
 
-            this.gridControl4.DataSource = list;
+                            dataRow[paramNameList[j]] = responseParam.response.data[i][j];
+                        }
+                        dt.Rows.Add(dataRow);
+                    }
+                }
+            }
 
-            //gridView4.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+            dt.AcceptChanges();
+
+            this.gridControl4.DataSource = dt;
+
+
 
             gridView4.OptionsView.ShowColumnHeaders = true;
             gridView4.OptionsView.ShowGroupPanel = false;
@@ -282,44 +347,44 @@ namespace DynaRAP.UControl
             gridView4.OptionsSelection.MultiSelectMode = DevExpress.XtraGrid.Views.Grid.GridMultiSelectMode.RowSelect;
             gridView4.OptionsSelection.EnableAppearanceFocusedCell = false;
 
-            GridColumn colType = gridView4.Columns["ParameterType"];
-            colType.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
-            colType.OptionsColumn.FixedWidth = true;
-            colType.Width = 120;
-            colType.Caption = "파라미터 구분";
-            colType.OptionsColumn.ReadOnly = true;
+            //GridColumn colType = gridView4.Columns["ParameterType"];
+            //colType.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
+            //colType.OptionsColumn.FixedWidth = true;
+            //colType.Width = 120;
+            //colType.Caption = "파라미터 구분";
+            //colType.OptionsColumn.ReadOnly = true;
 
-            GridColumn colName = gridView4.Columns["ParameterName"];
-            colName.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
-            colName.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
-            colName.OptionsColumn.FixedWidth = true;
-            colName.Width = 150;
-            colName.Caption = "파라미터 이름";
-            colName.OptionsColumn.ReadOnly = true;
+            //GridColumn colName = gridView4.Columns["ParameterName"];
+            //colName.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
+            //colName.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
+            //colName.OptionsColumn.FixedWidth = true;
+            //colName.Width = 150;
+            //colName.Caption = "파라미터 이름";
+            //colName.OptionsColumn.ReadOnly = true;
 
-            GridColumn colMin = gridView4.Columns["Min"];
-            colMin.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
-            colMin.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
-            colMin.OptionsColumn.FixedWidth = true;
-            colMin.Width = 60;
-            colMin.Caption = "MIN";
-            colMin.OptionsColumn.ReadOnly = true;
+            //GridColumn colMin = gridView4.Columns["Min"];
+            //colMin.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
+            //colMin.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
+            //colMin.OptionsColumn.FixedWidth = true;
+            //colMin.Width = 60;
+            //colMin.Caption = "MIN";
+            //colMin.OptionsColumn.ReadOnly = true;
 
-            GridColumn colMax = gridView4.Columns["Max"];
-            colMax.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
-            colMax.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
-            colMax.OptionsColumn.FixedWidth = true;
-            colMax.Width = 60;
-            colMax.Caption = "MAX";
-            colMax.OptionsColumn.ReadOnly = true;
+            //GridColumn colMax = gridView4.Columns["Max"];
+            //colMax.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
+            //colMax.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
+            //colMax.OptionsColumn.FixedWidth = true;
+            //colMax.Width = 60;
+            //colMax.Caption = "MAX";
+            //colMax.OptionsColumn.ReadOnly = true;
 
-            GridColumn colAvg = gridView4.Columns["Avg"];
-            colAvg.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
-            colAvg.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
-            colAvg.OptionsColumn.FixedWidth = true;
-            colAvg.Width = 60;
-            colAvg.Caption = "AVG";
-            colAvg.OptionsColumn.ReadOnly = true;
+            //GridColumn colAvg = gridView4.Columns["Avg"];
+            //colAvg.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
+            //colAvg.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
+            //colAvg.OptionsColumn.FixedWidth = true;
+            //colAvg.Width = 60;
+            //colAvg.Caption = "AVG";
+            //colAvg.OptionsColumn.ReadOnly = true;
 
 
         }

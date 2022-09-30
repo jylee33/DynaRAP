@@ -98,7 +98,7 @@ namespace DynaRAP.UControl
 
         private DataTable GetDataTable(string keyName, ParamDatas header, ParamDatas row)
         {
-            Dictionary<MinMaxRagne, Dictionary<MinMaxRagne, List<string>>> countSeqDic = new Dictionary<MinMaxRagne, Dictionary<MinMaxRagne, List<string>>>();
+          Dictionary<MinMaxRagne, Dictionary<MinMaxRagne, List<string>>> countSeqDic = new Dictionary<MinMaxRagne, Dictionary<MinMaxRagne, List<string>>>();
 
             DataTable dt = new DataTable();
             foreach (var list in pickUpParamList.Find(x => x.paramSeq == row.seq).userParamTable)

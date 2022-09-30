@@ -49,6 +49,10 @@ namespace DynaRAP.UControl
 
         private void SelectSBControl_Load(object sender, EventArgs e)
         {
+            if (pickUpParam != null && pickUpParam.userParamTable != null)
+            {
+                pickUpParam.userParamTable = pickUpParam.userParamTable.OrderBy(x => x.min).ToList();
+            }
             gridControl1.DataSource = pickUpParam.userParamTable;
             propTypeInit();
             if(pickUpParam.userParamTable != null)
