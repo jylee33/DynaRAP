@@ -43,42 +43,91 @@ public class EquationHelper {
     }
 
     public void loadParamModuleData(CryptoField moduleSeq) throws HandledServiceException {
-        ParamModuleVO paramModule = ApiController.getService(ParamModuleService.class).getParamModuleBySeq(moduleSeq);
-        paramModule.setSources(ApiController.getService(ParamModuleService.class).getParamModuleSourceList(moduleSeq));
-        if (paramModule.getSources() == null) paramModule.setSources(new ArrayList<>());
+        ParamModuleVO paramModule = paramModuleData.get(moduleSeq.valueOf());
 
-        paramModule.setParamData(new HashMap<>());
+        if (paramModule == null) {
+            paramModule = ApiController.getService(ParamModuleService.class).getParamModuleBySeq(moduleSeq);
+            paramModule.setSources(ApiController.getService(ParamModuleService.class).getParamModuleSourceList(moduleSeq));
+            if (paramModule.getSources() == null) paramModule.setSources(new ArrayList<>());
 
-        for (ParamModuleVO.Source source : paramModule.getSources()) {
-            if (source.getSourceType().equalsIgnoreCase("part")) {
-                loadPartData(source);
-                paramModule.getParamData().put(source.getSourceNo() + "_" + source.getParam().getParamKey(), source);
-            }
-            else if (source.getSourceType().equalsIgnoreCase("shortblock")) {
-                loadShortBlockData(source);
-                paramModule.getParamData().put(source.getSourceNo() + "_" + source.getParam().getParamKey(), source);
-            }
-            else if (source.getSourceType().equalsIgnoreCase("dll")) {
-                loadDllData(source);
-                paramModule.getParamData().put(source.getSourceNo() + "_" + source.getDllParam().getParamName().originOf(), source);
-            }
-            else if (source.getSourceType().equalsIgnoreCase("parammodule")) {
-                loadEquationData(source);
-                paramModule.getParamData().put(source.getSourceNo() + "_" + source.getEquation().getEqName().originOf(), source);
-            }
-        }
+            paramModule.setParamData(new HashMap<>());
 
-        paramModule.setEquations(ApiController.getService(ParamModuleService.class).getParamModuleEqList(moduleSeq));
-        if (paramModule.getEquations() == null) paramModule.setEquations(new ArrayList<>());
+            for (ParamModuleVO.Source source : paramModule.getSources()) {
+                if (source.getSourceType().equalsIgnoreCase("part")) {
+                    loadPartData(source);
+                    paramModule.getParamData().put(source.getSourceNo() + "_" + source.getParam().getParamKey(), source);
+                } else if (source.getSourceType().equalsIgnoreCase("shortblock")) {
+                    loadShortBlockData(source);
+                    paramModule.getParamData().put(source.getSourceNo() + "_" + source.getParam().getParamKey(), source);
+                } else if (source.getSourceType().equalsIgnoreCase("dll")) {
+                    loadDllData(source);
+                    paramModule.getParamData().put(source.getSourceNo() + "_" + source.getDllParam().getParamName().originOf(), source);
+                } else if (source.getSourceType().equalsIgnoreCase("parammodule")) {
+                    loadEquationData(source);
+                    paramModule.getParamData().put(source.getSourceNo() + "_" + source.getEquation().getEqName().originOf(), source);
+                }
+            }
 
-        for (ParamModuleVO.Equation equation : paramModule.getEquations()) {
-            loadEquationData(equation);
-            if (paramModule.getEqMap() == null)
-                paramModule.setEqMap(new HashMap<>());
-            paramModule.getEqMap().put(equation.getEqName().originOf(), equation);
+            paramModule.setEquations(ApiController.getService(ParamModuleService.class).getParamModuleEqList(moduleSeq));
+            if (paramModule.getEquations() == null) paramModule.setEquations(new ArrayList<>());
+
+            for (ParamModuleVO.Equation equation : paramModule.getEquations()) {
+                loadEquationData(equation);
+                if (paramModule.getEqMap() == null)
+                    paramModule.setEqMap(new HashMap<>());
+                paramModule.getEqMap().put(equation.getEqName().originOf(), equation);
+            }
         }
 
         paramModuleData.put(moduleSeq.valueOf(), paramModule);
+    }
+
+    public List<Object> loadPlotData(CryptoField moduleSeq, ParamModuleVO.Plot.PlotSource plotSource) throws HandledServiceException {
+        ParamModuleVO paramModule = paramModuleData.get(moduleSeq.valueOf());
+        if (paramModule == null) {
+            loadParamModuleData(moduleSeq);
+            paramModule = paramModuleData.get(moduleSeq.valueOf());
+        }
+
+        List<Object> sourceData = null;
+        if (!plotSource.getSourceType().equals("eq")) {
+            ParamModuleVO.Source moduleSource = null;
+            for (ParamModuleVO.Source source : paramModule.getSources()) {
+                if (source.getSeq().equals(plotSource.getSourceSeq())) {
+                    moduleSource = source;
+                    break;
+                }
+            }
+
+            if (moduleSource == null)
+                throw new HandledServiceException(411, "PLOT 데이터를 찾을 수 없습니다.");
+
+            sourceData = moduleSource.getData();
+        }
+        else {
+            ParamModuleVO.Equation equation = null;
+            for (ParamModuleVO.Equation eq : paramModule.getEquations()) {
+                if (eq.getSeq().equals(plotSource.getSourceSeq())) {
+                    equation = eq;
+                    break;
+                }
+            }
+
+            if (equation == null)
+                throw new HandledServiceException(411, "PLOT 데이터를 찾을 수 없습니다.");
+
+            sourceData = equation.getData();
+        }
+
+        List<Object> plotData = null;
+        if (sourceData != null) {
+            plotData = new ArrayList<>();
+            for (Object item : sourceData) {
+                plotData.add(item);
+            }
+        }
+
+        return plotData;
     }
 
     public JsonArray calculateEquationSingle(CryptoField moduleSeq, String equation) throws HandledServiceException {

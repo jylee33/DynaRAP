@@ -808,10 +808,43 @@ public class ServiceApiController extends ApiController {
         }
 
         if (command.equals("plot-data")) {
-            //
-            // TODO : data loading from redis
-            //
-            return ResponseHelper.response(200, "Success - ParamModule Plot Data", "");
+            CryptoField moduleSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "moduleSeq"))
+                moduleSeq = CryptoField.decode(payload.get("moduleSeq").getAsString(), 0L);
+
+            CryptoField plotSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "plotSeq"))
+                plotSeq = CryptoField.decode(payload.get("plotSeq").getAsString(), 0L);
+
+            if (moduleSeq == null || moduleSeq.isEmpty() || plotSeq == null || plotSeq.isEmpty())
+                throw new HandledServiceException(411, "파라미터를 확인하세요.");
+
+            equationHelper.setListOps(listOps);
+            equationHelper.setHashOps(hashOps);
+            equationHelper.setZsetOps(zsetOps);
+
+            equationHelper.loadParamModuleData(moduleSeq);
+
+            ParamModuleVO.Plot plotInfo = getService(ParamModuleService.class).getParamModulePlotBySeq(plotSeq);
+            if (plotInfo == null)
+                throw new HandledServiceException(411, "PLOT 정보를 찾을 수 없습니다.");
+
+            plotInfo.setDataProp(getService(RawService.class).getDataPropListToMap("plot", plotInfo.getSeq()));
+
+            plotInfo.setPlotSourceList(getService(ParamModuleService.class).getParamModulePlotSourceList(moduleSeq, plotSeq));
+            if (plotInfo.getPlotSourceList() == null) plotInfo.setPlotSourceList(new ArrayList<>());
+
+            List<List<Object>> plotDataList = new ArrayList<>();
+            plotInfo.setPlotSources(new ArrayList<>());
+
+            for (ParamModuleVO.Plot.Source plotSource : plotInfo.getPlotSourceList()) {
+                plotInfo.getPlotSources().add(ParamModuleVO.Plot.Source.getSimple(plotSource));
+
+                List<Object> plotData = equationHelper.loadPlotData(moduleSeq, ParamModuleVO.Plot.Source.getSimple(plotSource));
+                plotDataList.add(plotData);
+            }
+
+            return ResponseHelper.response(200, "Success - ParamModule Plot Data", 0, plotDataList, plotInfo);
         }
 
         if (command.equals("save-plot")) {
