@@ -11,7 +11,7 @@ namespace DynaRAP.Data
         public SBResult()
         {
         }
-        public SBResult(int psd, int rms, int n0, int rmsToPeek, int resultValue)
+        public SBResult(double psd, double rms, double n0, double rmsToPeek, double resultValue)
         {
             Psd = psd;
             Rms = rms;
@@ -19,10 +19,10 @@ namespace DynaRAP.Data
             RmsToPeek = rmsToPeek;
             ResultValue = resultValue;
         }
-        public int Psd { get; set; }
-        public int Rms { get; set; }
-        public int N0 { get; set; }
-        public int RmsToPeek { get; set; }
-        public int ResultValue { get; set; }
+        public double Psd { get; set; }
+        public double Rms { get; set; }
+        public double N0 { get; set; }
+        public double RmsToPeek { get; set; }
+        public double ResultValue { get; set; }
     }
 }

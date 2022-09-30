@@ -37,16 +37,16 @@
             this.xtraTabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.xtraTabControl1.Location = new System.Drawing.Point(0, 0);
             this.xtraTabControl1.Name = "xtraTabControl1";
-            this.xtraTabControl1.Size = new System.Drawing.Size(711, 414);
+            this.xtraTabControl1.Size = new System.Drawing.Size(711, 444);
             this.xtraTabControl1.TabIndex = 0;
             // 
             // BinTableControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 14F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.xtraTabControl1);
             this.Name = "BinTableControl";
-            this.Size = new System.Drawing.Size(711, 414);
+            this.Size = new System.Drawing.Size(711, 444);
             this.Load += new System.EventHandler(this.BinTableControl_Load);
             ((System.ComponentModel.ISupportInitialize)(this.xtraTabControl1)).EndInit();
             this.ResumeLayout(false);

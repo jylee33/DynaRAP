@@ -6,6 +6,8 @@ using DevExpress.XtraGrid.Views.BandedGrid;
 using DevExpress.XtraGrid.Views.Grid;
 using DevExpress.XtraTab;
 using DynaRAP.Data;
+using DynaRAP.UTIL;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -22,66 +24,216 @@ namespace DynaRAP.UControl
     {
         DockPanel binSBTabPanel = null;
         BinSBTabControl binSBTabCtrl = null;
-
-        public BinTableControl()
+        List<ParamDatas> paramDataList = null;
+        List<PickUpParam> pickUpParamList = null;
+        List<string> shortBlockSeqList = null;
+        Dictionary<string,string> firstColNameList= null;
+        List<ResponseParamList> responseParamList = null;
+        MainForm mainForm = null;
+        Dictionary<string, Dictionary<MinMaxRagne, Dictionary<MinMaxRagne, List<string>>>> rangeDic = new Dictionary<string, Dictionary<MinMaxRagne, Dictionary<MinMaxRagne, List<string>>>>();
+        public BinTableControl(List<ParamDatas> paramDataList, List<PickUpParam> pickUpParamList, List<string> shortBlockSeqList, MainForm mainForm)
         {
+            this.paramDataList = paramDataList;
+            this.pickUpParamList = pickUpParamList;
+            this.shortBlockSeqList = shortBlockSeqList;
+            this.mainForm = mainForm;
             InitializeComponent();
         }
 
         private void BinTableControl_Load(object sender, EventArgs e)
         {
-            DataTable dt = GetDataTable();
-            AddTabPage("AOA-Q", dt);
-            AddTabPage("AOA-AOS", dt);
-            AddTabPage("Q-AOS", dt);
+            firstColNameList = new Dictionary<string, string>();
+            int j = 1;
+            for(int i=j; i< paramDataList.Count();i++)
+            {
+               string showName = string.Format("{0}-{1}", paramDataList[i - 1].propInfo.paramUnit, paramDataList[i].propInfo.paramUnit);
+               string valueName = paramDataList[i - 1].paramKey + paramDataList[i].paramKey;
+                //DataTable dt = GetDataTable(paramDataList[i - 1], paramDataList[i]);
+               GetShortBlockParamList();
+               AddTabPage(showName, valueName, paramDataList[i - 1], paramDataList[i]);
+
+               if (i == paramDataList.Count() - 1)
+               {
+                    j++; 
+               }
+            }
+            //DataTable dt = GetDataTable(paramDataList[0], paramDataList[1]);
+            //DataTable dt1 = GetDataTable();
+            //AddTabPage("AOA-Q", dt);
+            //AddTabPage("AOA-AOS", dt1);
+            //AddTabPage("Q-AOS", dt);
+
         }
 
-        private DataTable GetDataTable()
+        private void GetShortBlockParamList()
         {
+            if(responseParamList == null)
+            {
+                responseParamList = new List<ResponseParamList>();
+            }
+            responseParamList.Clear();
+            //SBProgressForm form = new SBProgressForm(shortBlockSeqList.Count()-1);
+            //if (form.ShowDialog() == DialogResult.Cancel)
+            //{
+            //}
+            foreach (var shortblock in shortBlockSeqList.Select((value, index) => new { value, index }))
+            {
+
+                string sendData = string.Format(@"
+                {{
+                ""command"":""param-list"",
+                ""blockSeq"":""{0}""
+                }}", shortblock.value);
+                string responseData = Utils.GetPostData(System.Configuration.ConfigurationManager.AppSettings["UrlShortBlock"], sendData);
+                if (responseData != null)
+                {
+                    ResponseParamList responseParam = JsonConvert.DeserializeObject<ResponseParamList>(responseData);
+                    if (responseParam.code == 200)
+                    {
+                        responseParamList.Add(responseParam);
+                    }
+                }
+            }
+        }
+
+        private DataTable GetDataTable(string keyName, ParamDatas header, ParamDatas row)
+        {
+            Dictionary<MinMaxRagne, Dictionary<MinMaxRagne, List<string>>> countSeqDic = new Dictionary<MinMaxRagne, Dictionary<MinMaxRagne, List<string>>>();
+
             DataTable dt = new DataTable();
+            foreach (var list in pickUpParamList.Find(x => x.paramSeq == row.seq).userParamTable)
+            {
+                Dictionary<MinMaxRagne, List<string>> headerDic = new Dictionary<MinMaxRagne, List<string>>();
+                foreach (var list1 in pickUpParamList.Find(x => x.paramSeq == header.seq).userParamTable)
+                {
+                    headerDic.Add(new MinMaxRagne(list1.min,list1.max), new List<string>());
+                }
+                countSeqDic.Add(new MinMaxRagne(list.min,list.max), headerDic);
 
-            dt.Columns.Add("AOA");
-            dt.Columns.Add("Column1");
-            dt.Columns.Add("Column2");
-            dt.Columns.Add("Column3");
-            dt.Columns.Add("Column4");
-            dt.Columns.Add("Column5");
-            dt.Columns.Add("Column6");
-            dt.Columns.Add("Column7");
-            dt.Columns.Add("Column8");
-            dt.Columns.Add("Column9");
-            dt.Columns.Add("Column10");
-            dt.Columns.Add("Column11");
-            dt.Columns.Add("Column12");
-            dt.Columns.Add("Column13");
-            dt.Columns.Add("Column14");
-            dt.Columns.Add("Column15");
-            dt.Columns.Add("Column16");
-            dt.Columns.Add("Column17");
-            dt.Columns.Add("Column18");
-            dt.Columns.Add("Column19");
-            dt.Columns.Add("Column20");
+            }
 
-            dt.Rows.Add(10, 0, 0, 0, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
-            dt.Rows.Add(11, 0, 0, 0, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
-            dt.Rows.Add(12, 0, 0, 0, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
-            dt.Rows.Add(13, 0, 0, 0, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
-            dt.Rows.Add(14, 0, 0, 0, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
-            dt.Rows.Add(15, 0, 0, 0, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
-            dt.Rows.Add(16, 0, 0, 0, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
-            dt.Rows.Add(17, 0, 0, 0, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
-            dt.Rows.Add(18, 0, 0, 0, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
+            firstColNameList.Add(keyName, header.propInfo.paramUnit);
+            dt.Columns.Add(header.propInfo.paramUnit);
+            foreach (var list in pickUpParamList.Find(x => x.paramSeq == header.seq).userParamTable)
+            {
+                dt.Columns.Add(string.Format("{0}-{1}", list.min, list.max));
+            }
+
+            foreach(var responseParam in responseParamList)
+            {
+                var paramDataRow = responseParam.response.paramData.Find(x => x.seq == row.seq);
+                var paramDataHeader = responseParam.response.paramData.Find(x => x.seq == header.seq);
+                if (paramDataRow != null && paramDataHeader != null)
+                {
+                    var rowValue = countSeqDic.Where(dic => (dic.Key.max > paramDataRow.paramValueMap.blockAvg) && (dic.Key.min <= paramDataRow.paramValueMap.blockAvg)).Select(x => x.Key).ToList();
+                    if (rowValue.Count != 0)
+                    {
+                        var headerValue = countSeqDic[rowValue[0]].Where(dic => (dic.Key.max > paramDataHeader.paramValueMap.blockAvg) && (dic.Key.min <= paramDataHeader.paramValueMap.blockAvg)).Select(x => x.Key).ToList();
+                        if (headerValue.Count != 0)
+                        {
+                            countSeqDic[rowValue[0]][headerValue[0]].Add(responseParam.response.paramData[0].paramValueMap.blockSeq);
+                        }
+                    }
+                }
+            }
+            rangeDic.Add(keyName, countSeqDic);
+            //dt.Columns.Add(header.propInfo.paramUnit);
+            foreach(var list in countSeqDic.Keys)
+            {
+                DataRow dataRow = dt.NewRow();
+                dataRow[header.propInfo.paramUnit] = list.range;
+                foreach (var dic2 in countSeqDic[list].Keys)
+                {
+                    dataRow[dic2.range] = countSeqDic[list][dic2].Count();
+                }
+                //dt.Rows.Add(, 0, 0, 0, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
+                //countSeqDic
+                //dt.Columns.Add(list.range);
+                dt.Rows.Add(dataRow);
+            }
+            
+            //dt.Columns.Add("Column1");
+            //dt.Columns.Add("Column2");
+            //dt.Columns.Add("Column3");
+            //dt.Columns.Add("Column4");
+            //dt.Columns.Add("Column5");
+            //dt.Columns.Add("Column6");
+            //dt.Columns.Add("Column7");
+            //dt.Columns.Add("Column8");
+            //dt.Columns.Add("Column9");
+            //dt.Columns.Add("Column10");
+            //dt.Columns.Add("Column11");
+            //dt.Columns.Add("Column12");
+            //dt.Columns.Add("Column13");
+            //dt.Columns.Add("Column14");
+            //dt.Columns.Add("Column15");
+            //dt.Columns.Add("Column16");
+            //dt.Columns.Add("Column17");
+            //dt.Columns.Add("Column18");
+            //dt.Columns.Add("Column19");
+            //dt.Columns.Add("Column20");
+
+            //dt.Rows.Add(10, 0, 0, 0, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
+            //dt.Rows.Add(11, 0, 0, 0, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
+            //dt.Rows.Add(12, 0, 0, 0, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
+            //dt.Rows.Add(13, 0, 0, 0, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
+            //dt.Rows.Add(14, 0, 0, 0, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
+            //dt.Rows.Add(15, 0, 0, 0, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
+            //dt.Rows.Add(16, 0, 0, 0, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
+            //dt.Rows.Add(17, 0, 0, 0, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
+            //dt.Rows.Add(18, 0, 0, 0, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
 
             dt.AcceptChanges();
 
             return dt;
         }
+        //private DataTable GetDataTable()
+        //{
+        //    DataTable dt = new DataTable();
 
-        private void AddTabPage(string tabName, DataTable dt)
+        //    dt.Columns.Add("AOA");
+        //    dt.Columns.Add("Column1");
+        //    dt.Columns.Add("Column2");
+        //    dt.Columns.Add("Column3");
+        //    dt.Columns.Add("Column4");
+        //    dt.Columns.Add("Column5");
+        //    dt.Columns.Add("Column6");
+        //    dt.Columns.Add("Column7");
+        //    dt.Columns.Add("Column8");
+        //    dt.Columns.Add("Column9");
+        //    dt.Columns.Add("Column10");
+        //    dt.Columns.Add("Column11");
+        //    dt.Columns.Add("Column12");
+        //    dt.Columns.Add("Column13");
+        //    dt.Columns.Add("Column14");
+        //    dt.Columns.Add("Column15");
+        //    dt.Columns.Add("Column16");
+        //    dt.Columns.Add("Column17");
+        //    dt.Columns.Add("Column18");
+        //    dt.Columns.Add("Column19");
+        //    dt.Columns.Add("Column20");
+
+        //    dt.Rows.Add(10, 0, 0, 0, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
+        //    dt.Rows.Add(11, 0, 0, 0, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
+        //    dt.Rows.Add(12, 0, 0, 0, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
+        //    dt.Rows.Add(13, 0, 0, 0, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
+        //    dt.Rows.Add(14, 0, 0, 0, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
+        //    dt.Rows.Add(15, 0, 0, 0, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
+        //    dt.Rows.Add(16, 0, 0, 0, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
+        //    dt.Rows.Add(17, 0, 0, 0, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
+        //    dt.Rows.Add(18, 0, 0, 0, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
+
+        //    dt.AcceptChanges();
+
+        //    return dt;
+        //}
+
+        private void AddTabPage(string tabName, string tabValue, ParamDatas header, ParamDatas row)
         {
+            DataTable dt = GetDataTable(tabValue, header, row);
             XtraTabPage tabPage = new XtraTabPage();
             this.xtraTabControl1.TabPages.Add(tabPage);
-            tabPage.Name = tabName;
+            tabPage.Name = tabValue;
             tabPage.Text = tabName;
 
             GridControl gridControl = new GridControl();
@@ -137,12 +289,13 @@ namespace DynaRAP.UControl
 
             gridControl.DataSource = dt;
 
-            gridBand1.Caption = "AOS";
+            gridBand1.Caption = row.propInfo.paramUnit;
             gridBand1.AppearanceHeader.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
             //gridBand1.AppearanceHeader.BackColor = Color.Gray;
             //gridBand1.Columns.Clear();
 
-            BandedGridColumn colIndex = bandedGridView.Columns["AOA"];
+            BandedGridColumn colIndex = bandedGridView.Columns[header.propInfo.paramUnit];
+            //BandedGridColumn colIndex = bandedGridView.Columns["Q"];
             colIndex.OptionsColumn.FixedWidth = true;
             colIndex.Width = 80;
             //gridBand1.Columns.Add(colIndex);
@@ -184,9 +337,10 @@ namespace DynaRAP.UControl
         private void BandedGridView_RowCellStyle1(object sender, RowCellStyleEventArgs e)
         {
             GridView view = sender as GridView;
-
-            //if (e.Column != view.Columns["Column11"])
-            //    return;
+            var nowTabPage = this.xtraTabControl1.SelectedTabPage;
+            
+            if (e.Column == view.Columns[firstColNameList[nowTabPage.Name]])
+                return;
 
             //if (Convert.ToInt32(view.GetRowCellValue(e.RowHandle, view.Columns["Column11"])) > 10)
             //if (Convert.ToInt32(view.GetRowCellValue(e.RowHandle, "Column11")) > 10)
@@ -220,11 +374,29 @@ namespace DynaRAP.UControl
         private void BandedGridView_RowCellClick(object sender, RowCellClickEventArgs e)
         {
             BandedGridView gridView = sender as BandedGridView;
+            var nowTabPage = this.xtraTabControl1.SelectedTabPage;
 
-            string index = gridView.GetRowCellValue(e.RowHandle, "AOA").ToString();
-            Console.WriteLine("selected " + index);
+            if (e.Column.FieldName == firstColNameList[nowTabPage.Name])
+            {
+                return;
+            }
+            string rowKey = gridView.GetRowCellValue(e.RowHandle, firstColNameList[nowTabPage.Name]).ToString();
 
-            MainForm mainForm = this.ParentForm as MainForm;
+            string colKey = gridView.FocusedColumn.FieldName;
+
+            List<string> selectValue = null;
+            var rowValue = rangeDic[nowTabPage.Name].Where(dic => dic.Key.range == rowKey).Select(x => x.Key).ToList();
+            if (rowValue.Count != 0)
+            {
+                var headerValue = rangeDic[nowTabPage.Name][rowValue[0]].Where(dic => dic.Key.range == colKey).Select(x => x.Key).ToList();
+                if (headerValue.Count != 0)
+                {
+                    selectValue = rangeDic[nowTabPage.Name][rowValue[0]][headerValue[0]];
+                }
+            }
+
+
+            //MainForm mainForm = this.ParentForm as MainForm;
 
             // panel 추가
             if (binSBTabPanel == null)
@@ -234,15 +406,15 @@ namespace DynaRAP.UControl
                 binSBTabPanel.FloatSize = new Size(466, 620);
                 binSBTabPanel.Name = "ShortBlock Panel";
                 binSBTabPanel.Text = "ShortBlock Panel";
-                binSBTabCtrl = new BinSBTabControl();
-                binSBTabCtrl.IdxValue = index;
+                binSBTabCtrl = new BinSBTabControl(selectValue);
+                binSBTabCtrl.IdxValue = rowKey;
                 binSBTabCtrl.Dock = DockStyle.Fill;
                 binSBTabPanel.Controls.Add(binSBTabCtrl);
                 binSBTabPanel.ClosedPanel += BinSBTabPanel_ClosedPanel;
             }
             else
             {
-                binSBTabCtrl.IdxValue = index;
+                binSBTabCtrl.IdxValue = rowKey;
                 binSBTabPanel.Show();
             }
 

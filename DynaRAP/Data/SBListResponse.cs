@@ -29,5 +29,13 @@ namespace DynaRAP.Data
         public string registerUid { get; set; }
     }
 
+    public class SBInfoResponse
+    {
+        public int code { get; set; }
+        public string message { get; set; }
+        public ResponseSBList response { get; set; }
+        public ResponseAt responseAt { get; set; }
+        public int resultCount { get; set; }
+    }
 
 }

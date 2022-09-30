@@ -37,11 +37,27 @@ namespace DynaRAP.UControl
 
             XmlConfigurator.Configure(new FileInfo("log4net.xml"));
         }
+        public BinParameterSelectControl(BinModuleControl moduleControl, List<ParamDatas> paramDataList, PickUpParam pickUpParam)
+        {
+            this.pickUpParam = pickUpParam;
+            this.moduleControl = moduleControl;
+            this.paramDataList = paramDataList;
+            InitializeComponent();
+
+            XmlConfigurator.Configure(new FileInfo("log4net.xml"));
+        }
 
         private void SelectSBControl_Load(object sender, EventArgs e)
         {
             gridControl1.DataSource = pickUpParam.userParamTable;
             propTypeInit();
+            if(pickUpParam.userParamTable != null)
+            {
+                propTypeList.EditValue = propTypeList.Properties.GetKeyValueByDisplayText(pickUpParam.fieldType);
+
+                paramKeyInit();
+                paramList.EditValue = paramList.Properties.GetKeyValueByDisplayText(pickUpParam.paramKey);
+            }
 
         }
         private void propTypeInit()
@@ -74,12 +90,48 @@ namespace DynaRAP.UControl
             propTypeList.Properties.Columns["propType"].Visible = false;
             propTypeList.Properties.Columns["seq"].Visible = false;
             propTypeList.Properties.Columns["paramKey"].Visible = false;
+        }
 
+        private void paramKeyInit()
+        {
+            List<propTypesCombo> comboList = new List<propTypesCombo>();
+            foreach (var combo in paramDataList)
+            {
+                if (combo.propInfo != null)
+                {
+                    if (combo.propInfo.propType == propTypeList.GetColumnValue("propType").ToString() && combo.propInfo.paramUnit == propTypeList.GetColumnValue("paramUnit").ToString())
+                    {
+                        if (comboList.FindIndex(x => x.paramKey == combo.paramKey) == -1)
+                        {
+                            comboList.Add(new propTypesCombo(combo.paramKey, combo.seq));
+                        }
+                    }
+                }
+            }
+            paramList.Properties.DisplayMember = "paramKey";
+            paramList.Properties.NullText = "";
+
+            paramList.Properties.DataSource = comboList;
+
+
+            paramList.Properties.PopulateColumns();
+            paramList.Properties.Columns["seq"].Visible = false;
+            paramList.Properties.Columns["paramUnit"].Visible = false;
+            paramList.Properties.Columns["propType"].Visible = false;
+            paramList.Properties.Columns["viewName"].Visible = false;
         }
 
         private void btnClose_Click(object sender, EventArgs e)
         {
-            moduleControl.removeControl(this);
+            if(paramList.GetColumnValue("seq") == null)
+            {
+                moduleControl.removeControl(this);
+            }
+            else
+            {
+                moduleControl.removeControl(this, paramList.GetColumnValue("seq").ToString()) ;
+
+            }
         }
 
         private void btnAddNewRow_Click(object sender, EventArgs e)
@@ -96,32 +148,7 @@ namespace DynaRAP.UControl
 
         private void propTypeList_EditValueChanged(object sender, EventArgs e)
         {
-            List<propTypesCombo> comboList = new List<propTypesCombo>();
-            foreach (var combo in paramDataList)
-            {
-                if (combo.propInfo != null)
-                {
-                    if( combo.propInfo.propType == propTypeList.GetColumnValue("propType").ToString() && combo.propInfo.paramUnit == propTypeList.GetColumnValue("paramUnit").ToString())
-                    {
-                        if (comboList.FindIndex(x => x.paramKey == combo.paramKey) == -1)
-                        {
-                            comboList.Add(new propTypesCombo(combo.paramKey, combo.seq));
-                        }
-                    }
-                   
-                }
-            }
-
-            paramList.Properties.DataSource = comboList;
-
-            paramList.Properties.DisplayMember = "paramKey";
-            paramList.Properties.NullText = "";
-
-            paramList.Properties.PopulateColumns();
-            paramList.Properties.Columns["seq"].Visible = false;
-            paramList.Properties.Columns["paramUnit"].Visible = false;
-            paramList.Properties.Columns["propType"].Visible = false;
-            paramList.Properties.Columns["viewName"].Visible = false;
+            paramKeyInit();
         }
 
         private void paramList_EditValueChanged(object sender, EventArgs e)
@@ -158,6 +185,10 @@ namespace DynaRAP.UControl
 
         public PickUpParam SelectedParamLIst()
         {
+            if(paramList.GetColumnValue("seq") == null)
+            {
+                return null;
+            }
             ParamDatas paramDatas = paramDataList.Find(x => x.seq == paramList.GetColumnValue("seq").ToString());
             if(paramDatas != null)
             {

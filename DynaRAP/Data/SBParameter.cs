@@ -11,7 +11,7 @@ namespace DynaRAP.Data
         public SBParameter()
         {
         }
-        public SBParameter(string parameterType, string parameterName, int min, int max, int avg)
+        public SBParameter(string parameterType, string parameterName, double min, double max, double avg)
         {
             ParameterType = parameterType;
             ParameterName = parameterName;
@@ -21,8 +21,8 @@ namespace DynaRAP.Data
         }
         public string ParameterType { get; set; }
         public string ParameterName { get; set; }
-        public int Min { get; set; }
-        public int Max { get; set; }
-        public int Avg { get; set; }
+        public double Min { get; set; }
+        public double Max { get; set; }
+        public double Avg { get; set; }
     }
 }

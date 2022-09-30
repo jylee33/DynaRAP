@@ -54,7 +54,7 @@ namespace DynaRAP
 
         //DockPanel panelChart = null;
         //ChartControl chartControl = null;
-
+        
         public DevExpress.XtraBars.Docking.DockManager DockManager1
         {
             get
@@ -296,10 +296,10 @@ namespace DynaRAP
             //    panelBinTable = dockManager1.AddPanel(DockingStyle.Bottom);
             //}
             panelBinTable.Name = "panelBinTable";
-            panelBinTable.Text = "BIN TABLE";
-            BinTableControl binTableCtrl = new BinTableControl();
-            binTableCtrl.Dock = DockStyle.Fill;
-            panelBinTable.Controls.Add(binTableCtrl);
+            //panelBinTable.Text = "BIN TABLE";
+            //BinTableControl binTableCtrl = new BinTableControl();
+            //binTableCtrl.Dock = DockStyle.Fill;
+            //panelBinTable.Controls.Add(binTableCtrl);
             panelBinTable.Hide();
 
             //panelBinSbList.Name = "panelBinSbList";

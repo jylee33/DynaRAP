@@ -36,14 +36,12 @@
             this.gridColumn1 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridColumn2 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridColumn3 = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.repositoryItemImageComboBox1 = new DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox();
             this.imageCollection1 = new DevExpress.Utils.ImageCollection(this.components);
             this.btnAddNewRow = new DevExpress.XtraEditors.SimpleButton();
             this.propTypeList = new DevExpress.XtraEditors.LookUpEdit();
             this.paramList = new DevExpress.XtraEditors.LookUpEdit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemImageComboBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.propTypeList.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.paramList.Properties)).BeginInit();
@@ -70,9 +68,7 @@
             this.gridControl1.Location = new System.Drawing.Point(0, 46);
             this.gridControl1.MainView = this.gridView1;
             this.gridControl1.Name = "gridControl1";
-            this.gridControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
-            this.repositoryItemImageComboBox1});
-            this.gridControl1.Size = new System.Drawing.Size(243, 205);
+            this.gridControl1.Size = new System.Drawing.Size(243, 106);
             this.gridControl1.TabIndex = 4;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
@@ -94,6 +90,8 @@
             this.gridColumn1.Caption = "Nominal";
             this.gridColumn1.FieldName = "nominal";
             this.gridColumn1.Name = "gridColumn1";
+            this.gridColumn1.OptionsColumn.AllowSort = DevExpress.Utils.DefaultBoolean.False;
+            this.gridColumn1.OptionsFilter.FilterBySortField = DevExpress.Utils.DefaultBoolean.False;
             this.gridColumn1.Visible = true;
             this.gridColumn1.VisibleIndex = 0;
             // 
@@ -102,6 +100,8 @@
             this.gridColumn2.Caption = "Min";
             this.gridColumn2.FieldName = "min";
             this.gridColumn2.Name = "gridColumn2";
+            this.gridColumn2.OptionsColumn.AllowSort = DevExpress.Utils.DefaultBoolean.False;
+            this.gridColumn2.OptionsFilter.FilterBySortField = DevExpress.Utils.DefaultBoolean.False;
             this.gridColumn2.Visible = true;
             this.gridColumn2.VisibleIndex = 1;
             // 
@@ -110,16 +110,10 @@
             this.gridColumn3.Caption = "Max";
             this.gridColumn3.FieldName = "max";
             this.gridColumn3.Name = "gridColumn3";
+            this.gridColumn3.OptionsColumn.AllowSort = DevExpress.Utils.DefaultBoolean.False;
+            this.gridColumn3.OptionsFilter.FilterBySortField = DevExpress.Utils.DefaultBoolean.False;
             this.gridColumn3.Visible = true;
             this.gridColumn3.VisibleIndex = 2;
-            // 
-            // repositoryItemImageComboBox1
-            // 
-            this.repositoryItemImageComboBox1.AutoHeight = false;
-            this.repositoryItemImageComboBox1.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.repositoryItemImageComboBox1.Name = "repositoryItemImageComboBox1";
-            this.repositoryItemImageComboBox1.SmallImages = this.imageCollection1;
             // 
             // imageCollection1
             // 
@@ -130,7 +124,7 @@
             // btnAddNewRow
             // 
             this.btnAddNewRow.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.btnAddNewRow.Location = new System.Drawing.Point(0, 252);
+            this.btnAddNewRow.Location = new System.Drawing.Point(0, 156);
             this.btnAddNewRow.Margin = new System.Windows.Forms.Padding(0);
             this.btnAddNewRow.Name = "btnAddNewRow";
             this.btnAddNewRow.Size = new System.Drawing.Size(242, 20);
@@ -169,11 +163,10 @@
             this.Controls.Add(this.gridControl1);
             this.Controls.Add(this.btnClose);
             this.Name = "BinParameterSelectControl";
-            this.Size = new System.Drawing.Size(242, 272);
+            this.Size = new System.Drawing.Size(242, 176);
             this.Load += new System.EventHandler(this.SelectSBControl_Load);
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemImageComboBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.propTypeList.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.paramList.Properties)).EndInit();
@@ -189,7 +182,6 @@
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn2;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn3;
         private DevExpress.XtraEditors.SimpleButton btnAddNewRow;
-        private DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox repositoryItemImageComboBox1;
         private DevExpress.Utils.ImageCollection imageCollection1;
         private DevExpress.XtraEditors.LookUpEdit propTypeList;
         private DevExpress.XtraEditors.LookUpEdit paramList;
