@@ -64,6 +64,7 @@ public class ParamModuleVO {
         private double offsetEndAt;
 
         private String64 sourceName;
+        private String sourceNo;
         private String paramKey;
         private int dataCount;
         private String useTime;
@@ -78,8 +79,8 @@ public class ParamModuleVO {
             return (List<T>) data;
         }
 
-        private List<Double> lpfData;
-        private List<Double> hpfData;
+        private List<Object> lpfData;
+        private List<Object> hpfData;
 
         private ParamVO param;
         private ShortBlockVO.ParamData paramData;
@@ -105,6 +106,7 @@ public class ParamModuleVO {
         private transient boolean mark;
 
         private List<String> timeSet;
+        private String eqNo;
 
         @Setter
         private List<Object> data;

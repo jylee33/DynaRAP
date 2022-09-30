@@ -150,6 +150,7 @@ public class ParamModuleService {
             List<ParamModuleVO.Equation> equations = paramModuleMapper.selectParamModuleEqList(params);
             if (equations == null) equations = new ArrayList<>();
             for (ParamModuleVO.Equation equation : equations) {
+                equation.setEqNo("E" + equation.getSeq().originOf());
                 equation.setDataProp(rawService.getDataPropListToMap("eq", equation.getSeq()));
             }
             return equations;

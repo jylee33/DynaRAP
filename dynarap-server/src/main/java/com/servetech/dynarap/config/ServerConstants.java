@@ -95,42 +95,37 @@ public class ServerConstants {
         System.out.println(getJulianTimeOffset("344:10:49:24.429500", "344:10:49:24.431500"));
         */
         String test = "${SN910P} + ${SN999S} * 1.2";
-        test = "${SN910P} + max(${SN999S}) + min(${SN912S} * max(${SW907P}) * 1.2) + 5.0";
+        test = "{SN910P} + max({SN999S}) + min({SN912S} * max({SW907P}) * 1.2) + 5.0";
         //test = test.replaceAll("\\s+", "");
 
-        String loopTest = test;
-        String findPrefix = "min(";
-        boolean passing = false;
-        while (loopTest.contains("min(") || loopTest.contains("max(") || loopTest.contains("avg(")) {
-            List<String> params = extractParams(loopTest, findPrefix, ")");
-            System.out.println(StringUtil.join(params, ", "));
+        int reverseVal = -1;
+        String partCalc = findFunctionParam(test);
+        while (partCalc != null) {
+            String partEq = partCalc.replaceAll("\\\\", "");
 
-            for (String param : params) {
-                if (param.contains("min(") || param.contains("max(") || param.contains("avg(")) {
-                    if (findPrefix.equals("min(")) findPrefix = "max(";
-                    else if (findPrefix.equals("max(")) findPrefix = "avg(";
-                    else if (findPrefix.equals("avg(")) findPrefix = "min(";
-                    passing = true;
-                    break;
-                }
-                else {
-                    String replaceWhat = findPrefix.substring(0, findPrefix.length() - 1) + "\\(\\$\\{" + param.substring(2, param.length() - 1) + "\\}" + "\\)";
-                    loopTest = loopTest.replaceAll(replaceWhat, "(" + Math.random() + ")");
-                    System.out.println(loopTest);
-                }
-            }
-
-            if (passing == true) {
-                passing = false;
+            List<String> sensors = extractParams(partEq, "{", "}");
+            if (sensors == null || sensors.size() == 0) {
+                test = test.replaceAll(partCalc, "(" + reverseVal + ")");
+                reverseVal--;
+                partCalc = findFunctionParam(test);
                 continue;
             }
 
-            if (findPrefix.equals("min(")) findPrefix = "max(";
-            else if (findPrefix.equals("max(")) findPrefix = "avg(";
-            else if (findPrefix.equals("avg(")) findPrefix = "min(";
+            for (String sensor : sensors) {
+                System.out.println(partCalc + ", sensor=" + sensor);
+            }
+
+            test = test.replaceAll(partCalc, "(" + reverseVal + ")");
+            reverseVal--;
+            partCalc = findFunctionParam(test);
         }
 
-        System.out.println(loopTest);
+        List<String> sensors = extractParams(test, "{", "}");
+        for (String sensor : sensors) {
+            System.out.println(test + ", sensor=" + sensor);
+        }
+
+        //System.out.println(loopTest);
 
         //List<String> params = extractParams(loopTest, "min(", ")");
         //System.out.println(params);
@@ -150,6 +145,50 @@ public class ServerConstants {
         } */
     }
 
+    public static String findFunctionParam(String source) {
+        String eq = source;
+        String findPrefix = "min(";
+        boolean passing = false;
+        while (eq.contains("min(") || eq.contains("max(") || eq.contains("avg(")) {
+            List<String> params = extractParams(eq, findPrefix, ")");
+            //System.out.println(StringUtil.join(params, ", "));
+
+            for (String param : params) {
+                if (param.contains("min(") || param.contains("max(") || param.contains("avg(")) {
+                    if (findPrefix.equals("min(")) findPrefix = "max(";
+                    else if (findPrefix.equals("max(")) findPrefix = "avg(";
+                    else if (findPrefix.equals("avg(")) findPrefix = "min(";
+                    passing = true;
+                    break;
+                }
+                else {
+                    String replaceSource = findPrefix + param + ")";
+                    replaceSource = replaceSource.replaceAll("\\(", "\\\\(");
+                    replaceSource = replaceSource.replaceAll("\\)", "\\\\)");
+                    replaceSource = replaceSource.replaceAll("\\{", "\\\\{");
+                    replaceSource = replaceSource.replaceAll("\\}", "\\\\}");
+                    replaceSource = replaceSource.replaceAll("\\*", "\\\\*");
+
+                    return replaceSource;
+
+                    //String replaceWhat = findPrefix.substring(0, findPrefix.length() - 1) + "\\(\\$\\{" + param.substring(2, param.length() - 1) + "\\}" + "\\)";
+                    //eq = eq.replaceAll(replaceSource, "(" + Math.random() + ")");
+                    //System.out.println(loopTest);
+                }
+            }
+
+            if (passing == true) {
+                passing = false;
+                continue;
+            }
+
+            if (findPrefix.equals("min(")) findPrefix = "max(";
+            else if (findPrefix.equals("max(")) findPrefix = "avg(";
+            else if (findPrefix.equals("avg(")) findPrefix = "min(";
+        }
+        return null;
+    }
+
     public static List<String> extractParams(String source, String prefix, String postfix) {
         int si = -1, ei = -1;
 
@@ -158,20 +197,33 @@ public class ServerConstants {
         while ((si = test.indexOf(prefix)) > -1) {
             ei = test.indexOf(postfix, si + prefix.length());
             if (ei == -1) break;
+
             String part = test.substring(si + prefix.length(), ei);
-            test = test.substring(ei + postfix.length());
+            test = test.substring(ei);
 
             int openCount = (int) part.chars().filter(ch -> ch == '(').count();
-            for (int i = 0; i < openCount; i++) {
-                ei = test.indexOf(postfix);
-                if (ei == -1) {
-                    resultSet.add(part);
-                    break;
-                }
 
-                String subPart = test.substring(0,  ei);
-                part = part + subPart;
-                test = test.substring(ei + postfix.length());
+            if (openCount == 0) {
+                test = test.substring(postfix.length());
+            }
+            else {
+                for (int i = 0; i <= openCount; i++) {
+                    ei = test.indexOf(postfix);
+                    if (ei == -1) {
+                        resultSet.add(part);
+                        break;
+                    }
+
+                    if (i == openCount) {
+                        String subPart = test.substring(0, ei);
+                        part = part + subPart;
+                        test = test.substring(ei + postfix.length());
+                    } else {
+                        String subPart = test.substring(0, ei + postfix.length());
+                        part = part + subPart;
+                        test = test.substring(ei + postfix.length());
+                    }
+                }
             }
 
             if (ei == -1) break;

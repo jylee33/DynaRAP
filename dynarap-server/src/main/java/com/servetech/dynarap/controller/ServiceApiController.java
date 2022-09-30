@@ -345,6 +345,7 @@ public class ServiceApiController extends ApiController {
                         continue;
                     }
                     source.setSourceName(partInfo.getPartName());
+                    source.setSourceNo("P" + partInfo.getSeq().originOf());
                     RawVO.Upload rawUpload = getService(RawService.class).getUploadBySeq(partInfo.getUploadSeq());
                     if (rawUpload == null) {
                         source.setMark(true);
@@ -367,6 +368,7 @@ public class ServiceApiController extends ApiController {
                         continue;
                     }
                     source.setSourceName(blockInfo.getBlockName());
+                    source.setSourceNo("S" + blockInfo.getSeq().originOf());
 
                     PartVO partInfo = getService(PartService.class).getPartBySeq(blockInfo.getPartSeq());
                     RawVO.Upload rawUpload = getService(RawService.class).getUploadBySeq(partInfo.getUploadSeq());
@@ -391,6 +393,7 @@ public class ServiceApiController extends ApiController {
                         continue;
                     }
                     source.setSourceName(dllInfo.getDataSetName());
+                    source.setSourceNo("D" + dllInfo.getSeq().originOf());
 
                     DLLVO.Param dllParam = getService(DLLService.class).getDLLParamBySeq(source.getParamSeq());
                     source.setParamKey(dllParam.getParamName().originOf());
@@ -402,6 +405,7 @@ public class ServiceApiController extends ApiController {
                         continue;
                     }
                     source.setSourceName(moduleInfo.getModuleName());
+                    source.setSourceNo("M" + moduleInfo.getSeq().originOf());
 
                     ParamModuleVO.Equation eq = getService(ParamModuleService.class).getParamModuleEqBySeq(source.getParamSeq());
                     source.setParamKey(eq.getEqName().originOf());
@@ -498,6 +502,61 @@ public class ServiceApiController extends ApiController {
             }
 
             paramModule.setSources(getService(ParamModuleService.class).getParamModuleSourceList(moduleSeq));
+            if (paramModule.getSources() == null) paramModule.setSources(new ArrayList<>());
+            for (ParamModuleVO.Source source : paramModule.getSources()) {
+                if (source.getSourceType().equals("part")) {
+                    PartVO partInfo = getService(PartService.class).getPartBySeq(source.getSourceSeq());
+                    if (partInfo == null) continue;
+                    source.setSourceName(partInfo.getPartName());
+                    source.setSourceNo("P" + partInfo.getSeq().originOf());
+                    RawVO.Upload rawUpload = getService(RawService.class).getUploadBySeq(partInfo.getUploadSeq());
+                    if (rawUpload == null) continue;
+
+                    source.setUseTime("julian");
+                    if (rawUpload.getDataType().equalsIgnoreCase("adams") || rawUpload.getDataType().equalsIgnoreCase("zaero"))
+                        source.setUseTime("offset");
+
+                    // presetParamSeq 값으로 처리됨.
+                    PresetVO.Param pparam = getService(ParamService.class).getPresetParamBySource(source.getParamSeq());
+                    ParamVO param = getService(ParamService.class).getParamBySeq(pparam.getParamSeq());
+                    source.setParamKey(param.getParamKey());
+                }
+                else if (source.getSourceType().equals("shortblock")) {
+                    ShortBlockVO blockInfo = getService(PartService.class).getShortBlockBySeq(source.getSourceSeq());
+                    if (blockInfo == null) continue;
+                    source.setSourceName(blockInfo.getBlockName());
+                    source.setSourceNo("S" + blockInfo.getSeq().originOf());
+
+                    PartVO partInfo = getService(PartService.class).getPartBySeq(blockInfo.getPartSeq());
+                    RawVO.Upload rawUpload = getService(RawService.class).getUploadBySeq(partInfo.getUploadSeq());
+                    if (rawUpload == null) continue;
+
+                    source.setUseTime("julian");
+                    if (rawUpload.getDataType().equalsIgnoreCase("adams") || rawUpload.getDataType().equalsIgnoreCase("zaero"))
+                        source.setUseTime("offset");
+
+                    // blockParamSeq 값으로 처리됨.
+                    ShortBlockVO.Param blockParam = getService(ParamService.class).getShortBlockParamBySeq(source.getParamSeq());
+                    ParamVO param = getService(ParamService.class).getParamBySeq(blockParam.getParamSeq());
+                    source.setParamKey(param.getParamKey());
+                }
+                else if (source.getSourceType().equals("dll")) {
+                    DLLVO dllInfo = getService(DLLService.class).getDLLBySeq(source.getSourceSeq());
+                    if (dllInfo == null) continue;
+                    source.setSourceName(dllInfo.getDataSetName());
+                    source.setSourceNo("D" + dllInfo.getSeq().originOf());
+                    DLLVO.Param dllParam = getService(DLLService.class).getDLLParamBySeq(source.getParamSeq());
+                    source.setParamKey(dllParam.getParamName().originOf());
+                }
+                else if (source.getSourceType().equals("parammodule")) {
+                    ParamModuleVO moduleInfo = getService(ParamModuleService.class).getParamModuleBySeq(source.getSourceSeq());
+                    if (moduleInfo == null) continue;
+                    source.setSourceName(moduleInfo.getModuleName());
+                    source.setSourceNo("M" + moduleInfo.getSeq().originOf());
+                    ParamModuleVO.Equation eq = getService(ParamModuleService.class).getParamModuleEqBySeq(source.getParamSeq());
+                    source.setParamKey(eq.getEqName().originOf());
+                }
+            }
 
             return ResponseHelper.response(200, "Success - ParamModule Save Source", paramModule);
         }
@@ -565,6 +624,10 @@ public class ServiceApiController extends ApiController {
                 throw new HandledServiceException(411, "파라미터를 확인하세요.");
 
             // load all sources and equations.
+            equationHelper.setListOps(listOps);
+            equationHelper.setHashOps(hashOps);
+            equationHelper.setZsetOps(zsetOps);
+
             equationHelper.loadParamModuleData(moduleSeq);
 
             List<ParamModuleVO.Equation> equations = getService(ParamModuleService.class).getParamModuleEqList(moduleSeq);
@@ -573,10 +636,26 @@ public class ServiceApiController extends ApiController {
         }
 
         if (command.equals("eq-data")) {
+            CryptoField moduleSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "moduleSeq"))
+                moduleSeq = CryptoField.decode(payload.get("moduleSeq").getAsString(), 0L);
 
-            // TODO : eq data loading
+            CryptoField eqSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "eqSeq"))
+                eqSeq = CryptoField.decode(payload.get("eqSeq").getAsString(), 0L);
 
-            return ResponseHelper.response(200, "Success - ParamModule Eq Data", "");
+            if (moduleSeq == null || moduleSeq.isEmpty() || eqSeq == null || eqSeq.isEmpty())
+                throw new HandledServiceException(411, "파라미터를 확인하세요.");
+
+            String jsonData = hashOps.get("PM" + moduleSeq.originOf(), "E" + eqSeq.originOf());
+            if (jsonData == null || jsonData.isEmpty())
+                throw new HandledServiceException(411, "수식이 계산되지 않았습니다. 다시 저장해주세요.");
+
+            JsonArray jarrData = ServerConstants.GSON.fromJson(jsonData, JsonArray.class);
+            if (jarrData == null)
+                throw new HandledServiceException(411, "수식 데이터에 오류가 있습니다.");
+
+            return ResponseHelper.response(200, "Success - ParamModule Eq Data", jarrData);
         }
 
         if (command.equals("save-eq")) {
@@ -667,6 +746,7 @@ public class ServiceApiController extends ApiController {
                         findEquation.setDataProp(getService(RawService.class).getDataPropListToMap("eq", findEquation.getSeq()));
                     }
 
+                    findEquation.setEqNo("E" + findEquation.getSeq().originOf());
                     paramModule.getEquations().add(findEquation);
                 }
 
@@ -682,16 +762,36 @@ public class ServiceApiController extends ApiController {
                 paramModule.setEquations(new ArrayList<>());
             }
 
+            equationHelper.setListOps(listOps);
+            equationHelper.setHashOps(hashOps);
+            equationHelper.setZsetOps(zsetOps);
             equationHelper.calculateEquations(moduleSeq, paramModule.getEquations());
 
-            return ResponseHelper.response(200, "Success - ParamModule Save Eq", paramModule.getEquations());
+            List<ParamModuleVO.Equation> equations = getService(ParamModuleService.class).getParamModuleEqList(moduleSeq);
+
+            return ResponseHelper.response(200, "Success - ParamModule Save Eq", equations);
         }
 
         if (command.equals("evaluation")) {
-            //
-            // TODO : 계산 때문에 여기서 진행하기 어려움.
-            //
-            return ResponseHelper.response(200, "Success - ParamModule Eq Evaluation", "");
+            CryptoField moduleSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "moduleSeq"))
+                moduleSeq = CryptoField.decode(payload.get("moduleSeq").getAsString(), 0L);
+
+            String equation = "";
+            if (!checkJsonEmpty(payload, "equation"))
+                equation = payload.get("equation").getAsString();
+
+            if (moduleSeq == null || moduleSeq.isEmpty() || equation == null || equation.isEmpty())
+                throw new HandledServiceException(411, "파라미터를 확인하세요.");
+
+            equationHelper.setListOps(listOps);
+            equationHelper.setHashOps(hashOps);
+            equationHelper.setZsetOps(zsetOps);
+
+            equationHelper.loadParamModuleData(moduleSeq);
+            JsonArray evalResult = equationHelper.calculateEquationSingle(moduleSeq, equation);
+
+            return ResponseHelper.response(200, "Success - ParamModule Eq Evaluation", evalResult);
         }
 
         if (command.equals("plot-list")) {
