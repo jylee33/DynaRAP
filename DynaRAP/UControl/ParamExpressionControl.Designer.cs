@@ -45,13 +45,13 @@
             this.gridColumn7 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemImageComboBox2 = new DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox();
             this.gridColumn8 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.gridColumn9 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.btnSaveExpression = new DevExpress.XtraEditors.SimpleButton();
             this.btnInitAll = new DevExpress.XtraEditors.SimpleButton();
             this.lblTag = new DevExpress.XtraEditors.LabelControl();
             this.edtTag = new DevExpress.XtraEditors.ButtonEdit();
             this.panelTag = new System.Windows.Forms.FlowLayoutPanel();
             this.btnAddEQ = new DevExpress.XtraEditors.SimpleButton();
-            this.gridColumn9 = new DevExpress.XtraGrid.Columns.GridColumn();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
@@ -110,6 +110,7 @@
             this.gridView1.Name = "gridView1";
             this.gridView1.OptionsBehavior.EditorShowMode = DevExpress.Utils.EditorShowMode.MouseUp;
             this.gridView1.RowCellClick += new DevExpress.XtraGrid.Views.Grid.RowCellClickEventHandler(this.gridView1_RowCellClick);
+            this.gridView1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.gridView1_KeyUp);
             // 
             // gridColumn1
             // 
@@ -132,16 +133,12 @@
             this.gridColumn3.Caption = "선택구간(시작)";
             this.gridColumn3.FieldName = "SelectionStart";
             this.gridColumn3.Name = "gridColumn3";
-            this.gridColumn3.Visible = true;
-            this.gridColumn3.VisibleIndex = 2;
             // 
             // gridColumn4
             // 
             this.gridColumn4.Caption = "선택구간(끝)";
             this.gridColumn4.FieldName = "SelectionEnd";
             this.gridColumn4.Name = "gridColumn4";
-            this.gridColumn4.Visible = true;
-            this.gridColumn4.VisibleIndex = 3;
             // 
             // gridColumn5
             // 
@@ -149,7 +146,7 @@
             this.gridColumn5.FieldName = "DataCnt";
             this.gridColumn5.Name = "gridColumn5";
             this.gridColumn5.Visible = true;
-            this.gridColumn5.VisibleIndex = 4;
+            this.gridColumn5.VisibleIndex = 2;
             // 
             // gridColumn6
             // 
@@ -158,7 +155,7 @@
             this.gridColumn6.FieldName = "Del";
             this.gridColumn6.Name = "gridColumn6";
             this.gridColumn6.Visible = true;
-            this.gridColumn6.VisibleIndex = 5;
+            this.gridColumn6.VisibleIndex = 3;
             // 
             // repositoryItemImageComboBox1
             // 
@@ -175,7 +172,7 @@
             this.gridColumn7.FieldName = "View";
             this.gridColumn7.Name = "gridColumn7";
             this.gridColumn7.Visible = true;
-            this.gridColumn7.VisibleIndex = 6;
+            this.gridColumn7.VisibleIndex = 4;
             // 
             // repositoryItemImageComboBox2
             // 
@@ -190,6 +187,12 @@
             this.gridColumn8.Caption = "gridColumn8";
             this.gridColumn8.FieldName = "tags";
             this.gridColumn8.Name = "gridColumn8";
+            // 
+            // gridColumn9
+            // 
+            this.gridColumn9.Caption = "gridColumn9";
+            this.gridColumn9.FieldName = "Seq";
+            this.gridColumn9.Name = "gridColumn9";
             // 
             // btnSaveExpression
             // 
@@ -247,12 +250,6 @@
             this.btnAddEQ.TabIndex = 57;
             this.btnAddEQ.Text = "수식추가";
             this.btnAddEQ.Click += new System.EventHandler(this.btnAddEQ_Click);
-            // 
-            // gridColumn9
-            // 
-            this.gridColumn9.Caption = "gridColumn9";
-            this.gridColumn9.FieldName = "Seq";
-            this.gridColumn9.Name = "gridColumn9";
             // 
             // ParamExpressionControl
             // 

@@ -103,4 +103,13 @@ namespace DynaRAP.Data
         }
       
     }
+
+    public class EvaluationResponse
+    {
+        public int code { get; set; }
+        public string message { get; set; }
+        public List<double> response { get; set; }
+        public ResponseAt responseAt { get; set; }
+        public int resultCount { get; set; }
+    }
 }

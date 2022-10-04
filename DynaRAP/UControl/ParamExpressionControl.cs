@@ -1,7 +1,10 @@
 ﻿using DevExpress.Utils;
+using DevExpress.XtraBars.Docking;
+using DevExpress.XtraCharts;
 using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Controls;
 using DevExpress.XtraGrid.Columns;
+using DevExpress.XtraGrid.Views.Grid;
 using DynaRAP.Data;
 using DynaRAP.UTIL;
 using Newtonsoft.Json;
@@ -23,7 +26,11 @@ namespace DynaRAP.UControl
         private string paramModuleSeq = null;
         private List<EquationGridData> eqGridDataList = null;
         ParameterModuleControl parameterModuleControl = null;
-        //private List<EquationGridData>
+        private List<double> chartData = null;
+        ChartControl chartControl = null;
+        DataTable dt = null;
+        DockPanel panelChart = null;
+
         public ParamExpressionControl(ParameterModuleControl parameterModuleControl)
         {
             this.parameterModuleControl = parameterModuleControl;
@@ -65,15 +72,58 @@ namespace DynaRAP.UControl
 
             this.repositoryItemImageComboBox2.GlyphAlignment = HorzAlignment.Center;
             this.repositoryItemImageComboBox2.Buttons[0].Visible = false;
+            this.repositoryItemImageComboBox2.Click += RepositoryItemImageComboBox2_Click;
+
+            chartData = new List<double>();
+
         }
         private void RepositoryItemImageComboBox1_Click(object sender, EventArgs e)
         {
             EquationGridData selectGridData = (EquationGridData)gridView1.GetFocusedRow();
             eqGridDataList.Remove(selectGridData);
-            SaveEquationRequest("delOne");
+            if (selectGridData.Seq != null && selectGridData.Seq != "")
+            {
+                SaveEquationRequest("delOne");
+            }
             this.gridControl1.DataSource = eqGridDataList;
             gridView1.RefreshData();
 
+        }
+
+        private void RepositoryItemImageComboBox2_Click(object sender, EventArgs e)
+        {
+            EquationGridData selectGridData = (EquationGridData)gridView1.GetFocusedRow();
+            string sendData = string.Empty;
+
+            if (selectGridData.Seq != null && selectGridData.Seq != "")
+            {
+                sendData = string.Format(@"
+                {{
+                ""command"":""eq-data"",
+                ""moduleSeq"": ""{0}"",
+                ""eqSeq"" : ""{1}""
+                }}", paramModuleSeq, selectGridData.Seq);
+            }
+            else
+            {
+                sendData = string.Format(@"
+                {{
+                ""command"":""evaluation"",
+                ""moduleSeq"": ""{0}"",
+                ""equation"" : ""{1}""
+                }}", paramModuleSeq, selectGridData.equation);
+            }
+        
+            string responseData = Utils.GetPostData(ConfigurationManager.AppSettings["UrlParamModule"], sendData);
+            if (responseData != null)
+            {
+                EvaluationResponse evaluationResponse = JsonConvert.DeserializeObject<EvaluationResponse>(responseData);
+                if (evaluationResponse.response != null && evaluationResponse.response.Count() != 0)
+                {
+                    dt = GetChartValues(evaluationResponse.response);
+                    AddChartData(selectGridData.eqName);
+                }
+            }
         }
 
         public void SetSelectDataSource(string paramModuleSeq)
@@ -293,6 +343,146 @@ namespace DynaRAP.UControl
             }
         }
 
-    
+        private void gridView1_KeyUp(object sender, KeyEventArgs e)
+        {
+            GridView view = sender as GridView;
+            
+            if (e.KeyCode == Keys.Enter && view.FocusedColumn.FieldName == "equation")
+            {
+                GetEvaluation(view.FocusedValue.ToString());
+            }
+            
+            //ButtonEdit me = sender as ButtonEdit;
+            //if (me != null)
+            //{
+            //    EquationGridData selectGridData = (EquationGridData)gridView1.GetFocusedRow();
+            //    if (selectGridData.tags != null && selectGridData.tags != "")
+            //    {
+            //        gridView1.SetRowCellValue(gridView1.FocusedRowHandle, "tags", selectGridData.tags + "|" + me.Text);
+            //    }
+            //    else
+            //    {
+            //        gridView1.SetRowCellValue(gridView1.FocusedRowHandle, "tags", me.Text);
+
+            //    }
+            //    addTag(me.Text);
+            //    me.Text = String.Empty;
+            //}
+        }
+
+        private void GetEvaluation(string equation)
+        {
+            string sendData = string.Format(@"
+                {{
+                ""command"":""evaluation"",
+                ""moduleSeq"": ""{0}"",
+                ""equation"" : ""{1}""
+                }}", paramModuleSeq,equation);
+            string responseData = Utils.GetPostData(ConfigurationManager.AppSettings["UrlParamModule"], sendData);
+            if (responseData != null)
+            {
+                EvaluationResponse evaluationResponse = JsonConvert.DeserializeObject<EvaluationResponse>(responseData);
+                if (evaluationResponse.response != null && evaluationResponse.response.Count() != 0)
+                {
+                    gridView1.SetRowCellValue(gridView1.FocusedRowHandle, "DataCnt", evaluationResponse.response.Count()) ;
+
+                    //foreach (var list in equationResponse.response)
+                    //{
+                    //    list.eqName = Utils.base64StringDecoding(list.eqName);
+                    //    eqGridDataList.Add(new EquationGridData(list));
+                    //}
+                }
+                //this.gridControl1.DataSource = eqGridDataList;
+                //gridView1.RefreshData();
+            }
+        }
+
+        private void AddChartData(string keyValue)
+        {
+            MainForm mainForm = this.ParentForm as MainForm;
+
+            if (chartControl != null)
+            {
+                chartControl.Dispose();
+                chartControl = null;
+            }
+
+            chartControl = new ChartControl();
+
+            chartControl.Series.Clear();
+
+            Series series = new Series("Series1", ViewType.Line);
+            chartControl.Series.Add(series);
+
+            series.DataSource = dt;
+
+            series.ArgumentScaleType = ScaleType.Auto;
+            series.ArgumentDataMember = "Argument";
+            series.ValueScaleType = ScaleType.Numerical;
+            series.ValueDataMembers.AddRange(new string[] { "Value" });
+            //((XYDiagram)chartControl.Diagram).AxisY.Visibility = DevExpress.Utils.DefaultBoolean.False;
+            chartControl.Legend.Visibility = DevExpress.Utils.DefaultBoolean.False;
+
+            XYDiagram diagram = (XYDiagram)chartControl.Diagram;
+            
+            diagram.EnableAxisXScrolling = true;
+            diagram.EnableAxisXZooming = true;
+
+            diagram.AxisX.Label.Visible = false;
+            //this.rangeControl1.Client = chartControl;
+            //rangeControl1.RangeChanged += RangeControl1_RangeChanged;
+            //rangeControl1.ShowLabels = true;
+            //rangeControl1.SelectedRange = new RangeControlRange(minValue, maxValue);
+
+            if (panelChart == null)
+            {
+                panelChart = new DockPanel();
+                panelChart = mainForm.DockManager1.AddPanel(DockingStyle.Float);
+                panelChart.FloatLocation = new Point(500, 100);
+                panelChart.FloatSize = new Size(1058, 528);
+                panelChart.Name = keyValue;
+                panelChart.Text = keyValue;
+                chartControl.Dock = DockStyle.Fill;
+                panelChart.Controls.Add(chartControl);
+                //panelChart.ClosedPanel += PanelChart_ClosedPanel;
+            }
+            else
+            {
+                panelChart.Name = keyValue;
+                panelChart.Text = keyValue;
+                //panelChart.Controls.Clear();
+                chartControl.Dock = DockStyle.Fill;
+                panelChart.Controls.Add(chartControl);
+                panelChart.Show();
+                panelChart.Focus();
+            }
+        }
+
+        private DataTable GetChartValues(List<double> dataArr)
+        {
+            // Create an empty table.
+            DataTable table = new DataTable("Table1");
+
+            // Add two columns to the table.
+            table.Columns.Add("Argument", typeof(Int32));
+            //table.Columns.Add("Argument", typeof(DateTime));
+            table.Columns.Add("Value", typeof(double));
+
+            DataRow row = null;
+            chartData.Clear();
+            int i = 0;
+            foreach (double data in dataArr)
+            {
+                row = table.NewRow();
+                
+                chartData.Add(data);
+                row["Value"] = data;
+                row["Argument"] = i++;
+                table.Rows.Add(row);
+
+            }
+
+            return table;
+        }
     }
 }

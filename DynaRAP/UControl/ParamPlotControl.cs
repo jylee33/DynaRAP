@@ -75,6 +75,15 @@ namespace DynaRAP.UControl
             repositoryItemComboBox2.Items.Add("1D-Min, Max");
             repositoryItemComboBox2.Items.Add("2D-Potato");
             this.repositoryItemComboBox1.SelectedIndexChanged += RepositoryItemComboBox1_SelectedIndexChanged;
+
+
+            this.repositoryItemImageComboBox1.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(0, 0));
+            this.repositoryItemImageComboBox1.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(1, 1));
+
+            this.repositoryItemImageComboBox1.GlyphAlignment = HorzAlignment.Center;
+            this.repositoryItemImageComboBox1.Buttons[0].Visible = false;
+
+            this.repositoryItemImageComboBox1.Click += RepositoryItemImageComboBox1_Click;
         }
 
         private void GridView1_CustomDrawRowIndicator(object sender, DevExpress.XtraGrid.Views.Grid.RowIndicatorCustomDrawEventArgs e)
@@ -102,6 +111,32 @@ namespace DynaRAP.UControl
          
         private void RepositoryItemImageComboBox1_Click(object sender, EventArgs e)
         {
+            PlotGridData selectGridData = (PlotGridData)gridView1.GetFocusedRow();
+            if(selectGridData.PlotSeq != null && selectGridData.PlotSeq != "")
+            {
+                string sendData = string.Format(@"
+                {{
+                ""command"":""plot-data"",
+                ""moduleSeq"": ""{0}"",
+                ""plotSeq"" : ""{1}""
+                }}", paramModuleSeq, selectGridData.PlotSeq);
+
+                string responseData = Utils.GetPostData(ConfigurationManager.AppSettings["UrlParamModule"], sendData);
+                if (responseData != null)
+                {
+                    PlotDataResponse plotDataResponse = JsonConvert.DeserializeObject<PlotDataResponse>(responseData);
+                    if (plotDataResponse.response != null && plotDataResponse.response.Count() != 0)
+                    {
+                        //dt = GetChartValues(evaluationResponse.response);
+                        //AddChartData(selectGridData.eqName);
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("PLOT을 먼저 저장 후 보기를 눌러주세요.");
+            }
+
             //if (MessageBox.Show(Properties.Resources.StringDelete, Properties.Resources.StringConfirmation, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
             //{
             //    return;
@@ -205,7 +240,7 @@ namespace DynaRAP.UControl
                             }
                         }
                     }
-                    plotGridDataList.Add(new PlotGridData(Utils.base64StringDecoding(list.plotName),list.plotType, item1, itemSeq1, item2, itemSeq2, item3, itemSeq3, item4, itemSeq4, item5, itemSeq5, list.dataProp.tags));
+                    plotGridDataList.Add(new PlotGridData(Utils.base64StringDecoding(list.plotName),list.plotType,list.seq, item1, itemSeq1, item2, itemSeq2, item3, itemSeq3, item4, itemSeq4, item5, itemSeq5, list.dataProp.tags));
                 }
             }
             this.gridControl1.DataSource = plotGridDataList;

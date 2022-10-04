@@ -107,7 +107,7 @@ namespace DynaRAP.UTIL
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
                 request.Method = "POST";
                 request.ContentType = "application/json";
-                request.Timeout = 30 * 1000;
+                request.Timeout = 30 * 10000;
                 //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
 
                 // POST할 데이타를 Request Stream에 쓴다

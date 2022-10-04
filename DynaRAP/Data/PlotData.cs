@@ -118,7 +118,9 @@ namespace DynaRAP.Data
         public string ItemSeq3 { get => itemSeq3; set => itemSeq3 = value; }
         public string ItemSeq4 { get => itemSeq4; set => itemSeq4 = value; }
         public string ItemSeq5 { get => itemSeq5; set => itemSeq5 = value; }
+        public int View { get; set; }
         public string tags{ get; set; } 
+        public string PlotSeq { get; set; }
         public PlotGridData(string plotName, string item1, string item2, string item3, string item4, string item5)
         {
             this.plotName = plotName;
@@ -127,9 +129,10 @@ namespace DynaRAP.Data
             this.item3 = item3;
             this.item4 = item4;
             this.item5 = item5;
+            this.View = 1;
         }
 
-        public PlotGridData(string plotName,string plotType, string item1, string itemSeq1, string item2, string itemSeq2, string item3, string itemSeq3, string item4, string itemSeq4, string item5, string itemSeq5, string tags)
+        public PlotGridData(string plotName,string plotType,string plotSeq, string item1, string itemSeq1, string item2, string itemSeq2, string item3, string itemSeq3, string item4, string itemSeq4, string item5, string itemSeq5, string tags)
         {
             this.plotName = plotName;
             this.plotType = plotType;
@@ -144,6 +147,8 @@ namespace DynaRAP.Data
             this.itemSeq4 = itemSeq4;
             this.itemSeq5 = itemSeq5;
             this.tags = tags;
+            this.PlotSeq = plotSeq;
+            this.View = 1;
         }
     }
 
@@ -158,5 +163,48 @@ namespace DynaRAP.Data
             this.sourceType = sourceType;
             this.seq = seq;
         }
+    }
+
+    public class PlotDataResponse
+    {
+        public int code { get; set; }
+        public string message { get; set; }
+        public List<List<double>> response { get; set; }
+        public PlotAddtitional additionalResponse { get; set; }
+        public ResponseAt responseAt { get; set; }
+        public int resultCount { get; set; }
+    }
+
+    public class PlotAddtitional
+    {
+        public string seq { get; set; }
+        public string moduleSeq { get; set; }
+        public string plotName { get; set; }
+        public string plotType { get; set; }
+        public CreatedAt createdAt { get; set; }
+        public int plotOrder { get; set; }
+        public List<PlotSource> plotSourceList { get; set; }
+        public List<plotSources> plotSources { get; set; }
+        public DataProps dataProp { get; set; }
+    }
+    public class PlotSource 
+    {
+        public string seq { get; set; }
+        public string moduleSeq { get; set; }
+        public string plotSeq { get; set; }
+        public string sourceType { get; set; }
+        public string sourceSeq { get; set; }
+        public string paramPack { get; set; }
+        public string paramSeq { get; set; }
+        public string julianStartAt { get; set; }
+        public string julianEndAt { get; set; }
+        public double offsetStartAt { get; set; }
+        public double offsetEndAt { get; set; }
+    }
+    public class plotSources
+    {
+        public string seq { get; set; }
+        public string sourceType { get; set; }
+        public string sourceSeq { get; set; }
     }
 }

@@ -56,6 +56,7 @@ namespace DynaRAP.Data
         public string moduleSeq { get; set; }
         public string dataCount { get; set; }
         public string useTime { get; set; }
+        public string sourceNo { get; set; }
         public SaveParamModuleSelectDataSource(string sourceType, string sourceSeq, string seq, string paramPack = null, string paramSeq = null, string julianStartAt = null,string julianEndAt= null, double offsetStartAt = 0.0, double offsetEndAt = 0.0)
         {
             this.sourceType = sourceType;

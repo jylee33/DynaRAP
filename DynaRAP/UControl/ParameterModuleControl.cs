@@ -170,7 +170,7 @@ namespace DynaRAP.UControl
                 {
                     foreach (var list in paramModuleResponse.response)
                     {
-                        selectDataList.Add(new ParamDataSelectionData(list.sourceType, Utils.base64StringDecoding(list.sourceName), list.paramKey, list.julianStartAt, list.julianEndAt, list.dataCount, list.sourceSeq, list.useTime, list.seq, list.sourceType == "parammodule" ? 0 : 1, list.paramSeq));
+                        selectDataList.Add(new ParamDataSelectionData(list.sourceType, Utils.base64StringDecoding(list.sourceName), string.Format("{0}_{1}", list.sourceNo, list.paramKey), list.julianStartAt, list.julianEndAt, list.dataCount, list.sourceSeq, list.useTime, list.seq, list.sourceType == "parammodule" ? 0 : 1, list.paramSeq));
                     }
                 }
                 this.gridControl1.DataSource = selectDataList;

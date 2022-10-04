@@ -50,7 +50,6 @@
             this.gridColumn13 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridColumn14 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemComboBox2 = new DevExpress.XtraEditors.Repository.RepositoryItemComboBox();
-            this.repositoryItemImageComboBox2 = new DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox();
             this.labelControl1 = new DevExpress.XtraEditors.LabelControl();
             this.btnDelAll = new DevExpress.XtraEditors.SimpleButton();
             this.btnSavePlot = new DevExpress.XtraEditors.SimpleButton();
@@ -58,13 +57,13 @@
             this.lblTag = new DevExpress.XtraEditors.LabelControl();
             this.edtTag = new DevExpress.XtraEditors.ButtonEdit();
             this.panelTag = new System.Windows.Forms.FlowLayoutPanel();
+            this.gridColumn15 = new DevExpress.XtraGrid.Columns.GridColumn();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemImageComboBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemComboBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemComboBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemImageComboBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtTag.Properties)).BeginInit();
             this.SuspendLayout();
             // 
@@ -89,8 +88,8 @@
             this.gridControl1.Name = "gridControl1";
             this.gridControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemComboBox1,
-            this.repositoryItemImageComboBox2,
-            this.repositoryItemComboBox2});
+            this.repositoryItemComboBox2,
+            this.repositoryItemImageComboBox1});
             this.gridControl1.Size = new System.Drawing.Size(973, 445);
             this.gridControl1.TabIndex = 47;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
@@ -112,7 +111,8 @@
             this.gridColumn11,
             this.gridColumn12,
             this.gridColumn13,
-            this.gridColumn14});
+            this.gridColumn14,
+            this.gridColumn15});
             this.gridView1.GridControl = this.gridControl1;
             this.gridView1.Name = "gridView1";
             this.gridView1.OptionsBehavior.EditorShowMode = DevExpress.Utils.EditorShowMode.MouseUp;
@@ -239,13 +239,6 @@
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.repositoryItemComboBox2.Name = "repositoryItemComboBox2";
             // 
-            // repositoryItemImageComboBox2
-            // 
-            this.repositoryItemImageComboBox2.AutoHeight = false;
-            this.repositoryItemImageComboBox2.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.repositoryItemImageComboBox2.Name = "repositoryItemImageComboBox2";
-            // 
             // labelControl1
             // 
             this.labelControl1.Location = new System.Drawing.Point(3, 3);
@@ -311,6 +304,12 @@
             this.panelTag.Size = new System.Drawing.Size(750, 96);
             this.panelTag.TabIndex = 53;
             // 
+            // gridColumn15
+            // 
+            this.gridColumn15.Caption = "gridColumn15";
+            this.gridColumn15.FieldName = "PlotSeq";
+            this.gridColumn15.Name = "gridColumn15";
+            // 
             // ParamPlotControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -332,7 +331,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemComboBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemComboBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemImageComboBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtTag.Properties)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -366,8 +364,8 @@
         private System.Windows.Forms.FlowLayoutPanel panelTag;
         private DevExpress.XtraEditors.Repository.RepositoryItemComboBox repositoryItemComboBox1;
         private DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox repositoryItemImageComboBox1;
-        private DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox repositoryItemImageComboBox2;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn14;
         private DevExpress.XtraEditors.Repository.RepositoryItemComboBox repositoryItemComboBox2;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn15;
     }
 }
