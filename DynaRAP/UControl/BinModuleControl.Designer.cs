@@ -122,6 +122,7 @@
             this.tableLayoutPanel1.Controls.Add(this.labelControl1, 0, 2);
             this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel1, 4, 1);
             this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel2, 0, 3);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 5;
@@ -131,7 +132,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1298, 1172);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1366, 939);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // separatorControl1
@@ -143,7 +144,7 @@
             this.separatorControl1.Name = "separatorControl1";
             this.separatorControl1.Padding = new System.Windows.Forms.Padding(9, 10, 9, 10);
             this.tableLayoutPanel1.SetRowSpan(this.separatorControl1, 3);
-            this.separatorControl1.Size = new System.Drawing.Size(1, 1124);
+            this.separatorControl1.Size = new System.Drawing.Size(1, 891);
             this.separatorControl1.TabIndex = 0;
             // 
             // labelControl2
@@ -193,7 +194,7 @@
             this.flowLayoutPanel1.Location = new System.Drawing.Point(217, 24);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.tableLayoutPanel1.SetRowSpan(this.flowLayoutPanel1, 3);
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(1058, 1124);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(1126, 891);
             this.flowLayoutPanel1.TabIndex = 4;
             this.flowLayoutPanel1.WrapContents = false;
             // 
@@ -320,7 +321,7 @@
             this.gridControl2.Location = new System.Drawing.Point(3, 208);
             this.gridControl2.MainView = this.gridView2;
             this.gridControl2.Name = "gridControl2";
-            this.gridControl2.Size = new System.Drawing.Size(905, 211);
+            this.gridControl2.Size = new System.Drawing.Size(908, 179);
             this.gridControl2.TabIndex = 49;
             this.gridControl2.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView2});
@@ -364,9 +365,9 @@
             this.flowLayoutPanel3.Controls.Add(this.edtTag);
             this.flowLayoutPanel3.Controls.Add(this.panelTag);
             this.flowLayoutPanel3.Controls.Add(this.tableLayoutPanel6);
-            this.flowLayoutPanel3.Location = new System.Drawing.Point(3, 425);
+            this.flowLayoutPanel3.Location = new System.Drawing.Point(3, 393);
             this.flowLayoutPanel3.Name = "flowLayoutPanel3";
-            this.flowLayoutPanel3.Size = new System.Drawing.Size(908, 166);
+            this.flowLayoutPanel3.Size = new System.Drawing.Size(908, 152);
             this.flowLayoutPanel3.TabIndex = 43;
             // 
             // tableLayoutPanel3
@@ -411,7 +412,7 @@
             this.panelTag.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelTag.Location = new System.Drawing.Point(3, 57);
             this.panelTag.Name = "panelTag";
-            this.panelTag.Size = new System.Drawing.Size(750, 68);
+            this.panelTag.Size = new System.Drawing.Size(750, 57);
             this.panelTag.TabIndex = 52;
             // 
             // tableLayoutPanel6
@@ -423,7 +424,7 @@
             this.tableLayoutPanel6.Controls.Add(this.btnListModify, 0, 0);
             this.tableLayoutPanel6.Controls.Add(this.btnBinDelete, 0, 0);
             this.tableLayoutPanel6.Controls.Add(this.btnListSave, 1, 0);
-            this.tableLayoutPanel6.Location = new System.Drawing.Point(3, 131);
+            this.tableLayoutPanel6.Location = new System.Drawing.Point(3, 120);
             this.tableLayoutPanel6.Name = "tableLayoutPanel6";
             this.tableLayoutPanel6.RowCount = 1;
             this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -461,7 +462,7 @@
             // 
             this.labelControl18.Appearance.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold);
             this.labelControl18.Appearance.Options.UseFont = true;
-            this.labelControl18.Location = new System.Drawing.Point(3, 597);
+            this.labelControl18.Location = new System.Drawing.Point(3, 551);
             this.labelControl18.Name = "labelControl18";
             this.labelControl18.Size = new System.Drawing.Size(92, 17);
             this.labelControl18.TabIndex = 3;
@@ -470,7 +471,7 @@
             // btnParameterAdd
             // 
             this.btnParameterAdd.EditValue = "파라미터 추가";
-            this.btnParameterAdd.Location = new System.Drawing.Point(3, 620);
+            this.btnParameterAdd.Location = new System.Drawing.Point(3, 574);
             this.btnParameterAdd.Name = "btnParameterAdd";
             this.btnParameterAdd.Properties.Appearance.Options.UseTextOptions = true;
             this.btnParameterAdd.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
@@ -484,9 +485,9 @@
             // flowLayoutPanel4
             // 
             this.flowLayoutPanel4.Controls.Add(this.panelParamCnt);
-            this.flowLayoutPanel4.Location = new System.Drawing.Point(3, 648);
+            this.flowLayoutPanel4.Location = new System.Drawing.Point(3, 602);
             this.flowLayoutPanel4.Name = "flowLayoutPanel4";
-            this.flowLayoutPanel4.Size = new System.Drawing.Size(1045, 174);
+            this.flowLayoutPanel4.Size = new System.Drawing.Size(1048, 192);
             this.flowLayoutPanel4.TabIndex = 58;
             // 
             // panelParamCnt
@@ -495,13 +496,13 @@
             this.panelParamCnt.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelParamCnt.Location = new System.Drawing.Point(3, 3);
             this.panelParamCnt.Name = "panelParamCnt";
-            this.panelParamCnt.Size = new System.Drawing.Size(1030, 161);
+            this.panelParamCnt.Size = new System.Drawing.Size(1036, 189);
             this.panelParamCnt.TabIndex = 53;
             // 
             // btnCreateBIN
             // 
             this.btnCreateBIN.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnCreateBIN.Location = new System.Drawing.Point(466, 828);
+            this.btnCreateBIN.Location = new System.Drawing.Point(467, 800);
             this.btnCreateBIN.Name = "btnCreateBIN";
             this.btnCreateBIN.Size = new System.Drawing.Size(119, 25);
             this.btnCreateBIN.TabIndex = 41;
@@ -510,7 +511,7 @@
             // 
             // labelControl13
             // 
-            this.labelControl13.Location = new System.Drawing.Point(3, 859);
+            this.labelControl13.Location = new System.Drawing.Point(3, 831);
             this.labelControl13.Name = "labelControl13";
             this.labelControl13.Size = new System.Drawing.Size(153, 15);
             this.labelControl13.TabIndex = 2;
@@ -522,7 +523,7 @@
             this.flowLayoutPanel2.Controls.Add(this.treeList1);
             this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 176);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(196, 972);
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(196, 659);
             this.flowLayoutPanel2.TabIndex = 42;
             // 
             // treeList1
@@ -597,7 +598,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "BinModuleControl";
-            this.Size = new System.Drawing.Size(1340, 1705);
+            this.Size = new System.Drawing.Size(1366, 939);
             this.Load += new System.EventHandler(this.BinModuleControl_Load);
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemComboBox3)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);

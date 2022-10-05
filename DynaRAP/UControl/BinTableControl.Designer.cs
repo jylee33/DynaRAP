@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.xtraTabControl1 = new DevExpress.XtraTab.XtraTabControl();
+            this.splashScreenManager1 = new DevExpress.XtraSplashScreen.SplashScreenManager(this, typeof(global::DynaRAP.UControl.WaitForm1), true, true, typeof(System.Windows.Forms.UserControl));
             ((System.ComponentModel.ISupportInitialize)(this.xtraTabControl1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -39,6 +40,10 @@
             this.xtraTabControl1.Name = "xtraTabControl1";
             this.xtraTabControl1.Size = new System.Drawing.Size(711, 444);
             this.xtraTabControl1.TabIndex = 0;
+            // 
+            // splashScreenManager1
+            // 
+            this.splashScreenManager1.ClosingDelay = 500;
             // 
             // BinTableControl
             // 
@@ -56,5 +61,6 @@
         #endregion
 
         private DevExpress.XtraTab.XtraTabControl xtraTabControl1;
+        private DevExpress.XtraSplashScreen.SplashScreenManager splashScreenManager1;
     }
 }

@@ -42,6 +42,11 @@ namespace DynaRAP.UControl
 
         private void BinTableControl_Load(object sender, EventArgs e)
         {
+            if (!splashScreenManager1.IsSplashFormVisible)
+            {
+                splashScreenManager1.ShowWaitForm();
+                splashScreenManager1.SetWaitFormCaption("BIN테이블을 생성중입니다. 잠시만 기다려주십시오.");
+            }
             firstColNameList = new Dictionary<string, string>();
             int j = 1;
             for(int i=j; i< paramDataList.Count();i++)
@@ -57,6 +62,10 @@ namespace DynaRAP.UControl
                     j++; 
                }
             }
+
+
+            if (splashScreenManager1.IsSplashFormVisible)
+                splashScreenManager1.CloseWaitForm();
             //DataTable dt = GetDataTable(paramDataList[0], paramDataList[1]);
             //DataTable dt1 = GetDataTable();
             //AddTabPage("AOA-Q", dt);

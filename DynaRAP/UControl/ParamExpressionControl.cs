@@ -313,8 +313,14 @@ namespace DynaRAP.UControl
                 equationRequest.equations.Add(new Equations());
             }
             var json = JsonConvert.SerializeObject(equationRequest);
-
+            if (!splashScreenManager1.IsSplashFormVisible)
+            {
+                splashScreenManager1.ShowWaitForm();
+                splashScreenManager1.SetWaitFormCaption(type == "save" ? "수식을 저장 중입니다. 잠시만 기다려주십시오." : "수식을 삭제 중입니다. 잠시만 기다려주십시오.");
+            }   
             string responseData = Utils.GetPostData(ConfigurationManager.AppSettings["UrlParamModule"], json);
+            if(splashScreenManager1.IsSplashFormVisible)
+                splashScreenManager1.CloseWaitForm();
             if (responseData != null)
             {
                 JsonData result = JsonConvert.DeserializeObject<JsonData>(responseData);
@@ -378,7 +384,15 @@ namespace DynaRAP.UControl
                 ""moduleSeq"": ""{0}"",
                 ""equation"" : ""{1}""
                 }}", paramModuleSeq,equation);
+
+            if (!splashScreenManager1.IsSplashFormVisible)
+            {
+                splashScreenManager1.ShowWaitForm();
+                splashScreenManager1.SetWaitFormCaption("수식을 계산 중입니다. 잠시만 기다려주십시오.");
+            }
             string responseData = Utils.GetPostData(ConfigurationManager.AppSettings["UrlParamModule"], sendData);
+            if (splashScreenManager1.IsSplashFormVisible)
+                splashScreenManager1.CloseWaitForm();
             if (responseData != null)
             {
                 EvaluationResponse evaluationResponse = JsonConvert.DeserializeObject<EvaluationResponse>(responseData);

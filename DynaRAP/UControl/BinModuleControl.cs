@@ -215,7 +215,7 @@ namespace DynaRAP.UControl
             //mainForm.PanelBinTable.Hide();
             DockPanel panelChart = new DockPanel();
             panelChart = mainForm.DockManager1.AddPanel(DockingStyle.Float);
-            panelChart.FloatLocation = new Point(500, 100);
+            panelChart.FloatLocation = new Point(400, 100);
             panelChart.FloatSize = new Size(1058, 528);
             panelChart.Name = "BIN TABLE";
             panelChart.Text = "BIN TABLE";
