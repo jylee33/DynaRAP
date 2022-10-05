@@ -47,10 +47,14 @@
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuFileRead = new System.Windows.Forms.ToolStripMenuItem();
             this.pnPaging = new System.Windows.Forms.Panel();
+            this.chk_UseSecond = new System.Windows.Forms.CheckBox();
+            this.cbSeries2 = new System.Windows.Forms.ComboBox();
             this.btnReset = new System.Windows.Forms.Button();
             this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuSaveChart = new System.Windows.Forms.ToolStripMenuItem();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
             this.pnPaging.SuspendLayout();
             this.contextMenuStrip.SuspendLayout();
             this.SuspendLayout();
@@ -60,7 +64,7 @@
             this.label2.AutoEllipsis = true;
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.label2.Location = new System.Drawing.Point(3, 4);
+            this.label2.Location = new System.Drawing.Point(88, 4);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(42, 15);
             this.label2.TabIndex = 8;
@@ -72,7 +76,7 @@
             this.cbSeries.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbSeries.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.cbSeries.FormattingEnabled = true;
-            this.cbSeries.Location = new System.Drawing.Point(6, 24);
+            this.cbSeries.Location = new System.Drawing.Point(85, 23);
             this.cbSeries.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.cbSeries.Name = "cbSeries";
             this.cbSeries.Size = new System.Drawing.Size(179, 24);
@@ -84,7 +88,7 @@
             this.label1.AutoEllipsis = true;
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.label1.Location = new System.Drawing.Point(220, 7);
+            this.label1.Location = new System.Drawing.Point(273, 7);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(60, 15);
             this.label1.TabIndex = 6;
@@ -94,7 +98,7 @@
             // txtPageSize
             // 
             this.txtPageSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.txtPageSize.Location = new System.Drawing.Point(223, 24);
+            this.txtPageSize.Location = new System.Drawing.Point(276, 24);
             this.txtPageSize.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.txtPageSize.Name = "txtPageSize";
             this.txtPageSize.Size = new System.Drawing.Size(115, 23);
@@ -105,7 +109,7 @@
             // 
             this.lblPages.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.lblPages.AutoEllipsis = true;
-            this.lblPages.Location = new System.Drawing.Point(483, 4);
+            this.lblPages.Location = new System.Drawing.Point(482, 2);
             this.lblPages.Name = "lblPages";
             this.lblPages.Size = new System.Drawing.Size(200, 20);
             this.lblPages.TabIndex = 4;
@@ -236,6 +240,10 @@
             // 
             this.pnPaging.BackColor = System.Drawing.Color.Transparent;
             this.pnPaging.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnPaging.Controls.Add(this.label4);
+            this.pnPaging.Controls.Add(this.label3);
+            this.pnPaging.Controls.Add(this.chk_UseSecond);
+            this.pnPaging.Controls.Add(this.cbSeries2);
             this.pnPaging.Controls.Add(this.btnReset);
             this.pnPaging.Controls.Add(this.label2);
             this.pnPaging.Controls.Add(this.cbSeries);
@@ -251,15 +259,36 @@
             this.pnPaging.Location = new System.Drawing.Point(0, 0);
             this.pnPaging.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.pnPaging.Name = "pnPaging";
-            this.pnPaging.Size = new System.Drawing.Size(689, 75);
+            this.pnPaging.Size = new System.Drawing.Size(689, 94);
             this.pnPaging.TabIndex = 6;
+            // 
+            // chk_UseSecond
+            // 
+            this.chk_UseSecond.AutoSize = true;
+            this.chk_UseSecond.Location = new System.Drawing.Point(64, 63);
+            this.chk_UseSecond.Name = "chk_UseSecond";
+            this.chk_UseSecond.Size = new System.Drawing.Size(15, 14);
+            this.chk_UseSecond.TabIndex = 11;
+            this.chk_UseSecond.UseVisualStyleBackColor = true;
+            this.chk_UseSecond.CheckedChanged += new System.EventHandler(this.chk_UseSecond_CheckedChanged);
+            // 
+            // cbSeries2
+            // 
+            this.cbSeries2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbSeries2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.cbSeries2.FormattingEnabled = true;
+            this.cbSeries2.Location = new System.Drawing.Point(85, 58);
+            this.cbSeries2.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
+            this.cbSeries2.Name = "cbSeries2";
+            this.cbSeries2.Size = new System.Drawing.Size(179, 24);
+            this.cbSeries2.TabIndex = 10;
             // 
             // btnReset
             // 
             this.btnReset.BackColor = System.Drawing.Color.Transparent;
             this.btnReset.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.btnReset.ForeColor = System.Drawing.Color.Black;
-            this.btnReset.Location = new System.Drawing.Point(344, 24);
+            this.btnReset.Location = new System.Drawing.Point(397, 24);
             this.btnReset.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.btnReset.Name = "btnReset";
             this.btnReset.Size = new System.Drawing.Size(63, 24);
@@ -293,6 +322,30 @@
             this.mnuSaveChart.Size = new System.Drawing.Size(151, 22);
             this.mnuSaveChart.Text = "Save Chart";
             this.mnuSaveChart.Click += new System.EventHandler(this.mnuSaveChart_Click);
+            // 
+            // label3
+            // 
+            this.label3.AutoEllipsis = true;
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.label3.Location = new System.Drawing.Point(6, 26);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(53, 15);
+            this.label3.TabIndex = 12;
+            this.label3.Text = "Min ( X )";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label4
+            // 
+            this.label4.AutoEllipsis = true;
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.label4.Location = new System.Drawing.Point(6, 63);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(55, 15);
+            this.label4.TabIndex = 13;
+            this.label4.Text = "Max ( Y )";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // DXChartControl
             // 
@@ -334,5 +387,9 @@
         private System.Windows.Forms.ToolStripMenuItem drawChartToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem propertyShowToolStripMenuItem;
         private System.Windows.Forms.Button btnReset;
+        private System.Windows.Forms.CheckBox chk_UseSecond;
+        private System.Windows.Forms.ComboBox cbSeries2;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label3;
     }
 }

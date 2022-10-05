@@ -1,4 +1,5 @@
 ﻿using DevExpress.Utils;
+using DevExpress.XtraBars.Docking;
 using DevExpress.XtraEditors;
 using DevExpress.XtraEditors.Controls;
 using DevExpress.XtraGrid.Columns;
@@ -111,6 +112,8 @@ namespace DynaRAP.UControl
          
         private void RepositoryItemImageComboBox1_Click(object sender, EventArgs e)
         {
+            MainForm mainForm = this.ParentForm as MainForm;
+
             PlotGridData selectGridData = (PlotGridData)gridView1.GetFocusedRow();
             if(selectGridData.PlotSeq != null && selectGridData.PlotSeq != "")
             {
@@ -129,6 +132,44 @@ namespace DynaRAP.UControl
                     {
                         //dt = GetChartValues(evaluationResponse.response);
                         //AddChartData(selectGridData.eqName);
+                        DataTable dt = new DataTable();
+
+                        if (dt != null)
+                        {
+                            //MainForm mainForm = this.ParentForm as MainForm;
+
+                            //if (chartControl != null)
+                            //{
+                            //    chartControl.Dispose();
+                            //    chartControl = null;
+                            //}
+
+                            DXChartControl chartControl = new DXChartControl(plotDataResponse, plotGridSourceDataList);
+                            DockPanel panelChart = null;
+
+                            if (panelChart == null)
+                            {
+                                panelChart = new DockPanel();
+                                panelChart = mainForm.DockManager1.AddPanel(DockingStyle.Float);
+                                panelChart.FloatLocation = new Point(500, 100);
+                                panelChart.FloatSize = new Size(1058, 528);
+                                //panelChart.Name = this.sb.SbName;
+                                //panelChart.Text = this.sb.SbName;
+                                chartControl.Dock = DockStyle.Fill;
+                                panelChart.Controls.Add(chartControl);
+                                //panelChart.ClosedPanel += PanelChart_ClosedPanel;
+                            }
+                            else
+                            {
+                                //panelChart.Name = this.sb.SbName;
+                                //panelChart.Text = this.sb.SbName;
+                                //panelChart.Controls.Clear();
+                                chartControl.Dock = DockStyle.Fill;
+                                panelChart.Controls.Add(chartControl);
+                                panelChart.Show();
+                                panelChart.Focus();
+                            }
+                        }
                     }
                 }
             }
@@ -446,6 +487,7 @@ namespace DynaRAP.UControl
                 {
                     MessageBox.Show(type == "save" ? "저장 성공" : "전체삭제 성공");
                     GetSelectDataList(paramModuleSeq);
+                    GetSelectPlotDataList(paramModuleSeq);
                 }
                 else
                 {

@@ -12,6 +12,7 @@ using DevExpress.Utils.Drawing;
 using System.Drawing.Drawing2D;
 using System.Diagnostics;
 using DevExpress.XtraEditors;
+using DynaRAP.Data;
 
 namespace DynaRAP.UControl
 {
@@ -34,6 +35,7 @@ namespace DynaRAP.UControl
         private int m_pageSize;
         private int m_totalPages;
         private DataTable m_table;
+        private DataTable max_table;
         private DrawTypes m_drawTypes;
         private List<Cluster> m_clusters = new List<Cluster>();
 
@@ -41,6 +43,8 @@ namespace DynaRAP.UControl
 
         private List<DLL_DATA> m_dllDatas;
         private Dictionary<string, List<SeriesPointData>> m_dicData;
+        private PlotDataResponse plotDataResponse = null;
+        private List<PlotGridSourceData> plotGridSourceDataList = null;
         #endregion
 
         public DXChartControl()
@@ -57,6 +61,26 @@ namespace DynaRAP.UControl
 
             m_propertyGridWidth = 0;
         }
+
+        public DXChartControl(PlotDataResponse plotDataResponse, List<PlotGridSourceData> plotGridSourceDataList)
+        {
+            InitializeComponent();
+
+            m_drawTypes = DrawTypes.DT_UNKNOWN;
+
+            m_series = new List<string>();
+            //m_filename = @"sampledata.xls";
+            m_pageIndex = 0;
+            m_pageSize = 100000;
+            m_totalPages = 0;
+
+            m_propertyGridWidth = 0;
+
+            this.plotDataResponse = plotDataResponse;
+            this.plotGridSourceDataList = plotGridSourceDataList;
+        }
+
+        
 
         protected override void OnLoad(EventArgs e)
         {
@@ -87,6 +111,17 @@ namespace DynaRAP.UControl
             m_propertyGrid.Size = new Size(m_spliter.Panel2.Width, m_spliter.Panel2.Height);
             m_propertyGrid.SelectedObject = this.m_chart;            
             m_spliter.Panel2.Controls.Add(m_propertyGrid);
+
+
+            this.cbSeries.Enabled = false;
+            this.m_dicData = ReadDataList4();
+            //SetDllDatas();
+            this.cbSeries.Enabled = true;
+
+            mnuDrawChart1D.Enabled =
+                mnuDrawChart2D.Enabled =
+                mnuDrawChartMinMax.Enabled =
+                mnuDrawPotato.Enabled = this.cbSeries.Items.Count > 0;
         }
 
         private void Spliter_MouseClick(object sender, MouseEventArgs e)
@@ -212,7 +247,7 @@ namespace DynaRAP.UControl
                             {
                                 param.data = new DataTable();
                                 param.data.Columns.Add("Series", typeof(string));
-                                param.data.Columns.Add("Argument", typeof(DateTime));
+                                param.data.Columns.Add("Argument", typeof(int));
                                 param.data.Columns.Add("Value", typeof(double));
                             }
 
@@ -267,7 +302,7 @@ namespace DynaRAP.UControl
             if (this.m_chart.Series.Count > 0)
                 this.m_chart.Series.Clear();
 
-            this.pnPaging.Visible = drawTypes.Equals(DrawTypes.DT_1D) || drawTypes.Equals(DrawTypes.DT_2D);
+            //this.pnPaging.Visible = drawTypes.Equals(DrawTypes.DT_1D) || drawTypes.Equals(DrawTypes.DT_2D);
 
             switch (drawTypes)
             {
@@ -375,7 +410,7 @@ namespace DynaRAP.UControl
             {
                 if (0 == index)
                 {
-                    m_table.Columns.Add("Argument", typeof(DateTime));
+                    m_table.Columns.Add("Argument", typeof(int));
                     m_table.Columns.Add("Value", typeof(double));
                 }
 
@@ -390,6 +425,35 @@ namespace DynaRAP.UControl
             return m_table;
         }
 
+        private DataTable MakeMaxTableData(List<SeriesPointData> points)
+        {
+            if (null == max_table)
+                max_table = new DataTable();
+
+            max_table.Columns.Clear();
+            max_table.Rows.Clear();
+
+            int index = 0;
+
+            foreach (SeriesPointData point in points)
+            {
+                if (0 == index)
+                {
+                    max_table.Columns.Add("Argument", typeof(int));
+                    max_table.Columns.Add("Value", typeof(double));
+                }
+
+                DataRow row = max_table.NewRow();
+                row["Argument"] = point.Argument;
+                row["Value"] = point.Value;
+                max_table.Rows.Add(row);
+
+                index++;
+            }
+
+            return max_table;
+        }
+
         private void DrawChart_1D(string axisTitleX = "", int pageIndex = 0, int pageSize = 50000)
         {
             if(this.m_chart.Series.Count == 0)
@@ -402,7 +466,7 @@ namespace DynaRAP.UControl
             foreach (DataRow row in dataSource)
                 this.m_chart.Series[0].Points.Add(new SeriesPoint(row["Argument"], row["Value"]));
 
-            this.m_chart.Series[0].ArgumentScaleType = ScaleType.DateTime;
+            this.m_chart.Series[0].ArgumentScaleType = ScaleType.Auto;
             this.m_chart.Series[0].ArgumentDataMember = "Argument";
             this.m_chart.Series[0].ValueScaleType = ScaleType.Numerical;
             this.m_chart.Series[0].ValueDataMembers.AddRange(new string[] { "Value" });
@@ -423,7 +487,7 @@ namespace DynaRAP.UControl
             diagram.AxisX.DateTimeScaleOptions.GridOffset = 1;
             diagram.AxisX.DateTimeScaleOptions.MeasureUnit = DateTimeMeasureUnit.Millisecond;
             diagram.AxisX.DateTimeScaleOptions.GridAlignment = DateTimeGridAlignment.Second;
-            diagram.AxisX.Label.TextPattern = "{A:HH:mm:ss.ffff}";
+            //diagram.AxisX.Label.TextPattern = "{A:HH:mm:ss.ffff}";
 
             //this.btnMoveFirst.Enabled = this.btnMoveLeft.Enabled = (this.m_pageIndex > 0);
             //this.btnMoveLast.Enabled = this.btnMoveRight.Enabled = (this.m_pageIndex < this.m_totalPages);
@@ -446,7 +510,7 @@ namespace DynaRAP.UControl
             foreach (DataRow row in dataSource)
                 this.m_chart.Series[0].Points.Add(new SeriesPoint(row["Argument"], row["Value"]));
 
-            this.m_chart.Series[0].ArgumentScaleType = ScaleType.DateTime;
+            this.m_chart.Series[0].ArgumentScaleType = ScaleType.Auto;
             this.m_chart.Series[0].ArgumentDataMember = "Argument";
             this.m_chart.Series[0].ValueScaleType = ScaleType.Numerical;
             this.m_chart.Series[0].ValueDataMembers.AddRange(new string[] { "Value" });
@@ -574,31 +638,109 @@ namespace DynaRAP.UControl
 
             return table;
         }
+        //private void DrawChart_MinMax(string title = "", string axisTitleX = "", string axisTitleY = "")
+        //{
+        //    Dictionary<string, Series> seriesInfo = new Dictionary<string, Series>();
+        //    Series series;
+        //    foreach (DataRow row in m_table.Rows)
+        //    {
+        //        string operation = row["Operation"].ToString();
+        //        if (seriesInfo.TryGetValue(operation, out series) == false)
+        //        {
+        //            series = new Series(operation, ViewType.Line);
+        //            seriesInfo.Add(operation, series);
+
+        //            series.ArgumentDataMember = "Argument";
+        //            series.ArgumentScaleType = ScaleType.Numerical;
+        //            series.ValueDataMembers.AddRange(new string[] { "Value" });
+        //            series.ValueScaleType = ScaleType.Numerical;
+
+        //            this.m_chart.Series.Add(series);
+        //        }
+
+        //        double parameter = double.Parse(row["Argument"].ToString());
+        //        double minmax = double.Parse(row["Value"].ToString());
+        //        SeriesPoint point = new SeriesPoint(parameter, minmax);
+        //        series.Points.Add(point);
+        //    }
+
+        //    XYDiagram diagram = this.m_chart.Diagram as XYDiagram;
+
+        //    diagram.AxisY.Visibility = DevExpress.Utils.DefaultBoolean.Default;
+
+        //    diagram.EnableAxisXScrolling = true;
+        //    diagram.EnableAxisXZooming = true;
+        //    diagram.AxisX.WholeRange.SideMarginsValue = 0L;
+
+        //    diagram.AxisX.NumericScaleOptions.ScaleMode = ScaleMode.Manual;
+        //    diagram.AxisX.NumericScaleOptions.MeasureUnit = NumericMeasureUnit.Ones;
+        //    diagram.AxisX.NumericScaleOptions.GridOffset = 1;
+        //    diagram.AxisX.NumericScaleOptions.GridAlignment = NumericGridAlignment.Thousands;
+        //    diagram.AxisX.NumericScaleOptions.GridSpacing = 1;
+        //    diagram.AxisX.Label.TextPattern = "{A}";
+        //}
+        #endregion
+
         private void DrawChart_MinMax(string title = "", string axisTitleX = "", string axisTitleY = "")
         {
-            Dictionary<string, Series> seriesInfo = new Dictionary<string, Series>();
-            Series series;
-            foreach (DataRow row in m_table.Rows)
-            {
-                string operation = row["Operation"].ToString();
-                if (seriesInfo.TryGetValue(operation, out series) == false)
-                {
-                    series = new Series(operation, ViewType.Line);
-                    seriesInfo.Add(operation, series);
+            this.m_chart.Series.Clear();
+            this.m_chart.Series.Add(new Series("Min", ViewType.Line));
+            this.m_chart.Series.Add(new Series("MaX", ViewType.Line));
 
-                    series.ArgumentDataMember = "Argument";
-                    series.ArgumentScaleType = ScaleType.Numerical;
-                    series.ValueDataMembers.AddRange(new string[] { "Value" });
-                    series.ValueScaleType = ScaleType.Numerical;
+            var minDataSource = this.m_table.AsEnumerable().Skip(m_pageSize * m_pageIndex).Take(this.m_pageSize);
+            var maxDataSource = this.max_table.AsEnumerable().Skip(m_pageSize * m_pageIndex).Take(this.m_pageSize);
 
-                    this.m_chart.Series.Add(series);
-                }
+            this.m_chart.Series[0].Points.Clear();
 
-                double parameter = double.Parse(row["Argument"].ToString());
-                double minmax = double.Parse(row["Value"].ToString());
-                SeriesPoint point = new SeriesPoint(parameter, minmax);
-                series.Points.Add(point);
-            }
+            foreach (DataRow row in minDataSource)
+                this.m_chart.Series[0].Points.Add(new SeriesPoint(row["Argument"], row["Value"]));
+
+            this.m_chart.Series[0].ArgumentScaleType = ScaleType.Auto;
+            this.m_chart.Series[0].ArgumentDataMember = "Argument";
+            this.m_chart.Series[0].ValueScaleType = ScaleType.Numerical;
+            this.m_chart.Series[0].ValueDataMembers.AddRange(new string[] { "Value" });
+
+            this.m_chart.Legend.AlignmentHorizontal = LegendAlignmentHorizontal.Right;
+            this.m_chart.Legend.AlignmentVertical = LegendAlignmentVertical.Top;
+
+            this.m_chart.Series[1].Points.Clear();
+
+            foreach (DataRow row in maxDataSource)
+                this.m_chart.Series[1].Points.Add(new SeriesPoint(row["Argument"], row["Value"]));
+
+            this.m_chart.Series[1].ArgumentScaleType = ScaleType.Auto;
+            this.m_chart.Series[1].ArgumentDataMember = "Argument";
+            this.m_chart.Series[1].ValueScaleType = ScaleType.Numerical;
+            this.m_chart.Series[1].ValueDataMembers.AddRange(new string[] { "Value" });
+
+            this.m_chart.Legend.AlignmentHorizontal = LegendAlignmentHorizontal.Right;
+            this.m_chart.Legend.AlignmentVertical = LegendAlignmentVertical.Top;
+
+
+            //Dictionary<string, Series> seriesInfo = new Dictionary<string, Series>();
+            //Series series;
+
+            //foreach (DataRow row in m_table.Rows)
+            //{
+            //    string operation = row["Operation"].ToString();
+            //    if (seriesInfo.TryGetValue(operation, out series) == false)
+            //    {
+            //        series = new Series(operation, ViewType.Line);
+            //        seriesInfo.Add(operation, series);
+
+            //        series.ArgumentDataMember = "Argument";
+            //        series.ArgumentScaleType = ScaleType.Numerical;
+            //        series.ValueDataMembers.AddRange(new string[] { "Value" });
+            //        series.ValueScaleType = ScaleType.Numerical;
+
+            //        this.m_chart.Series.Add(series);
+            //    }
+
+            //    double parameter = double.Parse(row["Argument"].ToString());
+            //    double minmax = double.Parse(row["Value"].ToString());
+            //    SeriesPoint point = new SeriesPoint(parameter, minmax);
+            //    series.Points.Add(point);
+            //}
 
             XYDiagram diagram = this.m_chart.Diagram as XYDiagram;
 
@@ -615,7 +757,7 @@ namespace DynaRAP.UControl
             diagram.AxisX.NumericScaleOptions.GridSpacing = 1;
             diagram.AxisX.Label.TextPattern = "{A}";
         }
-        #endregion
+
 
         #region Potatao
         private void Chart_CustomPaint(object sender, CustomPaintEventArgs e)
@@ -661,6 +803,34 @@ namespace DynaRAP.UControl
             }
 
             return table;
+        }
+
+        private DataTable MakePotatoDataNew(List<SeriesPointData> seriesX, List<SeriesPointData> seriesY)
+        {
+            DataTable table = new DataTable();
+            table.Columns.Add("Operation", typeof(string));
+            table.Columns.Add("Argument", typeof(double));
+            table.Columns.Add("Value", typeof(double));
+
+            int index = seriesX.Count() < seriesY.Count() ? seriesX.Count() : seriesY.Count();
+           
+            for (int i = 0; i < index; i++)
+            {
+                Random random = new Random();
+                Random random1 = new Random();
+                DataRow row = table.NewRow();
+                row["Operation"] = "test";
+                row["Argument"] = seriesX[i].Value + random1.Next(0, 100);
+                row["Value"] = seriesY[i].Value + random.Next(0, 100); ;
+                table.Rows.Add(row);
+            }
+                //DataRow row1 = table.NewRow();
+                //row1["Operation"] = "test1";
+                //row1["Argument"] = 100000.0;
+                //row1["Value"] = 2000000.0;
+                //table.Rows.Add(row1);
+
+                return table;
         }
 
         private void DrawChart_Potato(string title = "", string axisTitleX = "", string axisTitleY = "")
@@ -714,7 +884,7 @@ namespace DynaRAP.UControl
             diagram.AxisY.NumericScaleOptions.GridOffset = 0;
             diagram.AxisY.NumericScaleOptions.GridSpacing = 100;
             //diagram.AxisY.NumericScaleOptions.MeasureUnit = NumericMeasureUnit.Thousands;
-            diagram.AxisY.NumericScaleOptions.GridAlignment = NumericGridAlignment.Tens;
+            diagram.AxisY.NumericScaleOptions.GridAlignment = NumericGridAlignment.Thousands;
             diagram.AxisY.VisualRange.SideMarginsValue = 100;
 
             ProcessAutoClusters();
@@ -808,7 +978,7 @@ namespace DynaRAP.UControl
         private void mnuFileRead_Click(object sender, EventArgs e)
         {
             this.cbSeries.Enabled = false;
-            this.m_dicData = ReadDataList3(m_filename);
+            this.m_dicData = ReadDataList4();
             SetDllDatas();
             this.cbSeries.Enabled = true;
 
@@ -852,13 +1022,26 @@ namespace DynaRAP.UControl
 
         private void drawChartToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if(this.cbSeries2.Text == null || this.cbSeries2.Text == "")
+            {
+                MessageBox.Show("Max로 사용할 항목을 선택해 주세요.");
+                return;
+            }
             this.m_drawTypes = DrawTypes.DT_MINMAX;
             mnuDrawChart1D.Checked = false;
             mnuDrawChart2D.Checked = false;
             mnuDrawChartMinMax.Checked = true;
             mnuDrawPotato.Checked = false;
 
-            DataTable dt = MakeMinMaxData();
+
+            List<SeriesPointData> minDatas;
+            List<SeriesPointData> maxDatas;
+
+            this.m_dicData.TryGetValue(this.cbSeries.Text, out minDatas);
+            this.m_dicData.TryGetValue(this.cbSeries2.Text, out maxDatas);
+
+            DataTable dt = MakeTableData(minDatas);
+            this.max_table = MakeMaxTableData(maxDatas);
 
             DrawChart(dt, this.m_drawTypes);
         }
@@ -881,8 +1064,15 @@ namespace DynaRAP.UControl
             mnuDrawChartMinMax.Checked = false;
             mnuDrawPotato.Checked = true;
 
-            DataTable dt = MakePotatoData("2955");
+            List<SeriesPointData> dataX;
+            List<SeriesPointData> dataY;
 
+            this.m_dicData.TryGetValue(this.cbSeries.Text, out dataX);
+            this.m_dicData.TryGetValue(this.cbSeries2.Text, out dataY);
+
+            //DataTable dt = MakePotatoData("2955");
+            DataTable dt = MakePotatoDataNew(dataX, dataY);
+            
             DrawChart(dt, m_drawTypes);
         }
 
@@ -896,6 +1086,60 @@ namespace DynaRAP.UControl
             if (sfd.ShowDialog() == DialogResult.OK)
                 this.m_chart.ExportToSvg(sfd.FileName);
         }
+        //private Dictionary<string, List<SeriesPointData>> SetDataList()
+        //{
+        //    Dictionary<string, List<SeriesPointData>> dicData = new Dictionary<string, List<SeriesPointData>>();
+        //    try
+        //    {
+        //        using (FileStream fs = new FileStream(filename, FileMode.Open))
+        //        using (StreamReader reader = new StreamReader(fs, Encoding.UTF8, false))
+        //        {
+        //            while (!reader.EndOfStream)
+        //            {
+        //                string line = reader.ReadLine();
+        //                var values = line.Split(',');
+
+        //                if (string.IsNullOrEmpty(values[0]))
+        //                    continue;
+
+        //                int i;
+        //                if (values[0].Equals("DATE"))
+        //                {
+        //                    for (i = 1; i < values.Length; i++)
+        //                    {
+        //                        if (!string.IsNullOrEmpty(values[i]))
+        //                        {
+        //                            dicData.Add(values[i], new List<SeriesPointData>());
+        //                        }
+        //                    }
+        //                    this.cbSeries.Items.AddRange(dicData.Keys.ToArray());
+        //                    this.cbSeries.SelectedIndex = 0;
+        //                    continue;
+        //                }
+
+        //                i = 0;
+        //                foreach (string key in dicData.Keys)
+        //                {
+        //                    if (!string.IsNullOrEmpty(values[i]))
+        //                    {
+        //                        string[] splits = values[0].Split(':');
+        //                        var temp = string.Format("{0} {1}:{2}:{3}", new DateTime().AddYears(DateTime.Now.Year - 1).AddDays(double.Parse(splits[0])).ToString("yyyy-MM-dd"), splits[1], splits[2], splits[3]);
+        //                        var arg = DateTime.ParseExact(temp, "yyyy-MM-dd HH:mm:ss.ffffff", null);
+        //                        var value = double.Parse(string.IsNullOrEmpty(values[i + 1]) ? "0" : values[i + 1]);
+        //                        dicData[key].Add(new SeriesPointData(key, arg, value));
+        //                        i++;
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception(ex.Message + Environment.NewLine + ex.StackTrace);
+        //    }
+
+        //    return dicData;
+        //}
 
         private void ReadDataTable(string filename)
         {
@@ -977,120 +1221,120 @@ namespace DynaRAP.UControl
             }
         }
 
-        private List<SeriesPointData> ReadDataList(string filename, bool isFirst = false)
-        {
-            int index = 1;
-            List<SeriesPointData> data = new List<SeriesPointData>();
-            try
-            {
-                using (FileStream fs = new FileStream(filename, FileMode.Open))
-                using (StreamReader reader = new StreamReader(fs, Encoding.UTF8, false))
-                {
-                    if (null == m_series)
-                        m_series = new List<string>();
+        //private List<SeriesPointData> ReadDataList(string filename, bool isFirst = false)
+        //{
+        //    int index = 1;
+        //    List<SeriesPointData> data = new List<SeriesPointData>();
+        //    try
+        //    {
+        //        using (FileStream fs = new FileStream(filename, FileMode.Open))
+        //        using (StreamReader reader = new StreamReader(fs, Encoding.UTF8, false))
+        //        {
+        //            if (null == m_series)
+        //                m_series = new List<string>();
 
-                    while (!reader.EndOfStream)
-                    {
-                        string line = reader.ReadLine();
-                        var values = line.Split(',');
+        //            while (!reader.EndOfStream)
+        //            {
+        //                string line = reader.ReadLine();
+        //                var values = line.Split(',');
 
-                        if (string.IsNullOrEmpty(values[0]))
-                            continue;
+        //                if (string.IsNullOrEmpty(values[0]))
+        //                    continue;
 
-                        if (values[0].Equals("DATE"))
-                        {
-                            if (isFirst)
-                            {
-                                for (int i = 1; i < values.Length; i++)
-                                {
-                                    if (!string.IsNullOrEmpty(values[i]))
-                                    {
-                                        m_series.Add(values[i]);
-                                        this.cbSeries.Items.Add(values[i]);
-                                    }
-                                }
-                                this.cbSeries.SelectedIndex = 0;
-                            }
-                            else
-                                index = m_series.FindIndex(f => f.Contains(this.cbSeries.Text));
+        //                if (values[0].Equals("DATE"))
+        //                {
+        //                    if (isFirst)
+        //                    {
+        //                        for (int i = 1; i < values.Length; i++)
+        //                        {
+        //                            if (!string.IsNullOrEmpty(values[i]))
+        //                            {
+        //                                m_series.Add(values[i]);
+        //                                this.cbSeries.Items.Add(values[i]);
+        //                            }
+        //                        }
+        //                        this.cbSeries.SelectedIndex = 0;
+        //                    }
+        //                    else
+        //                        index = m_series.FindIndex(f => f.Contains(this.cbSeries.Text));
 
-                            continue;
-                        }
+        //                    continue;
+        //                }
 
-                        if (!isFirst)
-                        {
-                            string[] splits = values[0].Split(':');
-                            var arg = string.Format("{0} {1}:{2}:{3}", new DateTime().AddYears(DateTime.Now.Year - 1).AddDays(double.Parse(splits[0])).ToString("yyyy-MM-dd"), splits[1], splits[2], splits[3]);
-                            var argument = DateTime.ParseExact(arg, "yyyy-MM-dd HH:mm:ss.ffffff", null);
-                            var value = double.Parse(values[index + 1]);
-                            data.Add(new SeriesPointData(this.cbSeries.Text, argument, value));
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message + Environment.NewLine + ex.StackTrace);
-            }
+        //                if (!isFirst)
+        //                {
+        //                    string[] splits = values[0].Split(':');
+        //                    var arg = string.Format("{0} {1}:{2}:{3}", new DateTime().AddYears(DateTime.Now.Year - 1).AddDays(double.Parse(splits[0])).ToString("yyyy-MM-dd"), splits[1], splits[2], splits[3]);
+        //                    var argument = DateTime.ParseExact(arg, "yyyy-MM-dd HH:mm:ss.ffffff", null);
+        //                    var value = double.Parse(values[index + 1]);
+        //                    data.Add(new SeriesPointData(this.cbSeries.Text, argument, value));
+        //                }
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception(ex.Message + Environment.NewLine + ex.StackTrace);
+        //    }
 
-            return data;
-        }
+        //    return data;
+        //}
 
-        private List<SeriesPointData> ReadDataList2(string filename)
-        {
-            List<SeriesPointData> data = new List<SeriesPointData>();
-            try
-            {
-                using (FileStream fs = new FileStream(filename, FileMode.Open))
-                using (StreamReader reader = new StreamReader(fs, Encoding.UTF8, false))
-                {
-                    if (null == m_series)
-                        m_series = new List<string>();
-                    m_series.Clear();
+        //private List<SeriesPointData> ReadDataList2(string filename)
+        //{
+        //    List<SeriesPointData> data = new List<SeriesPointData>();
+        //    try
+        //    {
+        //        using (FileStream fs = new FileStream(filename, FileMode.Open))
+        //        using (StreamReader reader = new StreamReader(fs, Encoding.UTF8, false))
+        //        {
+        //            if (null == m_series)
+        //                m_series = new List<string>();
+        //            m_series.Clear();
 
-                    while (!reader.EndOfStream)
-                    {
-                        string line = reader.ReadLine();
-                        var values = line.Split(',');
+        //            while (!reader.EndOfStream)
+        //            {
+        //                string line = reader.ReadLine();
+        //                var values = line.Split(',');
 
-                        if (string.IsNullOrEmpty(values[0]))
-                            continue;
+        //                if (string.IsNullOrEmpty(values[0]))
+        //                    continue;
 
-                        if (values[0].Equals("DATE"))
-                        {
-                            for (int i = 1; i < values.Length; i++)
-                            {
-                                if (!string.IsNullOrEmpty(values[i]))
-                                {
-                                    m_series.Add(values[i]);
-                                }
-                            }
-                            this.cbSeries.Items.AddRange(m_series.ToArray());
-                            this.cbSeries.SelectedIndex = 0;
-                            continue;
-                        }
+        //                if (values[0].Equals("DATE"))
+        //                {
+        //                    for (int i = 1; i < values.Length; i++)
+        //                    {
+        //                        if (!string.IsNullOrEmpty(values[i]))
+        //                        {
+        //                            m_series.Add(values[i]);
+        //                        }
+        //                    }
+        //                    this.cbSeries.Items.AddRange(m_series.ToArray());
+        //                    this.cbSeries.SelectedIndex = 0;
+        //                    continue;
+        //                }
 
-                        for (int i = 0; i < m_series.Count; i++)
-                        {
-                            string[] splits = values[0].Split(':');
-                            var arg = string.Format("{0} {1}:{2}:{3}", new DateTime().AddYears(DateTime.Now.Year - 1).AddDays(double.Parse(splits[0])).ToString("yyyy-MM-dd"), splits[1], splits[2], splits[3]);
-                            var argument = DateTime.ParseExact(arg, "yyyy-MM-dd HH:mm:ss.ffffff", null);
-                            var value = double.Parse(string.IsNullOrEmpty(values[i + 1]) ? "0" : values[i + 1]);
-                            var series = m_series[i];
+        //                for (int i = 0; i < m_series.Count; i++)
+        //                {
+        //                    string[] splits = values[0].Split(':');
+        //                    var arg = string.Format("{0} {1}:{2}:{3}", new DateTime().AddYears(DateTime.Now.Year - 1).AddDays(double.Parse(splits[0])).ToString("yyyy-MM-dd"), splits[1], splits[2], splits[3]);
+        //                    var argument = DateTime.ParseExact(arg, "yyyy-MM-dd HH:mm:ss.ffffff", null);
+        //                    var value = double.Parse(string.IsNullOrEmpty(values[i + 1]) ? "0" : values[i + 1]);
+        //                    var series = m_series[i];
 
-                            //Debug.Print(string.Format("arg = {0}, value = {1}, series = {2}", argument, value, series));
-                            data.Add(new SeriesPointData(series, argument, value));
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message + Environment.NewLine + ex.StackTrace);
-            }
+        //                    //Debug.Print(string.Format("arg = {0}, value = {1}, series = {2}", argument, value, series));
+        //                    data.Add(new SeriesPointData(series, argument, value));
+        //                }
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception(ex.Message + Environment.NewLine + ex.StackTrace);
+        //    }
 
-            return data;
-        }
+        //    return data;
+        //}
 
         private Dictionary<string, List<SeriesPointData>> ReadDataList3(string filename)
         {
@@ -1128,11 +1372,11 @@ namespace DynaRAP.UControl
                         {
                             if (!string.IsNullOrEmpty(values[i]))
                             {
-                                string[] splits = values[0].Split(':');
-                                var temp = string.Format("{0} {1}:{2}:{3}", new DateTime().AddYears(DateTime.Now.Year - 1).AddDays(double.Parse(splits[0])).ToString("yyyy-MM-dd"), splits[1], splits[2], splits[3]);
-                                var arg = DateTime.ParseExact(temp, "yyyy-MM-dd HH:mm:ss.ffffff", null);
+                                //string[] splits = values[0].Split(':');
+                                //var temp = string.Format("{0} {1}:{2}:{3}", new DateTime().AddYears(DateTime.Now.Year - 1).AddDays(double.Parse(splits[0])).ToString("yyyy-MM-dd"), splits[1], splits[2], splits[3]);
+                                //var arg = DateTime.ParseExact(temp, "yyyy-MM-dd HH:mm:ss.ffffff", null);
                                 var value = double.Parse(string.IsNullOrEmpty(values[i + 1]) ? "0" : values[i + 1]);
-                                dicData[key].Add(new SeriesPointData(key, arg, value));
+                                dicData[key].Add(new SeriesPointData(key, i, value));
                                 i++;
                             }
                         }
@@ -1147,11 +1391,50 @@ namespace DynaRAP.UControl
             return dicData;
         }
 
+        private Dictionary<string, List<SeriesPointData>> ReadDataList4()
+        {
+
+            Dictionary<string, List<SeriesPointData>> dicData = new Dictionary<string, List<SeriesPointData>>();
+            foreach (var source in plotGridSourceDataList)
+            {
+                int index = -99999;
+                index = plotDataResponse.additionalResponse.plotSourceList.FindIndex(x => x.sourceSeq == source.seq);
+                int i = 0;
+                if (index != -1)
+                {
+                    dicData.Add(source.itemName, new List<SeriesPointData>());
+                    foreach (var plotData in plotDataResponse.response[index])
+                    {
+                        dicData[source.itemName].Add(new SeriesPointData(source.itemName, i, plotData));
+                        i++;
+                    }
+                }
+            }
+            this.cbSeries.Items.AddRange(dicData.Keys.ToArray());
+            this.cbSeries.SelectedIndex = 0;
+            this.cbSeries2.Items.AddRange(dicData.Keys.ToArray());
+            //this.cbSeries2.SelectedIndex = 0;
+            return dicData;
+        }
+
         private void txtPageSize_KeyDown(object sender, KeyEventArgs e)
         {
             if(e.KeyCode == Keys.Enter)
             {
                 btnReset_Click(null, null);
+            }
+        }
+
+        private void chk_UseSecond_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chk_UseSecond.Checked)
+            {
+                cbSeries2.Enabled = true;
+            }
+            else
+            {
+                cbSeries2.Enabled = false;
+                cbSeries2.Text = "";
             }
         }
     }
@@ -1160,10 +1443,11 @@ namespace DynaRAP.UControl
     public class SeriesPointData
     {
         public string SeriesName { get; private set; }
-        public DateTime Argument { get; private set; }
+        //public DateTime Argument { get; private set; }
+        public int Argument { get; private set; }
         public double Value { get; private set; }
 
-        public SeriesPointData(string name, DateTime arg, double val)
+        public SeriesPointData(string name, int arg, double val)
         {
             SeriesName = name;
             Argument = arg;

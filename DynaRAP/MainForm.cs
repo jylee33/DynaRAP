@@ -725,7 +725,7 @@ namespace DynaRAP
                     panelChart.Focus();
                 }
             }
-            return;
+            //return;
             
             /*
             if (plotModuleControl == null)
@@ -745,9 +745,9 @@ namespace DynaRAP
             return;
             */
 
-            TestChartLine form = new TestChartLine();
-            form.Show();
-            return;
+            //TestChartLine form = new TestChartLine();
+            //form.Show();
+            //return;
 
             //ChartControl chartControl = null;
 
@@ -781,7 +781,7 @@ namespace DynaRAP
 
             plotModuleControl.AddDocument(new DXChartControl());
 
-            return;
+            //return;
             
             TestChartLine form = new TestChartLine();
             form.Show();
@@ -803,7 +803,7 @@ namespace DynaRAP
 
         private void btnChartPotato_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            if (plotModuleControl == null)
+                if (plotModuleControl == null)
             {
                 plotModuleControl = new PlotModuleControl();
                 DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(plotModuleControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
@@ -817,7 +817,7 @@ namespace DynaRAP
 
             plotModuleControl.AddDocument(new DXChartControl());
 
-            return;
+            //return;
 
             TestChartPotato form = new TestChartPotato();
             form.Show();

@@ -101,7 +101,10 @@ namespace DynaRAP.UControl
                 if (e.Column.FieldName == "paramKey")
                 {
                     ParamDataSelectionData paramData = (ParamDataSelectionData)gridView1.GetFocusedRow();
-                    e.RepositoryItem = comboDic[paramData.SourceSeq];
+                    if (paramData.DataType == "part" || paramData.DataType == "shortblock")
+                    {
+                        e.RepositoryItem = comboDic[paramData.SourceSeq];
+                    }
                 }
             };
         }
@@ -328,7 +331,7 @@ namespace DynaRAP.UControl
                         case "DLL":
                             foreach (var list in paramModuleResponse.response)
                             {
-                                paramDataList.Add(new ParamDataSelectionData("shortblock", Utils.base64StringDecoding(list.dataSetName),"","", "", list.seq,0));
+                                paramDataList.Add(new ParamDataSelectionData("dll", Utils.base64StringDecoding(list.dataSetName),"","", "", list.seq,0));
                             }
                             break;
                         case "PARAMMODULE":
