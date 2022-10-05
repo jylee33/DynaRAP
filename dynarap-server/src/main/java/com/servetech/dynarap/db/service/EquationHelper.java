@@ -43,9 +43,13 @@ public class EquationHelper {
     }
 
     public void loadParamModuleData(CryptoField moduleSeq) throws HandledServiceException {
+        loadParamModuleData(moduleSeq, false);
+    }
+
+    public void loadParamModuleData(CryptoField moduleSeq, boolean forced) throws HandledServiceException {
         ParamModuleVO paramModule = paramModuleData.get(moduleSeq.valueOf());
 
-        if (paramModule == null) {
+        if (paramModule == null || forced) {
             paramModule = ApiController.getService(ParamModuleService.class).getParamModuleBySeq(moduleSeq);
             paramModule.setSources(ApiController.getService(ParamModuleService.class).getParamModuleSourceList(moduleSeq));
             if (paramModule.getSources() == null) paramModule.setSources(new ArrayList<>());
@@ -146,9 +150,13 @@ public class EquationHelper {
     }
 
     public void calculateEquations(CryptoField moduleSeq, List<ParamModuleVO.Equation> equations) throws HandledServiceException {
+        calculateEquations(moduleSeq, equations, false);
+    }
+
+    public void calculateEquations(CryptoField moduleSeq, List<ParamModuleVO.Equation> equations, boolean forced) throws HandledServiceException {
         ParamModuleVO paramModule = paramModuleData.get(moduleSeq.valueOf());
-        if (paramModule == null) {
-            loadParamModuleData(moduleSeq);
+        if (paramModule == null || forced) {
+            loadParamModuleData(moduleSeq, forced);
             paramModule = paramModuleData.get(moduleSeq.valueOf());
         }
 

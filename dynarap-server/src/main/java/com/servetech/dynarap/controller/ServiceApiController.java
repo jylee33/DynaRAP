@@ -558,6 +558,9 @@ public class ServiceApiController extends ApiController {
                 }
             }
 
+            // source save 이후 새로 로딩.
+            equationHelper.loadParamModuleData(moduleSeq, true);
+
             return ResponseHelper.response(200, "Success - ParamModule Save Source", paramModule);
         }
 
@@ -765,7 +768,7 @@ public class ServiceApiController extends ApiController {
             equationHelper.setListOps(listOps);
             equationHelper.setHashOps(hashOps);
             equationHelper.setZsetOps(zsetOps);
-            equationHelper.calculateEquations(moduleSeq, paramModule.getEquations());
+            equationHelper.calculateEquations(moduleSeq, paramModule.getEquations(), true); // 강제 로딩 적용.
 
             List<ParamModuleVO.Equation> equations = getService(ParamModuleService.class).getParamModuleEqList(moduleSeq);
 
