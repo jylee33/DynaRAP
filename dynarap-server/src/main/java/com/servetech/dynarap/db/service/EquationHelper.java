@@ -54,7 +54,7 @@ public class EquationHelper {
             paramModule.setSources(ApiController.getService(ParamModuleService.class).getParamModuleSourceList(moduleSeq));
             if (paramModule.getSources() == null) paramModule.setSources(new ArrayList<>());
 
-            paramModule.setParamData(new HashMap<>());
+            paramModule.setParamData(new LinkedHashMap<>());
 
             for (ParamModuleVO.Source source : paramModule.getSources()) {
                 if (source.getSourceType().equalsIgnoreCase("part")) {
@@ -79,11 +79,17 @@ public class EquationHelper {
                 loadEquationData(equation);
                 if (paramModule.getEqMap() == null)
                     paramModule.setEqMap(new HashMap<>());
-                paramModule.getEqMap().put(equation.getEqName().originOf(), equation);
+                paramModule.getEqMap().put(equation.getEqNo(), equation);
             }
         }
 
         paramModuleData.put(moduleSeq.valueOf(), paramModule);
+    }
+
+    public List<ParamModuleVO.Source> getParamModuleSources(CryptoField moduleSeq) throws HandledServiceException {
+        ParamModuleVO paramModule = paramModuleData.get(moduleSeq.valueOf());
+        if (paramModule == null) throw new HandledServiceException(411, "파라미터 모듈의 소스가 준비되지 않았습니다.");
+        return new ArrayList<ParamModuleVO.Source>(paramModule.getParamData().values());
     }
 
     public List<Object> loadPlotData(CryptoField moduleSeq, ParamModuleVO.Plot.PlotSource plotSource) throws HandledServiceException {
@@ -173,7 +179,7 @@ public class EquationHelper {
 
             if (reCalculate) {
                 tryCalculate(paramModule, equations.get(i));
-                paramModule.getEqMap().put(equations.get(i).getEqName().originOf(), equations.get(i));
+                paramModule.getEqMap().put(equations.get(i).getEqNo(), equations.get(i));
             }
         }
     }
@@ -247,17 +253,24 @@ public class EquationHelper {
 
             for (String sensor : sensors) {
                 ParamModuleVO.Source partSource = paramModule.getParamData().get(sensor);
-                if (sensor.contains("_hpf")) {
-                    sensorData.put(sensor, partSource.getHpfData());
-                    outBound = Math.max(outBound, partSource.getHpfData().size());
-                }
-                else if (sensor.contains("_lpf")) {
-                    sensorData.put(sensor, partSource.getLpfData());
-                    outBound = Math.max(outBound, partSource.getLpfData().size());
+                if (partSource != null) {
+                    if (sensor.contains("_hpf")) {
+                        sensorData.put(sensor, partSource.getHpfData());
+                        outBound = Math.max(outBound, partSource.getHpfData().size());
+                    } else if (sensor.contains("_lpf")) {
+                        sensorData.put(sensor, partSource.getLpfData());
+                        outBound = Math.max(outBound, partSource.getLpfData().size());
+                    } else {
+                        sensorData.put(sensor, partSource.getData());
+                        outBound = Math.max(outBound, partSource.getData().size());
+                    }
                 }
                 else {
-                    sensorData.put(sensor, partSource.getData());
-                    outBound = Math.max(outBound, partSource.getData().size());
+                    ParamModuleVO.Equation equation = paramModule.getEqMap().get(sensor);
+                    if (equation != null) {
+                        sensorData.put(sensor, equation.getData());
+                        outBound = Math.max(outBound, equation.getData().size());
+                    }
                 }
             }
 
@@ -362,17 +375,24 @@ public class EquationHelper {
 
         for (String sensor : partSensors) {
             ParamModuleVO.Source partSource = paramModule.getParamData().get(sensor);
-            if (sensor.contains("_hpf")) {
-                sensorData.put(sensor, partSource.getHpfData());
-                outBound = Math.max(outBound, partSource.getHpfData().size());
-            }
-            else if (sensor.contains("_lpf")) {
-                sensorData.put(sensor, partSource.getLpfData());
-                outBound = Math.max(outBound, partSource.getLpfData().size());
+            if (partSource != null) {
+                if (sensor.contains("_hpf")) {
+                    sensorData.put(sensor, partSource.getHpfData());
+                    outBound = Math.max(outBound, partSource.getHpfData().size());
+                } else if (sensor.contains("_lpf")) {
+                    sensorData.put(sensor, partSource.getLpfData());
+                    outBound = Math.max(outBound, partSource.getLpfData().size());
+                } else {
+                    sensorData.put(sensor, partSource.getData());
+                    outBound = Math.max(outBound, partSource.getData().size());
+                }
             }
             else {
-                sensorData.put(sensor, partSource.getData());
-                outBound = Math.max(outBound, partSource.getData().size());
+                ParamModuleVO.Equation equation = paramModule.getEqMap().get(sensor);
+                if (equation != null) {
+                    sensorData.put(sensor, equation.getData());
+                    outBound = Math.max(outBound, equation.getData().size());
+                }
             }
         }
 
@@ -427,17 +447,24 @@ public class EquationHelper {
 
         for (String sensor : partSensors) {
             ParamModuleVO.Source partSource = paramModule.getParamData().get(sensor);
-            if (sensor.contains("_hpf")) {
-                sensorData.put(sensor, partSource.getHpfData());
-                outBound = Math.max(outBound, partSource.getHpfData().size());
-            }
-            else if (sensor.contains("_lpf")) {
-                sensorData.put(sensor, partSource.getLpfData());
-                outBound = Math.max(outBound, partSource.getLpfData().size());
+            if (partSource != null) {
+                if (sensor.contains("_hpf")) {
+                    sensorData.put(sensor, partSource.getHpfData());
+                    outBound = Math.max(outBound, partSource.getHpfData().size());
+                } else if (sensor.contains("_lpf")) {
+                    sensorData.put(sensor, partSource.getLpfData());
+                    outBound = Math.max(outBound, partSource.getLpfData().size());
+                } else {
+                    sensorData.put(sensor, partSource.getData());
+                    outBound = Math.max(outBound, partSource.getData().size());
+                }
             }
             else {
-                sensorData.put(sensor, partSource.getData());
-                outBound = Math.max(outBound, partSource.getData().size());
+                ParamModuleVO.Equation equation = paramModule.getEqMap().get(sensor);
+                if (equation != null) {
+                    sensorData.put(sensor, equation.getData());
+                    outBound = Math.max(outBound, equation.getData().size());
+                }
             }
         }
 
@@ -491,17 +518,24 @@ public class EquationHelper {
 
         for (String sensor : partSensors) {
             ParamModuleVO.Source partSource = paramModule.getParamData().get(sensor);
-            if (sensor.contains("_hpf")) {
-                sensorData.put(sensor, partSource.getHpfData());
-                outBound = Math.max(outBound, partSource.getHpfData().size());
-            }
-            else if (sensor.contains("_lpf")) {
-                sensorData.put(sensor, partSource.getLpfData());
-                outBound = Math.max(outBound, partSource.getLpfData().size());
+            if (partSource != null) {
+                if (sensor.contains("_hpf")) {
+                    sensorData.put(sensor, partSource.getHpfData());
+                    outBound = Math.max(outBound, partSource.getHpfData().size());
+                } else if (sensor.contains("_lpf")) {
+                    sensorData.put(sensor, partSource.getLpfData());
+                    outBound = Math.max(outBound, partSource.getLpfData().size());
+                } else {
+                    sensorData.put(sensor, partSource.getData());
+                    outBound = Math.max(outBound, partSource.getData().size());
+                }
             }
             else {
-                sensorData.put(sensor, partSource.getData());
-                outBound = Math.max(outBound, partSource.getData().size());
+                ParamModuleVO.Equation equation = paramModule.getEqMap().get(sensor);
+                if (equation != null) {
+                    sensorData.put(sensor, equation.getData());
+                    outBound = Math.max(outBound, equation.getData().size());
+                }
             }
         }
 
@@ -560,6 +594,14 @@ public class EquationHelper {
         }
         source.setParam(param);
         source.setSourceNo("P" + partInfo.getSeq().originOf());
+        source.setParamKey(param.getParamKey());
+
+        RawVO.Upload rawUpload = ApiController.getService(RawService.class).getUploadBySeq(partInfo.getUploadSeq());
+        if (rawUpload != null) {
+            source.setUseTime("julian");
+            if (rawUpload.getDataType().equalsIgnoreCase("adams") || rawUpload.getDataType().equalsIgnoreCase("zaero"))
+                source.setUseTime("offset");
+        }
 
         String julianFrom = "", julianTo = "";
         Set<String> listSet = zsetOps.rangeByScore("P" + partInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE);
@@ -625,6 +667,8 @@ public class EquationHelper {
         source.setData(data);
         source.setLpfData(lpfData);
         source.setHpfData(hpfData);
+
+        source.setDataCount(data == null ? 0 : data.size());
     }
 
     private void loadShortBlockData(ParamModuleVO.Source source) throws HandledServiceException {
@@ -646,6 +690,14 @@ public class EquationHelper {
         source.setParamData(ApiController.getService(PartService.class).getShortBlockParamData(
                 blockInfo.getBlockMetaSeq(), blockInfo.getSeq(), param.getReferenceSeq()));
         source.setSourceNo("S" + blockInfo.getSeq().originOf());
+        source.setParamKey(param.getParamKey());
+
+        RawVO.Upload rawUpload = ApiController.getService(RawService.class).getUploadBySeq(partInfo.getUploadSeq());
+        if (rawUpload != null) {
+            source.setUseTime("julian");
+            if (rawUpload.getDataType().equalsIgnoreCase("adams") || rawUpload.getDataType().equalsIgnoreCase("zaero"))
+                source.setUseTime("offset");
+        }
 
         String julianFrom = "", julianTo = "";
         Set<String> listSet = zsetOps.rangeByScore("S" + blockInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE);
@@ -711,6 +763,8 @@ public class EquationHelper {
         source.setData(data);
         source.setLpfData(lpfData);
         source.setHpfData(hpfData);
+
+        source.setDataCount(data == null ? 0 : data.size());
     }
 
     private void loadDllData(ParamModuleVO.Source source) throws HandledServiceException {
@@ -722,6 +776,7 @@ public class EquationHelper {
 
         source.setDllParam(dllParam);
         source.setSourceNo("D" + dllInfo.getSeq().originOf());
+        source.setParamKey(dllParam.getParamName().originOf());
 
         List<DLLVO.Raw> rawData = ApiController.getService(DLLService.class).getDLLData(dllInfo.getSeq(), dllParam.getSeq());
         List<Object> filteredData = new ArrayList<>();
@@ -733,6 +788,8 @@ public class EquationHelper {
         }
 
         source.setData(filteredData);
+
+        source.setDataCount(filteredData == null ? 0 : filteredData.size());
     }
 
     private void loadEquationData(ParamModuleVO.Source source) throws HandledServiceException {
@@ -744,6 +801,7 @@ public class EquationHelper {
 
         source.setEquation(equation);
         source.setSourceNo("M" + paramModule.getSeq().originOf());
+        source.setParamKey(equation.getEqName().originOf());
 
         // E<seq>.TimeSet = []
         // E<seq> = []
@@ -776,6 +834,8 @@ public class EquationHelper {
 
             source.setTimeSet(timeSet);
         }
+
+        source.setDataCount(data == null ? 0 : data.size());
     }
 
     private void loadEquationData(ParamModuleVO.Equation equation) throws HandledServiceException {
@@ -813,5 +873,7 @@ public class EquationHelper {
 
             equation.setTimeSet(timeSet);
         }
+
+        equation.setDataCount(data == null ? 0 : data.size());
     }
 }

@@ -334,95 +334,51 @@ public class ServiceApiController extends ApiController {
             if (moduleSeq == null || moduleSeq.isEmpty())
                 throw new HandledServiceException(411, "파라미터를 확인하세요.");
 
-            List<ParamModuleVO.Source> sources = getService(ParamModuleService.class).getParamModuleSourceList(moduleSeq);
+            // load all sources and equations.
+            equationHelper.setListOps(listOps);
+            equationHelper.setHashOps(hashOps);
+            equationHelper.setZsetOps(zsetOps);
+
+            equationHelper.loadParamModuleData(moduleSeq);
+
+            List<ParamModuleVO.Source> sources = equationHelper.getParamModuleSources(moduleSeq);
+
+            //List<ParamModuleVO.Source> sources = getService(ParamModuleService.class).getParamModuleSourceList(moduleSeq);
             if (sources == null) sources = new ArrayList<>();
 
-            for (ParamModuleVO.Source source : sources) {
-                if (source.getSourceType().equals("part")) {
-                    PartVO partInfo = getService(PartService.class).getPartBySeq(source.getSourceSeq());
-                    if (partInfo == null) {
-                        source.setMark(true);
-                        continue;
-                    }
-                    source.setSourceName(partInfo.getPartName());
-                    source.setSourceNo("P" + partInfo.getSeq().originOf());
-                    RawVO.Upload rawUpload = getService(RawService.class).getUploadBySeq(partInfo.getUploadSeq());
-                    if (rawUpload == null) {
-                        source.setMark(true);
-                        continue;
-                    }
-
-                    source.setUseTime("julian");
-                    if (rawUpload.getDataType().equalsIgnoreCase("adams") || rawUpload.getDataType().equalsIgnoreCase("zaero"))
-                        source.setUseTime("offset");
-
-                    // presetParamSeq 값으로 처리됨.
-                    PresetVO.Param pparam = getService(ParamService.class).getPresetParamBySource(source.getParamSeq());
-                    ParamVO param = getService(ParamService.class).getParamBySeq(pparam.getParamSeq());
-                    source.setParamKey(param.getParamKey());
-                }
-                else if (source.getSourceType().equals("shortblock")) {
-                    ShortBlockVO blockInfo = getService(PartService.class).getShortBlockBySeq(source.getSourceSeq());
-                    if (blockInfo == null) {
-                        source.setMark(true);
-                        continue;
-                    }
-                    source.setSourceName(blockInfo.getBlockName());
-                    source.setSourceNo("S" + blockInfo.getSeq().originOf());
-
-                    PartVO partInfo = getService(PartService.class).getPartBySeq(blockInfo.getPartSeq());
-                    RawVO.Upload rawUpload = getService(RawService.class).getUploadBySeq(partInfo.getUploadSeq());
-                    if (rawUpload == null) {
-                        source.setMark(true);
-                        continue;
-                    }
-
-                    source.setUseTime("julian");
-                    if (rawUpload.getDataType().equalsIgnoreCase("adams") || rawUpload.getDataType().equalsIgnoreCase("zaero"))
-                        source.setUseTime("offset");
-
-                    // blockParamSeq 값으로 처리됨.
-                    ShortBlockVO.Param blockParam = getService(ParamService.class).getShortBlockParamBySeq(source.getParamSeq());
-                    ParamVO param = getService(ParamService.class).getParamBySeq(blockParam.getParamSeq());
-                    source.setParamKey(param.getParamKey());
-                }
-                else if (source.getSourceType().equals("dll")) {
-                    DLLVO dllInfo = getService(DLLService.class).getDLLBySeq(source.getSourceSeq());
-                    if (dllInfo == null) {
-                        source.setMark(true);
-                        continue;
-                    }
-                    source.setSourceName(dllInfo.getDataSetName());
-                    source.setSourceNo("D" + dllInfo.getSeq().originOf());
-
-                    DLLVO.Param dllParam = getService(DLLService.class).getDLLParamBySeq(source.getParamSeq());
-                    source.setParamKey(dllParam.getParamName().originOf());
-                }
-                else if (source.getSourceType().equals("parammodule")) {
-                    ParamModuleVO moduleInfo = getService(ParamModuleService.class).getParamModuleBySeq(source.getSourceSeq());
-                    if (moduleInfo == null) {
-                        source.setMark(true);
-                        continue;
-                    }
-                    source.setSourceName(moduleInfo.getModuleName());
-                    source.setSourceNo("M" + moduleInfo.getSeq().originOf());
-
-                    ParamModuleVO.Equation eq = getService(ParamModuleService.class).getParamModuleEqBySeq(source.getParamSeq());
-                    source.setParamKey(eq.getEqName().originOf());
-                }
-            }
-
-            List<ParamModuleVO.Source> availSources = new ArrayList<>();
-            for (ParamModuleVO.Source source : sources) {
-                if (source.isMark() == false)
-                    availSources.add(source);
-            }
-
-            return ResponseHelper.response(200, "Success - ParamModule Source List", availSources);
+            return ResponseHelper.response(200, "Success - ParamModule Source List", sources);
         }
 
         if (command.equals("source-count")) {
-            return ResponseHelper.response(200, "Success - ParamModule Source Count", 0);
+            CryptoField moduleSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "moduleSeq"))
+                moduleSeq = CryptoField.decode(payload.get("moduleSeq").getAsString(), 0L);
+
+            CryptoField sourceSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "sourceSeq"))
+                sourceSeq = CryptoField.decode(payload.get("sourceSeq").getAsString(), 0L);
+
+            if (moduleSeq == null || moduleSeq.isEmpty() || sourceSeq == null || sourceSeq.isEmpty())
+                throw new HandledServiceException(411, "파라미터를 확인하세요.");
+
+            // load all sources and equations.
+            equationHelper.setListOps(listOps);
+            equationHelper.setHashOps(hashOps);
+            equationHelper.setZsetOps(zsetOps);
+
+            equationHelper.loadParamModuleData(moduleSeq);
+
+            List<ParamModuleVO.Source> sources = equationHelper.getParamModuleSources(moduleSeq);
+            if (sources == null) sources = new ArrayList<>();
+            ParamModuleVO.Source findSource = null;
+            for (ParamModuleVO.Source source : sources) {
+                if (source.getSeq().equals(sourceSeq)) {
+                    findSource = source;
+                    break;
+                }
+            }
+
+            return ResponseHelper.response(200, "Success - ParamModule Source Count", findSource == null ? 0 : findSource.getDataCount());
         }
 
         if (command.equals("save-source")) {
@@ -501,65 +457,17 @@ public class ServiceApiController extends ApiController {
                     getService(ParamModuleService.class).deleteParamModuleSource(paramSource.getSeq());
             }
 
-            paramModule.setSources(getService(ParamModuleService.class).getParamModuleSourceList(moduleSeq));
-            if (paramModule.getSources() == null) paramModule.setSources(new ArrayList<>());
-            for (ParamModuleVO.Source source : paramModule.getSources()) {
-                if (source.getSourceType().equals("part")) {
-                    PartVO partInfo = getService(PartService.class).getPartBySeq(source.getSourceSeq());
-                    if (partInfo == null) continue;
-                    source.setSourceName(partInfo.getPartName());
-                    source.setSourceNo("P" + partInfo.getSeq().originOf());
-                    RawVO.Upload rawUpload = getService(RawService.class).getUploadBySeq(partInfo.getUploadSeq());
-                    if (rawUpload == null) continue;
+            // load all sources and equations.
+            equationHelper.setListOps(listOps);
+            equationHelper.setHashOps(hashOps);
+            equationHelper.setZsetOps(zsetOps);
 
-                    source.setUseTime("julian");
-                    if (rawUpload.getDataType().equalsIgnoreCase("adams") || rawUpload.getDataType().equalsIgnoreCase("zaero"))
-                        source.setUseTime("offset");
-
-                    // presetParamSeq 값으로 처리됨.
-                    PresetVO.Param pparam = getService(ParamService.class).getPresetParamBySource(source.getParamSeq());
-                    ParamVO param = getService(ParamService.class).getParamBySeq(pparam.getParamSeq());
-                    source.setParamKey(param.getParamKey());
-                }
-                else if (source.getSourceType().equals("shortblock")) {
-                    ShortBlockVO blockInfo = getService(PartService.class).getShortBlockBySeq(source.getSourceSeq());
-                    if (blockInfo == null) continue;
-                    source.setSourceName(blockInfo.getBlockName());
-                    source.setSourceNo("S" + blockInfo.getSeq().originOf());
-
-                    PartVO partInfo = getService(PartService.class).getPartBySeq(blockInfo.getPartSeq());
-                    RawVO.Upload rawUpload = getService(RawService.class).getUploadBySeq(partInfo.getUploadSeq());
-                    if (rawUpload == null) continue;
-
-                    source.setUseTime("julian");
-                    if (rawUpload.getDataType().equalsIgnoreCase("adams") || rawUpload.getDataType().equalsIgnoreCase("zaero"))
-                        source.setUseTime("offset");
-
-                    // blockParamSeq 값으로 처리됨.
-                    ShortBlockVO.Param blockParam = getService(ParamService.class).getShortBlockParamBySeq(source.getParamSeq());
-                    ParamVO param = getService(ParamService.class).getParamBySeq(blockParam.getParamSeq());
-                    source.setParamKey(param.getParamKey());
-                }
-                else if (source.getSourceType().equals("dll")) {
-                    DLLVO dllInfo = getService(DLLService.class).getDLLBySeq(source.getSourceSeq());
-                    if (dllInfo == null) continue;
-                    source.setSourceName(dllInfo.getDataSetName());
-                    source.setSourceNo("D" + dllInfo.getSeq().originOf());
-                    DLLVO.Param dllParam = getService(DLLService.class).getDLLParamBySeq(source.getParamSeq());
-                    source.setParamKey(dllParam.getParamName().originOf());
-                }
-                else if (source.getSourceType().equals("parammodule")) {
-                    ParamModuleVO moduleInfo = getService(ParamModuleService.class).getParamModuleBySeq(source.getSourceSeq());
-                    if (moduleInfo == null) continue;
-                    source.setSourceName(moduleInfo.getModuleName());
-                    source.setSourceNo("M" + moduleInfo.getSeq().originOf());
-                    ParamModuleVO.Equation eq = getService(ParamModuleService.class).getParamModuleEqBySeq(source.getParamSeq());
-                    source.setParamKey(eq.getEqName().originOf());
-                }
-            }
-
-            // source save 이후 새로 로딩.
             equationHelper.loadParamModuleData(moduleSeq, true);
+
+            List<ParamModuleVO.Source> sources = equationHelper.getParamModuleSources(moduleSeq);
+            if (sources == null) sources = new ArrayList<>();
+
+            paramModule.setSources(sources);
 
             return ResponseHelper.response(200, "Success - ParamModule Save Source", paramModule);
         }
