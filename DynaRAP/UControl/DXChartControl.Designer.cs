@@ -47,16 +47,24 @@
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuFileRead = new System.Windows.Forms.ToolStripMenuItem();
             this.pnPaging = new System.Windows.Forms.Panel();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             this.chk_UseSecond = new System.Windows.Forms.CheckBox();
             this.cbSeries2 = new System.Windows.Forms.ComboBox();
             this.btnReset = new System.Windows.Forms.Button();
             this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuSaveChart = new System.Windows.Forms.ToolStripMenuItem();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem6 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem9 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItem10 = new System.Windows.Forms.ToolStripMenuItem();
             this.pnPaging.SuspendLayout();
             this.contextMenuStrip.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // label2
@@ -262,6 +270,30 @@
             this.pnPaging.Size = new System.Drawing.Size(689, 94);
             this.pnPaging.TabIndex = 6;
             // 
+            // label4
+            // 
+            this.label4.AutoEllipsis = true;
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.label4.Location = new System.Drawing.Point(6, 63);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(55, 15);
+            this.label4.TabIndex = 13;
+            this.label4.Text = "Max ( Y )";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // label3
+            // 
+            this.label3.AutoEllipsis = true;
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.label3.Location = new System.Drawing.Point(6, 26);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(53, 15);
+            this.label3.TabIndex = 12;
+            this.label3.Text = "Min ( X )";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // chk_UseSecond
             // 
             this.chk_UseSecond.AutoSize = true;
@@ -282,6 +314,7 @@
             this.cbSeries2.Name = "cbSeries2";
             this.cbSeries2.Size = new System.Drawing.Size(179, 24);
             this.cbSeries2.TabIndex = 10;
+            this.cbSeries2.SelectedIndexChanged += new System.EventHandler(this.cbSeries2_SelectedIndexChanged);
             // 
             // btnReset
             // 
@@ -323,29 +356,58 @@
             this.mnuSaveChart.Text = "Save Chart";
             this.mnuSaveChart.Click += new System.EventHandler(this.mnuSaveChart_Click);
             // 
-            // label3
+            // contextMenuStrip1
             // 
-            this.label3.AutoEllipsis = true;
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.label3.Location = new System.Drawing.Point(6, 26);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(53, 15);
-            this.label3.TabIndex = 12;
-            this.label3.Text = "Min ( X )";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripSeparator1,
+            this.toolStripMenuItem4,
+            this.toolStripMenuItem6,
+            this.toolStripMenuItem9,
+            this.toolStripSeparator2,
+            this.toolStripMenuItem10});
+            this.contextMenuStrip1.Name = "contextMenuStrip";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(152, 104);
             // 
-            // label4
+            // toolStripSeparator1
             // 
-            this.label4.AutoEllipsis = true;
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.label4.Location = new System.Drawing.Point(6, 63);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(55, 15);
-            this.label4.TabIndex = 13;
-            this.label4.Text = "Max ( Y )";
-            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(148, 6);
+            // 
+            // toolStripMenuItem4
+            // 
+            this.toolStripMenuItem4.Enabled = false;
+            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(151, 22);
+            this.toolStripMenuItem4.Text = "DrawChart 1D";
+            this.toolStripMenuItem4.Click += new System.EventHandler(this.mnuDrawChart1D_Click);
+            // 
+            // toolStripMenuItem6
+            // 
+            this.toolStripMenuItem6.Enabled = false;
+            this.toolStripMenuItem6.Name = "toolStripMenuItem6";
+            this.toolStripMenuItem6.Size = new System.Drawing.Size(151, 22);
+            this.toolStripMenuItem6.Text = "MIN/MAX";
+            this.toolStripMenuItem6.Click += new System.EventHandler(this.drawChartToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem9
+            // 
+            this.toolStripMenuItem9.Enabled = false;
+            this.toolStripMenuItem9.Name = "toolStripMenuItem9";
+            this.toolStripMenuItem9.Size = new System.Drawing.Size(151, 22);
+            this.toolStripMenuItem9.Text = "DrawPotato";
+            this.toolStripMenuItem9.Click += new System.EventHandler(this.mnuDrawPotato_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(148, 6);
+            // 
+            // toolStripMenuItem10
+            // 
+            this.toolStripMenuItem10.Name = "toolStripMenuItem10";
+            this.toolStripMenuItem10.Size = new System.Drawing.Size(151, 22);
+            this.toolStripMenuItem10.Text = "Save Chart";
+            this.toolStripMenuItem10.Click += new System.EventHandler(this.mnuSaveChart_Click);
             // 
             // DXChartControl
             // 
@@ -359,6 +421,7 @@
             this.pnPaging.ResumeLayout(false);
             this.pnPaging.PerformLayout();
             this.contextMenuStrip.ResumeLayout(false);
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -391,5 +454,12 @@
         private System.Windows.Forms.ComboBox cbSeries2;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem6;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem9;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem10;
     }
 }

@@ -147,7 +147,7 @@ namespace DynaRAP.UControl
                 {
                     foreach (var list in equationResponse.response)
                     {
-                        list.eqName = Utils.base64StringDecoding(list.eqName);
+                        list.eqName = string.Format("{0}_{1}",list.eqNo, Utils.base64StringDecoding(list.eqName));
                         eqGridDataList.Add(new EquationGridData(list));
                     }
                 }
@@ -297,6 +297,10 @@ namespace DynaRAP.UControl
                 {
                     MessageBox.Show("수식이름 중 비어있는 항목이 있습니다. \n수식이름 입력 후 저장해주세요.");
                     return;
+                }
+                if(list.EqFalg)
+                {
+                    list.eqName = list.eqName.Substring(list.eqName.IndexOf('_')+1);
                 }
                 byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(list.eqName);
                 string encName = Convert.ToBase64String(basebyte);

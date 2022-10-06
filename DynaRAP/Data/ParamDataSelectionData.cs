@@ -98,6 +98,33 @@ namespace DynaRAP.Data
             this.useTime = useTime;
             this.seq = seq;
         }
+        public ParamDataSelectionData DeepCopy()
+        {
+            ParamDataSelectionData newCopy = new ParamDataSelectionData();
+            newCopy.partSeq = this.partSeq;
+            newCopy.DataType = this.DataType;
+            newCopy.DataName = this.DataName;
+            newCopy.SelectionStart = this.SelectionStart;
+            newCopy.SelectionEnd = this.SelectionEnd;
+            newCopy.DataCnt = this.DataCnt;
+            newCopy.sourceType = this.sourceType;
+            newCopy.SourceSeq = this.SourceSeq;
+            newCopy.SourceName = this.SourceName;
+            newCopy.paramPack = this.paramPack;
+            newCopy.paramSeq = this.paramSeq;
+            newCopy.paramKey = this.paramKey;
+            newCopy.julianStartAt = this.julianStartAt;
+            newCopy.julianEndAt = this.julianEndAt;
+            newCopy.offsetStartAt = this.offsetStartAt;
+            newCopy.offsetEndAt = this.offsetEndAt;
+            newCopy.useTime = this.useTime;
+            newCopy.Add = this.Add;
+            newCopy.Del = this.Del;
+            newCopy.View = this.View;
+            newCopy.Seq = this.Seq;
+
+            return newCopy;
+        }
     }
     public class GridParam
     {

@@ -164,6 +164,15 @@ namespace DynaRAP.Data
 
     public class Equation
     {
-
+        public string seq { get; set; }
+        public string moduleSeq { get; set; }
+        public string eqName { get; set; }
+        public string equations { get; set; }
+        public int eqOrder { get; set; }
+        public double offsetStartAt { get; set; }
+        public double offsetEndAt { get; set; }
+        public int dataCount { get; set; }
+        public DataProps dataProp { get; set; }
+        public string eqNo { get; set; }
     }
 }

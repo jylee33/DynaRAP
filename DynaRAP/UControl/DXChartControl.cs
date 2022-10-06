@@ -100,7 +100,7 @@ namespace DynaRAP.UControl
 
             this.m_chart = new ChartControl();
             this.m_chart.Dock = DockStyle.Fill;
-            this.m_chart.ContextMenuStrip = this.contextMenuStrip;
+            this.m_chart.ContextMenuStrip = this.contextMenuStrip1;
             this.m_chart.CustomPaint += Chart_CustomPaint;
             m_spliter.Panel1.Controls.Add(this.m_chart);
 
@@ -122,6 +122,10 @@ namespace DynaRAP.UControl
                 mnuDrawChart2D.Enabled =
                 mnuDrawChartMinMax.Enabled =
                 mnuDrawPotato.Enabled = this.cbSeries.Items.Count > 0;
+
+            toolStripMenuItem4.Enabled =
+               toolStripMenuItem6.Enabled =
+               toolStripMenuItem9.Enabled = this.cbSeries.Items.Count > 0;
         }
 
         private void Spliter_MouseClick(object sender, MouseEventArgs e)
@@ -813,24 +817,27 @@ namespace DynaRAP.UControl
             table.Columns.Add("Value", typeof(double));
 
             int index = seriesX.Count() < seriesY.Count() ? seriesX.Count() : seriesY.Count();
-           
+                Random random = new Random();
+
             for (int i = 0; i < index; i++)
             {
-                Random random = new Random();
-                Random random1 = new Random();
                 DataRow row = table.NewRow();
                 row["Operation"] = "test";
-                row["Argument"] = seriesX[i].Value + random1.Next(0, 100);
-                row["Value"] = seriesY[i].Value + random.Next(0, 100); ;
+                row["Argument"] = seriesX[i].Value;
+                row["Value"] = seriesY[i].Value;
+                //var t1 = random.Next(0, 1000);
+                //var t2 =  random.Next(0, 1000); ;
+                //row["Argument"] = t1;
+                //row["Value"] = t2;
                 table.Rows.Add(row);
             }
-                //DataRow row1 = table.NewRow();
-                //row1["Operation"] = "test1";
-                //row1["Argument"] = 100000.0;
-                //row1["Value"] = 2000000.0;
-                //table.Rows.Add(row1);
+            //DataRow row1 = table.NewRow();
+            //row1["Operation"] = "test1";
+            //row1["Argument"] = 500.0;
+            //row1["Value"] = 500.0;
+            //table.Rows.Add(row1);
 
-                return table;
+            return table;
         }
 
         private void DrawChart_Potato(string title = "", string axisTitleX = "", string axisTitleY = "")
@@ -859,33 +866,50 @@ namespace DynaRAP.UControl
                 series.Points.Add(point);
             }
 
-            PointSeriesView seriesView = this.m_chart.Series[0].View as PointSeriesView;
-            seriesView.PointMarkerOptions.Kind = MarkerKind.Circle;
-            seriesView.PointMarkerOptions.FillStyle.FillMode = DevExpress.XtraCharts.FillMode.Empty;
-            seriesView.PointMarkerOptions.Size = 3;
+            //PointSeriesView seriesView = this.m_chart.Series[0].View as PointSeriesView;
+            //seriesView.PointMarkerOptions.Kind = MarkerKind.Circle;
+            //seriesView.PointMarkerOptions.FillStyle.FillMode = DevExpress.XtraCharts.FillMode.Empty;
+            //seriesView.PointMarkerOptions.Size = 3;
 
             XYDiagram diagram = this.m_chart.Diagram as XYDiagram;
 
-            diagram.AxisY.Visibility = DevExpress.Utils.DefaultBoolean.Default;
+            //diagram.AxisY.Visibility = DevExpress.Utils.DefaultBoolean.Default;
 
-            diagram.EnableAxisXScrolling = true;
-            diagram.EnableAxisXZooming = true;
+            //diagram.EnableAxisXScrolling = true;
+            //diagram.EnableAxisXZooming = true;
 
-            diagram.AxisX.WholeRange.Auto = true;
-            diagram.AxisX.WholeRange.SideMarginsValue = 100;
-            diagram.AxisX.NumericScaleOptions.ScaleMode = ScaleMode.Manual;
-            diagram.AxisX.NumericScaleOptions.MeasureUnit = NumericMeasureUnit.Tens;
-            diagram.AxisX.NumericScaleOptions.GridOffset = 0;
-            diagram.AxisX.NumericScaleOptions.GridAlignment = NumericGridAlignment.Thousands;
-            diagram.AxisX.NumericScaleOptions.GridSpacing = 10;
-            diagram.AxisX.Label.TextPattern = "{A}";
+            //diagram.AxisX.WholeRange.Auto = true;
+            //diagram.AxisX.WholeRange.SideMarginsValue = 100;
+            //diagram.AxisX.NumericScaleOptions.ScaleMode = ScaleMode.Manual;
+            //diagram.AxisX.NumericScaleOptions.MeasureUnit = NumericMeasureUnit.Tens;
+            //diagram.AxisX.NumericScaleOptions.GridOffset = 0;
+            //diagram.AxisX.NumericScaleOptions.GridAlignment = NumericGridAlignment.Thousands;
+            //diagram.AxisX.NumericScaleOptions.GridSpacing = 10;
+            //diagram.AxisX.Label.TextPattern = "{A}";
 
-            diagram.AxisY.WholeRange.Auto = true;
-            diagram.AxisY.NumericScaleOptions.GridOffset = 0;
-            diagram.AxisY.NumericScaleOptions.GridSpacing = 100;
-            //diagram.AxisY.NumericScaleOptions.MeasureUnit = NumericMeasureUnit.Thousands;
-            diagram.AxisY.NumericScaleOptions.GridAlignment = NumericGridAlignment.Thousands;
-            diagram.AxisY.VisualRange.SideMarginsValue = 100;
+            //diagram.AxisY.WholeRange.Auto = true;
+            //diagram.AxisY.NumericScaleOptions.GridOffset = 0;
+            //diagram.AxisY.NumericScaleOptions.GridSpacing = 100;
+            ////diagram.AxisY.NumericScaleOptions.MeasureUnit = NumericMeasureUnit.Thousands;
+            //diagram.AxisY.NumericScaleOptions.GridAlignment = NumericGridAlignment.Thousands;
+            //diagram.AxisY.VisualRange.SideMarginsValue = 100;
+
+            diagram.AxisX.Title.Visibility = string.IsNullOrEmpty(axisTitleX) ? DevExpress.Utils.DefaultBoolean.False : DevExpress.Utils.DefaultBoolean.True;
+            diagram.AxisX.Title.Alignment = StringAlignment.Center;
+            diagram.AxisX.Title.Text = axisTitleX;
+
+            diagram.AxisY.Title.Visibility = string.IsNullOrEmpty(axisTitleX) ? DevExpress.Utils.DefaultBoolean.False : DevExpress.Utils.DefaultBoolean.True;
+            diagram.AxisY.Title.Alignment = StringAlignment.Center;
+            diagram.AxisY.Title.Text = axisTitleY;
+
+            //var title1 = new ChartTitle();
+            //title1.Text = string.IsNullOrEmpty(title) ? m_chart.Series[0].Name : title;
+            //m_chart.Titles.Add(title1);
+
+            PointSeriesView seriesView = m_chart.Series[0].View as PointSeriesView;
+            seriesView.PointMarkerOptions.Kind = MarkerKind.Circle;
+            seriesView.PointMarkerOptions.FillStyle.FillMode = DevExpress.XtraCharts.FillMode.Hatch;
+            seriesView.PointMarkerOptions.Size = 5;
 
             ProcessAutoClusters();
         }
@@ -969,12 +993,48 @@ namespace DynaRAP.UControl
 
             List<SeriesPointData> spDatas;
             this.m_dicData.TryGetValue(this.cbSeries.Text, out spDatas);
+            DataTable dt = null;
+            if (this.m_drawTypes == DrawTypes.DT_1D || this.m_drawTypes == DrawTypes.DT_MINMAX)
+            {
+                dt = MakeTableData(spDatas);
+            }
+            else if (this.m_drawTypes == DrawTypes.DT_POTATO)
+            {
 
-            DataTable dt = MakeTableData(spDatas);
+                List<SeriesPointData> dataY;
+
+                this.m_dicData.TryGetValue(this.cbSeries2.Text, out dataY);
+                dt = MakePotatoDataNew(spDatas, dataY);
+            }
 
             DrawChart(dt, this.m_drawTypes);
         }
 
+        private void cbSeries2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (this.cbSeries2.Enabled == false || this.m_drawTypes == DrawTypes.DT_UNKNOWN)
+                return;
+
+            List<SeriesPointData> minDatas;
+            List<SeriesPointData> maxDatas;
+
+            DataTable dt = null;
+
+            this.m_dicData.TryGetValue(this.cbSeries.Text, out minDatas);
+            this.m_dicData.TryGetValue(this.cbSeries2.Text, out maxDatas);
+
+            if (this.m_drawTypes == DrawTypes.DT_MINMAX)
+            {
+                dt = MakeTableData(minDatas);
+                this.max_table = MakeMaxTableData(maxDatas);
+            }
+            else if (this.m_drawTypes == DrawTypes.DT_POTATO)
+            {
+                dt = MakePotatoDataNew(minDatas, maxDatas);
+            }
+
+            DrawChart(dt, this.m_drawTypes);
+        }
         private void mnuFileRead_Click(object sender, EventArgs e)
         {
             this.cbSeries.Enabled = false;
@@ -1069,6 +1129,11 @@ namespace DynaRAP.UControl
 
             this.m_dicData.TryGetValue(this.cbSeries.Text, out dataX);
             this.m_dicData.TryGetValue(this.cbSeries2.Text, out dataY);
+            if(this.cbSeries2.Text == null || this.cbSeries2.Text == "")
+            {
+                MessageBox.Show("Y축으로 사용할 항목을 선택해주세요.");
+                return;
+            }
 
             //DataTable dt = MakePotatoData("2955");
             DataTable dt = MakePotatoDataNew(dataX, dataY);
@@ -1413,6 +1478,7 @@ namespace DynaRAP.UControl
             this.cbSeries.Items.AddRange(dicData.Keys.ToArray());
             this.cbSeries.SelectedIndex = 0;
             this.cbSeries2.Items.AddRange(dicData.Keys.ToArray());
+            this.cbSeries2.Enabled = false;
             //this.cbSeries2.SelectedIndex = 0;
             return dicData;
         }
@@ -1435,6 +1501,7 @@ namespace DynaRAP.UControl
             {
                 cbSeries2.Enabled = false;
                 cbSeries2.Text = "";
+                cbSeries2.SelectedIndex = -1;
             }
         }
     }
