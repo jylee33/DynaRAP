@@ -547,7 +547,7 @@ public class ServiceApiController extends ApiController {
 
             List<ParamModuleVO.Equation> equations = new ArrayList<>(paramModule.getEqMap().values());
             equationHelper.calculateEquations(moduleSeq, equations);
-            
+
             return ResponseHelper.response(200, "Success - ParamModule Eq List", equations);
         }
 

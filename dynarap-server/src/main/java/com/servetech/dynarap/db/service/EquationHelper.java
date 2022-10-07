@@ -184,7 +184,7 @@ public class EquationHelper {
             if (oldEquation == null || !oldEquation.getEquation().equals(equations.get(i).getEquation()))
                 reCalculate = true;
 
-            reCalculate = true;
+            //reCalculate = true;
 
             if (reCalculate) {
                 tryCalculate(paramModule, equations.get(i));
