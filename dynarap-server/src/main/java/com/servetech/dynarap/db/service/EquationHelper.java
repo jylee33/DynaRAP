@@ -592,9 +592,11 @@ public class EquationHelper {
             param = ApiController.getService(ParamService.class).getNotMappedParamBySeq(new CryptoField(paramKey));
             if (param == null) throw new HandledServiceException(411, "파라미터 조회 실패");
         }
+
         source.setParam(param);
         source.setSourceNo("P" + partInfo.getSeq().originOf());
         source.setParamKey(param.getParamKey());
+        source.setSourceName(partInfo.getPartName());
 
         RawVO.Upload rawUpload = ApiController.getService(RawService.class).getUploadBySeq(partInfo.getUploadSeq());
         if (rawUpload != null) {
@@ -691,6 +693,7 @@ public class EquationHelper {
                 blockInfo.getBlockMetaSeq(), blockInfo.getSeq(), param.getReferenceSeq()));
         source.setSourceNo("S" + blockInfo.getSeq().originOf());
         source.setParamKey(param.getParamKey());
+        source.setSourceName(blockInfo.getBlockName());
 
         RawVO.Upload rawUpload = ApiController.getService(RawService.class).getUploadBySeq(partInfo.getUploadSeq());
         if (rawUpload != null) {
@@ -777,6 +780,7 @@ public class EquationHelper {
         source.setDllParam(dllParam);
         source.setSourceNo("D" + dllInfo.getSeq().originOf());
         source.setParamKey(dllParam.getParamName().originOf());
+        source.setSourceName(dllInfo.getDataSetName());
 
         List<DLLVO.Raw> rawData = ApiController.getService(DLLService.class).getDLLData(dllInfo.getSeq(), dllParam.getSeq());
         List<Object> filteredData = new ArrayList<>();
@@ -802,6 +806,7 @@ public class EquationHelper {
         source.setEquation(equation);
         source.setSourceNo("M" + paramModule.getSeq().originOf());
         source.setParamKey(equation.getEqName().originOf());
+        source.setSourceName(paramModule.getModuleName());
 
         // E<seq>.TimeSet = []
         // E<seq> = []
