@@ -546,6 +546,8 @@ public class ServiceApiController extends ApiController {
                 return ResponseHelper.response(200, "Success - ParamModule Eq List", paramModule.getEquations());
 
             List<ParamModuleVO.Equation> equations = new ArrayList<>(paramModule.getEqMap().values());
+            equationHelper.calculateEquations(moduleSeq, equations);
+            
             return ResponseHelper.response(200, "Success - ParamModule Eq List", equations);
         }
 
@@ -679,11 +681,12 @@ public class ServiceApiController extends ApiController {
             equationHelper.setListOps(listOps);
             equationHelper.setHashOps(hashOps);
             equationHelper.setZsetOps(zsetOps);
-            equationHelper.calculateEquations(moduleSeq, paramModule.getEquations(), true); // 강제 로딩 적용.
 
-            List<ParamModuleVO.Equation> equations = getService(ParamModuleService.class).getParamModuleEqList(moduleSeq);
+            equationHelper.calculateEquations(moduleSeq, paramModule.getEquations(), true); // 강제 로딩후 재 계산.
 
-            return ResponseHelper.response(200, "Success - ParamModule Save Eq", equations);
+            //List<ParamModuleVO.Equation> equations = getService(ParamModuleService.class).getParamModuleEqList(moduleSeq);
+
+            return ResponseHelper.response(200, "Success - ParamModule Save Eq", paramModule.getEquations());
         }
 
         if (command.equals("evaluation")) {
