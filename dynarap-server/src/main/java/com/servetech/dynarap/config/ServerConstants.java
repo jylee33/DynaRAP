@@ -94,6 +94,7 @@ public class ServerConstants {
         System.out.println(System.currentTimeMillis() / jd);
         System.out.println(getJulianTimeOffset("344:10:49:24.429500", "344:10:49:24.431500"));
         */
+        /*
         String test = "${SN910P} + ${SN999S} * 1.2";
         test = "{SN910P} + max({SN999S}) + min({SN912S} * max({SW907P}) * 1.2) + 5.0";
         //test = test.replaceAll("\\s+", "");
@@ -124,6 +125,10 @@ public class ServerConstants {
         for (String sensor : sensors) {
             System.out.println(test + ", sensor=" + sensor);
         }
+        */
+        String chm = "0759";
+        String userWhen = "0800";
+        System.out.println(chm.compareTo(userWhen)); // > 0 , 지난 경우,  0 > 아직 안 됨., 0 같음.
 
         //System.out.println(loopTest);
 
