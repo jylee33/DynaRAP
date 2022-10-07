@@ -823,19 +823,19 @@ namespace DynaRAP.UControl
             {
                 DataRow row = table.NewRow();
                 row["Operation"] = "test";
-                row["Argument"] = seriesX[i].Value;
-                row["Value"] = seriesY[i].Value;
-                //var t1 = random.Next(0, 1000);
-                //var t2 =  random.Next(0, 1000); ;
-                //row["Argument"] = t1;
-                //row["Value"] = t2;
+                //row["Argument"] = seriesX[i].Value;
+                //row["Value"] = seriesY[i].Value;
+                var t1 = random.Next(0, 500);
+                var t2 = random.Next(0, 500); ;
+                row["Argument"] = t1;
+                row["Value"] = t2;
                 table.Rows.Add(row);
             }
-            //DataRow row1 = table.NewRow();
-            //row1["Operation"] = "test1";
-            //row1["Argument"] = 500.0;
-            //row1["Value"] = 500.0;
-            //table.Rows.Add(row1);
+            DataRow row1 = table.NewRow();
+            row1["Operation"] = "test1";
+            row1["Argument"] = 250.0;
+            row1["Value"] = 250.0;
+            table.Rows.Add(row1);
 
             return table;
         }

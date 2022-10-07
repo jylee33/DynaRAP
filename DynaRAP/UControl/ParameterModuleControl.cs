@@ -99,6 +99,12 @@ namespace DynaRAP.UControl
                 moduleNameList.Properties.DataSource = paramModuleCombo;
                 moduleNameList.Properties.PopulateColumns();
                 moduleNameList.Properties.Columns["ModuleName"].Width = 800;
+
+                moduleNameList.Properties.PopulateColumns();
+                moduleNameList.Properties.ShowHeader = false;
+                moduleNameList.Properties.Columns["Seq"].Visible = false;
+                moduleNameList.Properties.Columns["CopyFromSeq"].Visible = false;
+                moduleNameList.Properties.ShowFooter = false;
             }
         }
 
@@ -170,6 +176,10 @@ namespace DynaRAP.UControl
                 {
                     foreach (var list in paramModuleResponse.response)
                     {
+                        if(list.sourceType == "parammodule")
+                        {
+                            list.paramKey = list.paramKey.Substring(0, list.paramKey.IndexOf('_'));
+                        }
                         selectDataList.Add(new ParamDataSelectionData(list.sourceType, Utils.base64StringDecoding(list.sourceName), string.Format("{0}_{1}", list.sourceNo, list.paramKey), list.julianStartAt, list.julianEndAt, list.dataCount, list.sourceSeq, list.useTime, list.seq, list.sourceType == "parammodule" ? 0 : 1, list.paramSeq));
                     }
                 }

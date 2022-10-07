@@ -439,7 +439,7 @@ namespace DynaRAP.UControl
                                 {
                                     GridParam param = new GridParam();
                                     param.seq = parameter.seq;
-                                    param.paramKey = Utils.base64StringDecoding(parameter.eqName);
+                                    param.paramKey = Utils.base64StringDecoding(string.Format("{0}_{1}",parameter.eqNo,parameter.eqName));
                                     paramList.Add(param);
                                     repositoryItemComboBox.Items.Add(param.paramKey);
                                 }

@@ -48,6 +48,7 @@
             this.imageCollection1 = new DevExpress.Utils.ImageCollection(this.components);
             this.gridColumn16 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridColumn17 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.gridColumn20 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemComboBox2 = new DevExpress.XtraEditors.Repository.RepositoryItemComboBox();
             this.btnAddAll = new DevExpress.XtraEditors.SimpleButton();
             this.labelControl3 = new DevExpress.XtraEditors.LabelControl();
@@ -68,10 +69,9 @@
             this.repositoryItemImageComboBox3 = new DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox();
             this.imageCollection3 = new DevExpress.Utils.ImageCollection(this.components);
             this.gridColumn18 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.gridColumn19 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemComboBox3 = new DevExpress.XtraEditors.Repository.RepositoryItemComboBox();
             this.repositoryItemComboBox4 = new DevExpress.XtraEditors.Repository.RepositoryItemComboBox();
-            this.gridColumn19 = new DevExpress.XtraGrid.Columns.GridColumn();
-            this.gridColumn20 = new DevExpress.XtraGrid.Columns.GridColumn();
             ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit1.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtSearch.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
@@ -220,8 +220,6 @@
             this.gridColumn6.MinWidth = 80;
             this.gridColumn6.Name = "gridColumn6";
             this.gridColumn6.OptionsColumn.ReadOnly = true;
-            this.gridColumn6.Visible = true;
-            this.gridColumn6.VisibleIndex = 5;
             this.gridColumn6.Width = 80;
             // 
             // gridColumn7
@@ -231,7 +229,7 @@
             this.gridColumn7.FieldName = "Add";
             this.gridColumn7.Name = "gridColumn7";
             this.gridColumn7.Visible = true;
-            this.gridColumn7.VisibleIndex = 6;
+            this.gridColumn7.VisibleIndex = 5;
             // 
             // repositoryItemImageComboBox1
             // 
@@ -258,6 +256,12 @@
             this.gridColumn17.Caption = "paramSeq";
             this.gridColumn17.FieldName = "paramSeq";
             this.gridColumn17.Name = "gridColumn17";
+            // 
+            // gridColumn20
+            // 
+            this.gridColumn20.Caption = "gridColumn20";
+            this.gridColumn20.FieldName = "useTime";
+            this.gridColumn20.Name = "gridColumn20";
             // 
             // repositoryItemComboBox2
             // 
@@ -444,6 +448,12 @@
             this.gridColumn18.FieldName = "paramSeq";
             this.gridColumn18.Name = "gridColumn18";
             // 
+            // gridColumn19
+            // 
+            this.gridColumn19.Caption = "gridColumn19";
+            this.gridColumn19.FieldName = "useTime";
+            this.gridColumn19.Name = "gridColumn19";
+            // 
             // repositoryItemComboBox3
             // 
             this.repositoryItemComboBox3.AutoHeight = false;
@@ -457,18 +467,6 @@
             this.repositoryItemComboBox4.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.repositoryItemComboBox4.Name = "repositoryItemComboBox4";
-            // 
-            // gridColumn19
-            // 
-            this.gridColumn19.Caption = "gridColumn19";
-            this.gridColumn19.FieldName = "useTime";
-            this.gridColumn19.Name = "gridColumn19";
-            // 
-            // gridColumn20
-            // 
-            this.gridColumn20.Caption = "gridColumn20";
-            this.gridColumn20.FieldName = "useTime";
-            this.gridColumn20.Name = "gridColumn20";
             // 
             // ParamDataSelectControl
             // 

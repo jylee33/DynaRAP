@@ -68,8 +68,8 @@ namespace DynaRAP.Data
     public class EquationGridData
     {
         string seq = null;
-        bool eqFalg = false;
         public string eqName { get; set; }
+        public string eqNo { get; set; }
         public string equation { get; set; }
         public string SelectionStart { get; set; }
         public string SelectionEnd { get; set; }
@@ -82,7 +82,6 @@ namespace DynaRAP.Data
         public string DataCnt { get; set; }
         public string tags { get; set; }
         public string Seq { get => seq; set => seq = value; }
-        public bool EqFalg { get => eqFalg; set => eqFalg = value; }
         public EquationGridData()
         {
             this.Del = 1;
@@ -103,7 +102,7 @@ namespace DynaRAP.Data
             this.View = 1;
             this.DataCnt = response.dataCount;
             this.tags = response.dataProp.tags;
-            this.EqFalg = true;
+            this.eqNo = response.eqNo;
         }
       
     }

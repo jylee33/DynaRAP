@@ -43,6 +43,12 @@ namespace DynaRAP.UControl
         }
         private void InitializeGridControl()
         {
+            GridColumn colEQNo = gridView1.Columns["eqNo"];
+            colEQNo.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
+            colEQNo.OptionsColumn.FixedWidth = true;
+            colEQNo.Width = 80;
+            colEQNo.OptionsColumn.ReadOnly = true;
+
             GridColumn colView = gridView1.Columns["View"];
             colView.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
             colView.OptionsColumn.FixedWidth = true;
@@ -147,7 +153,7 @@ namespace DynaRAP.UControl
                 {
                     foreach (var list in equationResponse.response)
                     {
-                        list.eqName = string.Format("{0}_{1}",list.eqNo, Utils.base64StringDecoding(list.eqName));
+                        list.eqName = Utils.base64StringDecoding(list.eqName);
                         eqGridDataList.Add(new EquationGridData(list));
                     }
                 }
@@ -298,10 +304,6 @@ namespace DynaRAP.UControl
                     MessageBox.Show("수식이름 중 비어있는 항목이 있습니다. \n수식이름 입력 후 저장해주세요.");
                     return;
                 }
-                if(list.EqFalg)
-                {
-                    list.eqName = list.eqName.Substring(list.eqName.IndexOf('_')+1);
-                }
                 byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(list.eqName);
                 string encName = Convert.ToBase64String(basebyte);
 
@@ -317,10 +319,32 @@ namespace DynaRAP.UControl
                 equationRequest.equations.Add(new Equations());
             }
             var json = JsonConvert.SerializeObject(equationRequest);
+            string waitMsg = null;
+            string successMsg = null;
+            string failMsg = null;
+            switch (type)
+            {
+                case "save":
+                case "saveEq":
+                    waitMsg = "수식을 저장 중입니다. 잠시만 기다려주십시오.";
+                    successMsg = "저장 성공";
+                    failMsg = "저장 실패";
+                    break;
+                case "deleteAll":
+                    waitMsg = "수식을 삭제 중입니다. 잠시만 기다려주십시오.";
+                    successMsg = "전체삭제 성공";
+                    failMsg = "전체삭제 실패";
+                    break;
+                case "delOne":
+                    waitMsg = "수식을 삭제 중입니다. 잠시만 기다려주십시오.";
+                    successMsg = "삭제 성공";
+                    failMsg = "삭제 실패"; 
+                    break;
+            }
             if (!splashScreenManager1.IsSplashFormVisible)
             {
                 splashScreenManager1.ShowWaitForm();
-                splashScreenManager1.SetWaitFormCaption(type == "save" ? "수식을 저장 중입니다. 잠시만 기다려주십시오." : "수식을 삭제 중입니다. 잠시만 기다려주십시오.");
+                splashScreenManager1.SetWaitFormCaption(waitMsg);
             }   
             string responseData = Utils.GetPostData(ConfigurationManager.AppSettings["UrlParamModule"], json);
             if(splashScreenManager1.IsSplashFormVisible)
@@ -330,13 +354,16 @@ namespace DynaRAP.UControl
                 JsonData result = JsonConvert.DeserializeObject<JsonData>(responseData);
                 if (result.code == 200)
                 {
-                    MessageBox.Show(type == "save" ? "저장 성공" : type== "deleteAll" ? "전체삭제 성공": "삭제 성공");
+                    if (type != "saveEq")
+                    {
+                        MessageBox.Show(successMsg);
+                    }
                     GetSelectDataList(paramModuleSeq);
                     parameterModuleControl.SaveChangePlotFromEQ(paramModuleSeq);
                 }
                 else
                 {
-                    MessageBox.Show(type == "save" ? "저장 실패" : type == "deleteAll" ? "전체삭제 실패" : "삭제 실패");
+                    MessageBox.Show(failMsg);
                 }
             }
         }
@@ -402,7 +429,8 @@ namespace DynaRAP.UControl
                 EvaluationResponse evaluationResponse = JsonConvert.DeserializeObject<EvaluationResponse>(responseData);
                 if (evaluationResponse.response != null && evaluationResponse.response.Count() != 0)
                 {
-                    gridView1.SetRowCellValue(gridView1.FocusedRowHandle, "DataCnt", evaluationResponse.response.Count()) ;
+                    SaveEquationRequest("saveEq");
+                    //gridView1.SetRowCellValue(gridView1.FocusedRowHandle, "DataCnt", evaluationResponse.response.Count()) ;
 
                     //foreach (var list in equationResponse.response)
                     //{

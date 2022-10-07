@@ -256,14 +256,16 @@
             // 
             this.gridColumn8.Caption = "구분";
             this.gridColumn8.FieldName = "DataType";
+            this.gridColumn8.MaxWidth = 60;
             this.gridColumn8.Name = "gridColumn8";
             this.gridColumn8.OptionsColumn.ReadOnly = true;
             this.gridColumn8.Visible = true;
             this.gridColumn8.VisibleIndex = 0;
+            this.gridColumn8.Width = 60;
             // 
             // gridColumn9
             // 
-            this.gridColumn9.Caption = "이름";
+            this.gridColumn9.Caption = "데이터 이름";
             this.gridColumn9.FieldName = "DataName";
             this.gridColumn9.Name = "gridColumn9";
             this.gridColumn9.OptionsColumn.ReadOnly = true;
