@@ -78,12 +78,21 @@ public class EquationHelper {
             for (ParamModuleVO.Equation equation : paramModule.getEquations()) {
                 loadEquationData(equation);
                 if (paramModule.getEqMap() == null)
-                    paramModule.setEqMap(new HashMap<>());
+                    paramModule.setEqMap(new LinkedHashMap<>());
                 paramModule.getEqMap().put(equation.getEqNo(), equation);
             }
         }
 
         paramModuleData.put(moduleSeq.valueOf(), paramModule);
+    }
+
+    public ParamModuleVO getParamModule(CryptoField moduleSeq) throws HandledServiceException {
+        ParamModuleVO paramModule = paramModuleData.get(moduleSeq.valueOf());
+        if (paramModule == null) {
+            loadParamModuleData(moduleSeq, true);
+            paramModule = paramModuleData.get(moduleSeq.valueOf());
+        }
+        return paramModule;
     }
 
     public List<ParamModuleVO.Source> getParamModuleSources(CryptoField moduleSeq) throws HandledServiceException {
