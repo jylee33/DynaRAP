@@ -68,7 +68,7 @@ public class EquationHelper {
                     paramModule.getParamData().put(source.getSourceNo() + "_" + source.getDllParam().getParamName().originOf(), source);
                 } else if (source.getSourceType().equalsIgnoreCase("parammodule")) {
                     loadEquationData(source);
-                    paramModule.getParamData().put(source.getSourceNo() + "_" + source.getEquation().getEqName().originOf(), source);
+                    paramModule.getParamData().put(source.getSourceNo() + "_" + source.getEquation().getEqNo(), source);
                 }
             }
 
@@ -813,8 +813,10 @@ public class EquationHelper {
         if (equation == null) throw new HandledServiceException(411, "수식 데이터 조회 실패");
 
         source.setEquation(equation);
+        if (equation.getEqNo() == null || equation.getEqNo().isEmpty())
+            equation.setEqNo("E" + equation.getSeq().originOf());
         source.setSourceNo("M" + paramModule.getSeq().originOf());
-        source.setParamKey(equation.getEqName().originOf());
+        source.setParamKey(equation.getEqNo() + "_" + equation.getEqName().originOf());
         source.setSourceName(paramModule.getModuleName());
 
         // E<seq>.TimeSet = []
