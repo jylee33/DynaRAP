@@ -42,30 +42,34 @@ namespace DynaRAP.UControl
 
         private void BinTableControl_Load(object sender, EventArgs e)
         {
-            if (!splashScreenManager1.IsSplashFormVisible)
-            {
-                splashScreenManager1.ShowWaitForm();
-                splashScreenManager1.SetWaitFormCaption("BIN테이블을 생성중입니다. 잠시만 기다려주십시오.");
-            }
+            //if (!splashScreenManager1.IsSplashFormVisible)
+            //{
+            //    splashScreenManager1.ShowWaitForm();
+            //    splashScreenManager1.SetWaitFormCaption("BIN테이블을 생성중입니다. 잠시만 기다려주십시오.");
+            //}
+            mainForm.ShowSplashScreenManager("BIN테이블을 생성중입니다. 잠시만 기다려주십시오.");
             firstColNameList = new Dictionary<string, string>();
-            int j = 1;
-            for(int i=j; i< paramDataList.Count();i++)
+            //int j = 1;
+            for (int i = 0; i < paramDataList.Count()-1; i++)
             {
-               string showName = string.Format("{0}-{1}", paramDataList[i - 1].propInfo.paramUnit, paramDataList[i].propInfo.paramUnit);
-               string valueName = paramDataList[i - 1].paramKey + paramDataList[i].paramKey;
-                //DataTable dt = GetDataTable(paramDataList[i - 1], paramDataList[i]);
-               GetShortBlockParamList();
-               AddTabPage(showName, valueName, paramDataList[i - 1], paramDataList[i]);
+                for (int j = i+1; j < paramDataList.Count(); j++)
+                {
+                    string showName = string.Format("{0}-{1}", paramDataList[i].propInfo.paramUnit, paramDataList[j].propInfo.paramUnit);
+                    string valueName = paramDataList[i].paramKey + paramDataList[j].paramKey;
+                    //DataTable dt = GetDataTable(paramDataList[i - 1], paramDataList[i]);
+                    GetShortBlockParamList();
+                    AddTabPage(showName, valueName, paramDataList[i], paramDataList[j]);
 
-               if (i == paramDataList.Count() - 1)
-               {
-                    j++; 
-               }
+                }
+                //if (i == paramDataList.Count() - 1)
+                //{
+                    //j++;
+                //}
             }
+            mainForm.HideSplashScreenManager();
 
-
-            if (splashScreenManager1.IsSplashFormVisible)
-                splashScreenManager1.CloseWaitForm();
+            //if (splashScreenManager1.IsSplashFormVisible)
+            //    splashScreenManager1.CloseWaitForm();
             //DataTable dt = GetDataTable(paramDataList[0], paramDataList[1]);
             //DataTable dt1 = GetDataTable();
             //AddTabPage("AOA-Q", dt);

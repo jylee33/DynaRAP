@@ -54,19 +54,21 @@ namespace DynaRAP
             this.btnChartMinMax = new DevExpress.XtraBars.BarButtonItem();
             this.btnChartPotato = new DevExpress.XtraBars.BarButtonItem();
             this.btnStart = new DevExpress.XtraBars.BarButtonItem();
-            this.barSubItem2 = new DevExpress.XtraBars.BarSubItem();
-            this.btnImportDLL = new DevExpress.XtraBars.BarButtonItem();
-            this.btnImportFlying = new DevExpress.XtraBars.BarButtonItem();
-            this.btnImportAnalysis = new DevExpress.XtraBars.BarButtonItem();
             this.barSubItem3 = new DevExpress.XtraBars.BarSubItem();
             this.btnMgmtParameter = new DevExpress.XtraBars.BarButtonItem();
             this.btnMgmtPreset = new DevExpress.XtraBars.BarButtonItem();
             this.btnMgmtPresetGroup = new DevExpress.XtraBars.BarButtonItem();
+            this.barSubItem2 = new DevExpress.XtraBars.BarSubItem();
+            this.btnImportDLL = new DevExpress.XtraBars.BarButtonItem();
+            this.btnImportFlying = new DevExpress.XtraBars.BarButtonItem();
+            this.btnImportAnalysis = new DevExpress.XtraBars.BarButtonItem();
             this.barSubItem1 = new DevExpress.XtraBars.BarSubItem();
             this.barSubItem5 = new DevExpress.XtraBars.BarSubItem();
             this.btnSBModule = new DevExpress.XtraBars.BarButtonItem();
             this.btnSBInfoView = new DevExpress.XtraBars.BarButtonItem();
             this.btnBinModule = new DevExpress.XtraBars.BarButtonItem();
+            this.barSubItem6 = new DevExpress.XtraBars.BarSubItem();
+            this.btnParamModule = new DevExpress.XtraBars.BarButtonItem();
             this.bar2 = new DevExpress.XtraBars.Bar();
             this.Workspace = new DevExpress.XtraBars.BarWorkspaceMenuItem();
             this.workspaceManager1 = new DevExpress.Utils.WorkspaceManager(this.components);
@@ -93,8 +95,7 @@ namespace DynaRAP
             this.controlContainer2 = new DevExpress.XtraBars.Docking.ControlContainer();
             this.tabbedView1 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.TabbedView(this.components);
             this.panelContainer1 = new DevExpress.XtraBars.Docking.DockPanel();
-            this.barSubItem6 = new DevExpress.XtraBars.BarSubItem();
-            this.btnParamModule = new DevExpress.XtraBars.BarButtonItem();
+            this.splashScreenManager1 = new DevExpress.XtraSplashScreen.SplashScreenManager(this, typeof(global::DynaRAP.UControl.WaitForm1), true, true);
             ((System.ComponentModel.ISupportInitialize)(this.documentManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dockManager1)).BeginInit();
@@ -320,37 +321,6 @@ namespace DynaRAP
             this.btnStart.Name = "btnStart";
             this.btnStart.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnStart_ItemClick);
             // 
-            // barSubItem2
-            // 
-            resources.ApplyResources(this.barSubItem2, "barSubItem2");
-            this.barSubItem2.Id = 17;
-            this.barSubItem2.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
-            new DevExpress.XtraBars.LinkPersistInfo(this.btnImportDLL),
-            new DevExpress.XtraBars.LinkPersistInfo(this.btnImportFlying),
-            new DevExpress.XtraBars.LinkPersistInfo(this.btnImportAnalysis)});
-            this.barSubItem2.Name = "barSubItem2";
-            // 
-            // btnImportDLL
-            // 
-            resources.ApplyResources(this.btnImportDLL, "btnImportDLL");
-            this.btnImportDLL.Id = 16;
-            this.btnImportDLL.Name = "btnImportDLL";
-            this.btnImportDLL.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnDLLImport_ItemClick);
-            // 
-            // btnImportFlying
-            // 
-            resources.ApplyResources(this.btnImportFlying, "btnImportFlying");
-            this.btnImportFlying.Id = 8;
-            this.btnImportFlying.Name = "btnImportFlying";
-            this.btnImportFlying.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnImportModule_ItemClick);
-            // 
-            // btnImportAnalysis
-            // 
-            resources.ApplyResources(this.btnImportAnalysis, "btnImportAnalysis");
-            this.btnImportAnalysis.Id = 18;
-            this.btnImportAnalysis.Name = "btnImportAnalysis";
-            this.btnImportAnalysis.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnImportAnalysis_ItemClick);
-            // 
             // barSubItem3
             // 
             resources.ApplyResources(this.barSubItem3, "barSubItem3");
@@ -382,6 +352,37 @@ namespace DynaRAP
             this.btnMgmtPresetGroup.Name = "btnMgmtPresetGroup";
             this.btnMgmtPresetGroup.Visibility = DevExpress.XtraBars.BarItemVisibility.Never;
             this.btnMgmtPresetGroup.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnMgmtPresetGroup_ItemClick);
+            // 
+            // barSubItem2
+            // 
+            resources.ApplyResources(this.barSubItem2, "barSubItem2");
+            this.barSubItem2.Id = 17;
+            this.barSubItem2.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+            new DevExpress.XtraBars.LinkPersistInfo(this.btnImportDLL),
+            new DevExpress.XtraBars.LinkPersistInfo(this.btnImportFlying),
+            new DevExpress.XtraBars.LinkPersistInfo(this.btnImportAnalysis)});
+            this.barSubItem2.Name = "barSubItem2";
+            // 
+            // btnImportDLL
+            // 
+            resources.ApplyResources(this.btnImportDLL, "btnImportDLL");
+            this.btnImportDLL.Id = 16;
+            this.btnImportDLL.Name = "btnImportDLL";
+            this.btnImportDLL.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnDLLImport_ItemClick);
+            // 
+            // btnImportFlying
+            // 
+            resources.ApplyResources(this.btnImportFlying, "btnImportFlying");
+            this.btnImportFlying.Id = 8;
+            this.btnImportFlying.Name = "btnImportFlying";
+            this.btnImportFlying.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnImportModule_ItemClick);
+            // 
+            // btnImportAnalysis
+            // 
+            resources.ApplyResources(this.btnImportAnalysis, "btnImportAnalysis");
+            this.btnImportAnalysis.Id = 18;
+            this.btnImportAnalysis.Name = "btnImportAnalysis";
+            this.btnImportAnalysis.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnImportAnalysis_ItemClick);
             // 
             // barSubItem1
             // 
@@ -421,6 +422,21 @@ namespace DynaRAP
             this.btnBinModule.Id = 15;
             this.btnBinModule.Name = "btnBinModule";
             this.btnBinModule.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnBinModule_ItemClick);
+            // 
+            // barSubItem6
+            // 
+            resources.ApplyResources(this.barSubItem6, "barSubItem6");
+            this.barSubItem6.Id = 38;
+            this.barSubItem6.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+            new DevExpress.XtraBars.LinkPersistInfo(this.btnParamModule)});
+            this.barSubItem6.Name = "barSubItem6";
+            // 
+            // btnParamModule
+            // 
+            resources.ApplyResources(this.btnParamModule, "btnParamModule");
+            this.btnParamModule.Id = 39;
+            this.btnParamModule.Name = "btnParamModule";
+            this.btnParamModule.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnParamModule_ItemClick);
             // 
             // bar2
             // 
@@ -565,7 +581,7 @@ namespace DynaRAP
             this.panelBinSbList.ID = new System.Guid("bbd25a6d-0250-46ba-9429-84d2ef47bbbc");
             resources.ApplyResources(this.panelBinSbList, "panelBinSbList");
             this.panelBinSbList.Name = "panelBinSbList";
-            this.panelBinSbList.OriginalSize = new System.Drawing.Size(254, 229);
+            this.panelBinSbList.OriginalSize = new System.Drawing.Size(254, 237);
             // 
             // dockPanel2_Container
             // 
@@ -579,7 +595,7 @@ namespace DynaRAP
             this.panelProperties.ID = new System.Guid("2633c3b8-4ee7-4e73-b180-a7e2da9a6929");
             resources.ApplyResources(this.panelProperties, "panelProperties");
             this.panelProperties.Name = "panelProperties";
-            this.panelProperties.OriginalSize = new System.Drawing.Size(254, 228);
+            this.panelProperties.OriginalSize = new System.Drawing.Size(254, 235);
             // 
             // dockPanel3_Container
             // 
@@ -606,7 +622,7 @@ namespace DynaRAP
             this.panelScenario.ID = new System.Guid("ac197e9b-7668-43be-9d4c-dece8fdffa98");
             resources.ApplyResources(this.panelScenario, "panelScenario");
             this.panelScenario.Name = "panelScenario";
-            this.panelScenario.OriginalSize = new System.Drawing.Size(267, 429);
+            this.panelScenario.OriginalSize = new System.Drawing.Size(267, 444);
             // 
             // dockPanel1_Container
             // 
@@ -620,7 +636,7 @@ namespace DynaRAP
             this.panelOther.ID = new System.Guid("a0efe638-b924-4a0a-aef0-81a62aa06a39");
             resources.ApplyResources(this.panelOther, "panelOther");
             this.panelOther.Name = "panelOther";
-            this.panelOther.OriginalSize = new System.Drawing.Size(267, 429);
+            this.panelOther.OriginalSize = new System.Drawing.Size(267, 444);
             // 
             // controlContainer2
             // 
@@ -636,20 +652,9 @@ namespace DynaRAP
             this.panelContainer1.Name = "panelContainer1";
             this.panelContainer1.OriginalSize = new System.Drawing.Size(200, 200);
             // 
-            // barSubItem6
+            // splashScreenManager1
             // 
-            resources.ApplyResources(this.barSubItem6, "barSubItem6");
-            this.barSubItem6.Id = 38;
-            this.barSubItem6.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
-            new DevExpress.XtraBars.LinkPersistInfo(this.btnParamModule)});
-            this.barSubItem6.Name = "barSubItem6";
-            // 
-            // btnParamModule
-            // 
-            resources.ApplyResources(this.btnParamModule, "btnParamModule");
-            this.btnParamModule.Id = 39;
-            this.btnParamModule.Name = "btnParamModule";
-            this.btnParamModule.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnParamModule_ItemClick);
+            this.splashScreenManager1.ClosingDelay = 500;
             // 
             // MainForm
             // 
@@ -748,6 +753,7 @@ namespace DynaRAP
         private DevExpress.XtraBars.BarButtonItem btnSBInfoView;
         private DevExpress.XtraBars.BarSubItem barSubItem6;
         private DevExpress.XtraBars.BarButtonItem btnParamModule;
+        private DevExpress.XtraSplashScreen.SplashScreenManager splashScreenManager1;
 
         public TabbedView TabbedView1 { get => tabbedView1; set => tabbedView1 = value; }
     }

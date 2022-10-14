@@ -73,7 +73,7 @@ namespace DynaRAP.UControl
             {
                 if (combo.propInfo != null)
                 {
-                    string temp = string.Format("{0}({1})", combo.propInfo.propType, combo.propInfo.paramUnit);
+                    string temp = string.Format("{0}({1})", combo.propInfo.propCode, combo.propInfo.paramUnit);
                     if (comboList.FindIndex(x => x.viewName == temp) == -1)
                     {
                         comboList.Add(new propTypesCombo(combo.propInfo.paramUnit, "",combo.propInfo.propType, temp));

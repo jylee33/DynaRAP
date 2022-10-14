@@ -8,6 +8,7 @@ namespace DynaRAP.Data
 {
     public class ParamDataSelectionData
     {
+        string dataView = string.Empty;
         string dataType = string.Empty;
         string dataName = string.Empty;
         string selectionStart;
@@ -29,6 +30,7 @@ namespace DynaRAP.Data
 
         public string partSeq { get; set; }
         public string DataType { get => dataType; set => dataType = value; }
+        public string DataView { get => dataView; set => dataView = value; }
         public string DataName { get => dataName; set => dataName = value; }
         public string SelectionStart { get => selectionStart; set => selectionStart = value; }
         public string SelectionEnd { get => selectionEnd; set => selectionEnd = value; }
@@ -53,8 +55,9 @@ namespace DynaRAP.Data
         {
         }
 
-        public ParamDataSelectionData(string dataType, string dataName, string selectionStart, string selectionEnd, string dataCnt, string sourceSeq, int view = 1, string partSeq = null)
+        public ParamDataSelectionData(string dataView, string dataType, string dataName, string selectionStart, string selectionEnd, string dataCnt, string sourceSeq, int view = 1, string partSeq = null)
         {
+            this.dataView = dataView;
             this.dataType = dataType;
             this.dataName = dataName;
             //this.parameter = parameter;
@@ -65,8 +68,9 @@ namespace DynaRAP.Data
             this.view = view;
             this.partSeq = partSeq;
         }
-        public ParamDataSelectionData(string dataType, string dataName, string selectionStart, string selectionEnd, string dataCnt, string sourceSeq, int view, string useTime, string julianStartAt,string julianEndAt,string offsetStartAt,string offsetEndAt)
+        public ParamDataSelectionData(string dataView, string dataType, string dataName, string selectionStart, string selectionEnd, string dataCnt, string sourceSeq, int view, string useTime, string julianStartAt,string julianEndAt,string offsetStartAt,string offsetEndAt)
         {
+            this.dataView = dataView;
             this.dataType = dataType;
             this.dataName = dataName;
             //this.parameter = parameter;
@@ -83,8 +87,9 @@ namespace DynaRAP.Data
             this.useTime = useTime;
         }
         
-        public ParamDataSelectionData(string dataType, string dataName, string paramKey, string selectionStart, string selectionEnd, string dataCnt, string sourceSeq,string useTime, string seq, int view = 1, string paramSeq = null)
+        public ParamDataSelectionData(string dataView, string dataType, string dataName, string paramKey, string selectionStart, string selectionEnd, string dataCnt, string sourceSeq,string useTime, string seq, int view = 1, string paramSeq = null)
         {
+            this.dataView = dataView;
             this.dataType = dataType;;
             this.dataName = dataName;
             this.selectionStart = selectionStart;
@@ -101,6 +106,7 @@ namespace DynaRAP.Data
         public ParamDataSelectionData DeepCopy()
         {
             ParamDataSelectionData newCopy = new ParamDataSelectionData();
+            newCopy.dataView = this.dataView;
             newCopy.partSeq = this.partSeq;
             newCopy.DataType = this.DataType;
             newCopy.DataName = this.DataName;

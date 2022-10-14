@@ -691,13 +691,21 @@ namespace DynaRAP.UControl
             this.m_chart.Series.Add(new Series("Min", ViewType.Line));
             this.m_chart.Series.Add(new Series("MaX", ViewType.Line));
 
-            var minDataSource = this.m_table.AsEnumerable().Skip(m_pageSize * m_pageIndex).Take(this.m_pageSize);
-            var maxDataSource = this.max_table.AsEnumerable().Skip(m_pageSize * m_pageIndex).Take(this.m_pageSize);
+            var minDataSource = this.m_table.AsEnumerable().Skip(m_pageSize * m_pageIndex).Take(this.m_pageSize).ToList();
+            var maxDataSource = this.max_table.AsEnumerable().Skip(m_pageSize * m_pageIndex).Take(this.m_pageSize).ToList();
 
             this.m_chart.Series[0].Points.Clear();
-
-            foreach (DataRow row in minDataSource)
-                this.m_chart.Series[0].Points.Add(new SeriesPoint(row["Argument"], row["Value"]));
+            if(minDataSource.Count() != maxDataSource.Count())
+            {
+                MessageBox.Show("Min,Max 데이터의 개수가 다릅니다.");
+                return;
+            }
+            for(int i=0; i < minDataSource.Count(); i++)
+            {
+                this.m_chart.Series[0].Points.Add(new SeriesPoint(minDataSource[i]["Value"], maxDataSource[i]["Value"]));
+            }
+            //foreach (DataRow row in minDataSource)
+            //    this.m_chart.Series[0].Points.Add(new SeriesPoint(row["Argument"], row["Value"]));
 
             this.m_chart.Series[0].ArgumentScaleType = ScaleType.Auto;
             this.m_chart.Series[0].ArgumentDataMember = "Argument";
@@ -709,16 +717,16 @@ namespace DynaRAP.UControl
 
             this.m_chart.Series[1].Points.Clear();
 
-            foreach (DataRow row in maxDataSource)
-                this.m_chart.Series[1].Points.Add(new SeriesPoint(row["Argument"], row["Value"]));
+            //foreach (DataRow row in maxDataSource)
+            //    this.m_chart.Series[1].Points.Add(new SeriesPoint(row["Argument"], row["Value"]));
 
-            this.m_chart.Series[1].ArgumentScaleType = ScaleType.Auto;
-            this.m_chart.Series[1].ArgumentDataMember = "Argument";
-            this.m_chart.Series[1].ValueScaleType = ScaleType.Numerical;
-            this.m_chart.Series[1].ValueDataMembers.AddRange(new string[] { "Value" });
+            //this.m_chart.Series[1].ArgumentScaleType = ScaleType.Auto;
+            //this.m_chart.Series[1].ArgumentDataMember = "Argument";
+            //this.m_chart.Series[1].ValueScaleType = ScaleType.Numerical;
+            //this.m_chart.Series[1].ValueDataMembers.AddRange(new string[] { "Value" });
 
-            this.m_chart.Legend.AlignmentHorizontal = LegendAlignmentHorizontal.Right;
-            this.m_chart.Legend.AlignmentVertical = LegendAlignmentVertical.Top;
+            //this.m_chart.Legend.AlignmentHorizontal = LegendAlignmentHorizontal.Right;
+            //this.m_chart.Legend.AlignmentVertical = LegendAlignmentVertical.Top;
 
 
             //Dictionary<string, Series> seriesInfo = new Dictionary<string, Series>();
@@ -1460,25 +1468,25 @@ namespace DynaRAP.UControl
         {
 
             Dictionary<string, List<SeriesPointData>> dicData = new Dictionary<string, List<SeriesPointData>>();
-            foreach (var source in plotGridSourceDataList)
-            {
-                int index = -99999;
-                index = plotDataResponse.additionalResponse.plotSourceList.FindIndex(x => x.sourceSeq == source.seq);
-                int i = 0;
-                if (index != -1)
-                {
-                    dicData.Add(source.itemName, new List<SeriesPointData>());
-                    foreach (var plotData in plotDataResponse.response[index])
-                    {
-                        dicData[source.itemName].Add(new SeriesPointData(source.itemName, i, plotData));
-                        i++;
-                    }
-                }
-            }
-            this.cbSeries.Items.AddRange(dicData.Keys.ToArray());
-            this.cbSeries.SelectedIndex = 0;
-            this.cbSeries2.Items.AddRange(dicData.Keys.ToArray());
-            this.cbSeries2.Enabled = false;
+            //foreach (var source in plotGridSourceDataList)
+            //{
+            //    int index = -99999;
+            //    index = plotDataResponse.additionalResponse.plotSourceList.FindIndex(x => x.sourceSeq == source.seq);
+            //    int i = 0;
+            //    if (index != -1)
+            //    {
+            //        dicData.Add(source.itemName, new List<SeriesPointData>());
+            //        foreach (var plotData in plotDataResponse.response[index])
+            //        {
+            //            dicData[source.itemName].Add(new SeriesPointData(source.itemName, i, plotData));
+            //            i++;
+            //        }
+            //    }
+            //}
+            //this.cbSeries.Items.AddRange(dicData.Keys.ToArray());
+            //this.cbSeries.SelectedIndex = 0;
+            //this.cbSeries2.Items.AddRange(dicData.Keys.ToArray());
+            //this.cbSeries2.Enabled = false;
             //this.cbSeries2.SelectedIndex = 0;
             return dicData;
         }

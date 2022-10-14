@@ -119,7 +119,7 @@ namespace DynaRAP.UControl
             cboLPFbtype.Properties.Items.Add("");
             cboLPFbtype.Properties.Items.Add("low");
             cboLPFbtype.Properties.Items.Add("high");
-            cboLPFbtype.SelectedIndex = 0;
+            cboLPFbtype.SelectedIndex = 1;
 
             edtHPFn.Text = "10";
             edtHPFcutoff.Text = "0.02";

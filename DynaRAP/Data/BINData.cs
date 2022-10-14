@@ -76,7 +76,7 @@ namespace DynaRAP.Data
             this.grtKey = paramDatas.grtKey;
             this.fltpKey = paramDatas.fltpKey;
             this.fltsKey = paramDatas.fltsKey;
-            this.fieldType = string.Format("{0}({1})", paramDatas.propInfo.propType, paramDatas.propInfo.paramUnit);
+            this.fieldType = string.Format("{0}({1})", paramDatas.propInfo.propCode, paramDatas.propInfo.paramUnit);
         }
        public PickUpParam()
         {
@@ -197,7 +197,7 @@ namespace DynaRAP.Data
         public string propType { get; set; }
         public string viewName { get; set; }
         public string seq { get; set; }
-        public propTypesCombo(string paramUnit, string paramKey, string propType, string viewName)
+        public propTypesCombo(string paramUnit, string paramKey,string propType, string viewName)
         {
             this.paramUnit = paramUnit;
             this.paramKey = paramKey;

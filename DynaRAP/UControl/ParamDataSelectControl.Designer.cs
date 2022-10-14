@@ -72,6 +72,8 @@
             this.gridColumn19 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemComboBox3 = new DevExpress.XtraEditors.Repository.RepositoryItemComboBox();
             this.repositoryItemComboBox4 = new DevExpress.XtraEditors.Repository.RepositoryItemComboBox();
+            this.gridColumn21 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.gridColumn22 = new DevExpress.XtraGrid.Columns.GridColumn();
             ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit1.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtSearch.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
@@ -153,7 +155,8 @@
             this.gridColumn7,
             this.gridColumn16,
             this.gridColumn17,
-            this.gridColumn20});
+            this.gridColumn20,
+            this.gridColumn21});
             this.gridView1.GridControl = this.gridControl1;
             this.gridView1.Name = "gridView1";
             // 
@@ -161,7 +164,7 @@
             // 
             this.gridColumn1.Caption = "데이터구분";
             this.gridColumn1.ColumnEdit = this.repositoryItemComboBox1;
-            this.gridColumn1.FieldName = "DataType";
+            this.gridColumn1.FieldName = "DataView";
             this.gridColumn1.Name = "gridColumn1";
             this.gridColumn1.OptionsColumn.ReadOnly = true;
             this.gridColumn1.Visible = true;
@@ -334,14 +337,15 @@
             this.gridColumn14,
             this.gridColumn15,
             this.gridColumn18,
-            this.gridColumn19});
+            this.gridColumn19,
+            this.gridColumn22});
             this.gridView2.GridControl = this.gridControl2;
             this.gridView2.Name = "gridView2";
             // 
             // gridColumn8
             // 
             this.gridColumn8.Caption = "데이터구분";
-            this.gridColumn8.FieldName = "DataType";
+            this.gridColumn8.FieldName = "DataView";
             this.gridColumn8.Name = "gridColumn8";
             this.gridColumn8.OptionsColumn.ReadOnly = true;
             this.gridColumn8.Visible = true;
@@ -468,6 +472,18 @@
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.repositoryItemComboBox4.Name = "repositoryItemComboBox4";
             // 
+            // gridColumn21
+            // 
+            this.gridColumn21.Caption = "gridColumn21";
+            this.gridColumn21.FieldName = "DataType";
+            this.gridColumn21.Name = "gridColumn21";
+            // 
+            // gridColumn22
+            // 
+            this.gridColumn22.Caption = "gridColumn22";
+            this.gridColumn22.FieldName = "DataType";
+            this.gridColumn22.Name = "gridColumn22";
+            // 
             // ParamDataSelectControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -550,5 +566,7 @@
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn18;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn20;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn19;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn21;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn22;
     }
 }

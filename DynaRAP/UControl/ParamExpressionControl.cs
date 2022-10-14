@@ -99,6 +99,7 @@ namespace DynaRAP.UControl
         private void RepositoryItemImageComboBox2_Click(object sender, EventArgs e)
         {
             EquationGridData selectGridData = (EquationGridData)gridView1.GetFocusedRow();
+            MainForm mainForm = this.ParentForm as MainForm;
             string sendData = string.Empty;
 
             if (selectGridData.Seq != null && selectGridData.Seq != "")
@@ -119,8 +120,9 @@ namespace DynaRAP.UControl
                 ""equation"" : ""{1}""
                 }}", paramModuleSeq, selectGridData.equation);
             }
-        
+            mainForm.ShowSplashScreenManager("수식을 데이터를 불러오는 중입니다. 잠시만 기다려주십시오.");
             string responseData = Utils.GetPostData(ConfigurationManager.AppSettings["UrlParamModule"], sendData);
+            mainForm.HideSplashScreenManager();
             if (responseData != null)
             {
                 EvaluationResponse evaluationResponse = JsonConvert.DeserializeObject<EvaluationResponse>(responseData);
@@ -139,12 +141,15 @@ namespace DynaRAP.UControl
         }
         private void GetSelectDataList(string paramModuleSeq)
         {
+            MainForm mainForm = this.ParentForm as MainForm;
             string sendData = string.Format(@"
                 {{
                 ""command"":""eq-list"",
                 ""moduleSeq"": ""{0}""
                 }}", paramModuleSeq);
+            mainForm.ShowSplashScreenManager("수식을 불러오는 중입니다. 잠시만 기다려주십시오.");
             string responseData = Utils.GetPostData(ConfigurationManager.AppSettings["UrlParamModule"], sendData);
+            mainForm.HideSplashScreenManager();
             if (responseData != null)
             {
                 eqGridDataList = new List<EquationGridData>();
@@ -296,6 +301,7 @@ namespace DynaRAP.UControl
             equationRequest.moduleSeq = paramModuleSeq;
             equationRequest.equations = new List<Equations>();
             List<EquationGridData> gridDataList = (List<EquationGridData>)this.gridControl1.DataSource;
+            MainForm mainForm = this.ParentForm as MainForm;
 
             foreach (var list in gridDataList)
             {
@@ -341,14 +347,18 @@ namespace DynaRAP.UControl
                     failMsg = "삭제 실패"; 
                     break;
             }
-            if (!splashScreenManager1.IsSplashFormVisible)
-            {
-                splashScreenManager1.ShowWaitForm();
-                splashScreenManager1.SetWaitFormCaption(waitMsg);
-            }   
+
+            mainForm.ShowSplashScreenManager(waitMsg);
+
+            //if (!splashScreenManager1.IsSplashFormVisible)
+            //{
+            //    splashScreenManager1.ShowWaitForm();
+            //    splashScreenManager1.SetWaitFormCaption(waitMsg);
+            //}   
             string responseData = Utils.GetPostData(ConfigurationManager.AppSettings["UrlParamModule"], json);
-            if(splashScreenManager1.IsSplashFormVisible)
-                splashScreenManager1.CloseWaitForm();
+            mainForm.HideSplashScreenManager();
+            //if(splashScreenManager1.IsSplashFormVisible)
+            //    splashScreenManager1.CloseWaitForm();
             if (responseData != null)
             {
                 JsonData result = JsonConvert.DeserializeObject<JsonData>(responseData);
@@ -416,14 +426,17 @@ namespace DynaRAP.UControl
                 ""equation"" : ""{1}""
                 }}", paramModuleSeq,equation);
 
-            if (!splashScreenManager1.IsSplashFormVisible)
-            {
-                splashScreenManager1.ShowWaitForm();
-                splashScreenManager1.SetWaitFormCaption("수식을 계산 중입니다. 잠시만 기다려주십시오.");
-            }
+            MainForm mainForm = this.ParentForm as MainForm;
+            mainForm.ShowSplashScreenManager("수식을 계산 중입니다. 잠시만 기다려주십시오.");
+            //if (!splashScreenManager1.IsSplashFormVisible)
+            //{
+            //    splashScreenManager1.ShowWaitForm();
+            //    splashScreenManager1.SetWaitFormCaption("수식을 계산 중입니다. 잠시만 기다려주십시오.");
+            //}
             string responseData = Utils.GetPostData(ConfigurationManager.AppSettings["UrlParamModule"], sendData);
-            if (splashScreenManager1.IsSplashFormVisible)
-                splashScreenManager1.CloseWaitForm();
+            //if (splashScreenManager1.IsSplashFormVisible)
+            //    splashScreenManager1.CloseWaitForm();
+            mainForm.HideSplashScreenManager();
             if (responseData != null)
             {
                 EvaluationResponse evaluationResponse = JsonConvert.DeserializeObject<EvaluationResponse>(responseData);

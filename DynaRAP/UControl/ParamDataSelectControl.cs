@@ -53,9 +53,9 @@ namespace DynaRAP.UControl
         private void ParamDataSelectControl_Load(object sender, EventArgs e)
         {
             //comboBoxEdit1.Properties.TextEditStyle = TextEditStyles.DisableTextEditor;
-            comboBoxEdit1.Properties.Items.Add("PART");
+            comboBoxEdit1.Properties.Items.Add("분할데이터");
             comboBoxEdit1.Properties.Items.Add("SHORTBLOCK");
-            comboBoxEdit1.Properties.Items.Add("DLL");
+            comboBoxEdit1.Properties.Items.Add("기준데이터");
             comboBoxEdit1.Properties.Items.Add("PARAMMODULE");
 
          
@@ -315,10 +315,26 @@ namespace DynaRAP.UControl
 
         private void edtSearch_Click(object sender, ButtonPressedEventArgs e)
         {
+            MainForm mainForm = this.ParentForm as MainForm;
+
             if (comboBoxEdit1.Text.Equals("") || edtSearch.Text.Equals(""))
             {
                 MessageBox.Show("구분 값이나 검색어가 없습니다.");
                 return;
+            }
+            string sourceType = comboBoxEdit1.Text;
+            switch (sourceType)
+            {
+                case "SHORTBLOCK" :
+                case "PARAMMODULE":
+                    sourceType = sourceType.ToLower();
+                    break;
+                case "분할데이터" :
+                    sourceType = "part";
+                    break;
+                case "기준데이터":
+                    sourceType = "dll";
+                    break;
             }
             if (e.Button.Kind.ToString() == "Search")
             {
@@ -327,7 +343,8 @@ namespace DynaRAP.UControl
                 ""command"":""search"",
                 ""sourceType"": ""{0}"",
                 ""keyword"": ""{1}""
-                }}" , comboBoxEdit1.Text.ToLower(), edtSearch.Text);
+                }}" , sourceType, edtSearch.Text);
+                mainForm.ShowSplashScreenManager("데이터선택 정보를 검색 중입니다. 잠시만 기다려주십시오.");
                 string responseData = Utils.GetPostData(ConfigurationManager.AppSettings["UrlParamModule"], sendData);
                 if (responseData != null)
                 {
@@ -335,7 +352,7 @@ namespace DynaRAP.UControl
                     comboDic = new Dictionary<string, RepositoryItemComboBox>();
                     gridPramDic = new Dictionary<string, List<GridParam>>();
                     paramDataList = new List<ParamDataSelectionData>();
-                    switch (comboBoxEdit1.Text)
+                    switch (sourceType.ToUpper())
                     {
                         case "PART": 
                             foreach(var list in paramModuleResponse.response)
@@ -368,7 +385,7 @@ namespace DynaRAP.UControl
                                 }
                                 //paramDataList.Add(new ParamDataSelectionData("part", Utils.base64StringDecoding(list.partName), string.Format("{0:yyyy-MM-dd hh:mm:ss.ffffff}", startTime), string.Format("{0:yyyy-MM-dd hh:mm:ss.ffffff}", endTime) , "",list.seq,1));
                                 //paramDataList.Add(new ParamDataSelectionData("part", Utils.base64StringDecoding(list.partName), list.julianStartAt, list.julianEndAt, "",list.seq,1));
-                                paramDataList.Add(new ParamDataSelectionData("part", Utils.base64StringDecoding(list.partName), list.useTime == "julian"? list.julianStartAt: list.offsetStartAt.ToString(),
+                                paramDataList.Add(new ParamDataSelectionData("분할데이터","part", Utils.base64StringDecoding(list.partName), list.useTime == "julian"? list.julianStartAt: list.offsetStartAt.ToString(),
                                     list.useTime == "julian" ? list.julianEndAt : list.offsetEndAt.ToString(),  list.dataCount ,list.seq,1,list.useTime,list.julianStartAt,list.julianEndAt,list.offsetStartAt.ToString(),list.offsetEndAt.ToString()));
                             }
                             break;
@@ -402,7 +419,7 @@ namespace DynaRAP.UControl
                                     endTime = Utils.GetDateFromJulian(list.julianEndAt);
                                 }
                                 //paramDataList.Add(new ParamDataSelectionData("shortblock", Utils.base64StringDecoding(list.blockName), string.Format("{0:yyyy-MM-dd hh:mm:ss.ffffff}", startTime), string.Format("{0:yyyy-MM-dd hh:mm:ss.ffffff}", endTime), "", list.seq,1));
-                                paramDataList.Add(new ParamDataSelectionData("shortblock", Utils.base64StringDecoding(list.blockName), list.julianStartAt, list.julianEndAt, list.dataCount, list.seq,1, list.partSeq));
+                                paramDataList.Add(new ParamDataSelectionData("SHORTBLOCK","shortblock", Utils.base64StringDecoding(list.blockName), list.julianStartAt, list.julianEndAt, list.dataCount, list.seq,1, list.partSeq));
                             }
                             break;
                         case "DLL":
@@ -424,7 +441,7 @@ namespace DynaRAP.UControl
                                 gridPramDic.Add(list.seq, paramList);
                                 comboDic.Add(list.seq, repositoryItemComboBox);
 
-                                paramDataList.Add(new ParamDataSelectionData("dll", Utils.base64StringDecoding(list.dataSetName),"","", "", list.seq,0));
+                                paramDataList.Add(new ParamDataSelectionData("기준데이터","dll", Utils.base64StringDecoding(list.dataSetName),"","", "", list.seq,0));
                             }
                             break;
                         case "PARAMMODULE":
@@ -445,12 +462,14 @@ namespace DynaRAP.UControl
                                 }
                                 gridPramDic.Add(list.seq, paramList);
                                 comboDic.Add(list.seq, repositoryItemComboBox);
-                                paramDataList.Add(new ParamDataSelectionData("parammodule", Utils.base64StringDecoding(list.moduleName),"","", "", list.seq,1));
+                                paramDataList.Add(new ParamDataSelectionData("PARAMMODULE","parammodule", Utils.base64StringDecoding(list.moduleName),"","", "", list.seq,1));
                             }
                             break;
                     }
                     this.gridControl1.DataSource = paramDataList;
                 }
+                mainForm.HideSplashScreenManager();
+
             }
         }
 
@@ -542,6 +561,7 @@ namespace DynaRAP.UControl
                 {
                     MessageBox.Show(type=="save"? "저장 성공": "전체삭제 성공");
                     GetSelectDataList(paramModuleSeq);
+                    parameterModuleControl.GetSelectDataList(paramModuleSeq);
                 }
                 else
                 {
@@ -662,12 +682,16 @@ namespace DynaRAP.UControl
 
         private void GetSelectDataList(string paramModuleSeq)
         {
+            MainForm mainForm = this.ParentForm as MainForm;
             string sendData = string.Format(@"
                 {{
                 ""command"":""source-list"",
                 ""moduleSeq"": ""{0}""
                 }}", paramModuleSeq);
+
+            mainForm.ShowSplashScreenManager("데이터선택 정보를 불러오는 중입니다. 잠시만 기다려주십시오.");
             string responseData = Utils.GetPostData(ConfigurationManager.AppSettings["UrlParamModule"], sendData);
+            mainForm.HideSplashScreenManager();
             if (responseData != null)
             {
                 selectComboDic = new Dictionary<string, RepositoryItemComboBox>();
@@ -678,7 +702,22 @@ namespace DynaRAP.UControl
                 {
                     foreach (var list in paramModuleResponse.response)
                     {
-                        selectParamDataList.Add(new ParamDataSelectionData(list.sourceType, Utils.base64StringDecoding(list.sourceName), list.paramKey, list.julianStartAt, list.julianEndAt, list.dataCount, list.sourceSeq,list.useTime, list.seq, list.sourceType == "dll"?0:1, list.paramSeq));
+                        string sourceType = null;
+                        switch (list.sourceType)
+                        {
+                            case "shortblock":
+                            case "parammodule":
+                                sourceType = list.sourceType.ToUpper();
+                                break;
+                            case "part":
+                                sourceType = "분할데이터";
+                                break;
+                            case "dll":
+                                sourceType = "기준데이터";
+                                break;
+                        }
+
+                        selectParamDataList.Add(new ParamDataSelectionData(sourceType, list.sourceType, Utils.base64StringDecoding(list.sourceName), list.paramKey, list.julianStartAt, list.julianEndAt, list.dataCount, list.sourceSeq,list.useTime, list.seq, list.sourceType == "dll"?0:1, list.paramSeq));
                     }
                 }
                 this.gridControl2.DataSource = selectParamDataList;

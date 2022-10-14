@@ -27,6 +27,8 @@ namespace DynaRAP.UControl
         private void StartScreenControl_Load(object sender, EventArgs e)
         {
             InitializeRecentProjectList();
+
+            labelControl6.Text = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
         }
 
         private void InitializeRecentProjectList()

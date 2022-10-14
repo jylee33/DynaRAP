@@ -160,14 +160,18 @@ namespace DynaRAP.UControl
             }
         }
 
-        private void GetSelectDataList(string paramModuleSeq)
+        public void GetSelectDataList(string paramModuleSeq)
         {
+            MainForm mainForm = this.ParentForm as MainForm;
             string sendData = string.Format(@"
                 {{
                 ""command"":""source-list"",
                 ""moduleSeq"": ""{0}""
                 }}", paramModuleSeq);
+            mainForm.ShowSplashScreenManager("파라미터 정보를 불러오는 중입니다. 잠시만 기다려주십시오.");
             string responseData = Utils.GetPostData(ConfigurationManager.AppSettings["UrlParamModule"], sendData);
+            mainForm.HideSplashScreenManager();
+
             if (responseData != null)
             {
                 selectDataList = new List<ParamDataSelectionData>();
@@ -176,11 +180,26 @@ namespace DynaRAP.UControl
                 {
                     foreach (var list in paramModuleResponse.response)
                     {
+                        string sourceType = null;
+                        switch (list.sourceType)
+                        {
+                            case "shortblock":
+                            case "parammodule":
+                                sourceType = list.sourceType.ToUpper();
+                                break;
+                            case "part":
+                                sourceType = "분할데이터";
+                                break;
+                            case "dll":
+                                sourceType = "기준데이터";
+                                break;
+                        }
+
                         if(list.sourceType == "parammodule")
                         {
                             list.paramKey = list.paramKey.Substring(0, list.paramKey.IndexOf('_'));
                         }
-                        selectDataList.Add(new ParamDataSelectionData(list.sourceType, Utils.base64StringDecoding(list.sourceName), string.Format("{0}_{1}", list.sourceNo, list.paramKey), list.julianStartAt, list.julianEndAt, list.dataCount, list.sourceSeq, list.useTime, list.seq, list.sourceType == "parammodule" ? 0 : 1, list.paramSeq));
+                        selectDataList.Add(new ParamDataSelectionData(sourceType, sourceType, Utils.base64StringDecoding(list.sourceName), string.Format("{0}_{1}", list.sourceNo, list.paramKey), list.julianStartAt, list.julianEndAt, list.dataCount, list.sourceSeq, list.useTime, list.seq, list.sourceType == "parammodule" ? 0 : 1, list.paramSeq));
                     }
                 }
                 this.gridControl1.DataSource = selectDataList;

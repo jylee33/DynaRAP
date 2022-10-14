@@ -245,6 +245,7 @@
             this.hyperlinkBrowseSB.Size = new System.Drawing.Size(105, 13);
             this.hyperlinkBrowseSB.TabIndex = 40;
             this.hyperlinkBrowseSB.Text = "Browse ShortBlocks...";
+            this.hyperlinkBrowseSB.Visible = false;
             this.hyperlinkBrowseSB.Click += new System.EventHandler(this.hyperlinkBrowseSB_Click);
             // 
             // tableLayoutPanel2

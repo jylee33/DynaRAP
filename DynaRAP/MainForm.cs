@@ -111,9 +111,22 @@ namespace DynaRAP
         //public MgmtPresetGroupControl MgmtPresetGroupControl { get => mgmtPresetGroupControl; set => mgmtPresetGroupControl = value; }
 
         public ParameterModuleControl ParamModuleControl { get => parameterModuleControl; set => parameterModuleControl = value; }
-        
 
-        public MainForm()
+        public void ShowSplashScreenManager(string message) {
+            if (!splashScreenManager1.IsSplashFormVisible)
+            {
+                splashScreenManager1.ShowWaitForm();
+                splashScreenManager1.SetWaitFormCaption(message);
+            }
+        }
+        public void HideSplashScreenManager()
+        {
+            if (splashScreenManager1.IsSplashFormVisible)
+                splashScreenManager1.CloseWaitForm();
+        }
+
+
+public MainForm()
         {
             InitializeComponent();
 
