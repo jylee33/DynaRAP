@@ -62,6 +62,10 @@ namespace DynaRAP.UControl
             InitializeTreeDataList();
 
             GetBinTableList();
+
+            panelParamCnt.Controls.Add(new BinParameterSelectControl(this, new List<ParamDatas>()));
+            panelParamCnt.Controls.Add(new BinParameterSelectControl(this, new List<ParamDatas>()));
+            panelParamCnt1.Controls.Add(new BinParameterSelectControl(this, new List<ParamDatas>()));
         }
 
         private void InitializeTreeDataList()
@@ -157,10 +161,30 @@ namespace DynaRAP.UControl
                         MessageBox.Show("선택된 ShortBlock의 변경으로 \nparameter의 변경이 있어 선택된 parameter를 초기화 합니다.");
                     }
                     panelParamCnt.Controls.Clear();
+                    panelParamCnt1.Controls.Clear();
                     selectedParamDataList.Clear();
                     paramListData = paramDatas;
+                    panelParamCnt.Controls.Add(new BinParameterSelectControl(this, paramListData));
+                    panelParamCnt.Controls.Add(new BinParameterSelectControl(this, paramListData));
+                    panelParamCnt1.Controls.Add(new BinParameterSelectControl(this, paramListData));
                 }
             }
+            else
+            {
+                panelParamCnt.Controls.Clear();
+                panelParamCnt1.Controls.Clear();
+                selectedParamDataList.Clear();
+                paramListData = paramDatas;
+                panelParamCnt.Controls.Add(new BinParameterSelectControl(this, paramListData));
+                panelParamCnt.Controls.Add(new BinParameterSelectControl(this, paramListData));
+                panelParamCnt1.Controls.Add(new BinParameterSelectControl(this, paramListData));
+            }
+            //else
+            //{
+            //    panelParamCnt.Controls.Add(new BinParameterSelectControl(this, new List<ParamDatas>()));
+            //    panelParamCnt.Controls.Add(new BinParameterSelectControl(this, new List<ParamDatas>()));
+            //    panelParamCnt1.Controls.Add(new BinParameterSelectControl(this, new List<ParamDatas>()));
+            //}
         }
 
         private void repositoryItemCheckEdit1_EditValueChanged(object sender, EventArgs e)
@@ -185,11 +209,6 @@ namespace DynaRAP.UControl
         private void btnCreateBIN_Click(object sender, EventArgs e)
         {
            
-            if (panelParamCnt.Controls.Count < 2)
-            {
-                MessageBox.Show("파라미터가 2개 이상 선택되어야 BIN테이블 생성이 가능합니다.");
-                return;
-            }
             List<PickUpParam> pickUpParamList = new List<PickUpParam>();
             foreach (BinParameterSelectControl control in panelParamCnt.Controls)
             {
@@ -198,6 +217,20 @@ namespace DynaRAP.UControl
                 {
                     pickUpParamList.Add(pickUpParam);
                 }
+            }
+            foreach (BinParameterSelectControl control in panelParamCnt1.Controls)
+            {
+                PickUpParam pickUpParam = control.SelectedParamLIst();
+                if (pickUpParam != null)
+                {
+                    pickUpParamList.Add(pickUpParam);
+                }
+            }
+
+            if (pickUpParamList.Count != 3)
+            {
+                MessageBox.Show("파라미터가 전체 선택되어야 BIN테이블 생성이 가능합니다.");
+                return;
             }
             BindingList<TreeData> treeDatas = treeList1.DataSource as BindingList<TreeData>;
             var treeList = treeDatas.ToList();
@@ -238,6 +271,7 @@ namespace DynaRAP.UControl
             {
                 binMetaSeq = null;
                 panelParamCnt.Controls.Clear();
+                panelParamCnt1.Controls.Clear();
                 selectedParamDataList.Clear();
                 binGridData = new List<BinGridData>();
                 binTableResponse = new BinTableData();
@@ -352,6 +386,7 @@ namespace DynaRAP.UControl
 
         private void SaveBinTable(string type)
         {
+            MainForm mainForm = this.ParentForm as MainForm;
             BindingList<TreeData> treeDatas = treeList1.DataSource as BindingList<TreeData>;
             var treeList = treeDatas.ToList();
             var shortBlockList = treeList.FindAll(x => x.Check != false && x.Type == "shortblock");
@@ -405,9 +440,18 @@ namespace DynaRAP.UControl
                     binSaveRequest.pickUpParams.Add(pickUpParam);
                 }
             }
+            foreach (BinParameterSelectControl control in panelParamCnt1.Controls)
+            {
+                PickUpParam pickUpParam = control.SelectedParamLIst();
+                if (pickUpParam != null)
+                {
+                    binSaveRequest.pickUpParams.Add(pickUpParam);
+                }
+            }
             var json = JsonConvert.SerializeObject(binSaveRequest);
-
+            mainForm.ShowSplashScreenManager("BIN테이블을 저장 중입니다.. 잠시만 기다려주십시오.");
             string responseData = Utils.GetPostData(ConfigurationManager.AppSettings["UrlBINTable"], json);
+            mainForm.HideSplashScreenManager();
             if (responseData != null)
             {
                 JsonData result = JsonConvert.DeserializeObject<JsonData>(responseData);
@@ -426,6 +470,8 @@ namespace DynaRAP.UControl
 
         private void gridView2_RowCellClick(object sender, DevExpress.XtraGrid.Views.Grid.RowCellClickEventArgs e)
         {
+            MainForm mainForm = this.ParentForm as MainForm;
+            mainForm.ShowSplashScreenManager("BIN테이블 정보를 불러오는 중입니다.. 잠시만 기다려주십시오.");
             BinGridData binGridData = (BinGridData)gridView2.GetFocusedRow();
             BindingList<TreeData> treeDatas = treeList1.DataSource as BindingList<TreeData>;
             binName.Text = binGridData.metaName;
@@ -476,12 +522,31 @@ namespace DynaRAP.UControl
 
             selectedParamDataList.Clear();
             panelParamCnt.Controls.Clear();
+            panelParamCnt1.Controls.Clear();
             paramListData = GetParamListByPartsShortblock();
-            foreach (var list in selectData.pickUpParams)
+            if (selectData.pickUpParams.Count != 0)
             {
-                BinParameterSelectControl ct = new BinParameterSelectControl(this, paramListData,list);
-                panelParamCnt.Controls.Add(ct);
+                foreach (var list in selectData.pickUpParams)
+                {
+                    BinParameterSelectControl ct = new BinParameterSelectControl(this, paramListData, list);
+                    if (panelParamCnt.Controls.Count > 1)
+                    {
+                        panelParamCnt1.Controls.Add(ct);
+
+                    }
+                    else
+                    {
+                        panelParamCnt.Controls.Add(ct);
+                    }
+                }
             }
+            else
+            {
+                panelParamCnt.Controls.Add(new BinParameterSelectControl(this, paramListData));
+                panelParamCnt.Controls.Add(new BinParameterSelectControl(this, paramListData));
+                panelParamCnt1.Controls.Add(new BinParameterSelectControl(this, paramListData));
+            }
+            mainForm.HideSplashScreenManager();
         }
 
         private void btnListModify_Click(object sender, EventArgs e)

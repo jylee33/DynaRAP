@@ -13,6 +13,7 @@ using System.Drawing.Drawing2D;
 using System.Diagnostics;
 using DevExpress.XtraEditors;
 using DynaRAP.Data;
+using Microsoft.Scripting.Utils;
 
 namespace DynaRAP.UControl
 {
@@ -79,39 +80,131 @@ namespace DynaRAP.UControl
             this.plotDataResponse = plotDataResponse;
             this.plotGridSourceDataList = plotGridSourceDataList;
         }
+        public DXChartControl DeepCopy(DXChartControl dXChartControl)
+        {
+            //InitializeComponent();
+            DXChartControl newDXChartControl = new DXChartControl();
+            newDXChartControl.m_spliter = dXChartControl.m_spliter;
+            newDXChartControl.m_propertyGrid = dXChartControl.m_propertyGrid;
+            newDXChartControl.m_chart = dXChartControl.m_chart;
+            newDXChartControl.m_series = dXChartControl.m_series;
+            newDXChartControl.m_filename = dXChartControl.m_filename;
+            newDXChartControl.m_pageIndex = dXChartControl.m_pageIndex;
+            newDXChartControl.m_pageSize = dXChartControl.m_pageSize;
+            newDXChartControl.m_totalPages = dXChartControl.m_totalPages;
+            newDXChartControl.m_table = dXChartControl.m_table;
+            newDXChartControl.max_table = dXChartControl.max_table;
+            newDXChartControl.m_drawTypes = dXChartControl.m_drawTypes;
+            newDXChartControl.m_clusters = dXChartControl.m_clusters;
 
-        
+            newDXChartControl.m_propertyGridWidth = dXChartControl.m_propertyGridWidth;
+
+            newDXChartControl.m_dllDatas = dXChartControl.m_dllDatas;
+            newDXChartControl.m_dicData = dXChartControl.m_dicData;
+            newDXChartControl.plotDataResponse = dXChartControl.plotDataResponse;
+            newDXChartControl.plotGridSourceDataList = dXChartControl.plotGridSourceDataList;
+
+            newDXChartControl.m_spliter = new SplitContainerControl();
+            newDXChartControl.m_spliter.MouseClick += Spliter_MouseClick;
+            newDXChartControl.m_spliter.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
+            newDXChartControl.m_spliter.Location = new Point(0, newDXChartControl.pnPaging.Location.Y + newDXChartControl.pnPaging.Height);
+            newDXChartControl.m_spliter.Size = new Size(newDXChartControl.ClientRectangle.Width, newDXChartControl.ClientRectangle.Height - newDXChartControl.pnPaging.Height);
+            newDXChartControl.m_spliter.CollapsePanel = SplitCollapsePanel.Panel2;
+            newDXChartControl.m_spliter.FixedPanel = SplitFixedPanel.Panel2;
+            newDXChartControl.m_spliter.SetPanelCollapsed(true);
+            newDXChartControl.m_spliter.SplitterPosition = 0;
+            newDXChartControl.Controls.Add(newDXChartControl.m_spliter);
+
+            newDXChartControl.m_chart = new ChartControl();
+            newDXChartControl.m_chart.Dock = DockStyle.Fill;
+            newDXChartControl.m_chart.ContextMenuStrip = newDXChartControl.contextMenuStrip1;
+            newDXChartControl.m_chart.CustomPaint += Chart_CustomPaint;
+            newDXChartControl.m_spliter.Panel1.Controls.Add(newDXChartControl.m_chart);
+            newDXChartControl.m_propertyGrid = new PropertyGrid();
+            newDXChartControl.m_propertyGrid.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
+            newDXChartControl.m_propertyGrid.Location = new Point(0, 0);
+            newDXChartControl.m_propertyGrid.Size = new Size(m_spliter.Panel2.Width, m_spliter.Panel2.Height);
+            newDXChartControl.m_propertyGrid.SelectedObject = newDXChartControl.m_chart;
+
+
+            //this.m_chart.Legend.AlignmentHorizontal = LegendAlignmentHorizontal.Right;
+            //this.m_chart.Legend.AlignmentVertical = LegendAlignmentVertical.Top;
+            foreach (Series series in dXChartControl.m_chart.Series)
+            {
+                //Series clonedSeries = (Series)Activator.CreateInstance(series.GetType());
+                //clonedSeries.Points.AddRange(series.Points);
+                ////clone.Diagram.Series.Add(clonedSeries);
+                Series clonedSeries = (Series)series.Clone();
+               
+                //newDXChartControl.m_chart.data
+                newDXChartControl.m_chart.Series.Add(clonedSeries);
+
+            }
+            XYDiagram diagram = (XYDiagram)dXChartControl.m_chart.Diagram.Clone();
+
+            XYDiagram diagramNew = newDXChartControl.m_chart.Diagram as XYDiagram;
+
+            diagramNew = diagram;
+            //newDXChartControl.m_chart.Series.AddRange(
+            //dXChartControl.m_chart.Series.OfType<Series>().Select(s =>
+            //{
+            //    Series series = (Series)s.Clone();
+            //    //series.Name += "Clone";
+            //    //series.ChangeView(ViewType.Point);
+            //    return series;
+            //}).ToArray());
+
+            //newDXChartControl.m_chart.Diagram = dXChartControl.m_chart.Diagram;
+
+            //    newDXChartControl.Controls.Add(dXChartControl.m_spliter);
+
+            //newDXChartControl.m_spliter.Panel1.Controls.Add(newDXChartControl.m_chart); 
+            //newDXChartControl.m_spliter.Panel2.Controls.Add(newDXChartControl.m_propertyGrid);
+
+            return newDXChartControl;
+            //InitializeComponent();
+        }
+
+
 
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
 
-            m_spliter = new SplitContainerControl();
-            m_spliter.MouseClick += Spliter_MouseClick;
-            m_spliter.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
-            m_spliter.Location = new Point(0, this.pnPaging.Location.Y + this.pnPaging.Height);
-            m_spliter.Size = new Size(this.ClientRectangle.Width, this.ClientRectangle.Height - this.pnPaging.Height);
-            m_spliter.CollapsePanel = SplitCollapsePanel.Panel2;
-            m_spliter.FixedPanel = SplitFixedPanel.Panel2;
-            m_spliter.SetPanelCollapsed(true);
-            m_spliter.SplitterPosition = 0;
-            this.Controls.Add(m_spliter);
 
+            if (m_spliter == null)
+            {
+                m_spliter = new SplitContainerControl();
 
-            this.m_chart = new ChartControl();
-            this.m_chart.Dock = DockStyle.Fill;
-            this.m_chart.ContextMenuStrip = this.contextMenuStrip1;
-            this.m_chart.CustomPaint += Chart_CustomPaint;
-            m_spliter.Panel1.Controls.Add(this.m_chart);
+                m_spliter.MouseClick += Spliter_MouseClick;
+                m_spliter.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
+                m_spliter.Location = new Point(0, this.pnPaging.Location.Y + this.pnPaging.Height);
+                m_spliter.Size = new Size(this.ClientRectangle.Width, this.ClientRectangle.Height - this.pnPaging.Height);
+                m_spliter.CollapsePanel = SplitCollapsePanel.Panel2;
+                m_spliter.FixedPanel = SplitFixedPanel.Panel2;
+                m_spliter.SetPanelCollapsed(true);
+                m_spliter.SplitterPosition = 0;
+                this.Controls.Add(m_spliter);
+            }
+            if (this.m_chart == null)
+            {
+                this.m_chart = new ChartControl();
 
+                this.m_chart.Dock = DockStyle.Fill;
+                this.m_chart.ContextMenuStrip = this.contextMenuStrip1;
+                this.m_chart.CustomPaint += Chart_CustomPaint;
+                m_spliter.Panel1.Controls.Add(this.m_chart);
+            }
+            if (m_propertyGrid == null)
+            {
+                m_propertyGrid = new PropertyGrid();
 
-            m_propertyGrid = new PropertyGrid();
-            m_propertyGrid.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
-            m_propertyGrid.Location = new Point(0, 0);
-            m_propertyGrid.Size = new Size(m_spliter.Panel2.Width, m_spliter.Panel2.Height);
-            m_propertyGrid.SelectedObject = this.m_chart;            
-            m_spliter.Panel2.Controls.Add(m_propertyGrid);
-
+                m_propertyGrid.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
+                m_propertyGrid.Location = new Point(0, 0);
+                m_propertyGrid.Size = new Size(m_spliter.Panel2.Width, m_spliter.Panel2.Height);
+                m_propertyGrid.SelectedObject = this.m_chart;
+                m_spliter.Panel2.Controls.Add(m_propertyGrid);
+            }
             this.cbSeries.Enabled = false;
             this.m_dicData = ReadDataList4();
             //SetDllDatas();
@@ -302,8 +395,8 @@ namespace DynaRAP.UControl
         {
             this.m_table = dt;
 
-            if (this.m_chart.Series.Count > 0)
-                this.m_chart.Series.Clear();
+            //if (this.m_chart.Series.Count > 0)
+            //    this.m_chart.Series.Clear();
 
             //this.pnPaging.Visible = drawTypes.Equals(DrawTypes.DT_1D) || drawTypes.Equals(DrawTypes.DT_2D);
 
@@ -459,23 +552,31 @@ namespace DynaRAP.UControl
 
         private void DrawChart_1D(string axisTitleX = "", int pageIndex = 0, int pageSize = 50000)
         {
-            if(this.m_chart.Series.Count == 0)
-                this.m_chart.Series.Add(new Series("Series", ViewType.Line));
-
+            //if(this.m_chart.Series.Count == 0)
+            //    this.m_chart.Series.Add(new Series("Series", ViewType.Line));
+            Series series = new Series("Series", ViewType.Line);
             var dataSource = this.m_table.AsEnumerable().Skip(m_pageSize * m_pageIndex).Take(this.m_pageSize);
 
-            this.m_chart.Series[0].Points.Clear();
+            //this.m_chart.Series[0].Points.Clear();
 
             foreach (DataRow row in dataSource)
-                this.m_chart.Series[0].Points.Add(new SeriesPoint(row["Argument"], row["Value"]));
+                series.Points.Add(new SeriesPoint(row["Argument"], row["Value"]));
+            //this.m_chart.Series[0].Points.Add(new SeriesPoint(row["Argument"], row["Value"]));
 
-            this.m_chart.Series[0].ArgumentScaleType = ScaleType.Auto;
-            this.m_chart.Series[0].ArgumentDataMember = "Argument";
-            this.m_chart.Series[0].ValueScaleType = ScaleType.Numerical;
-            this.m_chart.Series[0].ValueDataMembers.AddRange(new string[] { "Value" });
-
+            series.ArgumentScaleType = ScaleType.Auto;
+            series.ArgumentDataMember = "Argument";
+            series.ValueScaleType = ScaleType.Numerical;
+            series.ValueDataMembers.AddRange(new string[] { "Value" });
+            this.m_chart.Series.Add(series);
             this.m_chart.Legend.AlignmentHorizontal = LegendAlignmentHorizontal.Right;
             this.m_chart.Legend.AlignmentVertical = LegendAlignmentVertical.Top;
+            //this.m_chart.Series[0].ArgumentScaleType = ScaleType.Auto;
+            //this.m_chart.Series[0].ArgumentDataMember = "Argument";
+            //this.m_chart.Series[0].ValueScaleType = ScaleType.Numerical;
+            //this.m_chart.Series[0].ValueDataMembers.AddRange(new string[] { "Value" });
+
+            //this.m_chart.Legend.AlignmentHorizontal = LegendAlignmentHorizontal.Right;
+            //this.m_chart.Legend.AlignmentVertical = LegendAlignmentVertical.Top;
 
             XYDiagram diagram = this.m_chart.Diagram as XYDiagram;
 
@@ -1509,6 +1610,14 @@ namespace DynaRAP.UControl
                 cbSeries2.Text = "";
                 cbSeries2.SelectedIndex = -1;
             }
+        }
+
+        private void toolStripMenuItem11_Click(object sender, EventArgs e)
+        {
+            MainForm mainForm = this.ParentForm as MainForm;
+            DXChartControl chartControl = new DXChartControl();
+            chartControl = DeepCopy(this);
+            mainForm.PlotModuleControl.AddDocument(chartControl);
         }
     }
 

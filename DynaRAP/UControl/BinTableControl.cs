@@ -42,39 +42,31 @@ namespace DynaRAP.UControl
 
         private void BinTableControl_Load(object sender, EventArgs e)
         {
-            //if (!splashScreenManager1.IsSplashFormVisible)
-            //{
-            //    splashScreenManager1.ShowWaitForm();
-            //    splashScreenManager1.SetWaitFormCaption("BIN테이블을 생성중입니다. 잠시만 기다려주십시오.");
-            //}
             mainForm.ShowSplashScreenManager("BIN테이블을 생성중입니다. 잠시만 기다려주십시오.");
             firstColNameList = new Dictionary<string, string>();
-            //int j = 1;
-            for (int i = 0; i < paramDataList.Count()-1; i++)
-            {
-                for (int j = i+1; j < paramDataList.Count(); j++)
-                {
-                    string showName = string.Format("{0}-{1}", paramDataList[i].propInfo.paramUnit, paramDataList[j].propInfo.paramUnit);
-                    string valueName = paramDataList[i].paramKey + paramDataList[j].paramKey;
-                    //DataTable dt = GetDataTable(paramDataList[i - 1], paramDataList[i]);
-                    GetShortBlockParamList();
-                    AddTabPage(showName, valueName, paramDataList[i], paramDataList[j]);
 
-                }
-                //if (i == paramDataList.Count() - 1)
-                //{
-                    //j++;
-                //}
+            
+            string valueName = paramDataList[0].paramKey + paramDataList[2].paramKey;
+            //DataTable dt = GetDataTable(paramDataList[i - 1], paramDataList[i]);
+            GetShortBlockParamList();
+            foreach (var paramData in pickUpParamList[2].userParamTable)
+            {
+                string showName = string.Format("{0}-{1}({2}-{3})", paramDataList[0].propInfo.paramUnit, paramDataList[2].propInfo.paramUnit,paramData.min,paramData.max);
+                AddTabPage(showName, valueName+paramData.min, paramDataList[1], paramDataList[0], pickUpParamList[2].paramSeq, paramData);
             }
+            //for (int i = 0; i < paramDataList.Count() - 1; i++)
+            //{
+            //    for (int j = i + 1; j < paramDataList.Count(); j++)
+            //    {
+            //        string showName = string.Format("{0}-{1}", paramDataList[i].propInfo.paramUnit, paramDataList[j].propInfo.paramUnit);
+            //        string valueName = paramDataList[i].paramKey + paramDataList[j].paramKey;
+            //        //DataTable dt = GetDataTable(paramDataList[i - 1], paramDataList[i]);
+            //        GetShortBlockParamList();
+            //        AddTabPage(showName, valueName, paramDataList[i], paramDataList[j]);
+            //    }
+            //}
             mainForm.HideSplashScreenManager();
 
-            //if (splashScreenManager1.IsSplashFormVisible)
-            //    splashScreenManager1.CloseWaitForm();
-            //DataTable dt = GetDataTable(paramDataList[0], paramDataList[1]);
-            //DataTable dt1 = GetDataTable();
-            //AddTabPage("AOA-Q", dt);
-            //AddTabPage("AOA-AOS", dt1);
-            //AddTabPage("Q-AOS", dt);
 
         }
 
@@ -109,7 +101,7 @@ namespace DynaRAP.UControl
             }
         }
 
-        private DataTable GetDataTable(string keyName, ParamDatas header, ParamDatas row)
+        private DataTable GetDataTable(string keyName, ParamDatas header, ParamDatas row, string paramSeq, UserParamTable minMaxData)
         {
           Dictionary<MinMaxRagne, Dictionary<MinMaxRagne, List<string>>> countSeqDic = new Dictionary<MinMaxRagne, Dictionary<MinMaxRagne, List<string>>>();
 
@@ -144,7 +136,11 @@ namespace DynaRAP.UControl
                         var headerValue = countSeqDic[rowValue[0]].Where(dic => (dic.Key.max > paramDataHeader.paramValueMap.blockAvg) && (dic.Key.min <= paramDataHeader.paramValueMap.blockAvg)).Select(x => x.Key).ToList();
                         if (headerValue.Count != 0)
                         {
-                            countSeqDic[rowValue[0]][headerValue[0]].Add(responseParam.response.paramData[0].paramValueMap.blockSeq);
+                            var paramStand = responseParam.response.paramData.Find(x => x.seq == paramSeq);
+                            if (paramStand.paramValueMap.blockAvg < minMaxData.max && paramStand.paramValueMap.blockAvg >= minMaxData.min)
+                            {
+                                countSeqDic[rowValue[0]][headerValue[0]].Add(responseParam.response.paramData[0].paramValueMap.blockSeq);
+                            }
                         }
                     }
                 }
@@ -241,9 +237,9 @@ namespace DynaRAP.UControl
         //    return dt;
         //}
 
-        private void AddTabPage(string tabName, string tabValue, ParamDatas header, ParamDatas row)
+        private void AddTabPage(string tabName, string tabValue, ParamDatas header, ParamDatas row, string paramSeq, UserParamTable minMaxData)
         {
-            DataTable dt = GetDataTable(tabValue, header, row);
+            DataTable dt = GetDataTable(tabValue, header, row,  paramSeq,  minMaxData);
             XtraTabPage tabPage = new XtraTabPage();
             this.xtraTabControl1.TabPages.Add(tabPage);
             tabPage.Name = tabValue;

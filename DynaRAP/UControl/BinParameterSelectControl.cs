@@ -203,5 +203,10 @@ namespace DynaRAP.UControl
             }
             return null;
         }
+
+        public void SetParamDataList(List<ParamDatas> paramDataList)
+        {
+            this.paramDataList = paramDataList;
+        }
     }
 }

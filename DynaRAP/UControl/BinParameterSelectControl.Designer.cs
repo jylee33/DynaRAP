@@ -30,7 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BinParameterSelectControl));
-            this.btnClose = new DevExpress.XtraEditors.SimpleButton();
             this.gridControl1 = new DevExpress.XtraGrid.GridControl();
             this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.gridColumn1 = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -47,28 +46,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.paramList.Properties)).BeginInit();
             this.SuspendLayout();
             // 
-            // btnClose
-            // 
-            this.btnClose.Appearance.BackColor = System.Drawing.Color.White;
-            this.btnClose.Appearance.BackColor2 = System.Drawing.Color.White;
-            this.btnClose.Appearance.BorderColor = System.Drawing.Color.White;
-            this.btnClose.Appearance.ForeColor = System.Drawing.Color.Black;
-            this.btnClose.Appearance.Options.UseBackColor = true;
-            this.btnClose.Appearance.Options.UseBorderColor = true;
-            this.btnClose.Appearance.Options.UseForeColor = true;
-            this.btnClose.Location = new System.Drawing.Point(225, 3);
-            this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(12, 12);
-            this.btnClose.TabIndex = 3;
-            this.btnClose.Text = "X";
-            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
-            // 
             // gridControl1
             // 
             this.gridControl1.Location = new System.Drawing.Point(0, 46);
             this.gridControl1.MainView = this.gridView1;
             this.gridControl1.Name = "gridControl1";
-            this.gridControl1.Size = new System.Drawing.Size(243, 106);
+            this.gridControl1.Size = new System.Drawing.Size(317, 106);
             this.gridControl1.TabIndex = 4;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
@@ -127,7 +110,7 @@
             this.btnAddNewRow.Location = new System.Drawing.Point(0, 156);
             this.btnAddNewRow.Margin = new System.Windows.Forms.Padding(0);
             this.btnAddNewRow.Name = "btnAddNewRow";
-            this.btnAddNewRow.Size = new System.Drawing.Size(242, 20);
+            this.btnAddNewRow.Size = new System.Drawing.Size(320, 20);
             this.btnAddNewRow.TabIndex = 5;
             this.btnAddNewRow.Text = "Add New Row";
             this.btnAddNewRow.Click += new System.EventHandler(this.btnAddNewRow_Click);
@@ -138,17 +121,17 @@
             this.propTypeList.Name = "propTypeList";
             this.propTypeList.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.propTypeList.Size = new System.Drawing.Size(89, 22);
+            this.propTypeList.Size = new System.Drawing.Size(145, 22);
             this.propTypeList.TabIndex = 26;
             this.propTypeList.EditValueChanged += new System.EventHandler(this.propTypeList_EditValueChanged);
             // 
             // paramList
             // 
-            this.paramList.Location = new System.Drawing.Point(102, 11);
+            this.paramList.Location = new System.Drawing.Point(158, 11);
             this.paramList.Name = "paramList";
             this.paramList.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.paramList.Size = new System.Drawing.Size(117, 22);
+            this.paramList.Size = new System.Drawing.Size(150, 22);
             this.paramList.TabIndex = 27;
             this.paramList.EditValueChanged += new System.EventHandler(this.paramList_EditValueChanged);
             // 
@@ -161,9 +144,8 @@
             this.Controls.Add(this.propTypeList);
             this.Controls.Add(this.btnAddNewRow);
             this.Controls.Add(this.gridControl1);
-            this.Controls.Add(this.btnClose);
             this.Name = "BinParameterSelectControl";
-            this.Size = new System.Drawing.Size(242, 176);
+            this.Size = new System.Drawing.Size(320, 176);
             this.Load += new System.EventHandler(this.SelectSBControl_Load);
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
@@ -175,7 +157,6 @@
         }
 
         #endregion
-        private DevExpress.XtraEditors.SimpleButton btnClose;
         private DevExpress.XtraGrid.GridControl gridControl1;
         private DevExpress.XtraGrid.Views.Grid.GridView gridView1;
         private DevExpress.XtraGrid.Columns.GridColumn gridColumn1;

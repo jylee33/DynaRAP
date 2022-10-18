@@ -68,11 +68,14 @@ namespace DynaRAP.UControl
                 cboImportType.Properties.Items.Add("GRT");
                 cboImportType.Properties.Items.Add("FLTP");
                 cboImportType.Properties.Items.Add("FLTS");
+                gridControl1.Height = 560;
+                tableLayoutPanel6.Visible = false;
             }
             else
             {
                 cboImportType.Properties.Items.Add("ADAMS");
                 cboImportType.Properties.Items.Add("ZAERO");
+                InitializeGridControl3();
             }
 
             //InitializeSplittedRegionList();
@@ -109,7 +112,6 @@ namespace DynaRAP.UControl
                 intervalList = new List<ImportIntervalData>();
             }
             lblSplitCount.Text = string.Format(Properties.Resources.StringSplitCount, intervalList.Count);
-
             InitializeGridControl1();
             InitializeGridControl2();
 
@@ -175,6 +177,25 @@ namespace DynaRAP.UControl
             colName.Width = 240;
             colName.Caption = "UnmappedParamName";
             colName.OptionsColumn.ReadOnly = true;
+        }
+
+        private void InitializeGridControl3()
+        {
+
+          
+            gridView3.OptionsView.ShowColumnHeaders = true;
+            gridView3.OptionsView.ShowGroupPanel = false;
+            gridView3.OptionsView.ShowIndicator = true;
+            gridView3.IndicatorWidth = 40;
+            gridView3.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.False;
+            gridView3.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.False;
+            gridView3.OptionsView.ColumnAutoWidth = true;
+
+            gridView3.OptionsBehavior.ReadOnly = false;
+
+            gridView3.OptionsSelection.MultiSelectMode = DevExpress.XtraGrid.Views.Grid.GridMultiSelectMode.RowSelect;
+            gridView3.OptionsSelection.EnableAppearanceFocusedCell = false;
+
         }
 
         private List<ResponseParam> GetParamList()

@@ -30,6 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BinModuleControl));
+            this.repositoryItemCheckEdit2 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
             this.repositoryItemComboBox3 = new DevExpress.XtraEditors.Repository.RepositoryItemComboBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.separatorControl1 = new DevExpress.XtraEditors.SeparatorControl();
@@ -65,6 +66,8 @@
             this.btnParameterAdd = new DevExpress.XtraEditors.ButtonEdit();
             this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
             this.panelParamCnt = new System.Windows.Forms.FlowLayoutPanel();
+            this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
+            this.panelParamCnt1 = new System.Windows.Forms.FlowLayoutPanel();
             this.btnCreateBIN = new DevExpress.XtraEditors.SimpleButton();
             this.labelControl13 = new DevExpress.XtraEditors.LabelControl();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
@@ -77,6 +80,7 @@
             this.imageCollection3 = new DevExpress.Utils.ImageCollection(this.components);
             this.imageCollection1 = new DevExpress.Utils.ImageCollection(this.components);
             this.imageCollection2 = new DevExpress.Utils.ImageCollection(this.components);
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemComboBox3)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.separatorControl1)).BeginInit();
@@ -99,6 +103,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection2)).BeginInit();
             this.SuspendLayout();
+            // 
+            // repositoryItemCheckEdit2
+            // 
+            this.repositoryItemCheckEdit2.Name = "repositoryItemCheckEdit2";
             // 
             // repositoryItemComboBox3
             // 
@@ -481,14 +489,17 @@
             this.btnParameterAdd.Properties.ReadOnly = true;
             this.btnParameterAdd.Size = new System.Drawing.Size(114, 22);
             this.btnParameterAdd.TabIndex = 60;
+            this.btnParameterAdd.Visible = false;
             this.btnParameterAdd.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.btnParameterAdd_ButtonClick);
             // 
             // flowLayoutPanel4
             // 
             this.flowLayoutPanel4.Controls.Add(this.panelParamCnt);
+            this.flowLayoutPanel4.Controls.Add(this.flowLayoutPanel5);
+            this.flowLayoutPanel4.Controls.Add(this.panelParamCnt1);
             this.flowLayoutPanel4.Location = new System.Drawing.Point(3, 602);
             this.flowLayoutPanel4.Name = "flowLayoutPanel4";
-            this.flowLayoutPanel4.Size = new System.Drawing.Size(1048, 192);
+            this.flowLayoutPanel4.Size = new System.Drawing.Size(1034, 192);
             this.flowLayoutPanel4.TabIndex = 58;
             // 
             // panelParamCnt
@@ -497,13 +508,29 @@
             this.panelParamCnt.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelParamCnt.Location = new System.Drawing.Point(3, 3);
             this.panelParamCnt.Name = "panelParamCnt";
-            this.panelParamCnt.Size = new System.Drawing.Size(1036, 189);
+            this.panelParamCnt.Size = new System.Drawing.Size(660, 189);
             this.panelParamCnt.TabIndex = 53;
+            // 
+            // flowLayoutPanel5
+            // 
+            this.flowLayoutPanel5.Location = new System.Drawing.Point(669, 3);
+            this.flowLayoutPanel5.Name = "flowLayoutPanel5";
+            this.flowLayoutPanel5.Size = new System.Drawing.Size(25, 109);
+            this.flowLayoutPanel5.TabIndex = 59;
+            // 
+            // panelParamCnt1
+            // 
+            this.panelParamCnt1.AutoScroll = true;
+            this.panelParamCnt1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelParamCnt1.Location = new System.Drawing.Point(700, 3);
+            this.panelParamCnt1.Name = "panelParamCnt1";
+            this.panelParamCnt1.Size = new System.Drawing.Size(330, 189);
+            this.panelParamCnt1.TabIndex = 54;
             // 
             // btnCreateBIN
             // 
             this.btnCreateBIN.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnCreateBIN.Location = new System.Drawing.Point(467, 800);
+            this.btnCreateBIN.Location = new System.Drawing.Point(460, 800);
             this.btnCreateBIN.Name = "btnCreateBIN";
             this.btnCreateBIN.Size = new System.Drawing.Size(119, 25);
             this.btnCreateBIN.TabIndex = 41;
@@ -522,9 +549,10 @@
             // 
             this.tableLayoutPanel1.SetColumnSpan(this.flowLayoutPanel2, 2);
             this.flowLayoutPanel2.Controls.Add(this.treeList1);
+            this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 176);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(196, 659);
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(196, 739);
             this.flowLayoutPanel2.TabIndex = 42;
             // 
             // treeList1
@@ -538,7 +566,7 @@
             this.treeList1.Name = "treeList1";
             this.treeList1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemCheckEdit1});
-            this.treeList1.Size = new System.Drawing.Size(193, 963);
+            this.treeList1.Size = new System.Drawing.Size(193, 691);
             this.treeList1.TabIndex = 2;
             // 
             // ID
@@ -601,6 +629,7 @@
             this.Name = "BinModuleControl";
             this.Size = new System.Drawing.Size(1366, 939);
             this.Load += new System.EventHandler(this.BinModuleControl_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemComboBox3)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
@@ -680,5 +709,8 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel4;
         private System.Windows.Forms.FlowLayoutPanel panelParamCnt;
         private DevExpress.XtraEditors.ButtonEdit btnParameterAdd;
+        private System.Windows.Forms.FlowLayoutPanel panelParamCnt1;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel5;
+        private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repositoryItemCheckEdit2;
     }
 }
