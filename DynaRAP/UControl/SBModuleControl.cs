@@ -128,6 +128,7 @@ namespace DynaRAP.UControl
             paramList = GetParamList();
 
             InitializeGridControl();
+            InitializeTagGridControl();
 
         }
 
@@ -217,6 +218,8 @@ namespace DynaRAP.UControl
 
             gridView1.CustomDrawRowIndicator += GridView1_CustomDrawRowIndicator;
 
+
+
             GridColumn colName = gridView1.Columns["ParamKey"];
             colName.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
             colName.OptionsColumn.FixedWidth = true;
@@ -238,6 +241,27 @@ namespace DynaRAP.UControl
             this.repositoryItemImageComboBox1.Buttons[0].Visible = false;
 
             this.repositoryItemImageComboBox1.Click += RepositoryItemImageComboBox1_Click;
+        }
+        private void InitializeTagGridControl()
+        {
+            //gridView2.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+
+            gridView2.OptionsView.ShowColumnHeaders = false;
+            gridView2.OptionsView.ShowGroupPanel = false;
+            gridView2.OptionsView.ShowIndicator = false;
+            gridView2.IndicatorWidth = 40;
+            gridView2.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.False;
+            gridView2.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.False;
+            gridView2.OptionsView.ColumnAutoWidth = true;
+
+            gridView2.OptionsBehavior.ReadOnly = true;
+            gridView2.OptionsBehavior.Editable = false;
+
+            gridView2.OptionsSelection.MultiSelectMode = DevExpress.XtraGrid.Views.Grid.GridMultiSelectMode.RowSelect;
+            gridView2.OptionsSelection.EnableAppearanceFocusedCell = false;
+            gridView2.OptionsMenu.EnableColumnMenu = false;
+
+
         }
 
         private void RepositoryItemImageComboBox1_Click(object sender, EventArgs e)
@@ -522,16 +546,16 @@ namespace DynaRAP.UControl
             myChartArea.InnerPlotPosition.Auto = true;
             //myChartArea.InnerPlotPosition.Width = 100;
             //myChartArea.InnerPlotPosition.Height = 100;
+            myChartArea.AxisY.IsStartedFromZero = false;
 
             myChartArea.Position.X = 0;
             myChartArea.Position.Y = 0;
             myChartArea.Position.Width = 100;
             myChartArea.Position.Height = 100;
-
+            
             chart1.ChartAreas.RemoveAt(0);
             chart1.ChartAreas.Add(myChartArea);
             chart1.MouseWheel += Chart1_MouseWheel;
-
             /*
             chartPreview.ChartAreas[0].AxisX.LabelStyle.Enabled = false;
             chartPreview.ChartAreas[0].AxisY.LabelStyle.Enabled = false;
@@ -770,9 +794,12 @@ namespace DynaRAP.UControl
 
         private void InitializePartInfoList(string partName)
         {
+            MainForm mainForm = this.ParentForm as MainForm;
+
             cboParameter.Properties.Items.Clear();
             cboParameter.Text = String.Empty;
 
+            mainForm.ShowSplashScreenManager("ShortBlock 데이터를 불러오는 중입니다. 잠시만 기다려주십시오.");
             partInfo = null;
             partInfo = GetPartInfo(partName);
 
@@ -785,7 +812,7 @@ namespace DynaRAP.UControl
 
                 cboParameter.SelectedIndex = 0;
             }
-
+            mainForm.HideSplashScreenManager();
         }
 
         private ResponsePartInfo GetPartInfo(string seq)
@@ -960,6 +987,7 @@ namespace DynaRAP.UControl
             series1.IsValueShownAsLabel = false;
             series1.IsVisibleInLegend = false;
             series1.LabelForeColor = Color.Red;
+
             //series1.MarkerStyle = MarkerStyle.Square;
             //series1.MarkerSize = 3;
             //series1.MarkerColor = Color.Black;

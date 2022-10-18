@@ -486,6 +486,9 @@ namespace DynaRAP.UControl
             
             diagram.EnableAxisXScrolling = true;
             diagram.EnableAxisXZooming = true;
+            //diagram.EnableAxisYScrolling = true;
+            //diagram.EnableAxisYZooming = true;
+            diagram.AxisY.WholeRange.AlwaysShowZeroLevel = false;
 
             diagram.AxisX.Label.Visible = false;
             //this.rangeControl1.Client = chartControl;

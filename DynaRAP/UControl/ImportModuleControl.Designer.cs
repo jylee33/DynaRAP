@@ -505,6 +505,7 @@
             this.gridColumn9});
             this.gridView2.GridControl = this.gridControl2;
             this.gridView2.Name = "gridView2";
+            this.gridView2.KeyUp += new System.Windows.Forms.KeyEventHandler(this.gridView2_KeyUp);
             // 
             // gridColumn1
             // 

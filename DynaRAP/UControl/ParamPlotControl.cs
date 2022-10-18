@@ -145,30 +145,47 @@ namespace DynaRAP.UControl
                             //}
 
                             DXChartControl chartControl = new DXChartControl(plotDataResponse, plotGridSourceDataList);
-                            DockPanel panelChart = null;
-
-                            if (panelChart == null)
+                            if (mainForm.PlotModuleControl == null)
                             {
-                                panelChart = new DockPanel();
-                                panelChart = mainForm.DockManager1.AddPanel(DockingStyle.Float);
-                                panelChart.FloatLocation = new Point(500, 100);
-                                panelChart.FloatSize = new Size(1058, 528);
-                                //panelChart.Name = this.sb.SbName;
-                                //panelChart.Text = this.sb.SbName;
-                                chartControl.Dock = DockStyle.Fill;
-                                panelChart.Controls.Add(chartControl);
-                                //panelChart.ClosedPanel += PanelChart_ClosedPanel;
+                                mainForm.PlotModuleControl = new PlotModuleControl();
+                                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = mainForm.TabbedView1.AddDocument(mainForm.PlotModuleControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
+                                doc.Caption = "PLOT";
+                                mainForm.TabbedView1.ActivateDocument(mainForm.PlotModuleControl);
                             }
                             else
                             {
-                                //panelChart.Name = this.sb.SbName;
-                                //panelChart.Text = this.sb.SbName;
-                                //panelChart.Controls.Clear();
-                                chartControl.Dock = DockStyle.Fill;
-                                panelChart.Controls.Add(chartControl);
-                                panelChart.Show();
-                                panelChart.Focus();
+                                mainForm.TabbedView1.ActivateDocument(mainForm.PlotModuleControl);
                             }
+
+                            mainForm.PlotModuleControl.AddDocument(chartControl);
+
+                            //return;
+
+                            return;
+                            //DockPanel panelChart = null;
+
+                            //if (panelChart == null)
+                            //{
+                            //    panelChart = new DockPanel();
+                            //    panelChart = mainForm.DockManager1.AddPanel(DockingStyle.Float);
+                            //    panelChart.FloatLocation = new Point(500, 100);
+                            //    panelChart.FloatSize = new Size(1058, 528);
+                            //    //panelChart.Name = this.sb.SbName;
+                            //    //panelChart.Text = this.sb.SbName;
+                            //    chartControl.Dock = DockStyle.Fill;
+                            //    panelChart.Controls.Add(chartControl);
+                            //    //panelChart.ClosedPanel += PanelChart_ClosedPanel;
+                            //}
+                            //else
+                            //{
+                            //    //panelChart.Name = this.sb.SbName;
+                            //    //panelChart.Text = this.sb.SbName;
+                            //    //panelChart.Controls.Clear();
+                            //    chartControl.Dock = DockStyle.Fill;
+                            //    panelChart.Controls.Add(chartControl);
+                            //    panelChart.Show();
+                            //    panelChart.Focus();
+                            //}
                         }
                     }
                 }

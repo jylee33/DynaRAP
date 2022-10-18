@@ -179,8 +179,9 @@ namespace DynaRAP.UControl
             string blockSeq = gridView1.GetRowCellValue(row, "Seq") == null ? "" : gridView1.GetRowCellValue(row, "Seq").ToString();
             string start = gridView1.GetRowCellValue(row, "JulianStartAt") == null ? "" : gridView1.GetRowCellValue(row, "JulianStartAt").ToString();
             string end = gridView1.GetRowCellValue(row, "JulianEndAt") == null ? "" : gridView1.GetRowCellValue(row, "JulianEndAt").ToString();
+            string blcokName = gridView1.GetRowCellValue(row, "BlockName") == null ? "" : gridView1.GetRowCellValue(row, "BlockName").ToString();
 
-            GetSBData(blockSeq, start, end, "N");
+            GetSBData(blcokName, blockSeq, start, end, "N");
         }
 
         private void RepositoryItemImageComboBox2_Click(object sender, EventArgs e)
@@ -189,12 +190,13 @@ namespace DynaRAP.UControl
             string blockSeq = gridView1.GetRowCellValue(row, "Seq") == null ? "" : gridView1.GetRowCellValue(row, "Seq").ToString();
             string start = gridView1.GetRowCellValue(row, "JulianStartAt") == null ? "" : gridView1.GetRowCellValue(row, "JulianStartAt").ToString();
             string end = gridView1.GetRowCellValue(row, "JulianEndAt") == null ? "" : gridView1.GetRowCellValue(row, "JulianEndAt").ToString();
-
+            string blcokName = gridView1.GetRowCellValue(row, "BlockName") == null ? "" : gridView1.GetRowCellValue(row, "BlockName").ToString();
+            
             // 아래 strParamSet 을 구해서 GetSBData() 호출할 때 사용하면 해당 paramSet 에 대한 SBData 만 얻어올 수 있다.
             //List<string> sbParamList = GetSBParamList(blockSeq);
             //string strParamSet = JsonConvert.SerializeObject(sbParamList);
 
-            GetSBData(blockSeq, start, end, "N", true);
+            GetSBData(blcokName, blockSeq, start, end, "N", true);
         }
 
         private void RepositoryItemImageComboBox3_Click(object sender, EventArgs e)
@@ -203,8 +205,9 @@ namespace DynaRAP.UControl
             string blockSeq = gridView1.GetRowCellValue(row, "Seq") == null ? "" : gridView1.GetRowCellValue(row, "Seq").ToString();
             string start = gridView1.GetRowCellValue(row, "JulianStartAt") == null ? "" : gridView1.GetRowCellValue(row, "JulianStartAt").ToString();
             string end = gridView1.GetRowCellValue(row, "JulianEndAt") == null ? "" : gridView1.GetRowCellValue(row, "JulianEndAt").ToString();
+            string blcokName = gridView1.GetRowCellValue(row, "BlockName") == null ? "" : gridView1.GetRowCellValue(row, "BlockName").ToString();
 
-            GetSBData(blockSeq, start, end, "L", true);
+            GetSBData(blcokName, blockSeq, start, end, "L", true);
         }
 
         private void RepositoryItemImageComboBox4_Click(object sender, EventArgs e)
@@ -213,8 +216,9 @@ namespace DynaRAP.UControl
             string blockSeq = gridView1.GetRowCellValue(row, "Seq") == null ? "" : gridView1.GetRowCellValue(row, "Seq").ToString();
             string start = gridView1.GetRowCellValue(row, "JulianStartAt") == null ? "" : gridView1.GetRowCellValue(row, "JulianStartAt").ToString();
             string end = gridView1.GetRowCellValue(row, "JulianEndAt") == null ? "" : gridView1.GetRowCellValue(row, "JulianEndAt").ToString();
+            string blcokName = gridView1.GetRowCellValue(row, "BlockName") == null ? "" : gridView1.GetRowCellValue(row, "BlockName").ToString();
 
-            GetSBData(blockSeq, start, end, "H", true);
+            GetSBData(blcokName, blockSeq, start, end, "H", true);
         }
 
         private List<string> GetSBParamList(string blockSeq)
@@ -286,7 +290,7 @@ namespace DynaRAP.UControl
 
         }
 
-        private void GetSBData(string blockSeq, string start, string end,  string filterType, bool bDownload = false)
+        private void GetSBData(string blcokName, string blockSeq, string start, string end,  string filterType, bool bDownload = false)
         {
             try
             {
@@ -336,6 +340,12 @@ namespace DynaRAP.UControl
                 }
 
                 SaveFileDialog dlg = new SaveFileDialog();
+                string flyingName = cboFlying.Text;
+                if (flyingName.IndexOf(".") != -1) 
+                {
+                    flyingName = flyingName.Substring(0, flyingName.LastIndexOf(".")); 
+                }
+                dlg.FileName = string.Format("{0}_{1}_{2}_{3}", flyingName, cboPart.Text, blcokName, filterType=="N"? "RAW" : filterType=="L"?"LPF": "HPF");
                 dlg.Filter = "Comma Separated Value files (CSV)|*.csv";
                 dlg.Title = "Save an Image File";
 

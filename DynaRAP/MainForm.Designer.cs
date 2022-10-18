@@ -543,7 +543,7 @@ namespace DynaRAP
             this.panelImportViewCsv.ID = new System.Guid("d9a0ca3c-ea60-4ccb-b13a-157b5c5f38f6");
             resources.ApplyResources(this.panelImportViewCsv, "panelImportViewCsv");
             this.panelImportViewCsv.Name = "panelImportViewCsv";
-            this.panelImportViewCsv.OriginalSize = new System.Drawing.Size(1084, 170);
+            this.panelImportViewCsv.OriginalSize = new System.Drawing.Size(1090, 161);
             // 
             // controlContainer1
             // 
@@ -557,7 +557,7 @@ namespace DynaRAP
             this.panelBinTable.ID = new System.Guid("6dfc02a1-a41a-4100-a459-234398a2ca56");
             resources.ApplyResources(this.panelBinTable, "panelBinTable");
             this.panelBinTable.Name = "panelBinTable";
-            this.panelBinTable.OriginalSize = new System.Drawing.Size(1084, 170);
+            this.panelBinTable.OriginalSize = new System.Drawing.Size(1090, 161);
             // 
             // dockPanel4_Container
             // 
@@ -581,7 +581,7 @@ namespace DynaRAP
             this.panelBinSbList.ID = new System.Guid("bbd25a6d-0250-46ba-9429-84d2ef47bbbc");
             resources.ApplyResources(this.panelBinSbList, "panelBinSbList");
             this.panelBinSbList.Name = "panelBinSbList";
-            this.panelBinSbList.OriginalSize = new System.Drawing.Size(254, 237);
+            this.panelBinSbList.OriginalSize = new System.Drawing.Size(254, 236);
             // 
             // dockPanel2_Container
             // 
@@ -622,7 +622,7 @@ namespace DynaRAP
             this.panelScenario.ID = new System.Guid("ac197e9b-7668-43be-9d4c-dece8fdffa98");
             resources.ApplyResources(this.panelScenario, "panelScenario");
             this.panelScenario.Name = "panelScenario";
-            this.panelScenario.OriginalSize = new System.Drawing.Size(267, 444);
+            this.panelScenario.OriginalSize = new System.Drawing.Size(273, 449);
             // 
             // dockPanel1_Container
             // 
@@ -636,7 +636,7 @@ namespace DynaRAP
             this.panelOther.ID = new System.Guid("a0efe638-b924-4a0a-aef0-81a62aa06a39");
             resources.ApplyResources(this.panelOther, "panelOther");
             this.panelOther.Name = "panelOther";
-            this.panelOther.OriginalSize = new System.Drawing.Size(267, 444);
+            this.panelOther.OriginalSize = new System.Drawing.Size(273, 449);
             // 
             // controlContainer2
             // 

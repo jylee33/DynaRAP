@@ -1278,6 +1278,83 @@ namespace DynaRAP.UControl
                 chkLPF.Enabled = true;
             }
         }
+
+        private void gridView2_KeyUp(object sender, KeyEventArgs e)
+        {
+            GridView view = sender as GridView;
+
+            if (e.KeyCode == Keys.Enter && (view.FocusedColumn.FieldName == "StartTime" || view.FocusedColumn.FieldName == "EndTime"))
+            {
+                ImportIntervalData importIntervalData = (ImportIntervalData)gridView2.GetFocusedRow();
+                DateTime startTime = DateTime.Now;
+                DateTime endTime = DateTime.Now;
+
+                bool startParseYN = DateTime.TryParse(importIntervalData.StartTime,out startTime);
+                bool endParseYN = DateTime.TryParse(importIntervalData.EndTime, out endTime);
+
+                if(importIntervalData.StartTime == null || importIntervalData.EndTime == null)
+                {
+                    return;
+                }
+                if (!(startParseYN && endParseYN))
+                {
+                    MessageBox.Show(startParseYN ? "종료시간이 시간형식이 아닙니다. \n다시 확인해주세요." : "시작시간이 시간형식이 아닙니다. \n다시 확인해주세요.");
+                    if(view.FocusedColumn.FieldName == "StartTime")
+                    {
+                        importIntervalData.StartTime = null;
+                    }
+                    else
+                    {
+                        importIntervalData.EndTime = null;
+                    }
+                        return;
+                }
+                DataTable dataTable = paramControlList[0].Dt;
+
+                var dataStartTime = (DateTime)dataTable.Rows[0][0];
+                var dataEndTime = (DateTime)dataTable.Rows[(dataTable.Rows.Count - 1)][0];
+
+                if(endTime < startTime)
+                {
+                    MessageBox.Show("선택된 시작시간이 종료 시간보다 빠릅니다. \n다시 확인해주세요.");
+                    if (view.FocusedColumn.FieldName == "StartTime")
+                    {
+                        importIntervalData.StartTime = null;
+                    }
+                    else
+                    {
+                        importIntervalData.EndTime = null;
+                    }
+                    return;
+                }
+
+                if (importIntervalData.StartTime != null && startTime < dataStartTime)
+                {
+                    MessageBox.Show("선택된 시작시간이 전체 시간보다 빠릅니다. \n다시 확인해주세요.");
+                    importIntervalData.StartTime = null;
+                    return;
+                }
+
+                if (importIntervalData.EndTime != null && endTime > dataEndTime)
+                {
+                    MessageBox.Show("선택된 종료시간이 전체 시간보다 느립니다. \n다시 확인해주세요.");
+                    importIntervalData.EndTime = null;
+                    return;
+                }
+                DataTable dt = GetIntervalData(paramControlList[0].Dt, startTime, endTime);
+                int recordCnt = dt.Rows.Count;
+                importIntervalData.DataCount = recordCnt.ToString();
+                minValue = Convert.ToDateTime(importIntervalData.StartTime);
+                maxValue = Convert.ToDateTime(importIntervalData.EndTime);
+
+                foreach (ImportParamControl ctrl in paramControlList)
+                {
+                    ctrl.SelectRegion(minValue, maxValue);
+                }
+                gridView2.RefreshData();
+
+            }
+        }
     }
 
     

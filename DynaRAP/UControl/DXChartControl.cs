@@ -112,7 +112,6 @@ namespace DynaRAP.UControl
             m_propertyGrid.SelectedObject = this.m_chart;            
             m_spliter.Panel2.Controls.Add(m_propertyGrid);
 
-
             this.cbSeries.Enabled = false;
             this.m_dicData = ReadDataList4();
             //SetDllDatas();
@@ -497,7 +496,6 @@ namespace DynaRAP.UControl
             //this.btnMoveLast.Enabled = this.btnMoveRight.Enabled = (this.m_pageIndex < this.m_totalPages);
 
             this.lblPages.Text = string.Format("{0} page of {1} pages.", this.m_pageIndex + 1, this.m_totalPages + 1);
-
             //m_pageIndex = pageIndex;
             //m_pageSize = pageSize;
         }
@@ -1468,26 +1466,26 @@ namespace DynaRAP.UControl
         {
 
             Dictionary<string, List<SeriesPointData>> dicData = new Dictionary<string, List<SeriesPointData>>();
-            //foreach (var source in plotGridSourceDataList)
-            //{
-            //    int index = -99999;
-            //    index = plotDataResponse.additionalResponse.plotSourceList.FindIndex(x => x.sourceSeq == source.seq);
-            //    int i = 0;
-            //    if (index != -1)
-            //    {
-            //        dicData.Add(source.itemName, new List<SeriesPointData>());
-            //        foreach (var plotData in plotDataResponse.response[index])
-            //        {
-            //            dicData[source.itemName].Add(new SeriesPointData(source.itemName, i, plotData));
-            //            i++;
-            //        }
-            //    }
-            //}
-            //this.cbSeries.Items.AddRange(dicData.Keys.ToArray());
-            //this.cbSeries.SelectedIndex = 0;
-            //this.cbSeries2.Items.AddRange(dicData.Keys.ToArray());
-            //this.cbSeries2.Enabled = false;
-            //this.cbSeries2.SelectedIndex = 0;
+            foreach (var source in plotGridSourceDataList)
+            {
+                int index = -99999;
+                index = plotDataResponse.additionalResponse.plotSourceList.FindIndex(x => x.sourceSeq == source.seq);
+                int i = 0;
+                if (index != -1)
+                {
+                    dicData.Add(source.itemName, new List<SeriesPointData>());
+                    foreach (var plotData in plotDataResponse.response[index])
+                    {
+                        dicData[source.itemName].Add(new SeriesPointData(source.itemName, i, plotData));
+                        i++;
+                    }
+                }
+            }
+            this.cbSeries.Items.AddRange(dicData.Keys.ToArray());
+            this.cbSeries.SelectedIndex = 0;
+            this.cbSeries2.Items.AddRange(dicData.Keys.ToArray());
+            this.cbSeries2.Enabled = false;
+            this.cbSeries2.SelectedIndex = 0;
             return dicData;
         }
 

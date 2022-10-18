@@ -148,7 +148,6 @@ namespace DynaRAP.UControl
             diagram.RangeControlDateTimeGridOptions.SnapAlignment = DateTimeGridAlignment.Millisecond;
 
             rangeControl1.SelectedRange = new RangeControlRange(minValue, maxValue);
-
             if (panelChart == null)
             {
                 panelChart = new DockPanel();

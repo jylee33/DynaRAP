@@ -848,6 +848,10 @@ namespace DynaRAP.UControl
 
                 diagram.EnableAxisXScrolling = true;
                 diagram.EnableAxisXZooming = true;
+                //diagram.EnableAxisYScrolling = true;
+                //diagram.EnableAxisYZooming = true;
+                diagram.AxisY.WholeRange.AlwaysShowZeroLevel = false;
+
                 diagram.AxisX.DateTimeScaleOptions.ScaleMode = ScaleMode.Manual;
                 diagram.AxisX.DateTimeScaleOptions.MeasureUnit = DateTimeMeasureUnit.Millisecond;
                 diagram.AxisX.DateTimeScaleOptions.GridAlignment = DateTimeGridAlignment.Millisecond;
@@ -873,6 +877,9 @@ namespace DynaRAP.UControl
 
                 diagram.EnableAxisXScrolling = true;
                 diagram.EnableAxisXZooming = true;
+                //diagram.EnableAxisYScrolling = true;
+                //diagram.EnableAxisYZooming = true;
+                diagram.AxisY.WholeRange.AlwaysShowZeroLevel = false;
 
                 diagram.AxisX.Label.Visible = false;
             }
