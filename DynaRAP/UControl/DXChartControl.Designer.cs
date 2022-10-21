@@ -47,9 +47,19 @@
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuFileRead = new System.Windows.Forms.ToolStripMenuItem();
             this.pnPaging = new System.Windows.Forms.Panel();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.label4 = new System.Windows.Forms.Label();
+            this.gridControl1 = new DevExpress.XtraGrid.GridControl();
+            this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
+            this.gridColumn1 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.repositoryItemComboBox1 = new DevExpress.XtraEditors.Repository.RepositoryItemComboBox();
+            this.gridColumn2 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.gridColumn3 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.gridColumn4 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.gridColumn5 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.repositoryItemComboBox2 = new DevExpress.XtraEditors.Repository.RepositoryItemComboBox();
+            this.repositoryItemImageComboBox1 = new DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.chk_UseSecond = new System.Windows.Forms.CheckBox();
             this.cbSeries2 = new System.Windows.Forms.ComboBox();
             this.btnReset = new System.Windows.Forms.Button();
             this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -62,8 +72,15 @@
             this.toolStripMenuItem9 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem10 = new System.Windows.Forms.ToolStripMenuItem();
+            this.chartResetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem11 = new System.Windows.Forms.ToolStripMenuItem();
             this.pnPaging.SuspendLayout();
+            this.tableLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemComboBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemComboBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemImageComboBox1)).BeginInit();
             this.contextMenuStrip.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -73,7 +90,7 @@
             this.label2.AutoEllipsis = true;
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.label2.Location = new System.Drawing.Point(88, 4);
+            this.label2.Location = new System.Drawing.Point(128, 147);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(42, 15);
             this.label2.TabIndex = 8;
@@ -85,10 +102,10 @@
             this.cbSeries.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbSeries.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.cbSeries.FormattingEnabled = true;
-            this.cbSeries.Location = new System.Drawing.Point(85, 23);
+            this.cbSeries.Location = new System.Drawing.Point(92, 215);
             this.cbSeries.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.cbSeries.Name = "cbSeries";
-            this.cbSeries.Size = new System.Drawing.Size(179, 24);
+            this.cbSeries.Size = new System.Drawing.Size(210, 24);
             this.cbSeries.TabIndex = 3;
             this.cbSeries.SelectedIndexChanged += new System.EventHandler(this.cbSeries_SelectedIndexChanged);
             // 
@@ -97,28 +114,30 @@
             this.label1.AutoEllipsis = true;
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.label1.Location = new System.Drawing.Point(273, 7);
+            this.label1.Location = new System.Drawing.Point(407, 181);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(60, 15);
             this.label1.TabIndex = 6;
             this.label1.Text = "PageSize";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.label1.Visible = false;
             // 
             // txtPageSize
             // 
             this.txtPageSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.txtPageSize.Location = new System.Drawing.Point(276, 24);
+            this.txtPageSize.Location = new System.Drawing.Point(433, 178);
             this.txtPageSize.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.txtPageSize.Name = "txtPageSize";
             this.txtPageSize.Size = new System.Drawing.Size(115, 23);
             this.txtPageSize.TabIndex = 5;
+            this.txtPageSize.Visible = false;
             this.txtPageSize.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtPageSize_KeyDown);
             // 
             // lblPages
             // 
             this.lblPages.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.lblPages.AutoEllipsis = true;
-            this.lblPages.Location = new System.Drawing.Point(482, 2);
+            this.lblPages.Location = new System.Drawing.Point(423, 2);
             this.lblPages.Name = "lblPages";
             this.lblPages.Size = new System.Drawing.Size(200, 20);
             this.lblPages.TabIndex = 4;
@@ -130,13 +149,14 @@
             this.btnMoveFirst.BackColor = System.Drawing.Color.Transparent;
             this.btnMoveFirst.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.btnMoveFirst.ForeColor = System.Drawing.Color.Black;
-            this.btnMoveFirst.Location = new System.Drawing.Point(468, 24);
+            this.btnMoveFirst.Location = new System.Drawing.Point(507, 177);
             this.btnMoveFirst.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.btnMoveFirst.Name = "btnMoveFirst";
             this.btnMoveFirst.Size = new System.Drawing.Size(49, 24);
             this.btnMoveFirst.TabIndex = 3;
             this.btnMoveFirst.Text = "<<";
             this.btnMoveFirst.UseVisualStyleBackColor = false;
+            this.btnMoveFirst.Visible = false;
             this.btnMoveFirst.Click += new System.EventHandler(this.btnMoveFirst_Click);
             // 
             // btnMoveLeft
@@ -145,13 +165,14 @@
             this.btnMoveLeft.BackColor = System.Drawing.Color.Transparent;
             this.btnMoveLeft.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.btnMoveLeft.ForeColor = System.Drawing.Color.Black;
-            this.btnMoveLeft.Location = new System.Drawing.Point(523, 24);
+            this.btnMoveLeft.Location = new System.Drawing.Point(526, 177);
             this.btnMoveLeft.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.btnMoveLeft.Name = "btnMoveLeft";
             this.btnMoveLeft.Size = new System.Drawing.Size(49, 24);
             this.btnMoveLeft.TabIndex = 2;
             this.btnMoveLeft.Text = "<";
             this.btnMoveLeft.UseVisualStyleBackColor = false;
+            this.btnMoveLeft.Visible = false;
             this.btnMoveLeft.Click += new System.EventHandler(this.btnMoveLeft_Click);
             // 
             // btnMoveRight
@@ -160,13 +181,14 @@
             this.btnMoveRight.BackColor = System.Drawing.Color.Transparent;
             this.btnMoveRight.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.btnMoveRight.ForeColor = System.Drawing.Color.Black;
-            this.btnMoveRight.Location = new System.Drawing.Point(578, 24);
+            this.btnMoveRight.Location = new System.Drawing.Point(562, 177);
             this.btnMoveRight.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.btnMoveRight.Name = "btnMoveRight";
             this.btnMoveRight.Size = new System.Drawing.Size(49, 24);
             this.btnMoveRight.TabIndex = 1;
             this.btnMoveRight.Text = ">";
             this.btnMoveRight.UseVisualStyleBackColor = false;
+            this.btnMoveRight.Visible = false;
             this.btnMoveRight.Click += new System.EventHandler(this.btnMoveRight_Click);
             // 
             // btnMoveLast
@@ -175,13 +197,14 @@
             this.btnMoveLast.BackColor = System.Drawing.Color.Transparent;
             this.btnMoveLast.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.btnMoveLast.ForeColor = System.Drawing.Color.Black;
-            this.btnMoveLast.Location = new System.Drawing.Point(633, 24);
+            this.btnMoveLast.Location = new System.Drawing.Point(581, 177);
             this.btnMoveLast.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.btnMoveLast.Name = "btnMoveLast";
             this.btnMoveLast.Size = new System.Drawing.Size(49, 24);
             this.btnMoveLast.TabIndex = 0;
             this.btnMoveLast.Text = ">>";
             this.btnMoveLast.UseVisualStyleBackColor = false;
+            this.btnMoveLast.Visible = false;
             this.btnMoveLast.Click += new System.EventHandler(this.btnMoveLast_Click);
             // 
             // mnuDrawPotato
@@ -249,71 +272,162 @@
             // 
             this.pnPaging.BackColor = System.Drawing.Color.Transparent;
             this.pnPaging.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnPaging.Controls.Add(this.label4);
-            this.pnPaging.Controls.Add(this.label3);
-            this.pnPaging.Controls.Add(this.chk_UseSecond);
-            this.pnPaging.Controls.Add(this.cbSeries2);
-            this.pnPaging.Controls.Add(this.btnReset);
-            this.pnPaging.Controls.Add(this.label2);
-            this.pnPaging.Controls.Add(this.cbSeries);
-            this.pnPaging.Controls.Add(this.label1);
-            this.pnPaging.Controls.Add(this.txtPageSize);
+            this.pnPaging.Controls.Add(this.tableLayoutPanel1);
             this.pnPaging.Controls.Add(this.lblPages);
-            this.pnPaging.Controls.Add(this.btnMoveFirst);
-            this.pnPaging.Controls.Add(this.btnMoveLeft);
-            this.pnPaging.Controls.Add(this.btnMoveRight);
-            this.pnPaging.Controls.Add(this.btnMoveLast);
             this.pnPaging.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnPaging.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.pnPaging.Location = new System.Drawing.Point(0, 0);
             this.pnPaging.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.pnPaging.Name = "pnPaging";
-            this.pnPaging.Size = new System.Drawing.Size(689, 94);
+            this.pnPaging.Size = new System.Drawing.Size(630, 94);
             this.pnPaging.TabIndex = 6;
+            // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.ColumnCount = 3;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.85714F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 87.14286F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 380F));
+            this.tableLayoutPanel1.Controls.Add(this.gridControl1, 2, 0);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 3;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 44.44444F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 55.55556F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 33F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(628, 92);
+            this.tableLayoutPanel1.TabIndex = 14;
             // 
             // label4
             // 
             this.label4.AutoEllipsis = true;
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.label4.Location = new System.Drawing.Point(6, 63);
+            this.label4.Location = new System.Drawing.Point(71, 218);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(55, 15);
+            this.label4.Size = new System.Drawing.Size(14, 15);
             this.label4.TabIndex = 13;
-            this.label4.Text = "Max ( Y )";
-            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.label4.Text = "Y";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // gridControl1
+            // 
+            this.gridControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridControl1.Location = new System.Drawing.Point(250, 3);
+            this.gridControl1.MainView = this.gridView1;
+            this.gridControl1.Name = "gridControl1";
+            this.gridControl1.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
+            this.repositoryItemComboBox1,
+            this.repositoryItemComboBox2,
+            this.repositoryItemImageComboBox1});
+            this.tableLayoutPanel1.SetRowSpan(this.gridControl1, 3);
+            this.gridControl1.Size = new System.Drawing.Size(375, 86);
+            this.gridControl1.TabIndex = 44;
+            this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
+            this.gridView1});
+            // 
+            // gridView1
+            // 
+            this.gridView1.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
+            this.gridColumn1,
+            this.gridColumn2,
+            this.gridColumn3,
+            this.gridColumn4,
+            this.gridColumn5});
+            this.gridView1.GridControl = this.gridControl1;
+            this.gridView1.Name = "gridView1";
+            this.gridView1.OptionsBehavior.EditorShowMode = DevExpress.Utils.EditorShowMode.MouseUp;
+            this.gridView1.OptionsView.ShowGroupPanel = false;
+            // 
+            // gridColumn1
+            // 
+            this.gridColumn1.Caption = "시리즈명";
+            this.gridColumn1.ColumnEdit = this.repositoryItemComboBox1;
+            this.gridColumn1.FieldName = "seriesName";
+            this.gridColumn1.Name = "gridColumn1";
+            this.gridColumn1.OptionsColumn.ReadOnly = true;
+            this.gridColumn1.Visible = true;
+            this.gridColumn1.VisibleIndex = 0;
+            // 
+            // repositoryItemComboBox1
+            // 
+            this.repositoryItemComboBox1.AutoHeight = false;
+            this.repositoryItemComboBox1.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.repositoryItemComboBox1.Name = "repositoryItemComboBox1";
+            // 
+            // gridColumn2
+            // 
+            this.gridColumn2.Caption = "X축";
+            this.gridColumn2.FieldName = "xAxis";
+            this.gridColumn2.Name = "gridColumn2";
+            this.gridColumn2.OptionsColumn.ReadOnly = true;
+            this.gridColumn2.Visible = true;
+            this.gridColumn2.VisibleIndex = 2;
+            // 
+            // gridColumn3
+            // 
+            this.gridColumn3.Caption = "Y축";
+            this.gridColumn3.FieldName = "yAxis";
+            this.gridColumn3.FilterMode = DevExpress.XtraGrid.ColumnFilterMode.DisplayText;
+            this.gridColumn3.Name = "gridColumn3";
+            this.gridColumn3.Visible = true;
+            this.gridColumn3.VisibleIndex = 3;
+            // 
+            // gridColumn4
+            // 
+            this.gridColumn4.Caption = "차트타입";
+            this.gridColumn4.FieldName = "chartType";
+            this.gridColumn4.MinWidth = 80;
+            this.gridColumn4.Name = "gridColumn4";
+            this.gridColumn4.Visible = true;
+            this.gridColumn4.VisibleIndex = 1;
+            this.gridColumn4.Width = 80;
+            // 
+            // gridColumn5
+            // 
+            this.gridColumn5.Caption = "선택구간(끝)";
+            this.gridColumn5.FieldName = "SelectionEnd";
+            this.gridColumn5.MinWidth = 80;
+            this.gridColumn5.Name = "gridColumn5";
+            this.gridColumn5.Width = 80;
+            // 
+            // repositoryItemComboBox2
+            // 
+            this.repositoryItemComboBox2.AutoHeight = false;
+            this.repositoryItemComboBox2.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.repositoryItemComboBox2.Name = "repositoryItemComboBox2";
+            // 
+            // repositoryItemImageComboBox1
+            // 
+            this.repositoryItemImageComboBox1.AutoHeight = false;
+            this.repositoryItemImageComboBox1.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.repositoryItemImageComboBox1.Name = "repositoryItemImageComboBox1";
             // 
             // label3
             // 
             this.label3.AutoEllipsis = true;
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.label3.Location = new System.Drawing.Point(6, 26);
+            this.label3.Location = new System.Drawing.Point(71, 186);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(53, 15);
+            this.label3.Size = new System.Drawing.Size(15, 15);
             this.label3.TabIndex = 12;
-            this.label3.Text = "Min ( X )";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // chk_UseSecond
-            // 
-            this.chk_UseSecond.AutoSize = true;
-            this.chk_UseSecond.Location = new System.Drawing.Point(64, 63);
-            this.chk_UseSecond.Name = "chk_UseSecond";
-            this.chk_UseSecond.Size = new System.Drawing.Size(15, 14);
-            this.chk_UseSecond.TabIndex = 11;
-            this.chk_UseSecond.UseVisualStyleBackColor = true;
-            this.chk_UseSecond.CheckedChanged += new System.EventHandler(this.chk_UseSecond_CheckedChanged);
+            this.label3.Text = "X";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // cbSeries2
             // 
             this.cbSeries2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbSeries2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.cbSeries2.FormattingEnabled = true;
-            this.cbSeries2.Location = new System.Drawing.Point(85, 58);
+            this.cbSeries2.Location = new System.Drawing.Point(92, 181);
             this.cbSeries2.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.cbSeries2.Name = "cbSeries2";
-            this.cbSeries2.Size = new System.Drawing.Size(179, 24);
+            this.cbSeries2.Size = new System.Drawing.Size(210, 24);
             this.cbSeries2.TabIndex = 10;
             this.cbSeries2.SelectedIndexChanged += new System.EventHandler(this.cbSeries2_SelectedIndexChanged);
             // 
@@ -322,13 +436,14 @@
             this.btnReset.BackColor = System.Drawing.Color.Transparent;
             this.btnReset.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.btnReset.ForeColor = System.Drawing.Color.Black;
-            this.btnReset.Location = new System.Drawing.Point(397, 24);
+            this.btnReset.Location = new System.Drawing.Point(516, 177);
             this.btnReset.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.btnReset.Name = "btnReset";
             this.btnReset.Size = new System.Drawing.Size(63, 24);
             this.btnReset.TabIndex = 9;
             this.btnReset.Text = "Reset";
             this.btnReset.UseVisualStyleBackColor = false;
+            this.btnReset.Visible = false;
             this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
             // 
             // contextMenuStrip
@@ -366,20 +481,21 @@
             this.toolStripMenuItem9,
             this.toolStripSeparator2,
             this.toolStripMenuItem10,
+            this.chartResetToolStripMenuItem,
             this.toolStripMenuItem11});
             this.contextMenuStrip1.Name = "contextMenuStrip";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 148);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(152, 148);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(148, 6);
             // 
             // toolStripMenuItem4
             // 
             this.toolStripMenuItem4.Enabled = false;
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(151, 22);
             this.toolStripMenuItem4.Text = "DrawChart 1D";
             this.toolStripMenuItem4.Click += new System.EventHandler(this.mnuDrawChart1D_Click);
             // 
@@ -387,7 +503,7 @@
             // 
             this.toolStripMenuItem6.Enabled = false;
             this.toolStripMenuItem6.Name = "toolStripMenuItem6";
-            this.toolStripMenuItem6.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem6.Size = new System.Drawing.Size(151, 22);
             this.toolStripMenuItem6.Text = "MIN/MAX";
             this.toolStripMenuItem6.Click += new System.EventHandler(this.drawChartToolStripMenuItem_Click);
             // 
@@ -395,26 +511,33 @@
             // 
             this.toolStripMenuItem9.Enabled = false;
             this.toolStripMenuItem9.Name = "toolStripMenuItem9";
-            this.toolStripMenuItem9.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem9.Size = new System.Drawing.Size(151, 22);
             this.toolStripMenuItem9.Text = "DrawPotato";
             this.toolStripMenuItem9.Click += new System.EventHandler(this.mnuDrawPotato_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(148, 6);
             // 
             // toolStripMenuItem10
             // 
             this.toolStripMenuItem10.Name = "toolStripMenuItem10";
-            this.toolStripMenuItem10.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem10.Size = new System.Drawing.Size(151, 22);
             this.toolStripMenuItem10.Text = "Save Chart";
             this.toolStripMenuItem10.Click += new System.EventHandler(this.mnuSaveChart_Click);
+            // 
+            // chartResetToolStripMenuItem
+            // 
+            this.chartResetToolStripMenuItem.Name = "chartResetToolStripMenuItem";
+            this.chartResetToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+            this.chartResetToolStripMenuItem.Text = "Chart Reset";
+            this.chartResetToolStripMenuItem.Click += new System.EventHandler(this.chartResetToolStripMenuItem_Click);
             // 
             // toolStripMenuItem11
             // 
             this.toolStripMenuItem11.Name = "toolStripMenuItem11";
-            this.toolStripMenuItem11.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem11.Size = new System.Drawing.Size(151, 22);
             this.toolStripMenuItem11.Text = "Copy Chart";
             this.toolStripMenuItem11.Click += new System.EventHandler(this.toolStripMenuItem11_Click);
             // 
@@ -422,16 +545,34 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.pnPaging);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.cbSeries);
+            this.Controls.Add(this.btnMoveLast);
+            this.Controls.Add(this.btnReset);
+            this.Controls.Add(this.cbSeries2);
+            this.Controls.Add(this.btnMoveRight);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.btnMoveLeft);
+            this.Controls.Add(this.txtPageSize);
+            this.Controls.Add(this.btnMoveFirst);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "DXChartControl";
-            this.Size = new System.Drawing.Size(689, 201);
+            this.Size = new System.Drawing.Size(630, 245);
             this.pnPaging.ResumeLayout(false);
-            this.pnPaging.PerformLayout();
+            this.tableLayoutPanel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemComboBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemComboBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemImageComboBox1)).EndInit();
             this.contextMenuStrip.ResumeLayout(false);
             this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -459,7 +600,6 @@
         private System.Windows.Forms.ToolStripMenuItem drawChartToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem propertyShowToolStripMenuItem;
         private System.Windows.Forms.Button btnReset;
-        private System.Windows.Forms.CheckBox chk_UseSecond;
         private System.Windows.Forms.ComboBox cbSeries2;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
@@ -471,5 +611,17 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem10;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem11;
+        private System.Windows.Forms.ToolStripMenuItem chartResetToolStripMenuItem;
+        private DevExpress.XtraGrid.GridControl gridControl1;
+        private DevExpress.XtraGrid.Views.Grid.GridView gridView1;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn1;
+        private DevExpress.XtraEditors.Repository.RepositoryItemComboBox repositoryItemComboBox1;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn2;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn3;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn4;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn5;
+        private DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox repositoryItemImageComboBox1;
+        private DevExpress.XtraEditors.Repository.RepositoryItemComboBox repositoryItemComboBox2;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
     }
 }

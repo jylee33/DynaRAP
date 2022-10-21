@@ -119,19 +119,19 @@
   </resheader>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="labelControl1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>204, 162</value>
+    <value>204, 174</value>
   </data>
   <data name="labelControl1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>30, 14</value>
+    <value>36, 15</value>
   </data>
   <data name="labelControl1.Text" xml:space="preserve">
     <value>아이디</value>
   </data>
   <data name="labelControl2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>204, 188</value>
+    <value>204, 201</value>
   </data>
   <data name="labelControl2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>40, 14</value>
+    <value>48, 15</value>
   </data>
   <data name="labelControl2.Text" xml:space="preserve">
     <value>비밀번호</value>
@@ -140,36 +140,58 @@
     <value />
   </data>
   <data name="edtId.Location" type="System.Drawing.Point, System.Drawing">
-    <value>275, 159</value>
+    <value>275, 170</value>
   </data>
   <data name="edtId.Size" type="System.Drawing.Size, System.Drawing">
-    <value>210, 20</value>
+    <value>210, 22</value>
   </data>
   <data name="edtPassword.EditValue" xml:space="preserve">
     <value />
   </data>
   <data name="edtPassword.Location" type="System.Drawing.Point, System.Drawing">
-    <value>275, 185</value>
+    <value>275, 198</value>
   </data>
   <data name="edtPassword.Size" type="System.Drawing.Size, System.Drawing">
-    <value>210, 20</value>
+    <value>210, 22</value>
   </data>
   <data name="btnLogin.Location" type="System.Drawing.Point, System.Drawing">
-    <value>275, 211</value>
+    <value>275, 226</value>
   </data>
   <data name="btnLogin.Size" type="System.Drawing.Size, System.Drawing">
-    <value>100, 23</value>
+    <value>100, 25</value>
   </data>
   <data name="btnLogin.Text" xml:space="preserve">
     <value>로그인</value>
   </data>
   <data name="btnCancel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>385, 211</value>
+    <value>385, 226</value>
   </data>
   <data name="btnCancel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>100, 23</value>
+    <value>100, 25</value>
   </data>
   <data name="btnCancel.Text" xml:space="preserve">
     <value>취소</value>
+  </data>
+  <data name="labelControl3.Appearance.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 11.25pt</value>
+  </data>
+  <data name="labelControl3.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 233</value>
+  </data>
+  <data name="labelControl3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>26, 18</value>
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="labelControl3.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="labelControl3.Text" xml:space="preserve">
+    <value>Ver.</value>
+  </data>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>7, 15</value>
+  </data>
+  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
+    <value>500, 262</value>
   </data>
 </root>

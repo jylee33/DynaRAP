@@ -62,6 +62,10 @@ namespace DynaRAP
                 txt.GotFocus += RemovePlaceholder;
                 txt.LostFocus += SetPlaceholder;
             }
+            string version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+
+            version = version.Substring(0, version.LastIndexOf("."));
+            this.labelControl3.Text = "ver "+ version; 
 
         }
 

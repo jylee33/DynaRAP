@@ -2,6 +2,7 @@
 using DevExpress.XtraCharts;
 using DevExpress.XtraEditors;
 using DynaRAP.Data;
+using DynaRAP.UTIL;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -61,9 +62,18 @@ namespace DynaRAP.UControl
             //if (this.ViewBtnClicked != null)
             //    this.ViewBtnClicked(this, new EventArgs());
 
-            DateTime sTime = DateTime.ParseExact(this.sb.StartTime, "yyyy-MM-dd HH:mm:ss.ffffff", null);
-            DateTime eTime = DateTime.ParseExact(this.sb.EndTime, "yyyy-MM-dd HH:mm:ss.ffffff", null);
-
+            DateTime sTime = DateTime.Now;
+            DateTime eTime = DateTime.Now; 
+            if(this.sb.StartTime.Length < 8)
+            {
+                sTime = Utils.GetDateFromJulian(this.sb.StartTime);
+                sTime = Utils.GetDateFromJulian(this.sb.EndTime);
+            }
+            else
+                {
+                sTime = DateTime.ParseExact(this.sb.StartTime, "yyyy-MM-dd HH:mm:ss.ffffff", null);
+                    eTime = DateTime.Now; DateTime.ParseExact(this.sb.EndTime, "yyyy-MM-dd HH:mm:ss.ffffff", null);
+                }
             DataTable dt2 = GetShortBlockData(sTime, eTime);
 
             if (dt2 != null)

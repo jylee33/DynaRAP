@@ -207,4 +207,20 @@ namespace DynaRAP.Data
         public string sourceType { get; set; }
         public string sourceSeq { get; set; }
     }
+
+    public class dxGridData
+    {
+        public dxGridData(string seriesName, string chartType ,string xAxis, string yAxis = null)
+        {
+            this.seriesName = seriesName;
+            this.chartType = chartType;
+            this.xAxis = xAxis;
+            this.yAxis = yAxis;
+        }
+
+        public string chartType { get; set; }
+        public string seriesName { get; set; }
+        public string xAxis { get; set; }
+        public string yAxis { get; set; }
+    }
 }

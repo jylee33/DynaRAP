@@ -46,6 +46,7 @@ namespace DynaRAP.UControl
         private Dictionary<string, List<SeriesPointData>> m_dicData;
         private PlotDataResponse plotDataResponse = null;
         private List<PlotGridSourceData> plotGridSourceDataList = null;
+        private List<dxGridData> dxGridDataList = new List<dxGridData>();
         #endregion
 
         public DXChartControl()
@@ -84,10 +85,10 @@ namespace DynaRAP.UControl
         {
             //InitializeComponent();
             DXChartControl newDXChartControl = new DXChartControl();
-            newDXChartControl.m_spliter = dXChartControl.m_spliter;
-            newDXChartControl.m_propertyGrid = dXChartControl.m_propertyGrid;
-            newDXChartControl.m_chart = dXChartControl.m_chart;
-            newDXChartControl.m_series = dXChartControl.m_series;
+            //newDXChartControl.m_spliter = dXChartControl.m_spliter;
+            //newDXChartControl.m_propertyGrid = dXChartControl.m_propertyGrid;
+            //newDXChartControl.m_chart = dXChartControl.m_chart;
+            //newDXChartControl.m_series = dXChartControl.m_series;
             newDXChartControl.m_filename = dXChartControl.m_filename;
             newDXChartControl.m_pageIndex = dXChartControl.m_pageIndex;
             newDXChartControl.m_pageSize = dXChartControl.m_pageSize;
@@ -96,55 +97,53 @@ namespace DynaRAP.UControl
             newDXChartControl.max_table = dXChartControl.max_table;
             newDXChartControl.m_drawTypes = dXChartControl.m_drawTypes;
             newDXChartControl.m_clusters = dXChartControl.m_clusters;
-
+            newDXChartControl.dxGridDataList = dXChartControl.dxGridDataList;
             newDXChartControl.m_propertyGridWidth = dXChartControl.m_propertyGridWidth;
 
             newDXChartControl.m_dllDatas = dXChartControl.m_dllDatas;
             newDXChartControl.m_dicData = dXChartControl.m_dicData;
             newDXChartControl.plotDataResponse = dXChartControl.plotDataResponse;
             newDXChartControl.plotGridSourceDataList = dXChartControl.plotGridSourceDataList;
-
-            newDXChartControl.m_spliter = new SplitContainerControl();
-            newDXChartControl.m_spliter.MouseClick += Spliter_MouseClick;
-            newDXChartControl.m_spliter.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
-            newDXChartControl.m_spliter.Location = new Point(0, newDXChartControl.pnPaging.Location.Y + newDXChartControl.pnPaging.Height);
-            newDXChartControl.m_spliter.Size = new Size(newDXChartControl.ClientRectangle.Width, newDXChartControl.ClientRectangle.Height - newDXChartControl.pnPaging.Height);
-            newDXChartControl.m_spliter.CollapsePanel = SplitCollapsePanel.Panel2;
-            newDXChartControl.m_spliter.FixedPanel = SplitFixedPanel.Panel2;
-            newDXChartControl.m_spliter.SetPanelCollapsed(true);
-            newDXChartControl.m_spliter.SplitterPosition = 0;
-            newDXChartControl.Controls.Add(newDXChartControl.m_spliter);
-
-            newDXChartControl.m_chart = new ChartControl();
-            newDXChartControl.m_chart.Dock = DockStyle.Fill;
+            
+            //newDXChartControl.m_chart = new ChartControl();
+            newDXChartControl.m_chart = (ChartControl)dXChartControl.m_chart.Clone();
             newDXChartControl.m_chart.ContextMenuStrip = newDXChartControl.contextMenuStrip1;
-            newDXChartControl.m_chart.CustomPaint += Chart_CustomPaint;
-            newDXChartControl.m_spliter.Panel1.Controls.Add(newDXChartControl.m_chart);
-            newDXChartControl.m_propertyGrid = new PropertyGrid();
-            newDXChartControl.m_propertyGrid.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
-            newDXChartControl.m_propertyGrid.Location = new Point(0, 0);
-            newDXChartControl.m_propertyGrid.Size = new Size(m_spliter.Panel2.Width, m_spliter.Panel2.Height);
-            newDXChartControl.m_propertyGrid.SelectedObject = newDXChartControl.m_chart;
+            newDXChartControl.m_chart.CustomPaint += newDXChartControl.Chart_CustomPaint;
+            //newDXChartControl.m_chart.Dock = DockStyle.Fill;;
+            //newDXChartControl.m_chart.CustomPaint += newDXChartControl.Chart_CustomPaint;
 
+            //newDXChartControl.m_spliter = new SplitContainerControl();
+            //newDXChartControl.m_spliter.MouseClick += newDXChartControl.Spliter_MouseClick;
+            //newDXChartControl.m_spliter.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
+            //newDXChartControl.m_spliter.Location = new Point(0, newDXChartControl.pnPaging.Location.Y + newDXChartControl.pnPaging.Height);
+            //newDXChartControl.m_spliter.Size = new Size(newDXChartControl.ClientRectangle.Width, this.ClientRectangle.Height - newDXChartControl.pnPaging.Height);
+            //newDXChartControl.m_spliter.CollapsePanel = SplitCollapsePanel.Panel2;
+            //newDXChartControl.m_spliter.FixedPanel = SplitFixedPanel.Panel2;
+            //newDXChartControl.m_spliter.SetPanelCollapsed(true);
+            //newDXChartControl.m_spliter.SplitterPosition = 0;
+            //newDXChartControl.Controls.Add(newDXChartControl.m_spliter);
+            //newDXChartControl.m_chart.SelectionMode = (ElementSelectionMode)SelectionMode.MultiExtended;
+            //newDXChartControl.m_spliter.Panel1.Controls.Add(newDXChartControl.m_chart);
+            newDXChartControl.gridControl1.DataSource = newDXChartControl.dxGridDataList;
+            newDXChartControl.gridView1.RefreshData();
 
             //this.m_chart.Legend.AlignmentHorizontal = LegendAlignmentHorizontal.Right;
             //this.m_chart.Legend.AlignmentVertical = LegendAlignmentVertical.Top;
-            foreach (Series series in dXChartControl.m_chart.Series)
-            {
-                //Series clonedSeries = (Series)Activator.CreateInstance(series.GetType());
-                //clonedSeries.Points.AddRange(series.Points);
-                ////clone.Diagram.Series.Add(clonedSeries);
-                Series clonedSeries = (Series)series.Clone();
-               
-                //newDXChartControl.m_chart.data
-                newDXChartControl.m_chart.Series.Add(clonedSeries);
+            //foreach (Series series in dXChartControl.m_chart.Series)
+            //{
+            //    //Series clonedSeries = (Series)Activator.CreateInstance(series.GetType());
+            //    //clonedSeries.Points.AddRange(series.Points);
+            //    ////clone.Diagram.Series.Add(clonedSeries);
+            //    Series clonedSeries = (Series)series.Clone();
+            //    newDXChartControl.m_chart.Series.Add(clonedSeries);
 
-            }
-            XYDiagram diagram = (XYDiagram)dXChartControl.m_chart.Diagram.Clone();
+            //}
 
-            XYDiagram diagramNew = newDXChartControl.m_chart.Diagram as XYDiagram;
+            //XYDiagram diagram = (XYDiagram)dXChartControl.m_chart.Diagram.Clone();
 
-            diagramNew = diagram;
+            //XYDiagram diagramNew = newDXChartControl.m_chart.Diagram as XYDiagram;
+
+            //diagramNew = diagram;
             //newDXChartControl.m_chart.Series.AddRange(
             //dXChartControl.m_chart.Series.OfType<Series>().Select(s =>
             //{
@@ -172,8 +171,6 @@ namespace DynaRAP.UControl
             base.OnLoad(e);
 
 
-            if (m_spliter == null)
-            {
                 m_spliter = new SplitContainerControl();
 
                 m_spliter.MouseClick += Spliter_MouseClick;
@@ -185,26 +182,24 @@ namespace DynaRAP.UControl
                 m_spliter.SetPanelCollapsed(true);
                 m_spliter.SplitterPosition = 0;
                 this.Controls.Add(m_spliter);
-            }
             if (this.m_chart == null)
             {
                 this.m_chart = new ChartControl();
 
-                this.m_chart.Dock = DockStyle.Fill;
-                this.m_chart.ContextMenuStrip = this.contextMenuStrip1;
-                this.m_chart.CustomPaint += Chart_CustomPaint;
-                m_spliter.Panel1.Controls.Add(this.m_chart);
             }
-            if (m_propertyGrid == null)
-            {
-                m_propertyGrid = new PropertyGrid();
 
-                m_propertyGrid.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
-                m_propertyGrid.Location = new Point(0, 0);
-                m_propertyGrid.Size = new Size(m_spliter.Panel2.Width, m_spliter.Panel2.Height);
-                m_propertyGrid.SelectedObject = this.m_chart;
-                m_spliter.Panel2.Controls.Add(m_propertyGrid);
-            }
+            this.m_chart.Dock = DockStyle.Fill;
+            this.m_chart.ContextMenuStrip = this.contextMenuStrip1;
+            this.m_chart.CustomPaint += Chart_CustomPaint;
+            this.m_chart.SelectionMode = (ElementSelectionMode)SelectionMode.MultiSimple;
+            m_spliter.Panel1.Controls.Add(this.m_chart);
+            m_propertyGrid = new PropertyGrid();
+
+            m_propertyGrid.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
+            m_propertyGrid.Location = new Point(0, 0);
+            m_propertyGrid.Size = new Size(m_spliter.Panel2.Width, m_spliter.Panel2.Height);
+            m_propertyGrid.SelectedObject = this.m_chart;
+            m_spliter.Panel2.Controls.Add(m_propertyGrid);
             this.cbSeries.Enabled = false;
             this.m_dicData = ReadDataList4();
             //SetDllDatas();
@@ -399,7 +394,7 @@ namespace DynaRAP.UControl
             //    this.m_chart.Series.Clear();
 
             //this.pnPaging.Visible = drawTypes.Equals(DrawTypes.DT_1D) || drawTypes.Equals(DrawTypes.DT_2D);
-
+          
             switch (drawTypes)
             {
                 case DrawTypes.DT_1D:
@@ -426,6 +421,8 @@ namespace DynaRAP.UControl
                     }
                     break;
             }
+            this.gridControl1.DataSource = dxGridDataList;
+            this.gridView1.RefreshData();
         }
 
         //public void DrawChart(DataTable table, string seriesName = "Series1")
@@ -555,7 +552,8 @@ namespace DynaRAP.UControl
             //if(this.m_chart.Series.Count == 0)
             //    this.m_chart.Series.Add(new Series("Series", ViewType.Line));
             Series series = new Series("Series", ViewType.Line);
-            var dataSource = this.m_table.AsEnumerable().Skip(m_pageSize * m_pageIndex).Take(this.m_pageSize);
+            //var dataSource = this.m_table.AsEnumerable().Skip(m_pageSize * m_pageIndex).Take(this.m_pageSize);
+            var dataSource = this.m_table.AsEnumerable().ToList();
 
             //this.m_chart.Series[0].Points.Clear();
 
@@ -577,6 +575,7 @@ namespace DynaRAP.UControl
 
             //this.m_chart.Legend.AlignmentHorizontal = LegendAlignmentHorizontal.Right;
             //this.m_chart.Legend.AlignmentVertical = LegendAlignmentVertical.Top;
+            dxGridDataList.Add(new dxGridData("series", "1D", this.cbSeries.Text));
 
             XYDiagram diagram = this.m_chart.Diagram as XYDiagram;
 
@@ -596,30 +595,39 @@ namespace DynaRAP.UControl
             //this.btnMoveFirst.Enabled = this.btnMoveLeft.Enabled = (this.m_pageIndex > 0);
             //this.btnMoveLast.Enabled = this.btnMoveRight.Enabled = (this.m_pageIndex < this.m_totalPages);
 
-            this.lblPages.Text = string.Format("{0} page of {1} pages.", this.m_pageIndex + 1, this.m_totalPages + 1);
+            //this.lblPages.Text = string.Format("{0} page of {1} pages.", this.m_pageIndex + 1, this.m_totalPages + 1);
             //m_pageIndex = pageIndex;
             //m_pageSize = pageSize;
         }
 
         private void DrawChart_2D(string axisTitleX = "", string axisTitleY = "", int pageIndex = 0, int pageSize = 50000)
         {
-            if (this.m_chart.Series.Count == 0)
-                this.m_chart.Series.Add(new Series("Series", ViewType.Line));
+            //if (this.m_chart.Series.Count == 0)
+            //    this.m_chart.Series.Add(new Series("Series", ViewType.Line));
+            Series series = new Series("Series", ViewType.Line);
+            //var dataSource = this.m_table.AsEnumerable().Skip(m_pageSize * m_pageIndex).Take(this.m_pageSize);
+            var dataSource = this.m_table.AsEnumerable().ToList();
+            //this.m_chart.Series[0].Points.Clear();
 
-            var dataSource = this.m_table.AsEnumerable().Skip(m_pageSize * m_pageIndex).Take(this.m_pageSize);
+            //foreach (DataRow row in dataSource)
+            //    this.m_chart.Series[0].Points.Add(new SeriesPoint(row["Argument"], row["Value"]));
 
-            this.m_chart.Series[0].Points.Clear();
+            //this.m_chart.Series[0].ArgumentScaleType = ScaleType.Auto;
+            //this.m_chart.Series[0].ArgumentDataMember = "Argument";
+            //this.m_chart.Series[0].ValueScaleType = ScaleType.Numerical;
+            //this.m_chart.Series[0].ValueDataMembers.AddRange(new string[] { "Value" });
 
             foreach (DataRow row in dataSource)
-                this.m_chart.Series[0].Points.Add(new SeriesPoint(row["Argument"], row["Value"]));
+                series.Points.Add(new SeriesPoint(row["Argument"], row["Value"]));
 
-            this.m_chart.Series[0].ArgumentScaleType = ScaleType.Auto;
-            this.m_chart.Series[0].ArgumentDataMember = "Argument";
-            this.m_chart.Series[0].ValueScaleType = ScaleType.Numerical;
-            this.m_chart.Series[0].ValueDataMembers.AddRange(new string[] { "Value" });
-
+            series.ArgumentScaleType = ScaleType.Auto;
+            series.ArgumentDataMember = "Argument";
+            series.ValueScaleType = ScaleType.Numerical;
+            series.ValueDataMembers.AddRange(new string[] { "Value" });
+            this.m_chart.Series.Add(series);
             this.m_chart.Legend.AlignmentHorizontal = LegendAlignmentHorizontal.Right;
             this.m_chart.Legend.AlignmentVertical = LegendAlignmentVertical.Top;
+            dxGridDataList.Add(new dxGridData("series", "2D", this.cbSeries.Text, this.cbSeries2.Text));
 
             XYDiagram diagram = this.m_chart.Diagram as XYDiagram;
 
@@ -638,7 +646,7 @@ namespace DynaRAP.UControl
             //this.btnMoveFirst.Enabled = this.btnMoveLeft.Enabled = (this.m_pageIndex > 0);
             //this.btnMoveLast.Enabled = this.btnMoveRight.Enabled = (this.m_pageIndex < this.m_totalPages);
 
-            this.lblPages.Text = string.Format("{0} page of {1} pages.", this.m_pageIndex + 1, this.m_totalPages + 1);
+            //this.lblPages.Text = string.Format("{0} page of {1} pages.", this.m_pageIndex + 1, this.m_totalPages + 1);
 
             //m_pageIndex = pageIndex;
             //m_pageSize = pageSize;
@@ -786,14 +794,19 @@ namespace DynaRAP.UControl
 
         private void DrawChart_MinMax(string title = "", string axisTitleX = "", string axisTitleY = "")
         {
-            this.m_chart.Series.Clear();
-            this.m_chart.Series.Add(new Series("Min", ViewType.Line));
-            this.m_chart.Series.Add(new Series("MaX", ViewType.Line));
+            //this.m_chart.Series.Clear();
+            //this.m_chart.Series.Add(new Series("Min", ViewType.Line));
+            //this.m_chart.Series.Add(new Series("MaX", ViewType.Line));
 
-            var minDataSource = this.m_table.AsEnumerable().Skip(m_pageSize * m_pageIndex).Take(this.m_pageSize).ToList();
-            var maxDataSource = this.max_table.AsEnumerable().Skip(m_pageSize * m_pageIndex).Take(this.m_pageSize).ToList();
+            //var minDataSource = this.m_table.AsEnumerable().Skip(m_pageSize * m_pageIndex).Take(this.m_pageSize).ToList();
+            //var maxDataSource = this.max_table.AsEnumerable().Skip(m_pageSize * m_pageIndex).Take(this.m_pageSize).ToList();
 
-            this.m_chart.Series[0].Points.Clear();
+            Series series = new Series("Min-Max", ViewType.Line);
+
+            var minDataSource = this.m_table.AsEnumerable().ToList();
+            var maxDataSource = this.max_table.AsEnumerable().ToList();
+
+            //this.m_chart.Series[0].Points.Clear();
             if(minDataSource.Count() != maxDataSource.Count())
             {
                 MessageBox.Show("Min,Max 데이터의 개수가 다릅니다.");
@@ -801,20 +814,21 @@ namespace DynaRAP.UControl
             }
             for(int i=0; i < minDataSource.Count(); i++)
             {
-                this.m_chart.Series[0].Points.Add(new SeriesPoint(minDataSource[i]["Value"], maxDataSource[i]["Value"]));
+                series.Points.Add(new SeriesPoint(minDataSource[i]["Value"], maxDataSource[i]["Value"]));
             }
             //foreach (DataRow row in minDataSource)
             //    this.m_chart.Series[0].Points.Add(new SeriesPoint(row["Argument"], row["Value"]));
 
-            this.m_chart.Series[0].ArgumentScaleType = ScaleType.Auto;
-            this.m_chart.Series[0].ArgumentDataMember = "Argument";
-            this.m_chart.Series[0].ValueScaleType = ScaleType.Numerical;
-            this.m_chart.Series[0].ValueDataMembers.AddRange(new string[] { "Value" });
+            series.ArgumentScaleType = ScaleType.Auto;
+            series.ArgumentDataMember = "Argument";
+            series.ValueScaleType = ScaleType.Numerical;
+            series.ValueDataMembers.AddRange(new string[] { "Value" });
+            this.m_chart.Series.Add(series);
 
             this.m_chart.Legend.AlignmentHorizontal = LegendAlignmentHorizontal.Right;
             this.m_chart.Legend.AlignmentVertical = LegendAlignmentVertical.Top;
 
-            this.m_chart.Series[1].Points.Clear();
+            //this.m_chart.Series[1].Points.Clear();
 
             //foreach (DataRow row in maxDataSource)
             //    this.m_chart.Series[1].Points.Add(new SeriesPoint(row["Argument"], row["Value"]));
@@ -852,6 +866,7 @@ namespace DynaRAP.UControl
             //    SeriesPoint point = new SeriesPoint(parameter, minmax);
             //    series.Points.Add(point);
             //}
+            dxGridDataList.Add(new dxGridData("series", "Min-Max", this.cbSeries.Text, this.cbSeries2.Text));
 
             XYDiagram diagram = this.m_chart.Diagram as XYDiagram;
 
@@ -949,6 +964,8 @@ namespace DynaRAP.UControl
 
         private void DrawChart_Potato(string title = "", string axisTitleX = "", string axisTitleY = "")
         {
+            dxGridDataList.Add(new dxGridData("series", "Potato", this.cbSeries.Text, this.cbSeries2.Text));
+
             Dictionary<string, Series> seriesInfo = new Dictionary<string, Series>();
             Series series;
             foreach (DataRow row in m_table.Rows)
@@ -1017,7 +1034,6 @@ namespace DynaRAP.UControl
             seriesView.PointMarkerOptions.Kind = MarkerKind.Circle;
             seriesView.PointMarkerOptions.FillStyle.FillMode = DevExpress.XtraCharts.FillMode.Hatch;
             seriesView.PointMarkerOptions.Size = 5;
-
             ProcessAutoClusters();
         }
 
@@ -1095,52 +1111,52 @@ namespace DynaRAP.UControl
 
         private void cbSeries_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (this.cbSeries.Enabled == false || this.m_drawTypes == DrawTypes.DT_UNKNOWN)
-                return;
+            //if (this.cbSeries.Enabled == false || this.m_drawTypes == DrawTypes.DT_UNKNOWN)
+            //    return;
 
-            List<SeriesPointData> spDatas;
-            this.m_dicData.TryGetValue(this.cbSeries.Text, out spDatas);
-            DataTable dt = null;
-            if (this.m_drawTypes == DrawTypes.DT_1D || this.m_drawTypes == DrawTypes.DT_MINMAX)
-            {
-                dt = MakeTableData(spDatas);
-            }
-            else if (this.m_drawTypes == DrawTypes.DT_POTATO)
-            {
+            //List<SeriesPointData> spDatas;
+            //this.m_dicData.TryGetValue(this.cbSeries.Text, out spDatas);
+            //DataTable dt = null;
+            //if (this.m_drawTypes == DrawTypes.DT_1D || this.m_drawTypes == DrawTypes.DT_MINMAX)
+            //{
+            //    dt = MakeTableData(spDatas);
+            //}
+            //else if (this.m_drawTypes == DrawTypes.DT_POTATO)
+            //{
 
-                List<SeriesPointData> dataY;
+            //    List<SeriesPointData> dataY;
 
-                this.m_dicData.TryGetValue(this.cbSeries2.Text, out dataY);
-                dt = MakePotatoDataNew(spDatas, dataY);
-            }
+            //    this.m_dicData.TryGetValue(this.cbSeries2.Text, out dataY);
+            //    dt = MakePotatoDataNew(spDatas, dataY);
+            //}
 
-            DrawChart(dt, this.m_drawTypes);
+            //DrawChart(dt, this.m_drawTypes);
         }
 
         private void cbSeries2_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (this.cbSeries2.Enabled == false || this.m_drawTypes == DrawTypes.DT_UNKNOWN)
-                return;
+            //if (this.cbSeries2.Enabled == false || this.m_drawTypes == DrawTypes.DT_UNKNOWN)
+            //    return;
 
-            List<SeriesPointData> minDatas;
-            List<SeriesPointData> maxDatas;
+            //List<SeriesPointData> minDatas;
+            //List<SeriesPointData> maxDatas;
 
-            DataTable dt = null;
+            //DataTable dt = null;
 
-            this.m_dicData.TryGetValue(this.cbSeries.Text, out minDatas);
-            this.m_dicData.TryGetValue(this.cbSeries2.Text, out maxDatas);
+            //this.m_dicData.TryGetValue(this.cbSeries.Text, out minDatas);
+            //this.m_dicData.TryGetValue(this.cbSeries2.Text, out maxDatas);
 
-            if (this.m_drawTypes == DrawTypes.DT_MINMAX)
-            {
-                dt = MakeTableData(minDatas);
-                this.max_table = MakeMaxTableData(maxDatas);
-            }
-            else if (this.m_drawTypes == DrawTypes.DT_POTATO)
-            {
-                dt = MakePotatoDataNew(minDatas, maxDatas);
-            }
+            //if (this.m_drawTypes == DrawTypes.DT_MINMAX)
+            //{
+            //    dt = MakeTableData(minDatas);
+            //    this.max_table = MakeMaxTableData(maxDatas);
+            //}
+            //else if (this.m_drawTypes == DrawTypes.DT_POTATO)
+            //{
+            //    dt = MakePotatoDataNew(minDatas, maxDatas);
+            //}
 
-            DrawChart(dt, this.m_drawTypes);
+            //DrawChart(dt, this.m_drawTypes);
         }
         private void mnuFileRead_Click(object sender, EventArgs e)
         {
@@ -1585,7 +1601,7 @@ namespace DynaRAP.UControl
             this.cbSeries.Items.AddRange(dicData.Keys.ToArray());
             this.cbSeries.SelectedIndex = 0;
             this.cbSeries2.Items.AddRange(dicData.Keys.ToArray());
-            this.cbSeries2.Enabled = false;
+            this.cbSeries2.Enabled = true ;
             this.cbSeries2.SelectedIndex = 0;
             return dicData;
         }
@@ -1598,26 +1614,21 @@ namespace DynaRAP.UControl
             }
         }
 
-        private void chk_UseSecond_CheckedChanged(object sender, EventArgs e)
-        {
-            if (chk_UseSecond.Checked)
-            {
-                cbSeries2.Enabled = true;
-            }
-            else
-            {
-                cbSeries2.Enabled = false;
-                cbSeries2.Text = "";
-                cbSeries2.SelectedIndex = -1;
-            }
-        }
-
         private void toolStripMenuItem11_Click(object sender, EventArgs e)
         {
             MainForm mainForm = this.ParentForm as MainForm;
             DXChartControl chartControl = new DXChartControl();
-            chartControl = DeepCopy(this);
+            chartControl = chartControl.DeepCopy(this);
             mainForm.PlotModuleControl.AddDocument(chartControl);
+        }
+
+        private void chartResetToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.m_chart.Series.Clear();
+            this.dxGridDataList.Clear();
+            this.gridControl1.DataSource = this.dxGridDataList;
+            this.gridView1.RefreshData();
+            //chartResetToolStripMenuItem
         }
     }
 

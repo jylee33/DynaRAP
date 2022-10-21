@@ -625,7 +625,7 @@ public MainForm()
                 dllImportModuleControl = new ImportDLLControl();
                 DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(dllImportModuleControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
                 doc.Tag = "DLL";
-                doc.Caption = "DLL Import";
+                doc.Caption = "기준데이터 Import";
                 tabbedView1.ActivateDocument(dllImportModuleControl);
             }
             else

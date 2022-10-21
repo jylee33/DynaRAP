@@ -708,16 +708,25 @@ namespace DynaRAP.UControl
                             case "shortblock":
                             case "parammodule":
                                 sourceType = list.sourceType.ToUpper();
+                                selectParamDataList.Add(new ParamDataSelectionData(sourceType, list.sourceType, Utils.base64StringDecoding(list.sourceName), list.paramKey, list.julianStartAt, list.julianEndAt, list.dataCount, list.sourceSeq, list.useTime, list.seq, list.sourceType == "dll" ? 0 : 1, list.paramSeq));
                                 break;
                             case "part":
                                 sourceType = "분할데이터";
+                                if (list.useTime == "julian")
+                                {
+                                    selectParamDataList.Add(new ParamDataSelectionData(sourceType, list.sourceType, Utils.base64StringDecoding(list.sourceName), list.paramKey, list.julianStartAt, list.julianEndAt, list.dataCount, list.sourceSeq, list.useTime, list.seq, list.sourceType == "dll" ? 0 : 1, list.paramSeq));
+                                } else
+                                {
+                                    selectParamDataList.Add(new ParamDataSelectionData(sourceType, list.sourceType, Utils.base64StringDecoding(list.sourceName), list.paramKey, list.offsetStartAt.ToString(), list.offsetEndAt.ToString(), list.dataCount, list.sourceSeq, list.useTime, list.seq, list.sourceType == "dll" ? 0 : 1, list.paramSeq));
+                                }
                                 break;
                             case "dll":
+
                                 sourceType = "기준데이터";
+                                selectParamDataList.Add(new ParamDataSelectionData(sourceType, list.sourceType, Utils.base64StringDecoding(list.sourceName), list.paramKey, list.julianStartAt, list.julianEndAt, list.dataCount, list.sourceSeq, list.useTime, list.seq, list.sourceType == "dll" ? 0 : 1, list.paramSeq));
                                 break;
                         }
-
-                        selectParamDataList.Add(new ParamDataSelectionData(sourceType, list.sourceType, Utils.base64StringDecoding(list.sourceName), list.paramKey, list.julianStartAt, list.julianEndAt, list.dataCount, list.sourceSeq,list.useTime, list.seq, list.sourceType == "dll"?0:1, list.paramSeq));
+                      
                     }
                 }
                 this.gridControl2.DataSource = selectParamDataList;

@@ -127,8 +127,8 @@ namespace DynaRAP.UControl
             XYDiagram diagram = (XYDiagram)chartControl.Diagram;
             diagram.EnableAxisXScrolling = true;
             diagram.EnableAxisXZooming = true;
-            diagram.EnableAxisYScrolling = true;
-            diagram.EnableAxisYZooming = true;
+            //diagram.EnableAxisYScrolling = true;
+            //diagram.EnableAxisYZooming = true;
             diagram.AxisY.WholeRange.AlwaysShowZeroLevel = false;
             diagram.AxisX.DateTimeScaleOptions.ScaleMode = ScaleMode.Manual;
             diagram.AxisX.DateTimeScaleOptions.MeasureUnit = DateTimeMeasureUnit.Millisecond;

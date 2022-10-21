@@ -60,7 +60,7 @@ namespace DynaRAP.UControl
         double overlap = 10;
 
         string partSeq = String.Empty;
-
+        string partType = String.Empty;
         public SBModuleControl()
         {
             InitializeComponent();
@@ -829,6 +829,7 @@ namespace DynaRAP.UControl
                 if (part != null)
                 {
                     partSeq = part.seq;
+                    partType = part.dataType;
                 }
 
                 string sendData = string.Format(@"
@@ -1020,6 +1021,7 @@ namespace DynaRAP.UControl
             //table.Columns.Add("Argument", typeof(Int32));
             table.Columns.Add("Argument", typeof(DateTime));
             table.Columns.Add("Value", typeof(double));
+            table.Columns.Add("OffSetTime", typeof(string));
 
             DataRow row = null;
             int i = 0;
@@ -1047,6 +1049,8 @@ namespace DynaRAP.UControl
                         row["Argument"] = dt;
                         //row["Argument"] = i;
                         row["Value"] = data;
+
+                        row["OffSetTime"] = day;
                         table.Rows.Add(row);
 
                         j++;
@@ -1084,7 +1088,16 @@ namespace DynaRAP.UControl
                 if(t2 > endTime)
                 {
                     t2 = endTime;
-                    t1 = endTime.AddSeconds(-sbLen);
+                    t1 = startTime;
+                    if (partType == "zaero")
+                    {
+                        var temp1 = Utils.GetZaeroJulianFromDate(t1);
+                        var temp2 = Utils.GetZaeroJulianFromDate(t2);
+                        SplittedSB sb3 = new SplittedSB(string.Format("ShortBlock#{0}", i),temp1, temp2, 0);
+                        i++;
+                        AddSplittedInterval(sb3);
+                        break;
+                    }
                     SplittedSB sb2 = new SplittedSB(string.Format("ShortBlock#{0}", i), string.Format("{0:yyyy-MM-dd hh:mm:ss.ffffff}", t1), string.Format("{0:yyyy-MM-dd hh:mm:ss.ffffff}", t2), 0);
                     i++;
 
@@ -1483,9 +1496,17 @@ namespace DynaRAP.UControl
                     SplittedSB splitSb = ctrl.Sb;
                     sb.blockNo = i++;
                     sb.blockName = splitSb.SbName;
-                    sb.julianStartAt = Utils.GetJulianFromDate(splitSb.StartTime);
-                    sb.julianEndAt = Utils.GetJulianFromDate(splitSb.EndTime);
+                    if (partType != "zaero")
+                    {
+                        sb.julianStartAt = Utils.GetJulianFromDate(splitSb.StartTime);
+                        sb.julianEndAt = Utils.GetJulianFromDate(splitSb.EndTime);
+                    }
+                    else
+                    {
+                        sb.julianStartAt = splitSb.StartTime;
+                        sb.julianEndAt = splitSb.EndTime;
 
+                    }
                     req.shortBlocks.Add(sb);
 
                 }

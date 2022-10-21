@@ -27,6 +27,7 @@ namespace DynaRAP.Data
         public double offsetStartAt { get; set; }
         public double offsetEndAt { get; set; }
         public string registerUid { get; set; }
+        public string dataType { get; set; }
     }
 
 }

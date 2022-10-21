@@ -69,6 +69,15 @@ namespace DynaRAP.UTIL
             return strDate;
         }
 
+        public static string GetZaeroJulianFromDate(object obj)
+        {
+            DateTime dt = (DateTime)obj;
+            //DateTime dt = Convert.ToDateTime(obj.ToString());
+            string strDate = String.Format("{0}.{1:000}00",dt.Second, dt.Millisecond);
+
+            return strDate;
+        }
+
         public static DateTime ConvertFromJulian(int m_JulianDate)
         {
 

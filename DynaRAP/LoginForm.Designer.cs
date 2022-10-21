@@ -35,6 +35,7 @@
             this.edtPassword = new DevExpress.XtraEditors.TextEdit();
             this.btnLogin = new DevExpress.XtraEditors.SimpleButton();
             this.btnCancel = new DevExpress.XtraEditors.SimpleButton();
+            this.labelControl3 = new DevExpress.XtraEditors.LabelControl();
             ((System.ComponentModel.ISupportInitialize)(this.edtId.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtPassword.Properties)).BeginInit();
             this.SuspendLayout();
@@ -84,6 +85,15 @@
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
+            // labelControl3
+            // 
+            resources.ApplyResources(this.labelControl3, "labelControl3");
+            this.labelControl3.Appearance.Font = ((System.Drawing.Font)(resources.GetObject("labelControl3.Appearance.Font")));
+            this.labelControl3.Appearance.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(37)))), ((int)(((byte)(38)))));
+            this.labelControl3.Appearance.Options.UseFont = true;
+            this.labelControl3.Appearance.Options.UseForeColor = true;
+            this.labelControl3.Name = "labelControl3";
+            // 
             // LoginForm
             // 
             this.AcceptButton = this.btnLogin;
@@ -93,6 +103,7 @@
             this.BackgroundImageStore = global::DynaRAP.Properties.Resources.login;
             this.CancelButton = this.btnCancel;
             this.ControlBox = false;
+            this.Controls.Add(this.labelControl3);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnLogin);
             this.Controls.Add(this.edtPassword);
@@ -122,5 +133,6 @@
         private DevExpress.XtraEditors.TextEdit edtPassword;
         private DevExpress.XtraEditors.SimpleButton btnLogin;
         private DevExpress.XtraEditors.SimpleButton btnCancel;
+        private DevExpress.XtraEditors.LabelControl labelControl3;
     }
 }
