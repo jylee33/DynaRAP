@@ -65,7 +65,7 @@ namespace DynaRAP.UControl
 
             panelParamCnt.Controls.Add(new BinParameterSelectControl(this, new List<ParamDatas>()));
             panelParamCnt.Controls.Add(new BinParameterSelectControl(this, new List<ParamDatas>()));
-            panelParamCnt1.Controls.Add(new BinParameterSelectControl(this, new List<ParamDatas>()));
+            //panelParamCnt1.Controls.Add(new BinParameterSelectControl(this, new List<ParamDatas>()));
         }
 
         private void InitializeTreeDataList()
@@ -166,7 +166,10 @@ namespace DynaRAP.UControl
                     paramListData = paramDatas;
                     panelParamCnt.Controls.Add(new BinParameterSelectControl(this, paramListData));
                     panelParamCnt.Controls.Add(new BinParameterSelectControl(this, paramListData));
-                    panelParamCnt1.Controls.Add(new BinParameterSelectControl(this, paramListData));
+                    if (chkUse3D.Checked)
+                    {
+                        panelParamCnt1.Controls.Add(new BinParameterSelectControl(this, paramListData));
+                    }
                 }
             }
             else
@@ -177,7 +180,10 @@ namespace DynaRAP.UControl
                 paramListData = paramDatas;
                 panelParamCnt.Controls.Add(new BinParameterSelectControl(this, paramListData));
                 panelParamCnt.Controls.Add(new BinParameterSelectControl(this, paramListData));
-                panelParamCnt1.Controls.Add(new BinParameterSelectControl(this, paramListData));
+                if (chkUse3D.Checked)
+                {
+                    panelParamCnt1.Controls.Add(new BinParameterSelectControl(this, paramListData));
+                }
             }
             //else
             //{
@@ -227,9 +233,9 @@ namespace DynaRAP.UControl
                 }
             }
 
-            if (pickUpParamList.Count != 3)
+            if (pickUpParamList.Count < 2)
             {
-                MessageBox.Show("파라미터가 전체 선택되어야 BIN테이블 생성이 가능합니다.");
+                MessageBox.Show("파라미터가 2개 이상 선택되어야 BIN테이블 생성이 가능합니다.");
                 return;
             }
             BindingList<TreeData> treeDatas = treeList1.DataSource as BindingList<TreeData>;
@@ -239,7 +245,25 @@ namespace DynaRAP.UControl
             MainForm mainForm = this.ParentForm as MainForm;
 
             mainForm.PanelBinTable.Text = "BIN TABLE";
-            BinTableControl binTableCtrl = new BinTableControl(selectedParamDataList, pickUpParamList, shorBlockSeqList, mainForm);
+
+            //로직 확인 후 주석해제
+            //string sendData = string.Format(@"
+            //    {{
+            //    ""command"":""clear-summary"",
+            //    ""binMetaSeq"":""{0}""
+            //    }}", binMetaSeq);
+            //string responseData = Utils.GetPostData(System.Configuration.ConfigurationManager.AppSettings["UrlBINTable"], sendData);
+            //if (responseData != null)
+            //{
+            //    JsonData result = JsonConvert.DeserializeObject<JsonData>(responseData);
+            //    if (result.code == 200)
+            //    {
+
+            //    }
+            //}
+
+
+            BinTableControl binTableCtrl = new BinTableControl(selectedParamDataList, pickUpParamList, shorBlockSeqList, mainForm, binMetaSeq);
             binTableCtrl.Dock = DockStyle.Fill;
             //mainForm.PanelBinTable.Controls.Clear();
             //mainForm.PanelBinTable.Controls.Add(binTableCtrl);
@@ -524,15 +548,18 @@ namespace DynaRAP.UControl
             panelParamCnt.Controls.Clear();
             panelParamCnt1.Controls.Clear();
             paramListData = GetParamListByPartsShortblock();
+
             if (selectData.pickUpParams.Count != 0)
             {
+                chkUse3D.Checked = false;
                 foreach (var list in selectData.pickUpParams)
                 {
                     BinParameterSelectControl ct = new BinParameterSelectControl(this, paramListData, list);
                     if (panelParamCnt.Controls.Count > 1)
                     {
+                        chkUse3D.Checked = true;
+                        panelParamCnt1.Controls.Clear();
                         panelParamCnt1.Controls.Add(ct);
-
                     }
                     else
                     {
@@ -544,7 +571,10 @@ namespace DynaRAP.UControl
             {
                 panelParamCnt.Controls.Add(new BinParameterSelectControl(this, paramListData));
                 panelParamCnt.Controls.Add(new BinParameterSelectControl(this, paramListData));
-                panelParamCnt1.Controls.Add(new BinParameterSelectControl(this, paramListData));
+                if (chkUse3D.Checked)
+                {
+                    panelParamCnt1.Controls.Add(new BinParameterSelectControl(this, paramListData));
+                }
             }
             mainForm.HideSplashScreenManager();
         }
@@ -757,8 +787,11 @@ namespace DynaRAP.UControl
                             {
                                 if (paramSeqDic.Where(paramD => paramD.Key.seq == paramData.seq).Count() != 0)
                                 {
-                                    ParamDatas selectedParam = paramSeqDic.Where(paramD => paramD.Key.seq == paramData.seq).Select(paramD => paramD.Key).ToList()[0];
-                                    paramSeqDic[selectedParam] = paramSeqDic[selectedParam] +1;
+                                    if (paramData.propInfo != null)
+                                    {
+                                        ParamDatas selectedParam = paramSeqDic.Where(paramD => paramD.Key.seq == paramData.seq).Select(paramD => paramD.Key).ToList()[0];
+                                        paramSeqDic[selectedParam] = paramSeqDic[selectedParam] + 1;
+                                    }
                                 }
                                 else
                                 {
@@ -796,6 +829,34 @@ namespace DynaRAP.UControl
         public void RemoveSelectedParams(string seq)
         {
             selectedParamDataList.RemoveAt(selectedParamDataList.FindIndex(x => x.seq == seq));
+        }
+
+        private void chkUse3D_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkUse3D.Checked)
+            {
+                panelParamCnt1.Controls.Clear();
+                if (paramListData != null)
+                {
+                    panelParamCnt1.Controls.Add(new BinParameterSelectControl(this, paramListData));
+                }
+                else
+                {
+                    panelParamCnt1.Controls.Add(new BinParameterSelectControl(this, new List<ParamDatas>()));
+                }
+            }
+            else
+            {
+                if (panelParamCnt1.Controls.Count != 0)
+                {
+                    BinParameterSelectControl control = (BinParameterSelectControl)panelParamCnt1.Controls[0];
+                    if (control.beforeSeq != null)
+                    {
+                        RemoveSelectedParams(control.beforeSeq);
+                    }
+                }
+                panelParamCnt1.Controls.Clear();
+            }
         }
     }
 

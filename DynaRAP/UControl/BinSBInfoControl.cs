@@ -146,10 +146,12 @@ namespace DynaRAP.UControl
                         {
                             paramSeq = string.Format(@"{0},""{1}""", paramSeq, paramList.seq);
                         }
-                        paramNameList.Add(paramList.paramKey);
-                        SBParameterList.Add(new SBParameter((paramList.propInfo == null ? "" : paramList.propInfo.propCode), paramList.paramKey, paramList.paramValueMap.blockMin, paramList.paramValueMap.blockMax, paramList.paramValueMap.blockMax));
-                        SBResultList.Add(new SBResult(paramList.paramValueMap.psd, paramList.paramValueMap.rms, paramList.paramValueMap.n0, paramList.paramValueMap.zPeak, paramList.paramValueMap.zValley));
-
+                        if (paramList.paramValueMap != null)
+                        {
+                            paramNameList.Add(paramList.paramKey);
+                            SBParameterList.Add(new SBParameter((paramList.propInfo == null ? "" : paramList.propInfo.propCode), paramList.paramKey, paramList.paramValueMap.blockMin, paramList.paramValueMap.blockMax, paramList.paramValueMap.blockMax));
+                            SBResultList.Add(new SBResult(paramList.paramValueMap.psd, paramList.paramValueMap.rms, paramList.paramValueMap.n0, paramList.paramValueMap.zPeak, paramList.paramValueMap.zValley));
+                        }
                     }
                 }
             }

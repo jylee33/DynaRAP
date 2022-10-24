@@ -209,16 +209,25 @@ namespace DynaRAP.Data
     }
 
     public class dxGridData
-    {
-        public dxGridData(string seriesName, string chartType ,string xAxis, string yAxis = null)
+    {   
+        public dxGridData()
         {
-            this.seriesName = seriesName;
-            this.chartType = chartType;
-            this.xAxis = xAxis;
-            this.yAxis = yAxis;
+            this.delete = 1;
         }
+        //public dxGridData(string seriesName, string chartType ,string xAxis, string yAxis = null)
+        //{
+        //    this.seriesName = seriesName;
+        //    this.chartType = chartType;
+        //    this.xAxis = xAxis;
+        //    this.yAxis = yAxis;
+        //}
 
         public string chartType { get; set; }
+        public string seriesColor { get; set; }
+        public string bordLength { get; set; }
+        public string seriesLength { get; set; }
+        public string bordType { get; set; }
+        public int delete { get; set; }
         public string seriesName { get; set; }
         public string xAxis { get; set; }
         public string yAxis { get; set; }

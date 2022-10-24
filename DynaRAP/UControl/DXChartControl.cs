@@ -14,6 +14,8 @@ using System.Diagnostics;
 using DevExpress.XtraEditors;
 using DynaRAP.Data;
 using Microsoft.Scripting.Utils;
+using DevExpress.Utils;
+using DevExpress.XtraGrid.Columns;
 
 namespace DynaRAP.UControl
 {
@@ -170,8 +172,9 @@ namespace DynaRAP.UControl
         {
             base.OnLoad(e);
 
-
-                m_spliter = new SplitContainerControl();
+            //var temp = this.Size;
+            this.Size = new Size(625, 300);
+            m_spliter = new SplitContainerControl();
 
                 m_spliter.MouseClick += Spliter_MouseClick;
                 m_spliter.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
@@ -201,18 +204,106 @@ namespace DynaRAP.UControl
             m_propertyGrid.SelectedObject = this.m_chart;
             m_spliter.Panel2.Controls.Add(m_propertyGrid);
             this.cbSeries.Enabled = false;
+
+
             this.m_dicData = ReadDataList4();
             //SetDllDatas();
             this.cbSeries.Enabled = true;
 
-            mnuDrawChart1D.Enabled =
-                mnuDrawChart2D.Enabled =
-                mnuDrawChartMinMax.Enabled =
-                mnuDrawPotato.Enabled = this.cbSeries.Items.Count > 0;
+            //mnuDrawChart1D.Enabled =
+            //    mnuDrawChart2D.Enabled =
+            //    mnuDrawChartMinMax.Enabled =
+            //    mnuDrawPotato.Enabled = this.cbSeries.Items.Count > 0;
 
-            toolStripMenuItem4.Enabled =
-               toolStripMenuItem6.Enabled =
-               toolStripMenuItem9.Enabled = this.cbSeries.Items.Count > 0;
+            //toolStripMenuItem4.Enabled =
+            //   toolStripMenuItem6.Enabled =
+            //   toolStripMenuItem9.Enabled = this.cbSeries.Items.Count > 0;
+
+            InitGridControl1();
+        }
+
+        private void InitGridControl1()
+        {
+            //this.repositoryItemComboBox1.PopupFormMinSize = new System.Drawing.Size(0, 200);
+
+            this.repositoryItemComboBox1.Items.Add("1D");
+            this.repositoryItemComboBox1.Items.Add("Cross Plot");
+            this.repositoryItemComboBox1.Items.Add("2D-Potato");
+            this.repositoryItemComboBox1.SelectedIndexChanged += RepositoryItemComboBox1_SelectedIndexChanged;
+
+            //선타입
+            this.repositoryItemComboBox3.Items.Add("Line");
+            this.repositoryItemComboBox3.Items.Add("Dot");
+
+            //선색상
+            this.repositoryItemComboBox4.Items.Add("Red");
+            this.repositoryItemComboBox4.Items.Add("Orange");
+            this.repositoryItemComboBox4.Items.Add("Yellow");
+            this.repositoryItemComboBox4.Items.Add("Green");
+            this.repositoryItemComboBox4.Items.Add("Blue");
+            this.repositoryItemComboBox4.Items.Add("Purple");
+            this.repositoryItemComboBox4.Items.Add("Indigo");
+            this.repositoryItemComboBox4.Items.Add("Black");
+            //선굵기
+            this.repositoryItemComboBox5.Items.Add("1");
+            this.repositoryItemComboBox5.Items.Add("2");
+            this.repositoryItemComboBox5.Items.Add("3");
+            this.repositoryItemComboBox5.Items.Add("4");
+            this.repositoryItemComboBox5.Items.Add("5");
+            this.repositoryItemComboBox5.Items.Add("6");
+            this.repositoryItemComboBox5.Items.Add("7");
+            this.repositoryItemComboBox5.Items.Add("8");
+            this.repositoryItemComboBox5.Items.Add("9");
+            this.repositoryItemComboBox5.Items.Add("10");
+
+            GridColumn colDelet = gridView1.Columns["delete"];
+            colDelet.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
+            colDelet.OptionsColumn.FixedWidth = true;
+            colDelet.Width = 40;
+            colDelet.Caption = "삭제";
+            colDelet.OptionsColumn.ReadOnly = true;
+
+            this.repositoryItemImageComboBox1.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(0, 0));
+            this.repositoryItemImageComboBox1.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(1, 1));
+
+            this.repositoryItemImageComboBox1.GlyphAlignment = HorzAlignment.Center;
+            this.repositoryItemImageComboBox1.Buttons[0].Visible = false;
+
+            this.repositoryItemImageComboBox1.Click += RepositoryItemImageComboBox1_Click;
+
+        }
+        private void RepositoryItemImageComboBox1_Click(object sender, EventArgs e)
+        {
+                dxGridData selectDxGridData = (dxGridData)gridView1.GetFocusedRow();
+                dxGridDataList.Remove(selectDxGridData);
+           
+                this.gridControl1.DataSource = dxGridDataList;
+                //gridView2.DeleteRow(gridView2.FocusedRowHandle);
+                this.gridView1.RefreshData();
+        }
+
+
+
+        private void RepositoryItemComboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var combo = sender as ComboBoxEdit;
+            if (combo.SelectedIndex != -1)
+            {
+                string selectChartType = combo.SelectedItem as string;
+                if (selectChartType == "1D")
+                {
+                    gridView1.SetRowCellValue(gridView1.FocusedRowHandle, "yAxis", null);
+
+                    GridColumn colYAxis = gridView1.Columns["yAxis"];
+                    colYAxis.OptionsColumn.ReadOnly = true;
+                }
+                else
+                {
+                    GridColumn colYAxis = gridView1.Columns["yAxis"];
+                    colYAxis.OptionsColumn.ReadOnly = false ;
+                }
+                gridView1.SetRowCellValue(gridView1.FocusedRowHandle, "chartType", selectChartType);
+            }
         }
 
         private void Spliter_MouseClick(object sender, MouseEventArgs e)
@@ -575,7 +666,7 @@ namespace DynaRAP.UControl
 
             //this.m_chart.Legend.AlignmentHorizontal = LegendAlignmentHorizontal.Right;
             //this.m_chart.Legend.AlignmentVertical = LegendAlignmentVertical.Top;
-            dxGridDataList.Add(new dxGridData("series", "1D", this.cbSeries.Text));
+            //dxGridDataList.Add(new dxGridData("series", "1D", this.cbSeries.Text));
 
             XYDiagram diagram = this.m_chart.Diagram as XYDiagram;
 
@@ -627,7 +718,7 @@ namespace DynaRAP.UControl
             this.m_chart.Series.Add(series);
             this.m_chart.Legend.AlignmentHorizontal = LegendAlignmentHorizontal.Right;
             this.m_chart.Legend.AlignmentVertical = LegendAlignmentVertical.Top;
-            dxGridDataList.Add(new dxGridData("series", "2D", this.cbSeries.Text, this.cbSeries2.Text));
+            //dxGridDataList.Add(new dxGridData("series", "2D", this.cbSeries.Text, this.cbSeries2.Text));
 
             XYDiagram diagram = this.m_chart.Diagram as XYDiagram;
 
@@ -866,7 +957,7 @@ namespace DynaRAP.UControl
             //    SeriesPoint point = new SeriesPoint(parameter, minmax);
             //    series.Points.Add(point);
             //}
-            dxGridDataList.Add(new dxGridData("series", "Min-Max", this.cbSeries.Text, this.cbSeries2.Text));
+            //dxGridDataList.Add(new dxGridData("series", "Min-Max", this.cbSeries.Text, this.cbSeries2.Text));
 
             XYDiagram diagram = this.m_chart.Diagram as XYDiagram;
 
@@ -964,7 +1055,7 @@ namespace DynaRAP.UControl
 
         private void DrawChart_Potato(string title = "", string axisTitleX = "", string axisTitleY = "")
         {
-            dxGridDataList.Add(new dxGridData("series", "Potato", this.cbSeries.Text, this.cbSeries2.Text));
+            //dxGridDataList.Add(new dxGridData("series", "Potato", this.cbSeries.Text, this.cbSeries2.Text));
 
             Dictionary<string, Series> seriesInfo = new Dictionary<string, Series>();
             Series series;
@@ -1586,7 +1677,7 @@ namespace DynaRAP.UControl
             foreach (var source in plotGridSourceDataList)
             {
                 int index = -99999;
-                index = plotDataResponse.additionalResponse.plotSourceList.FindIndex(x => x.sourceSeq == source.seq);
+                index = plotDataResponse.additionalResponse.plotSourceList.FindIndex(x => x.sourceSeq == source.seq && x.sourceType == source.sourceType);
                 int i = 0;
                 if (index != -1)
                 {
@@ -1598,6 +1689,10 @@ namespace DynaRAP.UControl
                     }
                 }
             }
+            this.repositoryItemComboBox2.Items.AddRange(dicData.Keys.ToArray());
+
+            this.repositoryItemComboBox2.NullText = "";
+
             this.cbSeries.Items.AddRange(dicData.Keys.ToArray());
             this.cbSeries.SelectedIndex = 0;
             this.cbSeries2.Items.AddRange(dicData.Keys.ToArray());
@@ -1625,11 +1720,278 @@ namespace DynaRAP.UControl
         private void chartResetToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.m_chart.Series.Clear();
-            this.dxGridDataList.Clear();
+        }
+
+        private void btn_AddSeries_Click(object sender, EventArgs e)
+        {
+            if(this.dxGridDataList == null)
+            {
+                this.dxGridDataList = new List<dxGridData>();
+            }
+            dxGridData data = new dxGridData();
+            data.seriesName = "Test";
+            data.seriesColor = "Orange";
+            data.chartType = "1D";
+            data.bordType = "Line";
+            data.bordLength ="2";
+            this.dxGridDataList.Add(data);
             this.gridControl1.DataSource = this.dxGridDataList;
             this.gridView1.RefreshData();
-            //chartResetToolStripMenuItem
         }
+
+        private void btn_SeriesApply_Click(object sender, EventArgs e)
+        {
+            this.m_chart.Series.Clear();
+            DrawSeries();
+        }
+
+        private void btn_ResetSeries_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("전체 차트 및 추가한 Series 데이터가 초기화 됩니다. \n초기화 하시겠습니까?", "전체삭제", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                this.m_chart.Series.Clear();
+                this.dxGridDataList.Clear();
+                this.gridControl1.DataSource = this.dxGridDataList;
+                this.gridView1.RefreshData();
+            }
+        }
+
+        private void DrawSeries()
+        {
+           foreach(var seriesInfo in dxGridDataList)
+           {
+                if (string.IsNullOrEmpty(seriesInfo.seriesName))
+                {
+                    MessageBox.Show("Series이름이 비어있는 데이터가 있습니다. 다시확인해주세요.");
+                    this.m_chart.Series.Clear();
+                    return;
+                }
+                if (string.IsNullOrEmpty(seriesInfo.chartType))
+                {
+                    MessageBox.Show("차트타입이 비어있는 데이터가 있습니다. 다시확인해주세요.");
+                    this.m_chart.Series.Clear();
+                    return;
+                }
+                if (string.IsNullOrEmpty(seriesInfo.bordLength))
+                {
+                    MessageBox.Show("선굵기가 비어있는 데이터가 있습니다. 다시확인해주세요.");
+                    this.m_chart.Series.Clear();
+                    return;
+                }
+                if (string.IsNullOrEmpty(seriesInfo.bordType))
+                {
+                    MessageBox.Show("선타입이 비어있는 데이터가 있습니다. 다시확인해주세요.");
+                    this.m_chart.Series.Clear();
+                    return;
+                }
+                if (string.IsNullOrEmpty(seriesInfo.seriesColor))
+                {
+                    MessageBox.Show("선색상이 비어있는 데이터가 있습니다. 다시확인해주세요.");
+                    this.m_chart.Series.Clear();
+                    return;
+                }
+                List<SeriesPointData> spXAxisData;
+                List<SeriesPointData> spYAxisData;
+                DataTable dtX = null;
+                DataTable dtY = null;
+                this.m_dicData.TryGetValue(seriesInfo.xAxis, out spXAxisData);
+                if(seriesInfo.yAxis != null)
+                    this.m_dicData.TryGetValue(seriesInfo.yAxis, out spYAxisData);
+                Color seriesColor = Color.White;
+                ViewType viewType = ViewType.Line;
+
+                switch (seriesInfo.bordType)
+                {
+                    case "Line":
+                        viewType = ViewType.Line;
+                        break;
+                    case "Dot":
+                        viewType = ViewType.Point;
+                        break;
+                }
+                switch (seriesInfo.seriesColor)
+                {
+                    case "Red":
+                        seriesColor = Color.Red;
+                        break;
+                    case "Orange":
+                        seriesColor = Color.Orange;
+                        break;
+                    case "Yellow":
+                        seriesColor = Color.Yellow;
+                        break;
+                    case "Green":
+                        seriesColor = Color.Green;
+                        break;
+                    case "Blue":
+                        seriesColor = Color.Blue;
+                        break;
+                    case "Purple":
+                        seriesColor = Color.Purple;
+                        break;
+                    case "Indigo":
+                        seriesColor = Color.Indigo;
+                        break;
+                    case "Black":
+                        seriesColor = Color.Black;
+                        break;
+                }
+                int bordThickness = 0;
+                Int32.TryParse(seriesInfo.bordLength, out bordThickness);
+                switch (seriesInfo.chartType)
+                {
+                    case "1D":
+                        dtX = Make1DTableData(spXAxisData);
+                        DrawChart_1DBasic(seriesInfo.seriesName, seriesColor, bordThickness, viewType, dtX);
+                        break;
+                    case "Cross Plot":
+                        if (seriesInfo.yAxis == null)
+                        {
+                            MessageBox.Show("Y축이 설정되지 않은 데이터가 있습니다. 다시 확인해주세요.");
+                            this.m_chart.Series.Clear();
+                            return;
+                        }
+                        this.m_dicData.TryGetValue(seriesInfo.yAxis, out spYAxisData);
+
+                        dtX = Make1DTableData(spXAxisData);
+                        dtY = Make1DTableData(spYAxisData);
+                        if(dtX.Rows.Count != dtY.Rows.Count)
+                        {
+                            MessageBox.Show("X,Y의 갯수가 다른 데이터가 있습니다. 다시 확인해주세요.");
+                            this.m_chart.Series.Clear();
+                            return;
+                        }
+                        DrawChart_CrossPlot(seriesInfo.seriesName, seriesColor, bordThickness, viewType, dtX,dtY); ;
+                        break;
+                    case "potato":
+                        DrawChart_Potato();
+                        break;
+                }
+
+           }
+        }
+
+        private DataTable Make1DTableData(List<SeriesPointData> points)
+        {
+            DataTable tableData = new DataTable();
+
+            int index = 0;
+
+            foreach (SeriesPointData point in points)
+            {
+                if (0 == index)
+                {
+                    tableData.Columns.Add("Argument", typeof(int));
+                    tableData.Columns.Add("Value", typeof(double));
+                }
+
+                DataRow row = tableData.NewRow();
+                row["Argument"] = point.Argument;
+                row["Value"] = point.Value;
+                tableData.Rows.Add(row);
+
+                index++;
+            }
+
+            return tableData;
+        }
+
+        private void DrawChart_1DBasic(string serieaName,Color seriesColor, int bordThickness, ViewType viewType, DataTable dt)
+        {
+            Series series = new Series(serieaName, viewType);
+            
+            var dataSource = dt.AsEnumerable().ToList();
+            series.View.Color = seriesColor;
+
+            //foreach (DataRow row in dataSource)
+            //    series.Points.Add(new SeriesPoint(row["Argument"], row["Value"]));
+
+
+            series.Points.Add(new SeriesPoint(4, 5));
+
+            series.Points.Add(new SeriesPoint(4, 8));
+            series.Points.Add(new SeriesPoint(7, 8));
+            series.Points.Add(new SeriesPoint(7, 5));
+            series.Points.Add(new SeriesPoint(4, 5));
+            series.Points.Add(new SeriesPoint(3, 5));
+
+            if (viewType == ViewType.Line)
+            {
+                ((LineSeriesView)series.View).LineStyle.Thickness = bordThickness;
+            }
+            series.ArgumentScaleType = ScaleType.Numerical;
+            series.ArgumentDataMember = "Argument";
+            series.ValueScaleType = ScaleType.Numerical;
+            series.ValueDataMembers.AddRange(new string[] { "Value" });
+            this.m_chart.Series.Add(series);
+            this.m_chart.Legend.AlignmentHorizontal = LegendAlignmentHorizontal.Right;
+            this.m_chart.Legend.AlignmentVertical = LegendAlignmentVertical.Top;
+            this.m_chart.Series[serieaName].Points.Add(new SeriesPoint(4, 5));
+            XYDiagram diagram = this.m_chart.Diagram as XYDiagram;
+
+            diagram.AxisY.Visibility = DevExpress.Utils.DefaultBoolean.False;
+
+            diagram.EnableAxisXScrolling = true;
+            diagram.EnableAxisXZooming = true;
+            diagram.AxisX.WholeRange.SideMarginsValue = 0L;
+            diagram.AxisX.DateTimeScaleOptions.GridSpacing = 1;
+            diagram.AxisX.DateTimeScaleOptions.GridOffset = 1;
+            diagram.AxisX.DateTimeScaleOptions.MeasureUnit = DateTimeMeasureUnit.Millisecond;
+            diagram.AxisX.DateTimeScaleOptions.GridAlignment = DateTimeGridAlignment.Second;
+
+            //List<PointF> points = new List<PointF>();
+            //foreach (SeriesPoint point in this.m_chart.Series)
+            //    points.Add(new PointF((float)point.NumericalArgument, (float)point.Values[0]));
+
+        }
+
+        private void DrawChart_CrossPlot(string serieaName, Color seriesColor, int bordThickness,ViewType viewType, DataTable dt, DataTable dt2)
+        {
+            Series series = new Series(serieaName, viewType);
+            series.View.Color = seriesColor;
+
+            var minDataSource = dt.AsEnumerable().ToList();
+            var maxDataSource = dt2.AsEnumerable().ToList();
+
+            //this.m_chart.Series[0].Points.Clear();
+            if (minDataSource.Count() != maxDataSource.Count())
+            {
+                MessageBox.Show("CrossPlot 데이터의 개수가 다릅니다.");
+                return;
+            }
+            for (int i = 0; i < minDataSource.Count(); i++)
+            {
+                series.Points.Add(new SeriesPoint(minDataSource[i]["Value"], maxDataSource[i]["Value"]));
+            }
+            if (viewType == ViewType.Line)
+            {
+                ((LineSeriesView)series.View).LineStyle.Thickness = bordThickness;
+            }
+            series.ArgumentScaleType = ScaleType.Auto;
+            series.ArgumentDataMember = "Argument";
+            series.ValueScaleType = ScaleType.Numerical;
+            series.ValueDataMembers.AddRange(new string[] { "Value" });
+            this.m_chart.Series.Add(series);
+
+            this.m_chart.Legend.AlignmentHorizontal = LegendAlignmentHorizontal.Right;
+            this.m_chart.Legend.AlignmentVertical = LegendAlignmentVertical.Top;
+
+            XYDiagram diagram = this.m_chart.Diagram as XYDiagram;
+
+            diagram.AxisY.Visibility = DevExpress.Utils.DefaultBoolean.Default;
+
+            diagram.EnableAxisXScrolling = true;
+            diagram.EnableAxisXZooming = true;
+            diagram.AxisX.WholeRange.SideMarginsValue = 0L;
+            diagram.AxisX.NumericScaleOptions.ScaleMode = ScaleMode.Manual;
+            diagram.AxisX.NumericScaleOptions.MeasureUnit = NumericMeasureUnit.Ones;
+            diagram.AxisX.NumericScaleOptions.GridOffset = 1;
+            diagram.AxisX.NumericScaleOptions.GridAlignment = NumericGridAlignment.Thousands;
+            diagram.AxisX.NumericScaleOptions.GridSpacing = 1;
+            diagram.AxisX.Label.TextPattern = "{A}";
+        }
+
+
     }
 
     #region 1D SeriesPoint Data

@@ -63,13 +63,16 @@
             this.btnBinDelete = new DevExpress.XtraEditors.SimpleButton();
             this.btnListSave = new DevExpress.XtraEditors.SimpleButton();
             this.labelControl18 = new DevExpress.XtraEditors.LabelControl();
+            this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             this.btnParameterAdd = new DevExpress.XtraEditors.ButtonEdit();
+            this.chkUse3D = new DevExpress.XtraEditors.CheckEdit();
             this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
             this.panelParamCnt = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
             this.panelParamCnt1 = new System.Windows.Forms.FlowLayoutPanel();
             this.btnCreateBIN = new DevExpress.XtraEditors.SimpleButton();
             this.labelControl13 = new DevExpress.XtraEditors.LabelControl();
+            this.tableLayoutPanel7 = new System.Windows.Forms.TableLayoutPanel();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.treeList1 = new DevExpress.XtraTreeList.TreeList();
             this.ID = new DevExpress.XtraTreeList.Columns.TreeListColumn();
@@ -94,7 +97,9 @@
             this.tableLayoutPanel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.edtTag.Properties)).BeginInit();
             this.tableLayoutPanel6.SuspendLayout();
+            this.tableLayoutPanel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnParameterAdd.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chkUse3D.Properties)).BeginInit();
             this.flowLayoutPanel4.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.treeList1)).BeginInit();
@@ -193,10 +198,11 @@
             this.flowLayoutPanel1.Controls.Add(this.gridControl2);
             this.flowLayoutPanel1.Controls.Add(this.flowLayoutPanel3);
             this.flowLayoutPanel1.Controls.Add(this.labelControl18);
-            this.flowLayoutPanel1.Controls.Add(this.btnParameterAdd);
+            this.flowLayoutPanel1.Controls.Add(this.tableLayoutPanel5);
             this.flowLayoutPanel1.Controls.Add(this.flowLayoutPanel4);
             this.flowLayoutPanel1.Controls.Add(this.btnCreateBIN);
             this.flowLayoutPanel1.Controls.Add(this.labelControl13);
+            this.flowLayoutPanel1.Controls.Add(this.tableLayoutPanel7);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(217, 24);
@@ -477,10 +483,25 @@
             this.labelControl18.TabIndex = 3;
             this.labelControl18.Text = "파라미터 셋 선택";
             // 
+            // tableLayoutPanel5
+            // 
+            this.tableLayoutPanel5.ColumnCount = 2;
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 68.15534F));
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 31.84466F));
+            this.tableLayoutPanel5.Controls.Add(this.btnParameterAdd, 0, 0);
+            this.tableLayoutPanel5.Controls.Add(this.chkUse3D, 1, 0);
+            this.tableLayoutPanel5.Location = new System.Drawing.Point(0, 571);
+            this.tableLayoutPanel5.Margin = new System.Windows.Forms.Padding(0);
+            this.tableLayoutPanel5.Name = "tableLayoutPanel5";
+            this.tableLayoutPanel5.RowCount = 1;
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel5.Size = new System.Drawing.Size(1030, 29);
+            this.tableLayoutPanel5.TabIndex = 62;
+            // 
             // btnParameterAdd
             // 
             this.btnParameterAdd.EditValue = "파라미터 추가";
-            this.btnParameterAdd.Location = new System.Drawing.Point(3, 574);
+            this.btnParameterAdd.Location = new System.Drawing.Point(3, 3);
             this.btnParameterAdd.Name = "btnParameterAdd";
             this.btnParameterAdd.Properties.Appearance.Options.UseTextOptions = true;
             this.btnParameterAdd.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
@@ -492,12 +513,22 @@
             this.btnParameterAdd.Visible = false;
             this.btnParameterAdd.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.btnParameterAdd_ButtonClick);
             // 
+            // chkUse3D
+            // 
+            this.chkUse3D.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.chkUse3D.Location = new System.Drawing.Point(705, 5);
+            this.chkUse3D.Name = "chkUse3D";
+            this.chkUse3D.Properties.Caption = "사용";
+            this.chkUse3D.Size = new System.Drawing.Size(94, 19);
+            this.chkUse3D.TabIndex = 61;
+            this.chkUse3D.CheckedChanged += new System.EventHandler(this.chkUse3D_CheckedChanged);
+            // 
             // flowLayoutPanel4
             // 
             this.flowLayoutPanel4.Controls.Add(this.panelParamCnt);
             this.flowLayoutPanel4.Controls.Add(this.flowLayoutPanel5);
             this.flowLayoutPanel4.Controls.Add(this.panelParamCnt1);
-            this.flowLayoutPanel4.Location = new System.Drawing.Point(3, 602);
+            this.flowLayoutPanel4.Location = new System.Drawing.Point(3, 603);
             this.flowLayoutPanel4.Name = "flowLayoutPanel4";
             this.flowLayoutPanel4.Size = new System.Drawing.Size(1034, 192);
             this.flowLayoutPanel4.TabIndex = 58;
@@ -530,7 +561,7 @@
             // btnCreateBIN
             // 
             this.btnCreateBIN.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnCreateBIN.Location = new System.Drawing.Point(460, 800);
+            this.btnCreateBIN.Location = new System.Drawing.Point(460, 801);
             this.btnCreateBIN.Name = "btnCreateBIN";
             this.btnCreateBIN.Size = new System.Drawing.Size(119, 25);
             this.btnCreateBIN.TabIndex = 41;
@@ -539,11 +570,24 @@
             // 
             // labelControl13
             // 
-            this.labelControl13.Location = new System.Drawing.Point(3, 831);
+            this.labelControl13.Location = new System.Drawing.Point(3, 832);
             this.labelControl13.Name = "labelControl13";
             this.labelControl13.Size = new System.Drawing.Size(153, 15);
             this.labelControl13.TabIndex = 2;
             this.labelControl13.Text = "                                                   ";
+            // 
+            // tableLayoutPanel7
+            // 
+            this.tableLayoutPanel7.ColumnCount = 2;
+            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel7.Location = new System.Drawing.Point(3, 853);
+            this.tableLayoutPanel7.Name = "tableLayoutPanel7";
+            this.tableLayoutPanel7.RowCount = 2;
+            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel7.Size = new System.Drawing.Size(200, 100);
+            this.tableLayoutPanel7.TabIndex = 63;
             // 
             // flowLayoutPanel2
             // 
@@ -648,7 +692,9 @@
             this.tableLayoutPanel3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.edtTag.Properties)).EndInit();
             this.tableLayoutPanel6.ResumeLayout(false);
+            this.tableLayoutPanel5.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.btnParameterAdd.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chkUse3D.Properties)).EndInit();
             this.flowLayoutPanel4.ResumeLayout(false);
             this.flowLayoutPanel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.treeList1)).EndInit();
@@ -712,5 +758,8 @@
         private System.Windows.Forms.FlowLayoutPanel panelParamCnt1;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel5;
         private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repositoryItemCheckEdit2;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
+        private DevExpress.XtraEditors.CheckEdit chkUse3D;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel7;
     }
 }

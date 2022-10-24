@@ -317,9 +317,9 @@ namespace DynaRAP.UControl
         {
             MainForm mainForm = this.ParentForm as MainForm;
 
-            if (comboBoxEdit1.Text.Equals("") || edtSearch.Text.Equals(""))
+            if (comboBoxEdit1.Text.Equals(""))
             {
-                MessageBox.Show("구분 값이나 검색어가 없습니다.");
+                MessageBox.Show("구분 값이 선택되지 않았습니다.");
                 return;
             }
             string sourceType = comboBoxEdit1.Text;

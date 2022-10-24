@@ -269,7 +269,7 @@ namespace DynaRAP.UControl
                     {
                         foreach (var sourceList in list.plotSourceList.Select((value, index) => new { value, index }))
                         {
-                            var plotData = plotGridSourceDataList.Find(x => x.seq == sourceList.value.sourceSeq);
+                            var plotData = plotGridSourceDataList.Find(x => (x.seq == sourceList.value.sourceSeq) && (x.sourceType == sourceList.value.sourceType));
                             if (plotData != null)
                             {
                                 switch (sourceList.index)

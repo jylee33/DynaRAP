@@ -28,7 +28,7 @@ namespace DynaRAP.UControl
         BinModuleControl moduleControl = null;
         List<ParamDatas> paramDataList = null;
         bool initParamList = false;
-        string beforeSeq = null;
+        public string beforeSeq = null;
         public BinParameterSelectControl(BinModuleControl moduleControl, List<ParamDatas> paramDataList)
         {
             this.moduleControl = moduleControl;
