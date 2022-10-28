@@ -219,5 +219,10 @@ namespace DynaRAP.UControl
             }
             document.Caption = plotName;
         }
+        public string GetDocumentName()
+        {
+            Document document = view.ActiveDocument as Document;
+            return document.Caption;
+        }
     }
 }

@@ -125,12 +125,19 @@ namespace DynaRAP.UControl
             newDXChartControl.max_table = dXChartControl.max_table;
             newDXChartControl.m_drawTypes = dXChartControl.m_drawTypes;
             newDXChartControl.m_clusters = dXChartControl.m_clusters;
-            newDXChartControl.dxGridDataList = dXChartControl.dxGridDataList;
             newDXChartControl.m_propertyGridWidth = dXChartControl.m_propertyGridWidth;
 
             newDXChartControl.m_dllDatas = dXChartControl.m_dllDatas;
             newDXChartControl.m_dicData = dXChartControl.m_dicData;
-            
+
+
+            newDXChartControl.plotModuleControl = dXChartControl.plotModuleControl;
+            newDXChartControl.additionalResponse = dXChartControl.additionalResponse;
+            dxGridData[] dxGridArray= new dxGridData[dXChartControl.dxGridDataList.Count];
+            dXChartControl.dxGridDataList.CopyTo(dxGridArray);
+            newDXChartControl.dxGridDataList = dxGridArray.ToList() ;
+            newDXChartControl.tagValue = dXChartControl.tagValue;
+
             //newDXChartControl.m_chart = new ChartControl();
             newDXChartControl.m_chart = (ChartControl)dXChartControl.m_chart.Clone();
             newDXChartControl.m_chart.ContextMenuStrip = newDXChartControl.contextMenuStrip1;
@@ -1854,7 +1861,7 @@ namespace DynaRAP.UControl
             MainForm mainForm = this.ParentForm as MainForm;
             DXChartControl chartControl = new DXChartControl();
             chartControl = chartControl.DeepCopy(this);
-            mainForm.PlotModuleControl.AddDocument(chartControl);
+            plotModuleControl.AddDocument(chartControl, plotModuleControl.GetDocumentName());
         }
 
         private void chartResetToolStripMenuItem_Click(object sender, EventArgs e)
