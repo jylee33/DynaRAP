@@ -11,18 +11,24 @@ namespace DynaRAP.Data
         public SBResult()
         {
         }
-        public SBResult(double psd, double rms, double n0, double rmsToPeek, double resultValue)
+        public SBResult(string frequency, string psd)
         {
+            Frequency = frequency;
             Psd = psd;
-            Rms = rms;
-            N0 = n0;
-            RmsToPeek = rmsToPeek;
-            ResultValue = resultValue;
         }
-        public double Psd { get; set; }
-        public double Rms { get; set; }
-        public double N0 { get; set; }
-        public double RmsToPeek { get; set; }
-        public double ResultValue { get; set; }
+        public string Frequency { get; set; }
+        public string Psd { get; set; }
+    }
+
+    public class SBResult1
+    {
+        public SBResult1()
+        {
+        }
+        public SBResult1(string zarray)
+        {
+            Zarray = zarray;
+        }
+        public string Zarray { get; set; }
     }
 }

@@ -19,15 +19,24 @@ namespace DynaRAP.UControl
     {
         private string idxValue = string.Empty;
         List<string> shortBlockSeqList = null;
+        string binTableName = string.Empty;
+        string binMetaSeq = string.Empty;
+        BinSBSummary sbSummaryControl = null;
+        SummaryData selectSummaryData = null;
+        string selectParamSeq = string.Empty;
         public string IdxValue
         {
             get { return idxValue; }
             set { idxValue = value; }
         }
 
-        public BinSBTabControl(List<string> shortBlockSeqList)
+        public BinSBTabControl(List<string> shortBlockSeqList,SummaryData selectSummaryData,string selectParamSeq, string binTableName, string binMetaSeq)
         {
             this.shortBlockSeqList = shortBlockSeqList;
+            this.binTableName = binTableName;
+            this.binMetaSeq = binMetaSeq;
+            this.selectSummaryData = selectSummaryData;
+            this.selectParamSeq = selectParamSeq;
             InitializeComponent();
         }
 
@@ -38,11 +47,15 @@ namespace DynaRAP.UControl
             //AddTabPage("SB3");
             //AddTabPage("SB4");
             //AddTabPage("SB5");
-            SetTabPage();
+            if (selectSummaryData != null)
+            {
+                SetTabPage();
+            }
         }
 
         private void SetTabPage()
         {
+            AddTabSummaryPage();
             foreach (string shortblock in shortBlockSeqList)
             {
                 string sendData = string.Format(@"
@@ -83,8 +96,19 @@ namespace DynaRAP.UControl
                 //    }
                 //}
             }
+            sbSummaryControl.initGridControl();
         }
+        private void AddTabSummaryPage()
+        {
+            XtraTabPage tabPage = new XtraTabPage();
+            this.xtraTabControl1.TabPages.Add(tabPage);
+            tabPage.Name = "Summary";
+            tabPage.Text = "Summary";
 
+            sbSummaryControl = new BinSBSummary(selectSummaryData,binTableName,binMetaSeq);
+            sbSummaryControl.Dock = DockStyle.Fill;
+            tabPage.Controls.Add(sbSummaryControl);
+        }
         private void AddTabPage(string partSeq, string tabName, string shortBlockSeq)
         {
             XtraTabPage tabPage = new XtraTabPage();
@@ -92,7 +116,7 @@ namespace DynaRAP.UControl
             tabPage.Name = tabName;
             tabPage.Text = tabName;
 
-            BinSBInfoControl sbInfoControl = new BinSBInfoControl(partSeq, shortBlockSeq);
+            BinSBInfoControl sbInfoControl = new BinSBInfoControl(partSeq, shortBlockSeq, selectParamSeq, tabName, sbSummaryControl);
             sbInfoControl.Dock = DockStyle.Fill;
             tabPage.Controls.Add(sbInfoControl);
         }

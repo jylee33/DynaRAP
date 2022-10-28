@@ -50,16 +50,20 @@
             this.pnPaging = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.btn_AddSeries = new DevExpress.XtraEditors.SimpleButton();
+            this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
+            this.btn_ChangePlotName = new DevExpress.XtraEditors.SimpleButton();
+            this.btn_AddTags = new DevExpress.XtraEditors.SimpleButton();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.btn_ResetSeries = new DevExpress.XtraEditors.SimpleButton();
             this.btn_SeriesApply = new DevExpress.XtraEditors.SimpleButton();
+            this.btn_AddSeries = new DevExpress.XtraEditors.SimpleButton();
             this.gridControl1 = new DevExpress.XtraGrid.GridControl();
             this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.gridColumn1 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridColumn2 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemComboBox2 = new DevExpress.XtraEditors.Repository.RepositoryItemComboBox();
             this.gridColumn3 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.repositoryItemComboBox6 = new DevExpress.XtraEditors.Repository.RepositoryItemComboBox();
             this.gridColumn4 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemComboBox1 = new DevExpress.XtraEditors.Repository.RepositoryItemComboBox();
             this.gridColumn5 = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -71,6 +75,10 @@
             this.repositoryItemComboBox5 = new DevExpress.XtraEditors.Repository.RepositoryItemComboBox();
             this.gridColumn8 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemComboBox3 = new DevExpress.XtraEditors.Repository.RepositoryItemComboBox();
+            this.gridColumn9 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.gridColumn10 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.gridColumn11 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.gridColumn12 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.cbSeries2 = new System.Windows.Forms.ComboBox();
@@ -90,10 +98,12 @@
             this.pnPaging.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
+            this.flowLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemComboBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemComboBox6)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemComboBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemComboBox4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemImageComboBox1)).BeginInit();
@@ -325,9 +335,9 @@
             // tableLayoutPanel2
             // 
             this.tableLayoutPanel2.ColumnCount = 2;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 21.65605F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 78.34395F));
-            this.tableLayoutPanel2.Controls.Add(this.btn_AddSeries, 0, 0);
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 32.96178F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 67.03822F));
+            this.tableLayoutPanel2.Controls.Add(this.flowLayoutPanel2, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.flowLayoutPanel1, 1, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
@@ -338,31 +348,53 @@
             this.tableLayoutPanel2.Size = new System.Drawing.Size(628, 32);
             this.tableLayoutPanel2.TabIndex = 17;
             // 
-            // btn_AddSeries
+            // flowLayoutPanel2
             // 
-            this.btn_AddSeries.Location = new System.Drawing.Point(1, 1);
-            this.btn_AddSeries.Margin = new System.Windows.Forms.Padding(1);
-            this.btn_AddSeries.Name = "btn_AddSeries";
-            this.btn_AddSeries.Size = new System.Drawing.Size(75, 30);
-            this.btn_AddSeries.TabIndex = 51;
-            this.btn_AddSeries.Text = "Series 추가";
-            this.btn_AddSeries.Click += new System.EventHandler(this.btn_AddSeries_Click);
+            this.flowLayoutPanel2.Controls.Add(this.btn_ChangePlotName);
+            this.flowLayoutPanel2.Controls.Add(this.btn_AddTags);
+            this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel2.Location = new System.Drawing.Point(0, 0);
+            this.flowLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
+            this.flowLayoutPanel2.Name = "flowLayoutPanel2";
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(206, 32);
+            this.flowLayoutPanel2.TabIndex = 52;
+            // 
+            // btn_ChangePlotName
+            // 
+            this.btn_ChangePlotName.Location = new System.Drawing.Point(1, 1);
+            this.btn_ChangePlotName.Margin = new System.Windows.Forms.Padding(1);
+            this.btn_ChangePlotName.Name = "btn_ChangePlotName";
+            this.btn_ChangePlotName.Size = new System.Drawing.Size(92, 30);
+            this.btn_ChangePlotName.TabIndex = 52;
+            this.btn_ChangePlotName.Text = "PLOT이름변경";
+            this.btn_ChangePlotName.Click += new System.EventHandler(this.btn_ChangePlotName_Click);
+            // 
+            // btn_AddTags
+            // 
+            this.btn_AddTags.Location = new System.Drawing.Point(95, 1);
+            this.btn_AddTags.Margin = new System.Windows.Forms.Padding(1);
+            this.btn_AddTags.Name = "btn_AddTags";
+            this.btn_AddTags.Size = new System.Drawing.Size(75, 30);
+            this.btn_AddTags.TabIndex = 53;
+            this.btn_AddTags.Text = "태그 추가";
+            this.btn_AddTags.Click += new System.EventHandler(this.btn_AddTags_Click);
             // 
             // flowLayoutPanel1
             // 
             this.flowLayoutPanel1.Controls.Add(this.btn_ResetSeries);
             this.flowLayoutPanel1.Controls.Add(this.btn_SeriesApply);
+            this.flowLayoutPanel1.Controls.Add(this.btn_AddSeries);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(135, 0);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(206, 0);
             this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(493, 32);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(422, 32);
             this.flowLayoutPanel1.TabIndex = 16;
             // 
             // btn_ResetSeries
             // 
-            this.btn_ResetSeries.Location = new System.Drawing.Point(417, 1);
+            this.btn_ResetSeries.Location = new System.Drawing.Point(346, 1);
             this.btn_ResetSeries.Margin = new System.Windows.Forms.Padding(1);
             this.btn_ResetSeries.Name = "btn_ResetSeries";
             this.btn_ResetSeries.Size = new System.Drawing.Size(75, 30);
@@ -372,13 +404,23 @@
             // 
             // btn_SeriesApply
             // 
-            this.btn_SeriesApply.Location = new System.Drawing.Point(340, 1);
+            this.btn_SeriesApply.Location = new System.Drawing.Point(269, 1);
             this.btn_SeriesApply.Margin = new System.Windows.Forms.Padding(1);
             this.btn_SeriesApply.Name = "btn_SeriesApply";
             this.btn_SeriesApply.Size = new System.Drawing.Size(75, 30);
             this.btn_SeriesApply.TabIndex = 51;
             this.btn_SeriesApply.Text = "Apply";
             this.btn_SeriesApply.Click += new System.EventHandler(this.btn_SeriesApply_Click);
+            // 
+            // btn_AddSeries
+            // 
+            this.btn_AddSeries.Location = new System.Drawing.Point(192, 1);
+            this.btn_AddSeries.Margin = new System.Windows.Forms.Padding(1);
+            this.btn_AddSeries.Name = "btn_AddSeries";
+            this.btn_AddSeries.Size = new System.Drawing.Size(75, 30);
+            this.btn_AddSeries.TabIndex = 51;
+            this.btn_AddSeries.Text = "Series 추가";
+            this.btn_AddSeries.Click += new System.EventHandler(this.btn_AddSeries_Click);
             // 
             // gridControl1
             // 
@@ -392,7 +434,8 @@
             this.repositoryItemImageComboBox1,
             this.repositoryItemComboBox3,
             this.repositoryItemComboBox4,
-            this.repositoryItemComboBox5});
+            this.repositoryItemComboBox5,
+            this.repositoryItemComboBox6});
             this.gridControl1.Size = new System.Drawing.Size(622, 85);
             this.gridControl1.TabIndex = 44;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
@@ -408,7 +451,11 @@
             this.gridColumn5,
             this.gridColumn6,
             this.gridColumn7,
-            this.gridColumn8});
+            this.gridColumn8,
+            this.gridColumn9,
+            this.gridColumn10,
+            this.gridColumn11,
+            this.gridColumn12});
             this.gridView1.GridControl = this.gridControl1;
             this.gridView1.Name = "gridView1";
             this.gridView1.OptionsBehavior.EditorShowMode = DevExpress.Utils.EditorShowMode.MouseUp;
@@ -441,12 +488,19 @@
             // gridColumn3
             // 
             this.gridColumn3.Caption = "Y축";
-            this.gridColumn3.ColumnEdit = this.repositoryItemComboBox2;
+            this.gridColumn3.ColumnEdit = this.repositoryItemComboBox6;
             this.gridColumn3.FieldName = "yAxis";
             this.gridColumn3.FilterMode = DevExpress.XtraGrid.ColumnFilterMode.DisplayText;
             this.gridColumn3.Name = "gridColumn3";
             this.gridColumn3.Visible = true;
             this.gridColumn3.VisibleIndex = 3;
+            // 
+            // repositoryItemComboBox6
+            // 
+            this.repositoryItemComboBox6.AutoHeight = false;
+            this.repositoryItemComboBox6.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.repositoryItemComboBox6.Name = "repositoryItemComboBox6";
             // 
             // gridColumn4
             // 
@@ -470,7 +524,7 @@
             // 
             this.gridColumn5.Caption = "색상";
             this.gridColumn5.ColumnEdit = this.repositoryItemComboBox4;
-            this.gridColumn5.FieldName = "seriesColor";
+            this.gridColumn5.FieldName = "lineColor";
             this.gridColumn5.MinWidth = 80;
             this.gridColumn5.Name = "gridColumn5";
             this.gridColumn5.Visible = true;
@@ -511,7 +565,7 @@
             // 
             this.gridColumn7.Caption = "선굵기";
             this.gridColumn7.ColumnEdit = this.repositoryItemComboBox5;
-            this.gridColumn7.FieldName = "bordLength";
+            this.gridColumn7.FieldName = "lineBorder";
             this.gridColumn7.Name = "gridColumn7";
             this.gridColumn7.Visible = true;
             this.gridColumn7.VisibleIndex = 6;
@@ -527,7 +581,7 @@
             // 
             this.gridColumn8.Caption = "선타입";
             this.gridColumn8.ColumnEdit = this.repositoryItemComboBox3;
-            this.gridColumn8.FieldName = "bordType";
+            this.gridColumn8.FieldName = "lineType";
             this.gridColumn8.Name = "gridColumn8";
             this.gridColumn8.Visible = true;
             this.gridColumn8.VisibleIndex = 4;
@@ -538,6 +592,30 @@
             this.repositoryItemComboBox3.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.repositoryItemComboBox3.Name = "repositoryItemComboBox3";
+            // 
+            // gridColumn9
+            // 
+            this.gridColumn9.Caption = "gridColumn9";
+            this.gridColumn9.FieldName = "xAxisSourceType";
+            this.gridColumn9.Name = "gridColumn9";
+            // 
+            // gridColumn10
+            // 
+            this.gridColumn10.Caption = "gridColumn10";
+            this.gridColumn10.FieldName = "xAxisSourceSeq";
+            this.gridColumn10.Name = "gridColumn10";
+            // 
+            // gridColumn11
+            // 
+            this.gridColumn11.Caption = "gridColumn11";
+            this.gridColumn11.FieldName = "yAxisSourceType";
+            this.gridColumn11.Name = "gridColumn11";
+            // 
+            // gridColumn12
+            // 
+            this.gridColumn12.Caption = "gridColumn12";
+            this.gridColumn12.FieldName = "yAxisSourceSeq";
+            this.gridColumn12.Name = "gridColumn12";
             // 
             // label4
             // 
@@ -631,60 +709,63 @@
             this.chartResetToolStripMenuItem,
             this.toolStripMenuItem11});
             this.contextMenuStrip1.Name = "contextMenuStrip";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(152, 148);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 170);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(148, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
             // 
             // toolStripMenuItem4
             // 
             this.toolStripMenuItem4.Enabled = false;
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(151, 22);
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItem4.Text = "DrawChart 1D";
+            this.toolStripMenuItem4.Visible = false;
             this.toolStripMenuItem4.Click += new System.EventHandler(this.mnuDrawChart1D_Click);
             // 
             // toolStripMenuItem6
             // 
             this.toolStripMenuItem6.Enabled = false;
             this.toolStripMenuItem6.Name = "toolStripMenuItem6";
-            this.toolStripMenuItem6.Size = new System.Drawing.Size(151, 22);
+            this.toolStripMenuItem6.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItem6.Text = "MIN/MAX";
+            this.toolStripMenuItem6.Visible = false;
             this.toolStripMenuItem6.Click += new System.EventHandler(this.drawChartToolStripMenuItem_Click);
             // 
             // toolStripMenuItem9
             // 
             this.toolStripMenuItem9.Enabled = false;
             this.toolStripMenuItem9.Name = "toolStripMenuItem9";
-            this.toolStripMenuItem9.Size = new System.Drawing.Size(151, 22);
+            this.toolStripMenuItem9.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItem9.Text = "DrawPotato";
+            this.toolStripMenuItem9.Visible = false;
             this.toolStripMenuItem9.Click += new System.EventHandler(this.mnuDrawPotato_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(148, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
             // 
             // toolStripMenuItem10
             // 
             this.toolStripMenuItem10.Name = "toolStripMenuItem10";
-            this.toolStripMenuItem10.Size = new System.Drawing.Size(151, 22);
+            this.toolStripMenuItem10.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItem10.Text = "Save Chart";
             this.toolStripMenuItem10.Click += new System.EventHandler(this.mnuSaveChart_Click);
             // 
             // chartResetToolStripMenuItem
             // 
             this.chartResetToolStripMenuItem.Name = "chartResetToolStripMenuItem";
-            this.chartResetToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+            this.chartResetToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.chartResetToolStripMenuItem.Text = "Chart Reset";
             this.chartResetToolStripMenuItem.Click += new System.EventHandler(this.chartResetToolStripMenuItem_Click);
             // 
             // toolStripMenuItem11
             // 
             this.toolStripMenuItem11.Name = "toolStripMenuItem11";
-            this.toolStripMenuItem11.Size = new System.Drawing.Size(151, 22);
+            this.toolStripMenuItem11.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItem11.Text = "Copy Chart";
             this.toolStripMenuItem11.Click += new System.EventHandler(this.toolStripMenuItem11_Click);
             // 
@@ -712,10 +793,12 @@
             this.pnPaging.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);
+            this.flowLayoutPanel2.ResumeLayout(false);
             this.flowLayoutPanel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemComboBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemComboBox6)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemComboBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemComboBox4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemImageComboBox1)).EndInit();
@@ -788,5 +871,13 @@
         private DevExpress.XtraEditors.Repository.RepositoryItemComboBox repositoryItemComboBox3;
         private DevExpress.XtraEditors.Repository.RepositoryItemComboBox repositoryItemComboBox4;
         private DevExpress.XtraEditors.Repository.RepositoryItemComboBox repositoryItemComboBox5;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
+        private DevExpress.XtraEditors.SimpleButton btn_ChangePlotName;
+        private DevExpress.XtraEditors.SimpleButton btn_AddTags;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn9;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn10;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn11;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn12;
+        private DevExpress.XtraEditors.Repository.RepositoryItemComboBox repositoryItemComboBox6;
     }
 }

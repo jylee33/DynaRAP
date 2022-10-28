@@ -262,8 +262,7 @@ namespace DynaRAP.UControl
             //    }
             //}
 
-
-            BinTableControl binTableCtrl = new BinTableControl(selectedParamDataList, pickUpParamList, shorBlockSeqList, mainForm, binMetaSeq);
+            BinTableControl binTableCtrl = new BinTableControl(paramListData, selectedParamDataList, pickUpParamList, shorBlockSeqList, mainForm, binName.Text, binMetaSeq);
             binTableCtrl.Dock = DockStyle.Fill;
             //mainForm.PanelBinTable.Controls.Clear();
             //mainForm.PanelBinTable.Controls.Add(binTableCtrl);
@@ -780,7 +779,10 @@ namespace DynaRAP.UControl
                     string responseData = Utils.GetPostData(ConfigurationManager.AppSettings["UrlShortBlock"], sendData);
                     if (responseData != null)
                     {
+                        responseData = responseData.Replace(@"""[", "[");
+                        responseData = responseData.Replace(@"]""", "]");
                         ResponseParamList responseParam = JsonConvert.DeserializeObject<ResponseParamList>(responseData);
+                        
                         if (responseParam.code == 200)
                         {
                             foreach (var paramData in responseParam.response.paramData)

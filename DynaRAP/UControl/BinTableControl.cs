@@ -24,27 +24,47 @@ namespace DynaRAP.UControl
     {
         DockPanel binSBTabPanel = null;
         BinSBTabControl binSBTabCtrl = null;
+        List<ParamDatas> allParamList = null;
         List<ParamDatas> paramDataList = null;
         List<PickUpParam> pickUpParamList = null;
         List<string> shortBlockSeqList = null;
+        List<BINParamCombo> paramComboList = null;
         Dictionary<string,string> firstColNameList= null;
         List<ResponseParamList> responseParamList = null;
         MainForm mainForm = null;
         string binMetaSeq = null;
-        Dictionary<string, Dictionary<MinMaxRagne, Dictionary<MinMaxRagne, List<string>>>> rangeDic = new Dictionary<string, Dictionary<MinMaxRagne, Dictionary<MinMaxRagne, List<string>>>>();
-        public BinTableControl(List<ParamDatas> paramDataList, List<PickUpParam> pickUpParamList, List<string> shortBlockSeqList, MainForm mainForm, string binMetaSeq)
+        string binTableName = null;
+        Dictionary<string, Dictionary<MinMaxRagne, Dictionary<MinMaxRagne, BINMetaData>>> rangeDic = new Dictionary<string, Dictionary<MinMaxRagne, Dictionary<MinMaxRagne, BINMetaData>>>();
+        Dictionary<int[], dynamic> pointDic = new Dictionary<int[], dynamic>();
+        double maxValue = 0;
+
+        public BinTableControl(List<ParamDatas> allParamList , List<ParamDatas> paramDataList, List<PickUpParam> pickUpParamList, List<string> shortBlockSeqList, MainForm mainForm, string binTableName, string binMetaSeq)
         {
             this.paramDataList = paramDataList;
             this.pickUpParamList = pickUpParamList;
             this.shortBlockSeqList = shortBlockSeqList;
             this.mainForm = mainForm;
             this.binMetaSeq = binMetaSeq;
+            this.binTableName = binTableName;
+            this.allParamList = new List<ParamDatas>(); ;
+            foreach (var paramData in allParamList)
+            {
+                if (paramData.propInfo != null)
+                {
+                    if (paramData.propInfo.propType != "FLIGHT")
+                    {
+                        this.allParamList.Add(paramData);
+                    }
+                }
+            }
+
             InitializeComponent();
         }
 
         private void BinTableControl_Load(object sender, EventArgs e)
         {
             mainForm.ShowSplashScreenManager("BIN테이블을 생성중입니다. 잠시만 기다려주십시오.");
+            InitComboBoxList();
             firstColNameList = new Dictionary<string, string>();
 
             if (pickUpParamList.Count == 3)
@@ -52,10 +72,10 @@ namespace DynaRAP.UControl
                 string valueName = paramDataList[0].paramKey + paramDataList[2].paramKey;
                 //DataTable dt = GetDataTable(paramDataList[i - 1], paramDataList[i]);
                 GetShortBlockParamList();
-                foreach (var paramData in pickUpParamList[2].userParamTable)
+                foreach (var paramData in pickUpParamList[2].userParamTable.Select((value, index) => new { value, index }))
                 {
-                    string showName = string.Format("{0}-{1}({2}-{3})", paramDataList[0].propInfo.paramUnit, paramDataList[2].propInfo.paramUnit, paramData.min, paramData.max);
-                    AddTabPage(showName, valueName + paramData.min, paramDataList[1], paramDataList[0], pickUpParamList[2].paramSeq, paramData);
+                    string showName = string.Format("{0}-{1}({2}-{3})", paramDataList[0].propInfo.paramUnit, paramDataList[2].propInfo.paramUnit, paramData.value.min, paramData.value.max);
+                    AddTabPage(showName, valueName + paramData.value.min, paramDataList[1], paramDataList[0], pickUpParamList[2].paramSeq, paramData.value, paramData.index);
                 }
             } else
             {
@@ -81,6 +101,88 @@ namespace DynaRAP.UControl
 
         }
 
+        private void ChangeTabPage()
+        {
+            mainForm.ShowSplashScreenManager("BIN테이블 표시 내용을 변경 중입니다. 잠시만 기다려주십시오.");
+            int selectedIndex = this.xtraTabControl1.SelectedTabPageIndex;
+            firstColNameList = new Dictionary<string, string>();
+            maxValue = 0;
+
+            rangeDic.Clear();
+            this.xtraTabControl1.TabPages.Clear();
+            if (pickUpParamList.Count == 3)
+            {
+
+                string valueName = paramDataList[0].paramKey + paramDataList[2].paramKey;
+                foreach (var paramData in pickUpParamList[2].userParamTable.Select((value, index) => new { value, index }))
+                {
+                    string showName = string.Format("{0}-{1}({2}-{3})", paramDataList[0].propInfo.paramUnit, paramDataList[2].propInfo.paramUnit, paramData.value.min, paramData.value.max);
+                    AddTabPage(showName, valueName + paramData.value.min, paramDataList[1], paramDataList[0], pickUpParamList[2].paramSeq, paramData.value, paramData.index);
+                }
+                this.xtraTabControl1.SelectedTabPageIndex = selectedIndex;
+            }
+            else
+            {
+                string valueName = paramDataList[0].paramKey + paramDataList[1].paramKey;
+                string showName = string.Format("{0}-{1}", paramDataList[0].propInfo.paramUnit, paramDataList[1].propInfo.paramUnit);
+                AddTabPage2D(showName, valueName, paramDataList[0], paramDataList[1]);
+            }
+            //for (int i = 0; i < paramDataList.Count() - 1; i++)
+            //{
+            //    for (int j = i + 1; j < paramDataList.Count(); j++)
+            //    {
+            //        string showName = string.Format("{0}-{1}", paramDataList[i].propInfo.paramUnit, paramDataList[j].propInfo.paramUnit);
+            //        string valueName = paramDataList[i].paramKey + paramDataList[j].paramKey;
+            //        //DataTable dt = GetDataTable(paramDataList[i - 1], paramDataList[i]);
+            //        GetShortBlockParamList();
+            //        AddTabPage(showName, valueName, paramDataList[i], paramDataList[j]);
+            //    }
+            //}
+
+            mainForm.HideSplashScreenManager();
+        }
+
+        private void InitComboBoxList()
+        {
+            cboParam.Properties.DisplayMember = "paramKey";
+            cboParam.Properties.ValueMember = "seq";
+            cboParam.Properties.NullText = "";
+
+            if (paramComboList == null)
+            {
+                paramComboList = new List<BINParamCombo>();
+            }
+            if(allParamList != null)
+            {
+                cboParam.Properties.DataSource = null;
+
+                foreach (var paramData in allParamList)
+                {
+                    BINParamCombo combo = new BINParamCombo();
+                    combo.seq = paramData.paramValueMap.seq;
+                    combo.paramKey = paramData.paramKey;
+                    paramComboList.Add(combo);
+                }
+                cboParam.Properties.DataSource = paramComboList;
+
+                cboParam.Properties.PopulateColumns();
+                cboParam.Properties.ShowHeader = false;
+                cboParam.Properties.Columns["seq"].Visible = false;
+                cboParam.Properties.ShowFooter = false;
+                cboParam.Properties.PopulateColumns();
+                cboParam.Properties.Columns["paramKey"].Width = 800;
+
+                cboParam.EditValue = allParamList[0].paramValueMap.seq;
+                //cboParam.Properties.
+            }
+            cboType.Properties.Items.Add("평균 RMS크기");
+            cboType.Properties.Items.Add("평균 대표주파수");
+            cboType.Properties.Items.Add("최대 버스트값");
+            cboType.Properties.Items.Add("최대 하중/가속도 예측값");
+            cboType.SelectedIndex = 0;
+            cboParam.EditValueChanged += cboParamAndType_EditValueChanged;
+            cboType.EditValueChanged += cboParamAndType_EditValueChanged;
+        }
         private void GetShortBlockParamList()
         {
             if(responseParamList == null)
@@ -103,6 +205,8 @@ namespace DynaRAP.UControl
                 string responseData = Utils.GetPostData(System.Configuration.ConfigurationManager.AppSettings["UrlShortBlock"], sendData);
                 if (responseData != null)
                 {
+                    responseData = responseData.Replace(@"""[", "[");
+                    responseData = responseData.Replace(@"]""", "]");
                     ResponseParamList responseParam = JsonConvert.DeserializeObject<ResponseParamList>(responseData);
                     if (responseParam.code == 200)
                     {
@@ -112,17 +216,22 @@ namespace DynaRAP.UControl
             }
         }
 
-        private DataTable GetDataTable(string keyName, ParamDatas header, ParamDatas row, string paramSeq, UserParamTable minMaxData)
+        private DataTable GetDataTable(string keyName, ParamDatas header, ParamDatas row, string paramSeq, UserParamTable minMaxData, int indexZ)
         {
-          Dictionary<MinMaxRagne, Dictionary<MinMaxRagne, List<string>>> countSeqDic = new Dictionary<MinMaxRagne, Dictionary<MinMaxRagne, List<string>>>();
+
+            string selectParamSeq = String.Empty;
+            if (cboParam.GetColumnValue("seq") != null)
+                selectParamSeq = cboParam.GetColumnValue("seq").ToString();
+
+            Dictionary<MinMaxRagne, Dictionary<MinMaxRagne, BINMetaData>> countSeqDic = new Dictionary<MinMaxRagne, Dictionary<MinMaxRagne, BINMetaData>>();
 
             DataTable dt = new DataTable();
             foreach (var list in pickUpParamList.Find(x => x.paramSeq == row.seq).userParamTable)
             {
-                Dictionary<MinMaxRagne, List<string>> headerDic = new Dictionary<MinMaxRagne, List<string>>();
+                Dictionary<MinMaxRagne, BINMetaData> headerDic = new Dictionary<MinMaxRagne, BINMetaData>();
                 foreach (var list1 in pickUpParamList.Find(x => x.paramSeq == header.seq).userParamTable)
                 {
-                    headerDic.Add(new MinMaxRagne(list1.min,list1.max), new List<string>());
+                    headerDic.Add(new MinMaxRagne(list1.min,list1.max), new BINMetaData());
                 }
                 countSeqDic.Add(new MinMaxRagne(list.min,list.max), headerDic);
 
@@ -150,76 +259,118 @@ namespace DynaRAP.UControl
                             var paramStand = responseParam.response.paramData.Find(x => x.seq == paramSeq);
                             if (paramStand.paramValueMap.blockAvg < minMaxData.max && paramStand.paramValueMap.blockAvg >= minMaxData.min)
                             {
-                                countSeqDic[rowValue[0]][headerValue[0]].Add(responseParam.response.paramData[0].paramValueMap.blockSeq);
+                                countSeqDic[rowValue[0]][headerValue[0]].shortblcokSeqList.Add(responseParam.response.paramData[0].paramValueMap.blockSeq);
                             }
                         }
                     }
                 }
             }
-            rangeDic.Add(keyName, countSeqDic);
             //dt.Columns.Add(header.propInfo.paramUnit);
-            foreach(var list in countSeqDic.Keys)
+            foreach (var list in countSeqDic.Keys.Select((value, index) => new { value, index }))
             {
                 DataRow dataRow = dt.NewRow();
-                dataRow[header.propInfo.paramUnit] = list.range;
-                foreach (var dic2 in countSeqDic[list].Keys)
+                dataRow[header.propInfo.paramUnit] = list.value.range;
+                foreach (var dic2 in countSeqDic[list.value].Keys.Select((value, index) => new { value, index }))
                 {
-                    dataRow[dic2.range] = countSeqDic[list][dic2].Count();
+                    if (countSeqDic[list.value][dic2.value].shortblcokSeqList.Count() != 0)
+                    {
+                        dynamic calulateData = CalculateSBData(list.index, dic2.index, indexZ, countSeqDic[list.value][dic2.value].shortblcokSeqList);
+                        countSeqDic[list.value][dic2.value].jsonResult = calulateData;
+                        Summary summaryData = JsonConvert.DeserializeObject<Summary>(calulateData[selectParamSeq].ToString());
+                        double viewValue = 0;
+                        switch (cboType.Text)
+                        {
+                            case "평균 RMS크기":
+                                viewValue = summaryData.bpf.avg_rms;
+                                break;
+                            case "평균 대표주파수":
+                                viewValue = summaryData.bpf.avg_n0;
+                                break;
+                            case "최대 버스트값":
+                                viewValue = summaryData.bpf.burstFactor;
+                                break;
+                            case "최대 하중/가속도 예측값":
+                                viewValue = summaryData.bpf.maxLoadAccel;
+                                break;
+                        }
+
+                        dataRow[dic2.value.range] = viewValue;
+                        if (maxValue < viewValue)
+                        {
+                            maxValue = viewValue;
+                        }
+                    }
+                    else
+                    {
+                        dataRow[dic2.value.range] = countSeqDic[list.value][dic2.value].shortblcokSeqList.Count();
+                    }
                 }
                 //dt.Rows.Add(, 0, 0, 0, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
                 //countSeqDic
                 //dt.Columns.Add(list.range);
                 dt.Rows.Add(dataRow);
             }
-            
-            //dt.Columns.Add("Column1");
-            //dt.Columns.Add("Column2");
-            //dt.Columns.Add("Column3");
-            //dt.Columns.Add("Column4");
-            //dt.Columns.Add("Column5");
-            //dt.Columns.Add("Column6");
-            //dt.Columns.Add("Column7");
-            //dt.Columns.Add("Column8");
-            //dt.Columns.Add("Column9");
-            //dt.Columns.Add("Column10");
-            //dt.Columns.Add("Column11");
-            //dt.Columns.Add("Column12");
-            //dt.Columns.Add("Column13");
-            //dt.Columns.Add("Column14");
-            //dt.Columns.Add("Column15");
-            //dt.Columns.Add("Column16");
-            //dt.Columns.Add("Column17");
-            //dt.Columns.Add("Column18");
-            //dt.Columns.Add("Column19");
-            //dt.Columns.Add("Column20");
 
-            //dt.Rows.Add(10, 0, 0, 0, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
-            //dt.Rows.Add(11, 0, 0, 0, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
-            //dt.Rows.Add(12, 0, 0, 0, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
-            //dt.Rows.Add(13, 0, 0, 0, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
-            //dt.Rows.Add(14, 0, 0, 0, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
-            //dt.Rows.Add(15, 0, 0, 0, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
-            //dt.Rows.Add(16, 0, 0, 0, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
-            //dt.Rows.Add(17, 0, 0, 0, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
-            //dt.Rows.Add(18, 0, 0, 0, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
+            rangeDic.Add(keyName, countSeqDic);
 
             dt.AcceptChanges();
 
             return dt;
         }
 
+        private dynamic CalculateSBData(int indexX, int indexY, int indexZ, List<string> selectValue)
+        {
+            dynamic returnData = null;
+            if (selectValue.Count != 0)
+            {
+                string shortBlock = "";
+                foreach (var selectData in selectValue)
+                {
+                    if (shortBlock == "")
+                    {
+                        shortBlock = string.Format(@"{0}""{1}""", shortBlock, selectData);
+                    }
+                    else
+                    {
+                        shortBlock = string.Format(@"{0},""{1}""", shortBlock, selectData);
+                    }
+                }
+                string sendData = string.Format(@"
+                {{
+                ""command"":""calculate"",
+                ""binMetaSeq"":""{0}"",
+                ""shortBlocks"" : [{1}],
+                ""factorIndexes"" : [{2},{3},{4}]
+                }}", binMetaSeq, shortBlock, indexX, indexY, indexZ);
+                string responseData = Utils.GetPostData(System.Configuration.ConfigurationManager.AppSettings["UrlBINTable"], sendData);
+                if (responseData != null)
+                {
+                    dynamic result = JsonConvert.DeserializeObject(responseData);
+                    if (result["code"] == 200)
+                    {
+                        returnData = result["response"]["summary"];
+                    }
+                }
+            }
+            return returnData;
+        }
+
 
         private DataTable GetDataTable2D(string keyName, ParamDatas header, ParamDatas row)
         {
-            Dictionary<MinMaxRagne, Dictionary<MinMaxRagne, List<string>>> countSeqDic = new Dictionary<MinMaxRagne, Dictionary<MinMaxRagne, List<string>>>();
+            Dictionary<MinMaxRagne, Dictionary<MinMaxRagne, BINMetaData>> countSeqDic = new Dictionary<MinMaxRagne, Dictionary<MinMaxRagne, BINMetaData>>();
+
+            string selectParamSeq = String.Empty;
+            if (cboParam.GetColumnValue("seq") != null)
+                selectParamSeq = cboParam.GetColumnValue("seq").ToString();
 
             DataTable dt = new DataTable();
             foreach (var list in pickUpParamList.Find(x => x.paramSeq == row.seq).userParamTable)
             {
-                Dictionary<MinMaxRagne, List<string>> headerDic = new Dictionary<MinMaxRagne, List<string>>();
+                Dictionary<MinMaxRagne, BINMetaData> headerDic = new Dictionary<MinMaxRagne, BINMetaData>();
                 foreach (var list1 in pickUpParamList.Find(x => x.paramSeq == header.seq).userParamTable)
                 {
-                    headerDic.Add(new MinMaxRagne(list1.min, list1.max), new List<string>());
+                    headerDic.Add(new MinMaxRagne(list1.min, list1.max), new BINMetaData());
                 }
                 countSeqDic.Add(new MinMaxRagne(list.min, list.max), headerDic);
 
@@ -244,26 +395,63 @@ namespace DynaRAP.UControl
                         var headerValue = countSeqDic[rowValue[0]].Where(dic => (dic.Key.max > paramDataHeader.paramValueMap.blockAvg) && (dic.Key.min <= paramDataHeader.paramValueMap.blockAvg)).Select(x => x.Key).ToList();
                         if (headerValue.Count != 0)
                         {
-                            countSeqDic[rowValue[0]][headerValue[0]].Add(responseParam.response.paramData[0].paramValueMap.blockSeq);
+                            countSeqDic[rowValue[0]][headerValue[0]].shortblcokSeqList.Add(responseParam.response.paramData[0].paramValueMap.blockSeq);
                         }
                     }
                 }
             }
-            rangeDic.Add(keyName, countSeqDic);
-            //dt.Columns.Add(header.propInfo.paramUnit);
-            foreach (var list in countSeqDic.Keys)
+
+            int indexZ = this.xtraTabControl1.SelectedTabPageIndex;
+
+            foreach (var list in countSeqDic.Keys.Select((value, index) => new { value, index }))
             {
                 DataRow dataRow = dt.NewRow();
-                dataRow[header.propInfo.paramUnit] = list.range;
-                foreach (var dic2 in countSeqDic[list].Keys)
+                dataRow[header.propInfo.paramUnit] = list.value.range;
+                foreach (var dic2 in countSeqDic[list.value].Keys.Select((value, index) => new { value, index }))
                 {
-                    dataRow[dic2.range] = countSeqDic[list][dic2].Count();
+                    dataRow[dic2.value.range] = countSeqDic[list.value][dic2.value].shortblcokSeqList.Count();
+                    if (countSeqDic[list.value][dic2.value].shortblcokSeqList.Count() != 0)
+                    {
+                        dynamic calulateData = CalculateSBData(list.index, dic2.index, indexZ, countSeqDic[list.value][dic2.value].shortblcokSeqList);
+                        countSeqDic[list.value][dic2.value].jsonResult = calulateData;
+                        Summary summaryData = JsonConvert.DeserializeObject<Summary>(calulateData[selectParamSeq].ToString());
+                        double viewValue = 0;
+                        switch (cboType.Text)
+                        {
+                            case "평균 RMS크기":
+                                viewValue = summaryData.bpf.avg_rms;
+                                break;
+                            case "평균 대표주파수":
+                                viewValue = summaryData.bpf.avg_n0;
+                                break;
+                            case "최대 버스트값":
+                                viewValue = summaryData.bpf.burstFactor;
+                                break;
+                            case "최대 하중/가속도 예측값":
+                                viewValue = summaryData.bpf.maxLoadAccel;
+                                break;
+                        }
+
+                        dataRow[dic2.value.range] = viewValue;
+                        if(maxValue < viewValue)
+                        {
+                            maxValue = viewValue;
+                        }
+                    }
+                    else
+                    {
+                        dataRow[dic2.value.range] = countSeqDic[list.value][dic2.value].shortblcokSeqList.Count();
+                    }
                 }
                 //dt.Rows.Add(, 0, 0, 0, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
                 //countSeqDic
                 //dt.Columns.Add(list.range);
                 dt.Rows.Add(dataRow);
             }
+
+
+
+            rangeDic.Add(keyName, countSeqDic);
 
             dt.AcceptChanges();
 
@@ -310,9 +498,9 @@ namespace DynaRAP.UControl
         //    return dt;
         //}
 
-        private void AddTabPage(string tabName, string tabValue, ParamDatas header, ParamDatas row, string paramSeq, UserParamTable minMaxData)
+        private void AddTabPage(string tabName, string tabValue, ParamDatas header, ParamDatas row, string paramSeq, UserParamTable minMaxData,int indexZ)
         {
-            DataTable dt = GetDataTable(tabValue, header, row,  paramSeq,  minMaxData);
+            DataTable dt = GetDataTable(tabValue, header, row,  paramSeq,  minMaxData, indexZ);
             XtraTabPage tabPage = new XtraTabPage();
             this.xtraTabControl1.TabPages.Add(tabPage);
             tabPage.Name = tabValue;
@@ -484,25 +672,28 @@ namespace DynaRAP.UControl
             //    e.Appearance.BackColor = Color.Red;
             //}
 
-            int val = 0;
-            int.TryParse(view.GetRowCellValue(e.RowHandle, e.Column.FieldName).ToString(), out val);
-            if (val < 5)
-            {
-                e.Appearance.BackColor = Color.Green;
-            }
-            else if (val < 8)
-            {
-                e.Appearance.BackColor = Color.Yellow;
-                e.Appearance.ForeColor = Color.Black;
-            }
-            else if (val < 12)
-            {
-                e.Appearance.BackColor = Color.Orange;
-            }
-            else
-            {
-                e.Appearance.BackColor = Color.Red;
-            }
+            double val = 0;
+            double.TryParse(view.GetRowCellValue(e.RowHandle, e.Column.FieldName).ToString(), out val);
+            var percent = val / maxValue;
+            e.Appearance.BackColor = Color.FromArgb(0,Convert.ToInt32(percent * 128), 0);
+            //if (val < 5)
+            //{
+            //    Color.FromArgb(255,0, 0);
+            //e.Appearance.BackColor = Color.Green;
+            //}
+            //else if (val < 8)
+            //{
+            //    e.Appearance.BackColor = Color.Yellow;
+            //    e.Appearance.ForeColor = Color.Black;
+            //}
+            //else if (val < 12)
+            //{
+            //    e.Appearance.BackColor = Color.Orange;
+            //}
+            //else
+            //{
+            //    e.Appearance.BackColor = Color.Red;
+            //}
 
         }
 
@@ -510,61 +701,38 @@ namespace DynaRAP.UControl
         {
             BandedGridView gridView = sender as BandedGridView;
             var nowTabPage = this.xtraTabControl1.SelectedTabPage;
-            int indexX = e.RowHandle;
-            int indexY = e.Column.AbsoluteIndex;
-            int indexZ = this.xtraTabControl1.SelectedTabPageIndex;
+
+            string selectParamSeq = String.Empty;
+            if (cboParam.GetColumnValue("seq") != null)
+                selectParamSeq = cboParam.GetColumnValue("seq").ToString();
+
 
             if (e.Column.FieldName == firstColNameList[nowTabPage.Name])
             {
                 return;
             }
+            mainForm.ShowSplashScreenManager("ShorBlock 정보를 가져오는 중입니다. 잠시만 기다려주십시오.");
             string rowKey = gridView.GetRowCellValue(e.RowHandle, firstColNameList[nowTabPage.Name]).ToString();
 
             string colKey = gridView.FocusedColumn.FieldName;
 
             List<string> selectValue = null;
+            SummaryData selectSummaryData = null;
             var rowValue = rangeDic[nowTabPage.Name].Where(dic => dic.Key.range == rowKey).Select(x => x.Key).ToList();
             if (rowValue.Count != 0)
             {
                 var headerValue = rangeDic[nowTabPage.Name][rowValue[0]].Where(dic => dic.Key.range == colKey).Select(x => x.Key).ToList();
                 if (headerValue.Count != 0)
                 {
-                    selectValue = rangeDic[nowTabPage.Name][rowValue[0]][headerValue[0]];
-                }
-            }
-            
-            if(selectValue.Count != 0)
-            {
-                string shortBlock = "";
-                foreach (var selectData in selectValue)
-                {
-                    if (shortBlock == "")
+                    selectValue = rangeDic[nowTabPage.Name][rowValue[0]][headerValue[0]].shortblcokSeqList;
+                    if (selectValue.Count != 0)
                     {
-                        shortBlock = string.Format(@"{0}""{1}""", shortBlock, selectData);
-                    }
-                    else
-                    {
-                        shortBlock = string.Format(@"{0},""{1}""", shortBlock, selectData);
-                    }
-                }
-                string sendData = string.Format(@"
-                {{
-                ""command"":""calculate"",
-                ""binMetaSeq"":""{0}"",
-                ""shortBlocks"" : [{1}],
-                ""factorIndexes"" : [{2},{3},{4}]
-                }}", binMetaSeq, shortBlock, indexX,indexY,indexZ);
-                string responseData = Utils.GetPostData(System.Configuration.ConfigurationManager.AppSettings["UrlBINTable"], sendData);
-                if (responseData != null)
-                {
-                    JsonData result = JsonConvert.DeserializeObject<JsonData>(responseData);
-                    if (result.code == 200)
-                    {
-
+                        var temp = rangeDic[nowTabPage.Name][rowValue[0]][headerValue[0]].jsonResult[selectParamSeq].ToString();
+                        Summary summaryData = JsonConvert.DeserializeObject<Summary>(temp);
+                        selectSummaryData = summaryData.bpf;
                     }
                 }
             }
-
 
             // panel 추가
             if (binSBTabPanel == null)
@@ -574,7 +742,7 @@ namespace DynaRAP.UControl
                 binSBTabPanel.FloatSize = new Size(466, 620);
                 binSBTabPanel.Name = "ShortBlock Panel";
                 binSBTabPanel.Text = "ShortBlock Panel";
-                binSBTabCtrl = new BinSBTabControl(selectValue);
+                binSBTabCtrl = new BinSBTabControl(selectValue, selectSummaryData, selectParamSeq, binTableName, binMetaSeq);
                 binSBTabCtrl.IdxValue = rowKey;
                 binSBTabCtrl.Dock = DockStyle.Fill;
                 binSBTabPanel.Controls.Add(binSBTabCtrl);
@@ -585,7 +753,7 @@ namespace DynaRAP.UControl
                 binSBTabCtrl.IdxValue = rowKey;
                 binSBTabPanel.Show();
             }
-
+            mainForm.HideSplashScreenManager();
         }
 
         private void BinSBTabPanel_ClosedPanel(object sender, DockPanelEventArgs e)
@@ -612,5 +780,11 @@ namespace DynaRAP.UControl
                     e.Appearance.BackColor = Color.Red;
             }
         }
+
+        private void cboParamAndType_EditValueChanged(object sender, EventArgs e)
+        {
+            ChangeTabPage();
+        }
+
     }
 }

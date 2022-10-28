@@ -16,6 +16,8 @@ using DynaRAP.Data;
 using Microsoft.Scripting.Utils;
 using DevExpress.Utils;
 using DevExpress.XtraGrid.Columns;
+using DynaRAP.UTIL;
+using DevExpress.XtraBars.Docking;
 
 namespace DynaRAP.UControl
 {
@@ -46,9 +48,12 @@ namespace DynaRAP.UControl
 
         private List<DLL_DATA> m_dllDatas;
         private Dictionary<string, List<SeriesPointData>> m_dicData;
-        private PlotDataResponse plotDataResponse = null;
-        private List<PlotGridSourceData> plotGridSourceDataList = null;
+        private Dictionary<string, PlotSeriesSource> plotSourceNameSeqDic;
         private List<dxGridData> dxGridDataList = new List<dxGridData>();
+        private PlotModuleControl plotModuleControl = null;
+        private AdditionalResponse additionalResponse = null;
+        private string tagValue = string.Empty;
+        DockPanel panel = null;
         #endregion
 
         public DXChartControl()
@@ -66,7 +71,7 @@ namespace DynaRAP.UControl
             m_propertyGridWidth = 0;
         }
 
-        public DXChartControl(PlotDataResponse plotDataResponse, List<PlotGridSourceData> plotGridSourceDataList)
+        public DXChartControl(AdditionalResponse additionalResponse ,PlotModuleControl plotModuleControl)
         {
             InitializeComponent();
 
@@ -80,8 +85,29 @@ namespace DynaRAP.UControl
 
             m_propertyGridWidth = 0;
 
-            this.plotDataResponse = plotDataResponse;
-            this.plotGridSourceDataList = plotGridSourceDataList;
+            this.plotModuleControl = plotModuleControl;
+            this.additionalResponse = additionalResponse;
+        }
+        
+        public DXChartControl(AdditionalResponse additionalResponse, PlotModuleControl plotModuleControl, List<dxGridData> dxGridDataList, string tagValue)
+        {
+            InitializeComponent();
+
+            m_drawTypes = DrawTypes.DT_UNKNOWN;
+
+            m_series = new List<string>();
+            //m_filename = @"sampledata.xls";
+            m_pageIndex = 0;
+            m_pageSize = 100000;
+            m_totalPages = 0;
+
+            m_propertyGridWidth = 0;
+
+            this.plotModuleControl = plotModuleControl;
+            this.additionalResponse = additionalResponse;
+            this.dxGridDataList = dxGridDataList;
+            this.tagValue = tagValue;
+
         }
         public DXChartControl DeepCopy(DXChartControl dXChartControl)
         {
@@ -104,8 +130,6 @@ namespace DynaRAP.UControl
 
             newDXChartControl.m_dllDatas = dXChartControl.m_dllDatas;
             newDXChartControl.m_dicData = dXChartControl.m_dicData;
-            newDXChartControl.plotDataResponse = dXChartControl.plotDataResponse;
-            newDXChartControl.plotGridSourceDataList = dXChartControl.plotGridSourceDataList;
             
             //newDXChartControl.m_chart = new ChartControl();
             newDXChartControl.m_chart = (ChartControl)dXChartControl.m_chart.Clone();
@@ -205,7 +229,7 @@ namespace DynaRAP.UControl
             m_spliter.Panel2.Controls.Add(m_propertyGrid);
             this.cbSeries.Enabled = false;
 
-
+            this.plotSourceNameSeqDic = new Dictionary<string, PlotSeriesSource>();
             this.m_dicData = ReadDataList4();
             //SetDllDatas();
             this.cbSeries.Enabled = true;
@@ -220,13 +244,58 @@ namespace DynaRAP.UControl
             //   toolStripMenuItem9.Enabled = this.cbSeries.Items.Count > 0;
 
             InitGridControl1();
+            if(this.dxGridDataList != null && this.dxGridDataList.Count != 0)
+            {
+                foreach(var gridData in dxGridDataList)
+                {
+                    if(gridData.xAxisSourceType == "eq")
+                    {
+                        EQList eQList = additionalResponse.eqlist.Find(x => x.seq == gridData.xAxisSourceSeq);
+                        if(eQList != null)
+                        {
+                            string itemName = Utils.base64StringDecoding(eQList.eqName);
+                            gridData.xAxis = itemName;
+                        }
+                    }
+                    else
+                    {
+                        SourceList sourceList = additionalResponse.sourceList.Find(x => x.seq == gridData.xAxisSourceSeq);
+                        if (sourceList != null)
+                        {
+                            string itemName = string.Format(@"{0}-{1}", Utils.base64StringDecoding(sourceList.sourceName), sourceList.paramKey);
+                            gridData.xAxis = itemName;
+                        }
+                    }
+                    if (gridData.yAxisSourceType == "eq")
+                    {
+                        EQList eQList = additionalResponse.eqlist.Find(x => x.seq == gridData.yAxisSourceSeq);
+                        if (eQList != null)
+                        {
+                            string itemName = Utils.base64StringDecoding(eQList.eqName);
+                            gridData.yAxis = itemName;
+                        }
+                    }
+                    else
+                    {
+                        SourceList sourceList = additionalResponse.sourceList.Find(x => x.seq == gridData.yAxisSourceSeq);
+                        if (sourceList != null)
+                        {
+                            string itemName = string.Format(@"{0}-{1}", Utils.base64StringDecoding(sourceList.sourceName), sourceList.paramKey);
+                            gridData.yAxis = itemName;
+                        }
+                    }
+                }
+                this.gridControl1.DataSource = this.dxGridDataList;
+                this.gridView1.RefreshData();
+                DrawSeries();
+            }
         }
 
         private void InitGridControl1()
         {
             //this.repositoryItemComboBox1.PopupFormMinSize = new System.Drawing.Size(0, 200);
 
-            this.repositoryItemComboBox1.Items.Add("1D");
+            this.repositoryItemComboBox1.Items.Add("1D-Time History");
             this.repositoryItemComboBox1.Items.Add("Cross Plot");
             this.repositoryItemComboBox1.Items.Add("2D-Potato");
             this.repositoryItemComboBox1.SelectedIndexChanged += RepositoryItemComboBox1_SelectedIndexChanged;
@@ -290,19 +359,50 @@ namespace DynaRAP.UControl
             if (combo.SelectedIndex != -1)
             {
                 string selectChartType = combo.SelectedItem as string;
-                if (selectChartType == "1D")
+                if (selectChartType == "1D-Time History")
                 {
-                    gridView1.SetRowCellValue(gridView1.FocusedRowHandle, "yAxis", null);
+                    gridView1.SetRowCellValue(gridView1.FocusedRowHandle, "xAxis", null);
+                    gridView1.SetRowCellValue(gridView1.FocusedRowHandle, "xAxisSourceSeq", null);
+                    gridView1.SetRowCellValue(gridView1.FocusedRowHandle, "xAxisSourceType", null);
 
-                    GridColumn colYAxis = gridView1.Columns["yAxis"];
+                    GridColumn colYAxis = gridView1.Columns["xAxis"];
                     colYAxis.OptionsColumn.ReadOnly = true;
                 }
                 else
                 {
-                    GridColumn colYAxis = gridView1.Columns["yAxis"];
+                    GridColumn colYAxis = gridView1.Columns["xAxis"];
                     colYAxis.OptionsColumn.ReadOnly = false ;
                 }
                 gridView1.SetRowCellValue(gridView1.FocusedRowHandle, "chartType", selectChartType);
+            }
+        }
+
+        private void RepositoryItemComboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var combo = sender as ComboBoxEdit;
+            if (combo.SelectedIndex != -1)
+            {
+                PlotSeriesSource plotSeriesSource;
+                this.plotSourceNameSeqDic.TryGetValue(combo.Text, out plotSeriesSource);
+                if (plotSeriesSource != null)
+                {
+                    this.gridView1.SetRowCellValue(gridView1.FocusedRowHandle, "xAxisSourceSeq", plotSeriesSource.seq);
+                    this.gridView1.SetRowCellValue(gridView1.FocusedRowHandle, "xAxisSourceType", plotSeriesSource.sourceType);
+                }
+            }
+        }
+        private void RepositoryItemComboBox6_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var combo = sender as ComboBoxEdit;
+            if (combo.SelectedIndex != -1)
+            {
+                PlotSeriesSource plotSeriesSource;
+                this.plotSourceNameSeqDic.TryGetValue(combo.Text, out plotSeriesSource);
+                if (plotSeriesSource != null)
+                {
+                   this.gridView1.SetRowCellValue(gridView1.FocusedRowHandle, "yAxisSourceSeq", plotSeriesSource.seq);
+                   this.gridView1.SetRowCellValue(gridView1.FocusedRowHandle, "yAxisSourceType", plotSeriesSource.sourceType);
+                }
             }
         }
 
@@ -1672,32 +1772,72 @@ namespace DynaRAP.UControl
 
         private Dictionary<string, List<SeriesPointData>> ReadDataList4()
         {
-
             Dictionary<string, List<SeriesPointData>> dicData = new Dictionary<string, List<SeriesPointData>>();
-            foreach (var source in plotGridSourceDataList)
+            foreach(var source in additionalResponse.sourceList)
             {
-                int index = -99999;
-                index = plotDataResponse.additionalResponse.plotSourceList.FindIndex(x => x.sourceSeq == source.seq && x.sourceType == source.sourceType);
-                int i = 0;
-                if (index != -1)
+                string itemName = string.Format(@"{0}-{1}", Utils.base64StringDecoding(source.sourceName), source.paramKey);
+                dicData.Add(itemName, new List<SeriesPointData>());
+                if (source.timeSet != null && source.timeSet.Count != 0)
                 {
-                    dicData.Add(source.itemName, new List<SeriesPointData>());
-                    foreach (var plotData in plotDataResponse.response[index])
+                    for(int i = 0; i < source.data.Count; i++)
                     {
-                        dicData[source.itemName].Add(new SeriesPointData(source.itemName, i, plotData));
-                        i++;
+                        dicData[itemName].Add(new SeriesPointData(itemName, source.timeSet[i], source.data[i]));
                     }
                 }
+                else
+                {
+                    for (int i = 0; i < source.data.Count; i++)
+                    {
+                        dicData[itemName].Add(new SeriesPointData(itemName, i, source.data[i]));
+                    }
+                }
+                plotSourceNameSeqDic.Add(itemName, new PlotSeriesSource(source.sourceType, source.seq,itemName));
             }
+
+            foreach (var equaction in additionalResponse.eqlist)
+            {
+                string itemName = Utils.base64StringDecoding(equaction.eqName);
+                dicData.Add(itemName, new List<SeriesPointData>());
+                //if (equaction.timeSet != null && equaction.timeSet.Count != 0)
+                //{
+                    for (int i = 0; i < equaction.data.Count; i++)
+                    {
+                        dicData[itemName].Add(new SeriesPointData(itemName, i, equaction.data[i]));
+                    }
+                //}
+                //else
+                //{
+                //    for (int i = 0; i < source.data.Count; i++)
+                //    {
+                //        dicData[itemName].Add(new SeriesPointData(itemName, i, source.data[i]));
+                //    }
+                //}
+                plotSourceNameSeqDic.Add(itemName, new PlotSeriesSource("eq", equaction.seq, itemName));
+            }
+            //foreach (var source in plotGridSourceDataList)
+            //{
+            //    int index = -99999;
+            //    index = plotDataResponse.additionalResponse.plotSourceList.FindIndex(x => x.sourceSeq == source.seq && x.sourceType == source.sourceType);
+            //    int i = 0;
+            //    if (index != -1)
+            //    {
+            //        dicData.Add(source.itemName, new List<SeriesPointData>());
+            //        foreach (var plotData in plotDataResponse.response[index])
+            //        {
+            //            dicData[source.itemName].Add(new SeriesPointData(source.itemName, i, plotData));
+            //            i++;
+            //        }
+            //    }
+            //}
             this.repositoryItemComboBox2.Items.AddRange(dicData.Keys.ToArray());
 
             this.repositoryItemComboBox2.NullText = "";
+            this.repositoryItemComboBox2.SelectedIndexChanged += RepositoryItemComboBox2_SelectedIndexChanged;
+            this.repositoryItemComboBox6.Items.AddRange(dicData.Keys.ToArray());
 
-            this.cbSeries.Items.AddRange(dicData.Keys.ToArray());
-            this.cbSeries.SelectedIndex = 0;
-            this.cbSeries2.Items.AddRange(dicData.Keys.ToArray());
-            this.cbSeries2.Enabled = true ;
-            this.cbSeries2.SelectedIndex = 0;
+            this.repositoryItemComboBox6.NullText = "";
+            this.repositoryItemComboBox6.SelectedIndexChanged += RepositoryItemComboBox6_SelectedIndexChanged;
+
             return dicData;
         }
 
@@ -1729,11 +1869,6 @@ namespace DynaRAP.UControl
                 this.dxGridDataList = new List<dxGridData>();
             }
             dxGridData data = new dxGridData();
-            data.seriesName = "Test";
-            data.seriesColor = "Orange";
-            data.chartType = "1D";
-            data.bordType = "Line";
-            data.bordLength ="2";
             this.dxGridDataList.Add(data);
             this.gridControl1.DataSource = this.dxGridDataList;
             this.gridView1.RefreshData();
@@ -1741,8 +1876,11 @@ namespace DynaRAP.UControl
 
         private void btn_SeriesApply_Click(object sender, EventArgs e)
         {
+            MainForm mainForm = this.ParentForm as MainForm;
+            mainForm.ShowSplashScreenManager("차트를 생성중입니다. 잠시만 기다려주십시오.");
             this.m_chart.Series.Clear();
             DrawSeries();
+            mainForm.HideSplashScreenManager();
         }
 
         private void btn_ResetSeries_Click(object sender, EventArgs e)
@@ -1772,19 +1910,19 @@ namespace DynaRAP.UControl
                     this.m_chart.Series.Clear();
                     return;
                 }
-                if (string.IsNullOrEmpty(seriesInfo.bordLength))
+                if (string.IsNullOrEmpty(seriesInfo.lineBorder))
                 {
                     MessageBox.Show("선굵기가 비어있는 데이터가 있습니다. 다시확인해주세요.");
                     this.m_chart.Series.Clear();
                     return;
                 }
-                if (string.IsNullOrEmpty(seriesInfo.bordType))
+                if (string.IsNullOrEmpty(seriesInfo.lineType))
                 {
                     MessageBox.Show("선타입이 비어있는 데이터가 있습니다. 다시확인해주세요.");
                     this.m_chart.Series.Clear();
                     return;
                 }
-                if (string.IsNullOrEmpty(seriesInfo.seriesColor))
+                if (string.IsNullOrEmpty(seriesInfo.lineColor))
                 {
                     MessageBox.Show("선색상이 비어있는 데이터가 있습니다. 다시확인해주세요.");
                     this.m_chart.Series.Clear();
@@ -1794,13 +1932,16 @@ namespace DynaRAP.UControl
                 List<SeriesPointData> spYAxisData;
                 DataTable dtX = null;
                 DataTable dtY = null;
-                this.m_dicData.TryGetValue(seriesInfo.xAxis, out spXAxisData);
-                if(seriesInfo.yAxis != null)
-                    this.m_dicData.TryGetValue(seriesInfo.yAxis, out spYAxisData);
+
+                this.m_dicData.TryGetValue(seriesInfo.yAxis, out spYAxisData);
+
+                if (seriesInfo.xAxis != null)
+                    this.m_dicData.TryGetValue(seriesInfo.xAxis, out spXAxisData);
+
                 Color seriesColor = Color.White;
                 ViewType viewType = ViewType.Line;
 
-                switch (seriesInfo.bordType)
+                switch (seriesInfo.lineType)
                 {
                     case "Line":
                         viewType = ViewType.Line;
@@ -1809,7 +1950,7 @@ namespace DynaRAP.UControl
                         viewType = ViewType.Point;
                         break;
                 }
-                switch (seriesInfo.seriesColor)
+                switch (seriesInfo.lineColor)
                 {
                     case "Red":
                         seriesColor = Color.Red;
@@ -1837,11 +1978,11 @@ namespace DynaRAP.UControl
                         break;
                 }
                 int bordThickness = 0;
-                Int32.TryParse(seriesInfo.bordLength, out bordThickness);
+                Int32.TryParse(seriesInfo.lineBorder, out bordThickness);
                 switch (seriesInfo.chartType)
                 {
-                    case "1D":
-                        dtX = Make1DTableData(spXAxisData);
+                    case "1D-Time History":
+                        dtX = Make1DTimeTableData(spYAxisData);
                         DrawChart_1DBasic(seriesInfo.seriesName, seriesColor, bordThickness, viewType, dtX);
                         break;
                     case "Cross Plot":
@@ -1851,10 +1992,10 @@ namespace DynaRAP.UControl
                             this.m_chart.Series.Clear();
                             return;
                         }
-                        this.m_dicData.TryGetValue(seriesInfo.yAxis, out spYAxisData);
+                        this.m_dicData.TryGetValue(seriesInfo.xAxis, out spXAxisData);
 
-                        dtX = Make1DTableData(spXAxisData);
-                        dtY = Make1DTableData(spYAxisData);
+                        dtX = Make1DTableData(spYAxisData);
+                        dtY = Make1DTableData(spXAxisData);
                         if(dtX.Rows.Count != dtY.Rows.Count)
                         {
                             MessageBox.Show("X,Y의 갯수가 다른 데이터가 있습니다. 다시 확인해주세요.");
@@ -1896,6 +2037,35 @@ namespace DynaRAP.UControl
             return tableData;
         }
 
+        private DataTable Make1DTimeTableData(List<SeriesPointData> points)
+        {
+            DataTable tableData = new DataTable();
+
+            int index = 0;
+
+            foreach (SeriesPointData point in points)
+            {
+                if (point.TimeValue != null)
+                {
+                    if (0 == index)
+                    {
+                        tableData.Columns.Add("Argument", typeof(DateTime));
+                        tableData.Columns.Add("Value", typeof(double));
+                    }
+
+                    DataRow row = tableData.NewRow();
+
+                    DateTime dt = Utils.GetDateFromJulian(point.TimeValue);
+                    row["Argument"] = dt;
+                    row["Value"] = point.Value;
+                    tableData.Rows.Add(row);
+
+                    index++;
+                }
+            }
+
+            return tableData;
+        }
         private void DrawChart_1DBasic(string serieaName,Color seriesColor, int bordThickness, ViewType viewType, DataTable dt)
         {
             Series series = new Series(serieaName, viewType);
@@ -1903,41 +2073,47 @@ namespace DynaRAP.UControl
             var dataSource = dt.AsEnumerable().ToList();
             series.View.Color = seriesColor;
 
-            //foreach (DataRow row in dataSource)
-            //    series.Points.Add(new SeriesPoint(row["Argument"], row["Value"]));
-
-
-            series.Points.Add(new SeriesPoint(4, 5));
-
-            series.Points.Add(new SeriesPoint(4, 8));
-            series.Points.Add(new SeriesPoint(7, 8));
-            series.Points.Add(new SeriesPoint(7, 5));
-            series.Points.Add(new SeriesPoint(4, 5));
-            series.Points.Add(new SeriesPoint(3, 5));
+            foreach (DataRow row in dataSource)
+                series.Points.Add(new SeriesPoint(row["Argument"], row["Value"]));
 
             if (viewType == ViewType.Line)
             {
                 ((LineSeriesView)series.View).LineStyle.Thickness = bordThickness;
             }
-            series.ArgumentScaleType = ScaleType.Numerical;
+            series.ArgumentScaleType = ScaleType.DateTime;
             series.ArgumentDataMember = "Argument";
             series.ValueScaleType = ScaleType.Numerical;
             series.ValueDataMembers.AddRange(new string[] { "Value" });
             this.m_chart.Series.Add(series);
             this.m_chart.Legend.AlignmentHorizontal = LegendAlignmentHorizontal.Right;
             this.m_chart.Legend.AlignmentVertical = LegendAlignmentVertical.Top;
-            this.m_chart.Series[serieaName].Points.Add(new SeriesPoint(4, 5));
+
             XYDiagram diagram = this.m_chart.Diagram as XYDiagram;
 
             diagram.AxisY.Visibility = DevExpress.Utils.DefaultBoolean.False;
+            //타임으로 변경
+            //diagram.EnableAxisXScrolling = true;
+            //diagram.EnableAxisXZooming = true;
+            //diagram.AxisX.WholeRange.SideMarginsValue = 0L;
+            //diagram.AxisX.DateTimeScaleOptions.GridSpacing = 1;
+            //diagram.AxisX.DateTimeScaleOptions.GridOffset = 1;
+            //diagram.AxisX.DateTimeScaleOptions.MeasureUnit = DateTimeMeasureUnit.Millisecond;
+            //diagram.AxisX.DateTimeScaleOptions.GridAlignment = DateTimeGridAlignment.Second;
 
-            diagram.EnableAxisXScrolling = true;
-            diagram.EnableAxisXZooming = true;
-            diagram.AxisX.WholeRange.SideMarginsValue = 0L;
-            diagram.AxisX.DateTimeScaleOptions.GridSpacing = 1;
-            diagram.AxisX.DateTimeScaleOptions.GridOffset = 1;
+            diagram.AxisY.WholeRange.AlwaysShowZeroLevel = false;
+
+            diagram.AxisX.DateTimeScaleOptions.ScaleMode = ScaleMode.Manual;
             diagram.AxisX.DateTimeScaleOptions.MeasureUnit = DateTimeMeasureUnit.Millisecond;
-            diagram.AxisX.DateTimeScaleOptions.GridAlignment = DateTimeGridAlignment.Second;
+            diagram.AxisX.DateTimeScaleOptions.GridAlignment = DateTimeGridAlignment.Millisecond;
+            diagram.AxisX.DateTimeScaleOptions.AutoGrid = false;
+            diagram.AxisX.DateTimeScaleOptions.GridSpacing = 1;
+            diagram.AxisX.Label.TextPattern = "{A:HH:mm:ss.ffffff}";
+
+            diagram.RangeControlDateTimeGridOptions.GridMode = ChartRangeControlClientGridMode.Manual;
+            diagram.RangeControlDateTimeGridOptions.GridOffset = 1;
+            diagram.RangeControlDateTimeGridOptions.GridSpacing = 60;
+            diagram.RangeControlDateTimeGridOptions.LabelFormat = "HH:mm:ss.fff";
+            diagram.RangeControlDateTimeGridOptions.SnapAlignment = DateTimeGridAlignment.Millisecond;
 
             //List<PointF> points = new List<PointF>();
             //foreach (SeriesPoint point in this.m_chart.Series)
@@ -1991,7 +2167,44 @@ namespace DynaRAP.UControl
             diagram.AxisX.Label.TextPattern = "{A}";
         }
 
+        private void btn_ChangePlotName_Click(object sender, EventArgs e)
+        {
+            plotModuleControl.GetDocument();
+        }
 
+        private void btn_AddTags_Click(object sender, EventArgs e)
+        {
+            MainForm mainForm = this.ParentForm as MainForm;
+            panel = new DockPanel();
+            TagControl tagControl = new TagControl(tagValue, this);
+            panel = mainForm.DockManager1.AddPanel(DockingStyle.Float);
+            panel.FloatLocation = new Point(500, 100);
+            panel.FloatSize = new Size(450, 250);
+            panel.Name = "태그";
+            panel.Text = "태그";
+            tagControl.Dock = DockStyle.Fill;
+
+            panel.Controls.Add(tagControl);
+        }
+
+        public void setTagValue(string tagVal)
+        {
+            this.tagValue = tagVal;
+            panel.Close();
+        }
+        public string getTagValue()
+        {
+            return this.tagValue;
+        }
+        public void closePanel()
+        {
+            panel.Close();
+        }
+        public List<dxGridData> getSeriesInfo()
+        {
+            List<dxGridData> gridDataList = (List<dxGridData>)this.gridControl1.DataSource;
+            return gridDataList;
+        }
     }
 
     #region 1D SeriesPoint Data
@@ -2001,11 +2214,18 @@ namespace DynaRAP.UControl
         //public DateTime Argument { get; private set; }
         public int Argument { get; private set; }
         public double Value { get; private set; }
+        public string TimeValue { get; private set; }
 
         public SeriesPointData(string name, int arg, double val)
         {
             SeriesName = name;
             Argument = arg;
+            Value = val;
+        }
+        public SeriesPointData(string name, string timeValue, double val)
+        {
+            SeriesName = name;
+            TimeValue = timeValue;
             Value = val;
         }
     }

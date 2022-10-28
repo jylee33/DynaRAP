@@ -21,21 +21,28 @@ namespace DynaRAP.UControl
         string paramSeq = null;
         string shortBlockSeq = null;
         string partSeq = null;
+        string binName = null;
+        string selectParamSeq = null;
         List<string> paramNameList = null;
+        BinSBSummary sbSummaryControl = null;
 
-        public BinSBInfoControl(string partSeq , string shortBlockSeq)
+        public BinSBInfoControl(string partSeq , string shortBlockSeq, string selectParamSeq, string binName, BinSBSummary sbSummaryControl)
         {
             this.partSeq = partSeq;
             this.shortBlockSeq = shortBlockSeq;
+            this.sbSummaryControl = sbSummaryControl;
+            this.binName = binName;
+            this.selectParamSeq = selectParamSeq;
             InitializeComponent();
-        }
-
-        private void BinSBInfoControl_Load(object sender, EventArgs e)
-        {
             InitializeSBInfo();
             InitializeSBParamList();
             InitializeSBResult();
             InitializeSBData();
+        }
+
+        private void BinSBInfoControl_Load(object sender, EventArgs e)
+        {
+            
         }
 
         private void InitializeSBInfo()
@@ -122,6 +129,7 @@ namespace DynaRAP.UControl
         {
             List<SBParameter> SBParameterList = new List<SBParameter>();
             List<SBResult> SBResultList = new List<SBResult>();
+            List<SBResult1> SBResult1List = new List<SBResult1>();
             paramSeq = string.Empty;
             paramNameList = new List<string>();
 
@@ -131,28 +139,66 @@ namespace DynaRAP.UControl
             ""blockSeq"":""{0}""
             }}", shortBlockSeq);
             string responseData = Utils.GetPostData(System.Configuration.ConfigurationManager.AppSettings["UrlShortBlock"], sendData);
+       
             if (responseData != null)
             {
+                responseData = responseData.Replace(@"""[", "[");
+                responseData = responseData.Replace(@"]""", "]");
                 ResponseParamList responseParam = JsonConvert.DeserializeObject<ResponseParamList>(responseData);
                 if (responseParam.code == 200)
                 {
-                    foreach (var paramList in responseParam.response.paramData)
+
+                    for(int i =0; i< responseParam.response.paramSet.Count;i++)
                     {
-                        if(paramSeq == String.Empty)
-                        {
-                            paramSeq = string.Format(@"{0}""{1}""", paramSeq, paramList.seq);
-                        }
-                        else
-                        {
-                            paramSeq = string.Format(@"{0},""{1}""", paramSeq, paramList.seq);
-                        }
+                        var paramList = responseParam.response.paramData[i];
+
                         if (paramList.paramValueMap != null)
                         {
-                            paramNameList.Add(paramList.paramKey);
-                            SBParameterList.Add(new SBParameter((paramList.propInfo == null ? "" : paramList.propInfo.propCode), paramList.paramKey, paramList.paramValueMap.blockMin, paramList.paramValueMap.blockMax, paramList.paramValueMap.blockMax));
-                            SBResultList.Add(new SBResult(paramList.paramValueMap.psd, paramList.paramValueMap.rms, paramList.paramValueMap.n0, paramList.paramValueMap.zPeak, paramList.paramValueMap.zValley));
+                            if (responseParam.response.paramSet[i] == selectParamSeq)
+                            {
+                                paramNameList.Add(paramList.paramKey);
+                                paramSeq = paramList.seq;
+                                SBParameterList.Add(new SBParameter((paramList.propInfo == null ? "" : paramList.propInfo.propCode), paramList.paramKey, paramList.paramValueMap.blockMin, paramList.paramValueMap.blockMax, paramList.paramValueMap.blockMax));
+                                //SBResultList.Add(new SBResult(paramList.paramValueMap.psd, paramList.paramValueMap.rms, paramList.paramValueMap.n0, paramList.paramValueMap.zPeak, paramList.paramValueMap.zValley));
+                                
+                                for(int j = 0; j< paramList.paramValueMap.bpfPsd.Count; j++ )
+                                {
+                                    SBResultList.Add(new SBResult(paramList.paramValueMap.bpfFrequency[j], paramList.paramValueMap.bpfPsd[j]));
+                                }
+
+                                foreach(var zarray in  paramList.paramValueMap.bpfZarray)
+                                {
+                                    SBResult1List.Add(new SBResult1(zarray));
+                                }
+                                labelRMS.Text = paramList.paramValueMap.bpfRms.ToString();
+                                LabelN0.Text = paramList.paramValueMap.bpfN0.ToString();
+                                sbSummaryControl.psdListAdd(new BINSummaryList(binName + " PSD", paramList.paramValueMap.bpfPsd));
+                                sbSummaryControl.rmsListAdd(new BINSummary(binName + " RMS", paramList.paramValueMap.bpfRms.ToString()));
+                            }
                         }
                     }
+                    //foreach (var paramList in responseParam.response.paramData)
+                    //{
+                    //    if (paramSeq == String.Empty)
+                    //    {
+                    //        paramSeq = string.Format(@"{0}""{1}""", paramSeq, paramList.seq);
+                    //    }
+                    //    else
+                    //    {
+                    //        paramSeq = string.Format(@"{0},""{1}""", paramSeq, paramList.seq);
+                    //    }
+                    //    if (paramList.paramValueMap != null)
+                    //    {
+                    //        paramNameList.Add(paramList.paramKey);
+                    //        SBParameterList.Add(new SBParameter((paramList.propInfo == null ? "" : paramList.propInfo.propCode), paramList.paramKey, paramList.paramValueMap.blockMin, paramList.paramValueMap.blockMax, paramList.paramValueMap.blockMax));
+                    //        //SBResultList.Add(new SBResult(paramList.paramValueMap.psd, paramList.paramValueMap.rms, paramList.paramValueMap.n0, paramList.paramValueMap.zPeak, paramList.paramValueMap.zValley));
+                    //        if(paramList.paramValueMap.seq == selectParamSeq) {
+                    //            sbSummaryControl.psdListAdd(new BINSummaryList(binName + " PSD", paramList.paramValueMap.bpfPsd));
+
+                    //            sbSummaryControl.rmsListAdd(new BINSummary(binName + " RMS", paramList.paramValueMap.bpfRms.ToString()));
+                    //        }
+                    //    }
+                    //}
                 }
             }
 
@@ -241,45 +287,79 @@ namespace DynaRAP.UControl
             gridView3.OptionsSelection.MultiSelectMode = DevExpress.XtraGrid.Views.Grid.GridMultiSelectMode.RowSelect;
             gridView3.OptionsSelection.EnableAppearanceFocusedCell = false;
 
-            GridColumn colPsd = gridView3.Columns["Psd"];
+            GridColumn colPsd = gridView3.Columns["Frequency"];
             colPsd.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
             colPsd.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
             //colPsd.OptionsColumn.FixedWidth = true;
             //colPsd.Width = 120;
-            colPsd.Caption = "PSD";
+            colPsd.Caption = "Frequency";
             colPsd.OptionsColumn.ReadOnly = true;
 
-            GridColumn colRms = gridView3.Columns["Rms"];
+            GridColumn colRms = gridView3.Columns["Psd"];
             colRms.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
             colRms.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
             //colRms.OptionsColumn.FixedWidth = true;
             //colRms.Width = 150;
-            colRms.Caption = "RMS";
+            colRms.Caption = "PSD";
             colRms.OptionsColumn.ReadOnly = true;
 
-            GridColumn colN0 = gridView3.Columns["N0"];
-            colN0.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
-            colN0.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
-            //colN0.OptionsColumn.FixedWidth = true;
-            //colN0.Width = 60;
-            colN0.Caption = "N0";
-            colN0.OptionsColumn.ReadOnly = true;
 
-            GridColumn colRmsToPeek = gridView3.Columns["RmsToPeek"];
-            colRmsToPeek.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
-            colRmsToPeek.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
-            //colRmsToPeek.OptionsColumn.FixedWidth = true;
-            //colRmsToPeek.Width = 60;
-            colRmsToPeek.Caption = "RMS-to-Peek";
-            colRmsToPeek.OptionsColumn.ReadOnly = true;
 
-            GridColumn colResultValue = gridView3.Columns["ResultValue"];
-            colResultValue.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
-            colResultValue.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
-            //colResultValue.OptionsColumn.FixedWidth = true;
-            //colResultValue.Width = 60;
-            colResultValue.Caption = "ResultValue";
-            colResultValue.OptionsColumn.ReadOnly = true;
+            this.gridControl5.DataSource = SBResult1List;
+
+            //gridView5.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
+
+            gridView5.OptionsView.ShowColumnHeaders = true;
+            gridView5.OptionsView.ShowGroupPanel = false;
+            gridView5.OptionsView.ShowIndicator = false;
+            //gridView5.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.False;
+            //gridView5.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.False;
+            gridView5.OptionsView.ColumnAutoWidth = true;
+
+            gridView5.OptionsBehavior.ReadOnly = true;
+            gridView5.OptionsBehavior.Editable = false;
+
+            gridView5.FocusRectStyle = DevExpress.XtraGrid.Views.Grid.DrawFocusRectStyle.None;
+            gridView5.OptionsSelection.EnableAppearanceFocusedCell = false;
+            gridView5.OptionsSelection.EnableAppearanceFocusedRow = false;
+            gridView5.OptionsSelection.EnableAppearanceHideSelection = false;
+
+
+            gridView5.OptionsSelection.MultiSelectMode = DevExpress.XtraGrid.Views.Grid.GridMultiSelectMode.RowSelect;
+            gridView5.OptionsSelection.EnableAppearanceFocusedCell = false;
+
+            GridColumn colZarray = gridView5.Columns["Zarray"];
+            colZarray.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
+            colZarray.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
+            //colPsd.OptionsColumn.FixedWidth = true;
+            //colPsd.Width = 120;
+            colZarray.Caption = "Zarray";
+            colZarray.OptionsColumn.ReadOnly = true;
+            
+            
+            //GridColumn colN0 = gridView3.Columns["N0"];
+            //colN0.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
+            //colN0.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
+            ////colN0.OptionsColumn.FixedWidth = true;
+            ////colN0.Width = 60;
+            //colN0.Caption = "N0";
+            //colN0.OptionsColumn.ReadOnly = true;
+
+            //GridColumn colRmsToPeek = gridView3.Columns["RmsToPeek"];
+            //colRmsToPeek.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
+            //colRmsToPeek.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
+            ////colRmsToPeek.OptionsColumn.FixedWidth = true;
+            ////colRmsToPeek.Width = 60;
+            //colRmsToPeek.Caption = "RMS-to-Peek";
+            //colRmsToPeek.OptionsColumn.ReadOnly = true;
+
+            //GridColumn colResultValue = gridView3.Columns["ResultValue"];
+            //colResultValue.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
+            //colResultValue.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
+            ////colResultValue.OptionsColumn.FixedWidth = true;
+            ////colResultValue.Width = 60;
+            //colResultValue.Caption = "ResultValue";
+            //colResultValue.OptionsColumn.ReadOnly = true;
         }
 
         private void InitializeSBResult()
@@ -294,7 +374,7 @@ namespace DynaRAP.UControl
         {
             DataTable dt = new DataTable();
             dt.Columns.Add("julianTime");
-            foreach(var paramName in paramNameList)
+            foreach (var paramName in paramNameList)
             {
                 dt.Columns.Add(paramName);
             }
@@ -310,18 +390,33 @@ namespace DynaRAP.UControl
                 PartInfoResponse responseParam = JsonConvert.DeserializeObject<PartInfoResponse>(responseData);
                 if (responseParam.code == 200)
                 {
-                    for(int i= 0; i< responseParam.response.julianSet[0].Count(); i++)
+                    for(int i=0; i<responseParam.response.paramSet.Count; i++)
                     {
-
-                        DataRow dataRow = dt.NewRow();
-                        dataRow["julianTime"] = responseParam.response.julianSet[0][i];
-                        for(int j=0;j<paramNameList.Count();j++)
+                        if (responseParam.response.paramSet[i].seq == paramSeq)
                         {
-
-                            dataRow[paramNameList[j]] = responseParam.response.data[i][j];
+                            for (int j = 0; j < responseParam.response.julianSet[0].Count ; j++)
+                            {
+                                DataRow dataRow = dt.NewRow();
+                                dataRow["julianTime"] = responseParam.response.julianSet[0][i];
+                                dataRow[paramNameList[0]] = responseParam.response.data[j][i];
+                                dt.Rows.Add(dataRow);
+                            }
                         }
-                        dt.Rows.Add(dataRow);
                     }
+                    //for (int i = 0; i < responseParam.response.julianSet[0].Count(); i++)
+                    //{
+                    //    if (responseParam.response.paramSet[i].seq == selectParamSeq)
+                    //    {
+                    //        DataRow dataRow = dt.NewRow();
+                    //        dataRow["julianTime"] = responseParam.response.julianSet[0][i];
+                    //        for (int j = 0; j < paramNameList.Count(); j++)
+                    //        {
+
+                    //            dataRow[paramNameList[j]] = responseParam.response.data[i][j];
+                    //        }
+                    //        dt.Rows.Add(dataRow);
+                    //    }
+                    //}
                 }
             }
 
@@ -391,5 +486,9 @@ namespace DynaRAP.UControl
 
         }
 
+        private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }

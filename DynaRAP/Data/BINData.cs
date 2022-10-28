@@ -175,18 +175,32 @@ namespace DynaRAP.Data
         public double blockMin { get; set; }
         public double blockMax { get; set; }
         public double blockAvg { get; set; }
-        public double psd { get; set; }
+        public List<string> psd { get; set; }
+        public List<string> bpfPsd { get; set; }
+        public List<string> bpfZarray { get; set; }
+        public List<string> bpfFrequency { get; set; }
+
         public double rms { get; set; }
         public double n0 { get; set; }
-        public double zarray { get; set; }
+        public List<string> peak { get; set; }
+        public List<string> zarray { get; set; }
         public double zPeak { get; set; }
         public double zValley { get; set; }
+        public double lpfRms { get; set; }
+        public double lpfN0 { get; set; }
+        public double hpfRms { get; set; }
+        public double hpfN0 { get; set; }
+        public double bpfRms { get; set; }
+        public double bpfN0 { get; set; }
         public double blockLpfMin { get; set; }
         public double blockLpfMax { get; set; }
         public double blockLpfAvg { get; set; }
         public double blockHpfMin { get; set; }
         public double blockHpfMax { get; set; }
         public double blockHpfAvg { get; set; }
+        public double blockBpfMin { get; set; }
+        public double blockBpfMax { get; set; }
+        public double blockBpfAvg { get; set; }
     }
 
 
@@ -222,5 +236,87 @@ namespace DynaRAP.Data
             this.max = max;
             this.range = string.Format("{0}-{1}", min, max);
         }
+    }
+
+    public class BINSBSummary
+    {
+        public int code { get;set;}
+        public string message { get;set;}
+        public List<SummaryResponse> response { get; set; }
+    }
+    public class SummaryResponse
+    {
+        public string seq { get; set; }
+        public string binMetaSeq { get; set; }
+        public List<int> factorIndexes { get; set; }
+        public List<Summary> summary { get; set; }
+    }
+    public class Summary
+    {
+        public SummaryData normal { get; set; }
+        public SummaryData lpf { get; set; }
+        public SummaryData hpf { get; set; }
+        public SummaryData bpf { get; set; }
+    }
+    public class SummaryData
+    {
+        public double min { get; set; }
+        public double avg { get; set; }
+        public double max { get; set; }
+        public List<double> psd { get; set; }
+        public List<double> frequency { get; set; }
+        public List<double> rms { get; set; }
+        public double avg_rms { get; set; }
+        public List<double> zeta { get; set; }
+        public double burstFactor { get; set; }
+        public List<double> n0 { get; set; }
+        public double avg_n0 { get; set; }
+
+        public List<double> rmsToPeak { get; set; }
+        public double maxRmsToPeak { get; set; }
+        public double maxLoadAccel { get; set; }
+    }
+
+    public class BINSummary
+    {
+        public string key { get; set; }
+        public string value { get; set; }
+        public BINSummary(string key, string value)
+        {
+            this.key = key;
+            this.value = value;
+        }
+        public BINSummary()
+        {
+
+        }
+    }
+
+    public class BINSummaryList
+    {
+        public string key { get; set; }
+        public List<string> valueList { get; set; }
+        public BINSummaryList(string key, List<string> valueList)
+        {
+            this.key = key;
+            this.valueList = valueList;
+        }
+    }
+
+    public class BINParamCombo
+    {
+        public string paramKey { get; set; }
+        public string seq { get; set; }
+    }
+
+    public class BINMetaData
+    {
+        public BINMetaData()
+        {
+            this.shortblcokSeqList = new List<string>();
+        }
+        public int[] index { get; set; }
+        public List<string> shortblcokSeqList { get; set; }
+        public dynamic jsonResult { get; set; }
     }
 }

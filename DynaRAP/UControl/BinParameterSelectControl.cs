@@ -32,7 +32,18 @@ namespace DynaRAP.UControl
         public BinParameterSelectControl(BinModuleControl moduleControl, List<ParamDatas> paramDataList)
         {
             this.moduleControl = moduleControl;
-            this.paramDataList = paramDataList;
+            this.paramDataList = new List<ParamDatas>();
+            foreach(var paramData in paramDataList)
+            {
+                if(paramData.propInfo != null)
+                {
+                    if(paramData.propInfo.propType == "FLIGHT")
+                    {
+                        this.paramDataList.Add(paramData);
+                    }
+                }
+            }
+            //this.paramDataList = paramDataList;
             InitializeComponent();
 
             XmlConfigurator.Configure(new FileInfo("log4net.xml"));
@@ -41,7 +52,17 @@ namespace DynaRAP.UControl
         {
             this.pickUpParam = pickUpParam;
             this.moduleControl = moduleControl;
-            this.paramDataList = paramDataList;
+             this.paramDataList = new List<ParamDatas>();
+            foreach(var paramData in paramDataList)
+            {
+                if(paramData.propInfo != null)
+                {
+                    if(paramData.propInfo.propType == "FLIGHT")
+                    {
+                        this.paramDataList.Add(paramData);
+                    }
+}
+            }
             InitializeComponent();
 
             XmlConfigurator.Configure(new FileInfo("log4net.xml"));
@@ -69,14 +90,17 @@ namespace DynaRAP.UControl
             propTypeList.Properties.DataSource = null;
 
             List<propTypesCombo> comboList= new List<propTypesCombo>();
-            foreach(var combo in paramDataList)
+            if (paramDataList != null) 
             {
-                if (combo.propInfo != null)
+                foreach (var combo in paramDataList)
                 {
-                    string temp = string.Format("{0}({1})", combo.propInfo.propCode, combo.propInfo.paramUnit);
-                    if (comboList.FindIndex(x => x.viewName == temp) == -1)
+                    if (combo.propInfo != null)
                     {
-                        comboList.Add(new propTypesCombo(combo.propInfo.paramUnit, "",combo.propInfo.propType, temp));
+                        string temp = string.Format("{0}({1})", combo.propInfo.propCode, combo.propInfo.paramUnit);
+                        if (comboList.FindIndex(x => x.viewName == temp) == -1)
+                        {
+                            comboList.Add(new propTypesCombo(combo.propInfo.paramUnit, "", combo.propInfo.propType, temp));
+                        }
                     }
                 }
             }
@@ -103,11 +127,14 @@ namespace DynaRAP.UControl
             {
                 if (combo.propInfo != null)
                 {
-                    if (combo.propInfo.propType == propTypeList.GetColumnValue("propType").ToString() && combo.propInfo.paramUnit == propTypeList.GetColumnValue("paramUnit").ToString())
-                    {
-                        if (comboList.FindIndex(x => x.paramKey == combo.paramKey) == -1)
+                    if(propTypeList.GetColumnValue("propType") != null && propTypeList.GetColumnValue("paramUnit") != null) 
+                    { 
+                        if (combo.propInfo.propType == propTypeList.GetColumnValue("propType").ToString() && combo.propInfo.paramUnit == propTypeList.GetColumnValue("paramUnit").ToString())
                         {
-                            comboList.Add(new propTypesCombo(combo.paramKey, combo.seq));
+                            if (comboList.FindIndex(x => x.paramKey == combo.paramKey) == -1)
+                            {
+                                comboList.Add(new propTypesCombo(combo.paramKey, combo.seq));
+                            }
                         }
                     }
                 }

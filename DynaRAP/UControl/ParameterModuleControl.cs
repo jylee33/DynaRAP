@@ -119,7 +119,8 @@ namespace DynaRAP.UControl
                     GetSelectDataList(parammoduleSeq);
                     dataSelectionControl.SetSelectDataSource(parammoduleSeq);
                     expressionControl.SetSelectDataSource(parammoduleSeq);
-                    plotControl.SetSelectDataSource(parammoduleSeq);
+                    string moduleName = moduleNameList.GetColumnValue("ModuleName").ToString();
+                    plotControl.SetSelectDataSource(parammoduleSeq, moduleName);
                     beforeSelectIndex = moduleNameList.ItemIndex;
                 }
                 else
@@ -129,7 +130,7 @@ namespace DynaRAP.UControl
                     if (result == DialogResult.Yes)
                     {
                         resultFlag = dataSelectionControl.SelectDataSaveRequest();
-                        resultFlag = plotControl.PlotSaveRequest();
+                        plotControl.PlotSaveRequest();
                         if (!resultFlag)
                         {
                             moduleNameList.ItemIndex = beforeSelectIndex;
@@ -140,7 +141,9 @@ namespace DynaRAP.UControl
                         GetSelectDataList(parammoduleSeq);
                         dataSelectionControl.SetSelectDataSource(parammoduleSeq);
                         expressionControl.SetSelectDataSource(parammoduleSeq);
-                        plotControl.SetSelectDataSource(parammoduleSeq);
+
+                        string moduleName = moduleNameList.GetColumnValue("ModuleName").ToString();
+                        plotControl.SetSelectDataSource(parammoduleSeq, moduleName);
                         beforeSelectIndex = moduleNameList.ItemIndex;
                     }
                     else if (result == DialogResult.No)
@@ -149,7 +152,9 @@ namespace DynaRAP.UControl
                         GetSelectDataList(parammoduleSeq);
                         dataSelectionControl.SetSelectDataSource(parammoduleSeq);
                         expressionControl.SetSelectDataSource(parammoduleSeq);
-                        plotControl.SetSelectDataSource(parammoduleSeq);
+
+                        string moduleName = moduleNameList.GetColumnValue("ModuleName").ToString();
+                        plotControl.SetSelectDataSource(parammoduleSeq, moduleName);
                         beforeSelectIndex = moduleNameList.ItemIndex;
                     }
                     else
@@ -209,7 +214,8 @@ namespace DynaRAP.UControl
         }
         public void SaveChangePlotFromEQ(string paramModuleSeq)
         {
-            plotControl.SetSelectDataSource(paramModuleSeq);
+            string moduleName = moduleNameList.GetColumnValue("ModuleName").ToString();
+            plotControl.SetSelectDataSource(paramModuleSeq, moduleName) ;
         }
     }
 }
