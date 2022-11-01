@@ -276,28 +276,31 @@ namespace DynaRAP.UControl
                     {
                         dynamic calulateData = CalculateSBData(list.index, dic2.index, indexZ, countSeqDic[list.value][dic2.value].shortblcokSeqList);
                         countSeqDic[list.value][dic2.value].jsonResult = calulateData;
-                        Summary summaryData = JsonConvert.DeserializeObject<Summary>(calulateData[selectParamSeq].ToString());
-                        double viewValue = 0;
-                        switch (cboType.Text)
+                        if (calulateData != null)
                         {
-                            case "평균 RMS크기":
-                                viewValue = summaryData.bpf.avg_rms;
-                                break;
-                            case "평균 대표주파수":
-                                viewValue = summaryData.bpf.avg_n0;
-                                break;
-                            case "최대 버스트값":
-                                viewValue = summaryData.bpf.burstFactor;
-                                break;
-                            case "최대 하중/가속도 예측값":
-                                viewValue = summaryData.bpf.maxLoadAccel;
-                                break;
-                        }
+                            Summary summaryData = JsonConvert.DeserializeObject<Summary>(calulateData[selectParamSeq].ToString());
+                            double viewValue = 0;
+                            switch (cboType.Text)
+                            {
+                                case "평균 RMS크기":
+                                    viewValue = summaryData.bpf.avg_rms;
+                                    break;
+                                case "평균 대표주파수":
+                                    viewValue = summaryData.bpf.avg_n0;
+                                    break;
+                                case "최대 버스트값":
+                                    viewValue = summaryData.bpf.burstFactor;
+                                    break;
+                                case "최대 하중/가속도 예측값":
+                                    viewValue = summaryData.bpf.maxLoadAccel;
+                                    break;
+                            }
 
-                        dataRow[dic2.value.range] = viewValue;
-                        if (maxValue < viewValue)
-                        {
-                            maxValue = viewValue;
+                            dataRow[dic2.value.range] = viewValue;
+                            if (maxValue < viewValue)
+                            {
+                                maxValue = viewValue;
+                            }
                         }
                     }
                     else
@@ -674,8 +677,13 @@ namespace DynaRAP.UControl
 
             double val = 0;
             double.TryParse(view.GetRowCellValue(e.RowHandle, e.Column.FieldName).ToString(), out val);
-            var percent = val / maxValue;
-            e.Appearance.BackColor = Color.FromArgb(0,Convert.ToInt32(percent * 128), 0);
+            var percent = 0.0;
+            if (!Double.IsNaN(val / maxValue))
+            {
+                percent = val / maxValue;
+            }
+            e.Appearance.BackColor = Color.FromArgb(0, Convert.ToInt32(percent * 128), 0);
+        
             //if (val < 5)
             //{
             //    Color.FromArgb(255,0, 0);

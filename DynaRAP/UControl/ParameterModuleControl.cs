@@ -198,6 +198,9 @@ namespace DynaRAP.UControl
                             case "dll":
                                 sourceType = "기준데이터";
                                 break;
+                            case "bintable":
+                                sourceType = "BIN Table";
+                                break;
                         }
 
                         if(list.sourceType == "parammodule")

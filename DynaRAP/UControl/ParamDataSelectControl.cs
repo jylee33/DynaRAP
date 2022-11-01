@@ -57,8 +57,9 @@ namespace DynaRAP.UControl
             comboBoxEdit1.Properties.Items.Add("SHORTBLOCK");
             comboBoxEdit1.Properties.Items.Add("기준데이터");
             comboBoxEdit1.Properties.Items.Add("PARAMMODULE");
+            comboBoxEdit1.Properties.Items.Add("BIN Table");
 
-         
+
             selectComboDic = new Dictionary<string, RepositoryItemComboBox>();
             gridSelectPramDic = new Dictionary<string, List<GridParam>>();
             InitializeGridControl1();
@@ -335,6 +336,9 @@ namespace DynaRAP.UControl
                 case "기준데이터":
                     sourceType = "dll";
                     break;
+                case "BIN Table":
+                    sourceType = "bintable";
+                    break;
             }
             if (e.Button.Kind.ToString() == "Search")
             {
@@ -465,6 +469,27 @@ namespace DynaRAP.UControl
                                 paramDataList.Add(new ParamDataSelectionData("PARAMMODULE","parammodule", Utils.base64StringDecoding(list.moduleName),"","", "", list.seq,1));
                             }
                             break;
+                        case "BINTABLE":
+                            foreach (var list in paramModuleResponse.response)
+                            {
+                                List<GridParam> paramList = new List<GridParam>();
+                                RepositoryItemComboBox repositoryItemComboBox = new RepositoryItemComboBox();
+                                repositoryItemComboBox.SelectedIndexChanged += RepositoryItemComboBox_SelectedIndexChanged;
+                                repositoryItemComboBox.AllowDropDownWhenReadOnly = DefaultBoolean.True;
+                                repositoryItemComboBox.TextEditStyle = TextEditStyles.DisableTextEditor;
+                                foreach (var parameter in list.@params)
+                                {
+                                    GridParam param = new GridParam();
+                                    param.seq = parameter.seq;
+                                    param.paramKey = parameter.paramKey;
+                                    paramList.Add(param);
+                                    repositoryItemComboBox.Items.Add(param.paramKey);
+                                }
+                                gridPramDic.Add(list.seq, paramList);
+                                comboDic.Add(list.seq, repositoryItemComboBox);
+                                paramDataList.Add(new ParamDataSelectionData("BIN TABLE", "bintable", Utils.base64StringDecoding(list.metaName), "", "", "", list.seq, 0));
+                            }
+                            break;
                     }
                     this.gridControl1.DataSource = paramDataList;
                 }
@@ -538,6 +563,9 @@ namespace DynaRAP.UControl
                     case "dll":
                         requestParam.sources.Add(new SaveParamModuleSelectDataSource(list.DataType, list.SourceSeq, list.Seq, list.paramSeq, list.paramSeq));
                         break;
+                    case "bintable":
+                        requestParam.sources.Add(new SaveParamModuleSelectDataSource(list.DataType, list.SourceSeq, list.Seq, list.paramSeq, list.paramSeq));
+                        break;
                 }
             }
             if (selectDataList.Count == 0)
@@ -592,6 +620,9 @@ namespace DynaRAP.UControl
                         requestParam.sources.Add(new SaveParamModuleSelectDataSource(list.DataType, list.SourceSeq, list.Seq, list.paramSeq, list.paramSeq));
                         break;
                     case "dll":
+                        requestParam.sources.Add(new SaveParamModuleSelectDataSource(list.DataType, list.SourceSeq, list.Seq, list.paramSeq, list.paramSeq));
+                        break;
+                    case "bintable":
                         requestParam.sources.Add(new SaveParamModuleSelectDataSource(list.DataType, list.SourceSeq, list.Seq, list.paramSeq, list.paramSeq));
                         break;
                 }
@@ -724,6 +755,11 @@ namespace DynaRAP.UControl
 
                                 sourceType = "기준데이터";
                                 selectParamDataList.Add(new ParamDataSelectionData(sourceType, list.sourceType, Utils.base64StringDecoding(list.sourceName), list.paramKey, list.julianStartAt, list.julianEndAt, list.dataCount, list.sourceSeq, list.useTime, list.seq, list.sourceType == "dll" ? 0 : 1, list.paramSeq));
+                                break;
+                            case "bintable":
+
+                                sourceType = "BIN Table";
+                                selectParamDataList.Add(new ParamDataSelectionData(sourceType, list.sourceType, Utils.base64StringDecoding(list.sourceName), list.paramKey, list.julianStartAt, list.julianEndAt, list.dataCount, list.sourceSeq, list.useTime, list.seq, list.sourceType == "bintable" ? 0 : 1, list.paramSeq));
                                 break;
                         }
                       

@@ -107,7 +107,7 @@ namespace DynaRAP.Data
         public string copyFromSeq { get; set; }
         public bool referenced { get; set; }
         public string dataCount { get; set; }
-
+        public string metaName { get; set; }
 
         public List<Equation> equations { get; set; }
         public CreatedAt createdAt { get; set; }
