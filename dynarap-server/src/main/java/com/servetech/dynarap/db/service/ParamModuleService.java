@@ -7,6 +7,7 @@ import com.servetech.dynarap.vo.DLLVO;
 import com.servetech.dynarap.vo.ParamModuleVO;
 import com.servetech.dynarap.vo.PartVO;
 import com.servetech.dynarap.vo.ShortBlockVO;
+import org.apache.ibatis.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -283,8 +284,12 @@ public class ParamModuleService {
             params.put("seq", seq);
 
             ParamModuleVO.Plot plot = getParamModulePlotBySeq(seq);
-            if (plot != null)
+            if (plot != null) {
                 deleteParamModulePlotSourceByPlotSeq(plot.getModuleSeq(), plot.getSeq());
+
+                // delete all savepoint
+                deletePlotSavePoint(plot.getModuleSeq(), plot.getSeq());
+            }
 
             paramModuleMapper.deleteParamModulePlot(params);
         } catch(Exception e) {
@@ -300,6 +305,12 @@ public class ParamModuleService {
 
             // 모든 소스 지우기.
             deleteParamModulePlotSourceByModuleSeq(moduleSeq);
+
+            // delete all seires.
+            deleteParamModulePlotSeriesByModuleSeq(moduleSeq);
+
+            // delete all savepoint
+            deletePlotSavePoint(moduleSeq, CryptoField.LZERO);
 
             // dataProp 삭제.
             List<ParamModuleVO.Plot> plots = getParamModulePlotList(moduleSeq);
@@ -389,6 +400,77 @@ public class ParamModuleService {
 
 
 
+    public List<ParamModuleVO.Plot.Series> getParamModulePlotSeriesList(CryptoField plotSeq) throws HandledServiceException {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("plotSeq", plotSeq);
+            return paramModuleMapper.selectParamModulePlotSeriesList(params);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    public ParamModuleVO.Plot.Series selectParamModulePlotSeriesBySeq(CryptoField seq) throws HandledServiceException {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("seq", seq);
+            return paramModuleMapper.selectParamModulePlotSeriesBySeq(params);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    @Transactional
+    public void insertParamModulePlotSeries(ParamModuleVO.Plot.Series plotSeries) throws HandledServiceException {
+        try {
+            paramModuleMapper.insertParamModulePlotSeries(plotSeries);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    @Transactional
+    public void updateParamModulePlotSeries(ParamModuleVO.Plot.Series plotSeries) throws HandledServiceException {
+        try {
+            paramModuleMapper.updateParamModulePlotSeries(plotSeries);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    @Transactional
+    public void deleteParamModulePlotSeries(CryptoField seq) throws HandledServiceException {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("seq", seq);
+            paramModuleMapper.deleteParamModulePlotSeries(params);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    @Transactional
+    public void deleteParamModulePlotSeriesByPlotSeq(CryptoField plotSeq) throws HandledServiceException {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("plotSeq", plotSeq);
+            paramModuleMapper.deleteParamModulePlotSeriesByPlotSeq(params);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    @Transactional
+    public void deleteParamModulePlotSeriesByModuleSeq(CryptoField moduleSeq) throws HandledServiceException {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("moduleSeq", moduleSeq);
+            paramModuleMapper.deleteParamModulePlotSeriesByModuleSeq(params);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
     public List<PartVO> getPartListByKeyword(String keyword) throws HandledServiceException {
         try {
             Map<String, Object> params = new HashMap<>();
@@ -424,6 +506,56 @@ public class ParamModuleService {
             Map<String, Object> params = new HashMap<>();
             params.put("keyword", keyword);
             return paramModuleMapper.selectParamModuleListByKeyword(params);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    public List<ParamModuleVO.Source> getReferencedSourceList(List<PartVO> partList) throws HandledServiceException {
+        try {
+            if (partList == null) partList = new ArrayList<>();
+
+            StringBuilder sbPart = new StringBuilder();
+            for (PartVO part : partList) {
+                sbPart.append((Long) part.getSeq().originOf()).append(",");
+            }
+            if (partList.size() > 0) sbPart.setLength(sbPart.length() - 1);
+
+            if (sbPart.length() == 0) return null;
+
+            Map<String, Object> params = new HashMap<>();
+            params.put("partSet", sbPart.toString());
+            return paramModuleMapper.selectReferencedSourceList(params);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    public List<ParamModuleVO.Plot.SavePoint> getPlotSavePointList(CryptoField moduleSeq, CryptoField plotSeq) throws HandledServiceException {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("moduleSeq", moduleSeq);
+            params.put("plotSeq", (plotSeq == null) ? CryptoField.LZERO : plotSeq);
+            return paramModuleMapper.selectPlotSavePointList(params);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    public void insertPlotSavePoint(ParamModuleVO.Plot.SavePoint savePoint) throws HandledServiceException {
+        try {
+            paramModuleMapper.insertPlotSavePoint(savePoint);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    public void deletePlotSavePoint(CryptoField moduleSeq, CryptoField plotSeq) throws HandledServiceException {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("moduleSeq", moduleSeq);
+            params.put("plotSeq", (plotSeq == null) ? CryptoField.LZERO : plotSeq);
+            paramModuleMapper.deletePlotSavePoint(params);
         } catch(Exception e) {
             throw new HandledServiceException(410, e.getMessage());
         }

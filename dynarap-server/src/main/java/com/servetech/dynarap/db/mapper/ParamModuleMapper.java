@@ -360,6 +360,88 @@ public interface ParamModuleMapper {
     void deleteParamModulePlotSourceByModuleSeq(Map<String, Object> params) throws Exception;
 
 
+    @Select({
+            "<script>" +
+                    "select * from dynarap_param_module_plot_series " +
+                    "where plotSeq = #{plotSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "order by seq asc" +
+                    "</script>"
+    })
+    List<ParamModuleVO.Plot.Series> selectParamModulePlotSeriesList(Map<String, Object> params) throws Exception;
+
+    @Select({
+            "<script>" +
+                    "select * from dynarap_param_module_plot_series " +
+                    "where seq = #{seq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "limit 0, 1" +
+                    "</script>"
+    })
+    ParamModuleVO.Plot.Series selectParamModulePlotSeriesBySeq(Map<String, Object> params) throws Exception;
+
+    @Insert({
+            "<script>" +
+                    "insert into dynarap_param_module_plot_series (" +
+                    "plotSeq,seriesName,chartType,xAxisSourceType,xAxisSourceSeq," +
+                    "yAxisSourceType,yAxisSourceSeq,lineType,lineColor,lineBorder" +
+                    ") values (" +
+                    "#{plotSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField}" +
+                    ",#{seriesName,javaType=java.lang.String,jdbcType=VARCHAR,typeHandler=String64}" +
+                    ",#{chartType}" +
+                    ",#{xAxisSourceType}" +
+                    ",#{xAxisSourceSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField}" +
+                    ",#{yAxisSourceType}" +
+                    ",#{yAxisSourceSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField}" +
+                    ",#{lineType}" +
+                    ",#{lineColor}" +
+                    ",#{lineBorder}" +
+                    ")" +
+                    "</script>"
+    })
+    @SelectKey(before = false, keyColumn = "seq", keyProperty = "seq",
+            resultType = CryptoField.class,
+            statement = "SELECT last_insert_id() FROM dynarap_param_module_plot_series LIMIT 0, 1")
+    void insertParamModulePlotSeries(ParamModuleVO.Plot.Series plotSeries) throws Exception;
+
+    @Update({
+            "<script>" +
+                    " update dynarap_param_module_plot_series set " +
+                    " seriesName = #{seriesName,} " +
+                    ",chartType = #{chartType} " +
+                    ",xAxisSourceType = #{xAxisSourceType} " +
+                    ",xAxisSourceSeq = #{xAxisSourceSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    ",yAxisSourceType = #{yAxisSourceType} " +
+                    ",yAxisSourceSeq = #{yAxisSourceSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    ",lineType = #{lineType} " +
+                    ",lineColor = #{lineColor} " +
+                    ",lineBorder = #{lineBorder} " +
+                    " where seq = #{seq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "</script>"
+    })
+    void updateParamModulePlotSeries(ParamModuleVO.Plot.Series plotSeries) throws Exception;
+
+    @Delete({
+            "<script>" +
+                    "delete from dynarap_param_module_plot_series " +
+                    "where seq = #{seq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "</script>"
+    })
+    void deleteParamModulePlotSeries(Map<String, Object> params) throws Exception;
+
+    @Delete({
+            "<script>" +
+                    "delete from dynarap_param_module_plot_series " +
+                    "where plotSeq = #{plotSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField}" +
+                    "</script>"
+    })
+    void deleteParamModulePlotSeriesByPlotSeq(Map<String, Object> params) throws Exception;
+
+    @Delete({
+            "<script>" +
+                    "delete from dynarap_param_module_plot_series " +
+                    "where moduleSeq = #{moduleSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField}" +
+                    "</script>"
+    })
+    void deleteParamModulePlotSeriesByModuleSeq(Map<String, Object> params) throws Exception;
 
 
     @Select({
@@ -416,5 +498,64 @@ public interface ParamModuleMapper {
                     "</script>"
     })
     List<ParamModuleVO> selectParamModuleListByKeyword(Map<String, Object> params) throws Exception;
+
+    @Select({
+            "<script>" +
+                    "select a.* from dynarap_param_module_source a, dynarap_param_module b " +
+                    "where a.moduleSeq = b.seq " +
+                    "and a.sourceTYpe = 'part' " +
+                    "and a.sourceSeq in (${partSet}) " +
+                    "and b.deleted = 0" +
+                    "</script>"
+    })
+    List<ParamModuleVO.Source> selectReferencedSourceList(Map<String, Object> params) throws Exception;
+
+
+    @Select({
+            "<script>" +
+                    "select * from dynarap_param_module_save " +
+                    "where moduleSeq = #{moduleSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "<if test='@com.servetech.dynarap.db.type.MybatisCryptoFieldChecker@isNotEmpty(plotSeq)'> " +
+                    "and plotSeq = #{plotSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "</if> " +
+                    "order by savedAt asc" +
+                    "</script>"
+    })
+    List<ParamModuleVO.Plot.SavePoint> selectPlotSavePointList(Map<String, Object> params) throws Exception;
+
+    @Insert({
+            "<script>" +
+                    "insert into dynarap_param_module_save (" +
+                    "moduleSeq,plotSeq,xSourceSeq,ySourceSeq,xValue,yValue,savedAt,chartType,xSourceType,ySourceType,pointIndex" +
+                    ") values (" +
+                    "#{moduleSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField}" +
+                    ",#{plotSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField}" +
+                    ",#{xSourceSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField}" +
+                    ",#{ySourceSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField}" +
+                    ",#{xValue}" +
+                    ",#{yValue}" +
+                    ",#{savedAt,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=LongDate}" +
+                    ",#{chartType}" +
+                    ",#{xSourceType}" +
+                    ",#{ySourceType}" +
+                    ",#{pointIndex}" +
+                    ")" +
+                    "</script>"
+    })
+    @SelectKey(before = false, keyColumn = "seq", keyProperty = "seq",
+            resultType = CryptoField.class,
+            statement = "SELECT last_insert_id() FROM dynarap_param_module_save LIMIT 0, 1")
+    void insertPlotSavePoint(ParamModuleVO.Plot.SavePoint savePoint) throws Exception;
+
+    @Delete({
+            "<script>" +
+                    "delete from dynarap_param_module_save " +
+                    "where moduleSeq = #{moduleSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "<if test='@com.servetech.dynarap.db.type.MybatisCryptoFieldChecker@isNotEmpty(plotSeq)'> " +
+                    "and plotSeq = #{plotSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "</if> " +
+                    "</script>"
+    })
+    void deletePlotSavePoint(Map<String, Object> params) throws Exception;
 
 }

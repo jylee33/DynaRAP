@@ -108,18 +108,41 @@ public class ShortBlockVO {
         private double blockMin;
         private double blockMax;
         private double blockAvg;
-        private double psd;
+
+        private String psd;
+        private String frequency;
         private double rms;
         private double n0;
+        private String peak;
         private String zarray;
-        private double zPeak;
-        private double zValley;
+        private String lpfPsd;
+        private String lpfFrequency;
+        private double lpfRms;
+        private double lpfN0;
+        private String lpfPeak;
+        private String lpfZarray;
+        private String hpfPsd;
+        private String hpfFrequency;
+        private double hpfRms;
+        private double hpfN0;
+        private String hpfPeak;
+        private String hpfZarray;
+        private String bpfPsd;
+        private String bpfFrequency;
+        private double bpfRms;
+        private double bpfN0;
+        private String bpfPeak;
+        private String bpfZarray;
+
         private double blockLpfMin;
         private double blockLpfMax;
         private double blockLpfAvg;
         private double blockHpfMin;
         private double blockHpfMax;
         private double blockHpfAvg;
+        private double blockBpfMin;
+        private double blockBpfMax;
+        private double blockBpfAvg;
     }
 
     @Data

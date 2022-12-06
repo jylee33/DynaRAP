@@ -78,14 +78,17 @@ public class ParamModuleVO {
         public <T> List<T> getData() {
             return (List<T>) data;
         }
+        private List<Double[]> convhData;
 
         private List<Object> lpfData;
         private List<Object> hpfData;
+        private List<Object> bpfData;
 
         private ParamVO param;
         private ShortBlockVO.ParamData paramData;
         private DLLVO.Param dllParam;
         private Equation equation;
+        private Map<String, BinTableVO.BinSummary> binSummaries;
     }
 
     @Data
@@ -104,6 +107,7 @@ public class ParamModuleVO {
 
         private Map<String, String> dataProp;
         private transient boolean mark;
+        private transient boolean lazyLoad;
 
         private List<String> timeSet;
         private String eqNo;
@@ -113,6 +117,8 @@ public class ParamModuleVO {
         public <T> List<T> getData() {
             return (List<T>) data;
         }
+
+        private List<Double[]> convhData;
     }
 
     @Data
@@ -126,7 +132,9 @@ public class ParamModuleVO {
 
         private List<Source> plotSourceList;
         private List<PlotSource> plotSources;
+        private List<Series> plotSeries;
         private Map<String, String> dataProp;
+        private List<SavePoint> selectPoints;
 
         @Data
         public static class Source {
@@ -149,6 +157,38 @@ public class ParamModuleVO {
                 plotSource.setSourceSeq(source.getSourceSeq());
                 return plotSource;
             }
+        }
+
+        @Data
+        public static class SavePoint {
+            private CryptoField seq;
+            private CryptoField moduleSeq;
+            private CryptoField plotSeq;
+            private CryptoField xSourceSeq;
+            private CryptoField ySourceSeq;
+            private String xValue;
+            private String yValue;
+            private int pointIndex;
+            private transient LongDate savedAt;
+            private String chartType;
+            private String xSourceType;
+            private String ySourceType;
+        }
+
+        @Data
+        public static class Series {
+            private CryptoField seq;
+            private CryptoField moduleSeq;
+            private CryptoField plotSeq;
+            private String64 seriesName;
+            private String chartType;
+            private String xAxisSourceType;
+            private CryptoField xAxisSourceSeq;
+            private String yAxisSourceType;
+            private CryptoField yAxisSourceSeq;
+            private String lineType;
+            private String lineColor;
+            private int lineBorder;
         }
 
         @Data

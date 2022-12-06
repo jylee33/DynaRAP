@@ -19,6 +19,8 @@ public class BinTableVO {
     private Map<String, String> dataProps;
     private List<BinParam> pickUpParams;
 
+    private List<ShortBlockVO.Param> params;
+
     @Data
     public static class SaveRequest {
         private String command;
@@ -28,6 +30,42 @@ public class BinTableVO {
         private List<String> selectedShortBlocks;
         private Map<String, String> dataProps;
         private List<BinParam> pickUpParams;
+    }
+
+    @Data
+    public static class CalculateRequest {
+        private String command;
+        private CryptoField binMetaSeq;
+        private List<String> shortBlocks; // short blocks
+        private List<Integer> factorIndexes; // dimension index
+    }
+
+    @Data
+    public static class BinSummary {
+        private CryptoField seq;
+        private CryptoField binMetaSeq;
+        private List<Integer> factorIndexes; // dimension index
+
+        private Map<String, Map<String, SummaryItem>> summary;
+
+        @Data
+        public static class SummaryItem {
+            private Double min;
+            private Double max;
+            private Double avg;
+
+            private List<Double> psd;
+            private List<Double> frequency;
+            private List<Double> rms;
+            private Double avg_rms;
+            private List<Double> zeta;
+            private Double burstFactor;
+            private List<Double> n0;
+            private Double avg_n0;
+            private List<Double> rmsToPeak; // zarray append and sorting
+            private Double maxRmsToPeak;
+            private Double maxLoadAccel; // avg_rms * maxRmsToPeak(4) * burstFactor
+        }
     }
 
     @Data

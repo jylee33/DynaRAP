@@ -1,7 +1,7 @@
 # This is a sample Python script.
 import sys
-import numpy as np
 import os
+import numpy as np
 from scipy import signal
 
 
@@ -24,9 +24,9 @@ def get_lh_filtered_data(n, cutoff, btype, data):
 
 
 def get_psd_filtered_data(n, cutoff, btype, data):
-    b, a = get_butter(n, cutoff, btype)
-    y = get_lh_filtered_data(n, cutoff, btype, data)
-    f, p = signal.welch(y, window="boxcar", nperseg=500, noverlap=0, nfft=500)
+    #b, a = get_butter(n, cutoff, btype)
+    #y = get_lh_filtered_data(n, cutoff, btype, data)
+    f, p = signal.welch(data, window="boxcar", nperseg=500, noverlap=0, nfft=500)
     return f, p
 
 
@@ -39,19 +39,19 @@ def get_rms_filtered_data(n, cutoff, btype, data):
 
 
 def get_peak_filtered_data(n, cutoff, btype, data):
-    b, a = get_butter(n, cutoff, btype)
-    y = get_lh_filtered_data(n, cutoff, btype, data)
-    idx_pv = np.diff(np.sign(np.diff(y))).nonzero()[0] + 1  # Index of peak/valley
+    #b, a = get_butter(n, cutoff, btype)
+    #y = get_lh_filtered_data(n, cutoff, btype, data)
+    idx_pv = np.diff(np.sign(np.diff(data))).nonzero()[0] + 1  # Index of peak/valley
 
-    return y[idx_pv]
+    return data[idx_pv]
 
 
 def get_zarray_filtered_data(n, cutoff, btype, data):
-    b, a = get_butter(n, cutoff, btype)
-    y = get_lh_filtered_data(n, cutoff, btype, data)
-    idx_pv = np.diff(np.sign(np.diff(y))).nonzero()[0] + 1  # Index of peak/valley
+    #b, a = get_butter(n, cutoff, btype)
+    #y = get_lh_filtered_data(n, cutoff, btype, data)
+    idx_pv = np.diff(np.sign(np.diff(data))).nonzero()[0] + 1  # Index of peak/valley
     rms, fc = get_rms_filtered_data(n, cutoff, btype, data)
-    y_pv = y[idx_pv]  # peak/valley 값
+    y_pv = data[idx_pv]  # peak/valley 값
 
     z_array = y_pv / rms  # Normalization
     z_array = abs(z_array)  # Absolute Value
@@ -67,17 +67,18 @@ if __name__ == '__main__':
         sys.exit(0)
 
     arg1 = sys.argv[1]  # 명령어 종류
-    arg2 = sys.argv[2]  # 필터링할 데이터
+    #arg2 = sys.argv[2]  # 필터링할 데이터
     arg3 = float(sys.argv[3])  # LPF/HPF의 경우 필터계수
     arg4 = float(sys.argv[4])  # LPF/HPF의 경우 필터계수
     arg5 = sys.argv[5]  # LOW / HIGH
 
-    with open(arg2) as f:
-        data = f.read()
+    # for test
+    with open(sys.argv[2]) as f:
+        arg2 = f.read()
+        f.close()
+        #os.remove(sys.argv[2])
 
-    os.remove(arg2)
-
-    str_x = np.array(data.split(","))
+    str_x = np.array(arg2.split(","))
     x = str_x.astype(np.float)
 
     result1 = ""
