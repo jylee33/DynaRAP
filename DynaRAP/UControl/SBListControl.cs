@@ -30,9 +30,11 @@ namespace DynaRAP.UControl
         List<ResponseSBList> sbList = new List<ResponseSBList>();
 
         List<SBData> gridList = null;
+        MainForm mainForm = null;
 
-        public SBListControl()
+        public SBListControl(MainForm mainForm)
         {
+            this.mainForm = mainForm;
             InitializeComponent();
         
             XmlConfigurator.Configure(new FileInfo("log4net.xml"));
@@ -120,6 +122,14 @@ namespace DynaRAP.UControl
 
             this.repositoryItemImageComboBox1.Click += RepositoryItemImageComboBox1_Click;
 
+            GridColumn colDownload0 = gridView1.Columns["Download0"];
+            colDownload0.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
+            colDownload0.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
+            colDownload0.OptionsColumn.FixedWidth = true;
+            colDownload0.Width = 80;
+            colDownload0.Caption = "CSV_ALL";
+            colDownload0.OptionsColumn.ReadOnly = true;
+
             GridColumn colDownload1 = gridView1.Columns["Download1"];
             colDownload1.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
             colDownload1.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
@@ -144,6 +154,15 @@ namespace DynaRAP.UControl
             colDownload3.Caption = "CSV_HPF";
             colDownload3.OptionsColumn.ReadOnly = true;
 
+
+            GridColumn colDownload4 = gridView1.Columns["Download4"];
+            colDownload4.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
+            colDownload4.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
+            colDownload4.OptionsColumn.FixedWidth = true;
+            colDownload4.Width = 80;
+            colDownload4.Caption = "CSV_BPF";
+            colDownload4.OptionsColumn.ReadOnly = true;
+
             this.repositoryItemImageComboBox2.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(0, 0));
             this.repositoryItemImageComboBox2.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(1, 1));
 
@@ -167,6 +186,23 @@ namespace DynaRAP.UControl
             this.repositoryItemImageComboBox4.Buttons[0].Visible = false;
 
             this.repositoryItemImageComboBox4.Click += RepositoryItemImageComboBox4_Click;
+
+
+            this.repositoryItemImageComboBox5.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(0, 0));
+            this.repositoryItemImageComboBox5.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(1, 1));
+
+            this.repositoryItemImageComboBox5.GlyphAlignment = HorzAlignment.Center;
+            this.repositoryItemImageComboBox5.Buttons[0].Visible = false;
+
+            this.repositoryItemImageComboBox5.Click += RepositoryItemImageComboBox5_Click;
+
+            this.repositoryItemImageComboBox6.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(0, 0));
+            this.repositoryItemImageComboBox6.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(1, 1));
+
+            this.repositoryItemImageComboBox6.GlyphAlignment = HorzAlignment.Center;
+            this.repositoryItemImageComboBox6.Buttons[0].Visible = false;
+
+            this.repositoryItemImageComboBox6.Click += RepositoryItemImageComboBox6_Click;
 
 #if DEBUG
             gridView1.Columns["Seq"].Visible = true;
@@ -219,6 +255,27 @@ namespace DynaRAP.UControl
             string blcokName = gridView1.GetRowCellValue(row, "BlockName") == null ? "" : gridView1.GetRowCellValue(row, "BlockName").ToString();
 
             GetSBData(blcokName, blockSeq, start, end, "H", true);
+        }
+
+        private void RepositoryItemImageComboBox5_Click(object sender, EventArgs e)
+        {
+            int row = gridView1.FocusedRowHandle;
+            string blockSeq = gridView1.GetRowCellValue(row, "Seq") == null ? "" : gridView1.GetRowCellValue(row, "Seq").ToString();
+            string start = gridView1.GetRowCellValue(row, "JulianStartAt") == null ? "" : gridView1.GetRowCellValue(row, "JulianStartAt").ToString();
+            string end = gridView1.GetRowCellValue(row, "JulianEndAt") == null ? "" : gridView1.GetRowCellValue(row, "JulianEndAt").ToString();
+            string blcokName = gridView1.GetRowCellValue(row, "BlockName") == null ? "" : gridView1.GetRowCellValue(row, "BlockName").ToString();
+
+            GetSBData(blcokName, blockSeq, start, end, "B", true);
+        }
+        private void RepositoryItemImageComboBox6_Click(object sender, EventArgs e)
+        {
+            int row = gridView1.FocusedRowHandle;
+            string blockSeq = gridView1.GetRowCellValue(row, "Seq") == null ? "" : gridView1.GetRowCellValue(row, "Seq").ToString();
+            string start = gridView1.GetRowCellValue(row, "JulianStartAt") == null ? "" : gridView1.GetRowCellValue(row, "JulianStartAt").ToString();
+            string end = gridView1.GetRowCellValue(row, "JulianEndAt") == null ? "" : gridView1.GetRowCellValue(row, "JulianEndAt").ToString();
+            string blcokName = gridView1.GetRowCellValue(row, "BlockName") == null ? "" : gridView1.GetRowCellValue(row, "BlockName").ToString();
+
+            GetSBData(blcokName, blockSeq, start, end, "A", true);
         }
 
         private List<string> GetSBParamList(string blockSeq)
@@ -328,16 +385,6 @@ namespace DynaRAP.UControl
                     reqStream.Write(bytes, 0, bytes.Length);
                 }
 
-                // Response 처리
-                string responseText = string.Empty;
-                using (WebResponse resp = request.GetResponse())
-                {
-                    Stream respStream = resp.GetResponseStream();
-                    using (StreamReader sr = new StreamReader(respStream))
-                    {
-                        responseText = sr.ReadToEnd();
-                    }
-                }
 
                 SaveFileDialog dlg = new SaveFileDialog();
                 string flyingName = cboFlying.Text;
@@ -345,26 +392,95 @@ namespace DynaRAP.UControl
                 {
                     flyingName = flyingName.Substring(0, flyingName.LastIndexOf(".")); 
                 }
-                dlg.FileName = string.Format("{0}_{1}_{2}_{3}", flyingName, cboPart.Text, blcokName, filterType=="N"? "RAW" : filterType=="L"?"LPF": "HPF");
-                dlg.Filter = "Comma Separated Value files (CSV)|*.csv";
-                dlg.Title = "Save an Image File";
+                string fileTypeName = null;
+                switch (filterType)
+                {
+                    case "N":
+                        fileTypeName = "RAW";
+                        break;
+                    case "L":
+                        fileTypeName = "LPF";
+                        break;
+                    case "H":
+                        fileTypeName = "HPF";
+                        break;
+                    case "B":
+                        fileTypeName = "BPF";
+                        break;
+                    case "A":
+                        fileTypeName = "ALL";
+                        break;
 
+                }
+                dlg.FileName = string.Format("{0}_{1}_{2}_{3}", flyingName, cboPart.Text, blcokName, fileTypeName);
+                if (filterType == "A" || filterType == "Z")
+                {
+                    if(filterType == "Z")
+                    {
+                        dlg.FileName = string.Format("{0}_{1}", flyingName, cboPart.Text);
+                    }
+                    dlg.Filter = "ZIP Folders(.ZIP)| *.zip";
+                }
+                else
+                {
+                    dlg.Filter = "Comma Separated Value files (CSV)|*.csv";
+                }
+                dlg.Title = "Save a CSV File";
+                
                 if (dlg.ShowDialog() == DialogResult.OK)
                 {
+                    mainForm.ShowSplashScreenManager("ShortBlock 데이터를 저장 중입니다.. 잠시만 기다려주십시오.");
+
                     string fileName = dlg.FileName;
 
-                    FileStream fs = new FileStream(fileName, FileMode.Append, FileAccess.Write);
-                    StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
-                    sw.WriteLine(responseText);
-                    sw.Close();
-                    fs.Close();
+                    var buff = new byte[1024];
+                    int pos = 0;
+                    int count;
+                    if (filterType == "A" || filterType == "Z")
+                    {
+                        using (WebResponse resp = request.GetResponse())
+                        {
+                            using (Stream respStream = resp.GetResponseStream())
+                            {
+                                using (FileStream fs = new FileStream(fileName, FileMode.Create))
+                                {
+                                    do
+                                    {
+                                        count = respStream.Read(buff, pos, buff.Length);
+                                        fs.Write(buff, 0, count);
+                                    } while (count > 0);
 
+                                    fs.Close();
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        string responseText = string.Empty;
+                        using (WebResponse resp = request.GetResponse())
+                        {
+                            Stream respStream = resp.GetResponseStream();
+                            using (StreamReader sr = new StreamReader(respStream))
+                            {
+                                responseText = sr.ReadToEnd();
+                            }
+                        }
+
+                        FileStream fs = new FileStream(fileName, FileMode.Append, FileAccess.Write);
+                        StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
+                        sw.WriteLine(responseText);
+                        sw.Close();
+                        fs.Close();
+                    }
+                    mainForm.HideSplashScreenManager();
                 }
 
                 //Console.WriteLine(responseText);
             }
             catch (Exception ex)
             {
+                mainForm.HideSplashScreenManager();
                 log.Error(ex.Message);
                 MessageBox.Show(ex.Message);
             }
@@ -537,7 +653,7 @@ namespace DynaRAP.UControl
                             byte[] byte64 = Convert.FromBase64String(sb.blockName);
                             string decName = Encoding.UTF8.GetString(byte64);
 
-                            gridList.Add(new SBData(decName, sb.julianStartAt, sb.julianEndAt, sb.seq, 1, 1, 1, 1));
+                            gridList.Add(new SBData(decName, sb.julianStartAt, sb.julianEndAt, sb.seq, 1, 1, 1, 1, 1, 1));
                         }
 
                         this.gridControl1.DataSource = gridList;
@@ -798,6 +914,24 @@ namespace DynaRAP.UControl
 
             gridControl2.DataSource = null;
             gridView2.RefreshData();
+        }
+
+        private void btn_downloadAll_Click(object sender, EventArgs e)
+        {
+            if (gridView1.DataSource != null)
+            {
+                int row = 0;
+                string blockSeq = gridView1.GetRowCellValue(row, "Seq") == null ? "" : gridView1.GetRowCellValue(row, "Seq").ToString();
+                string start = gridView1.GetRowCellValue(row, "JulianStartAt") == null ? "" : gridView1.GetRowCellValue(row, "JulianStartAt").ToString();
+                string end = gridView1.GetRowCellValue(row, "JulianEndAt") == null ? "" : gridView1.GetRowCellValue(row, "JulianEndAt").ToString();
+                string blcokName = gridView1.GetRowCellValue(row, "BlockName") == null ? "" : gridView1.GetRowCellValue(row, "BlockName").ToString();
+
+                // 아래 strParamSet 을 구해서 GetSBData() 호출할 때 사용하면 해당 paramSet 에 대한 SBData 만 얻어올 수 있다.
+                //List<string> sbParamList = GetSBParamList(blockSeq);
+                //string strParamSet = JsonConvert.SerializeObject(sbParamList);
+
+                GetSBData(blcokName, blockSeq, start, end, "Z", true);
+            }
         }
     }
 }

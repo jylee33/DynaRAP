@@ -127,6 +127,8 @@ namespace DynaRAP.UControl
 
         private void treeList1_CellValueChanged(object sender, DevExpress.XtraTreeList.CellValueChangedEventArgs e)
         {
+            MainForm mainForm = this.ParentForm as MainForm;
+            mainForm.ShowSplashScreenManager("변경된 Shortblock을 확인 중입니다.. 잠시만 기다려주십시오.");
             foreach (TreeListNode node in e.Node.Nodes)
                 node[e.Column] = e.Value;
             TreeListNode parent = e.Node.ParentNode;
@@ -158,7 +160,8 @@ namespace DynaRAP.UControl
                 {
                     if (panelParamCnt.Controls.Count != 0)
                     {
-                        MessageBox.Show("선택된 ShortBlock의 변경으로 \nparameter의 변경이 있어 선택된 parameter를 초기화 합니다.");
+                        mainForm.HideSplashScreenManager();
+                        MessageBox.Show(new Form { TopMost = true }, "선택된 ShortBlock의 변경으로 \nparameter의 변경이 있어 선택된 parameter를 초기화 합니다.");
                     }
                     panelParamCnt.Controls.Clear();
                     panelParamCnt1.Controls.Clear();
@@ -191,6 +194,7 @@ namespace DynaRAP.UControl
             //    panelParamCnt.Controls.Add(new BinParameterSelectControl(this, new List<ParamDatas>()));
             //    panelParamCnt1.Controls.Add(new BinParameterSelectControl(this, new List<ParamDatas>()));
             //}
+            mainForm.HideSplashScreenManager();
         }
 
         private void repositoryItemCheckEdit1_EditValueChanged(object sender, EventArgs e)
@@ -208,7 +212,7 @@ namespace DynaRAP.UControl
         {
             MainForm mainForm = this.ParentForm as MainForm;
 
-            mainForm.PanelBinSbList.Show();
+            //mainForm.PanelBinSbList.Show();
 
         }
 
@@ -235,7 +239,7 @@ namespace DynaRAP.UControl
 
             if (pickUpParamList.Count < 2)
             {
-                MessageBox.Show("파라미터가 2개 이상 선택되어야 BIN테이블 생성이 가능합니다.");
+                MessageBox.Show(new Form { TopMost = true }, "파라미터가 2개 이상 선택되어야 BIN테이블 생성이 가능합니다.");
                 return;
             }
             BindingList<TreeData> treeDatas = treeList1.DataSource as BindingList<TreeData>;
@@ -243,8 +247,7 @@ namespace DynaRAP.UControl
             List<TreeData> shortBlockList = treeList.FindAll(x => x.Check != false && x.Type == "shortblock");
             List<string> shorBlockSeqList = shortBlockList.Select(x => x.Seq).ToList();
             MainForm mainForm = this.ParentForm as MainForm;
-
-            mainForm.PanelBinTable.Text = "BIN TABLE";
+            //mainForm.PanelBinTable.Text = "BIN TABLE";
 
             //로직 확인 후 주석해제
             //string sendData = string.Format(@"
@@ -395,7 +398,7 @@ namespace DynaRAP.UControl
             catch (Exception ex)
             {
                 log.Error(ex.Message);
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(new Form { TopMost = true }, ex.Message);
                 return null;
             }
 
@@ -480,13 +483,13 @@ namespace DynaRAP.UControl
                 JsonData result = JsonConvert.DeserializeObject<JsonData>(responseData);
                 if (result.code == 200)
                 {
-                    MessageBox.Show(type == "save" ? "저장 성공" : "수정 성공");
+                    MessageBox.Show(new Form { TopMost = true }, type == "save" ? "저장 성공" : "수정 성공");
                     AllShortBlockUnChecked();
                     GetBinTableList();
                 }
                 else
                 {
-                    MessageBox.Show(type == "save" ? "저장 실패" : "수정 실패");
+                    MessageBox.Show(new Form { TopMost = true }, type == "save" ? "저장 실패" : "수정 실패");
                 }
             }
         }
@@ -587,7 +590,7 @@ namespace DynaRAP.UControl
         {
             if(binMetaSeq == null)
             {
-                MessageBox.Show("선택된 BIN테이블이 없습니다. 선택 후 삭제해주세요.");
+                MessageBox.Show(new Form { TopMost = true }, "선택된 BIN테이블이 없습니다. 선택 후 삭제해주세요.");
                 return;
             }
             if(MessageBox.Show(binName.Text +  "을(를) 삭제하시겠습니까?", "삭제",MessageBoxButtons.OKCancel) == DialogResult.OK)
@@ -603,7 +606,7 @@ namespace DynaRAP.UControl
                     JsonData result = JsonConvert.DeserializeObject<JsonData>(responseData);
                     if (result.code == 200)
                     {
-                        MessageBox.Show("삭제 성공");
+                        MessageBox.Show(new Form { TopMost = true }, "삭제 성공");
                         binMetaSeq = null;
                         binName.Text = "";
                         AllShortBlockUnChecked();
@@ -611,7 +614,7 @@ namespace DynaRAP.UControl
                     }
                     else
                     {
-                        MessageBox.Show("삭제 실패");
+                        MessageBox.Show(new Form { TopMost = true }, "삭제 실패");
                     }
                 }
             }
@@ -725,7 +728,7 @@ namespace DynaRAP.UControl
             paramListData = GetParamListByPartsShortblock();
             if(paramListData.Count == 0)
             {
-                MessageBox.Show("선택된 shortblock에 공통된 파라미터가 없습니다.");
+                MessageBox.Show(new Form { TopMost = true }, "선택된 shortblock에 공통된 파라미터가 없습니다.");
                 return;
             }
             BinParameterSelectControl ct = new BinParameterSelectControl(this, paramListData);
@@ -785,19 +788,20 @@ namespace DynaRAP.UControl
                         
                         if (responseParam.code == 200)
                         {
-                            foreach (var paramData in responseParam.response.paramData)
+                            foreach (var paramData in responseParam.response.paramData.Select((value, index) => new { value, index }))
                             {
-                                if (paramSeqDic.Where(paramD => paramD.Key.seq == paramData.seq).Count() != 0)
+                                paramData.value.binSearchSeq = responseParam.response.paramSet[paramData.index];
+                                if (paramSeqDic.Where(paramD => paramD.Key.seq == paramData.value.seq).Count() != 0)
                                 {
-                                    if (paramData.propInfo != null)
+                                    if (paramData.value.propInfo != null)
                                     {
-                                        ParamDatas selectedParam = paramSeqDic.Where(paramD => paramD.Key.seq == paramData.seq).Select(paramD => paramD.Key).ToList()[0];
+                                        ParamDatas selectedParam = paramSeqDic.Where(paramD => paramD.Key.seq == paramData.value.seq).Select(paramD => paramD.Key).ToList()[0];
                                         paramSeqDic[selectedParam] = paramSeqDic[selectedParam] + 1;
                                     }
                                 }
                                 else
                                 {
-                                    paramSeqDic.Add(paramData, 1);
+                                    paramSeqDic.Add(paramData.value, 1);
                                 }
                                 //if (responseParamList.FindIndex(x => x.seq == paramData.seq) == -1)
                                 //{

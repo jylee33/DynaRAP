@@ -51,6 +51,7 @@
             this.gridColumn6 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.gridColumn7 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemComboBox1 = new DevExpress.XtraEditors.Repository.RepositoryItemComboBox();
+            this.gridColumn14 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
             this.labelControl12 = new DevExpress.XtraEditors.LabelControl();
             this.gridControl3 = new DevExpress.XtraGrid.GridControl();
@@ -64,6 +65,7 @@
             this.labelControl19 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl20 = new DevExpress.XtraEditors.LabelControl();
             this.btnAddSplittedInterval = new DevExpress.XtraEditors.ButtonEdit();
+            this.btn_downloadAll = new DevExpress.XtraEditors.SimpleButton();
             this.gridControl2 = new DevExpress.XtraGrid.GridControl();
             this.gridView2 = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.gridColumn1 = new DevExpress.XtraGrid.Columns.GridColumn();
@@ -75,6 +77,18 @@
             this.gridColumn9 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.repositoryItemImageComboBox1 = new DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox();
             this.imageCollection2 = new DevExpress.Utils.ImageCollection(this.components);
+            this.CSV_ALL = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.repositoryItemImageComboBox2 = new DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox();
+            this.imageCollection3 = new DevExpress.Utils.ImageCollection(this.components);
+            this.gridColumn8 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.repositoryItemImageComboBox3 = new DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox();
+            this.gridColumn10 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.repositoryItemImageComboBox4 = new DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox();
+            this.gridColumn11 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.repositoryItemImageComboBox5 = new DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox();
+            this.gridColumn12 = new DevExpress.XtraGrid.Columns.GridColumn();
+            this.repositoryItemImageComboBox6 = new DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox();
+            this.gridColumn13 = new DevExpress.XtraGrid.Columns.GridColumn();
             this.lblSplitCount = new DevExpress.XtraEditors.LabelControl();
             this.lblTag = new DevExpress.XtraEditors.LabelControl();
             this.edtTag = new DevExpress.XtraEditors.ButtonEdit();
@@ -123,6 +137,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemComboBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemImageComboBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemImageComboBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.imageCollection3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemImageComboBox3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemImageComboBox4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemImageComboBox5)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemImageComboBox6)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtTag.Properties)).BeginInit();
             this.tableLayoutPanel4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chkLPF.Properties)).BeginInit();
@@ -362,13 +382,14 @@
             // 
             this.gridView1.Columns.AddRange(new DevExpress.XtraGrid.Columns.GridColumn[] {
             this.gridColumn6,
-            this.gridColumn7});
+            this.gridColumn7,
+            this.gridColumn14});
             this.gridView1.GridControl = this.gridControl1;
             this.gridView1.Name = "gridView1";
             // 
             // gridColumn6
             // 
-            this.gridColumn6.Caption = "UnmappedParamName";
+            this.gridColumn6.Caption = "ParamName";
             this.gridColumn6.FieldName = "UnmappedParamName";
             this.gridColumn6.Name = "gridColumn6";
             this.gridColumn6.Visible = true;
@@ -389,6 +410,14 @@
             this.repositoryItemComboBox1.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.repositoryItemComboBox1.Name = "repositoryItemComboBox1";
+            // 
+            // gridColumn14
+            // 
+            this.gridColumn14.Caption = "Mapping";
+            this.gridColumn14.FieldName = "Mapping";
+            this.gridColumn14.Name = "gridColumn14";
+            this.gridColumn14.Visible = true;
+            this.gridColumn14.VisibleIndex = 2;
             // 
             // tableLayoutPanel6
             // 
@@ -445,9 +474,9 @@
             this.labelControl11.Appearance.Options.UseFont = true;
             this.labelControl11.Location = new System.Drawing.Point(3, 819);
             this.labelControl11.Name = "labelControl11";
-            this.labelControl11.Size = new System.Drawing.Size(309, 17);
+            this.labelControl11.Size = new System.Drawing.Size(454, 17);
             this.labelControl11.TabIndex = 0;
-            this.labelControl11.Text = "동압식(Q) - 사용예 : ${PARAM1} - ${PARAM2}";
+            this.labelControl11.Text = "Dynamic Presure 파라미터 생성 - 사용예 : ${PARAM1} - ${PARAM2}";
             // 
             // edtEquation
             // 
@@ -464,6 +493,7 @@
             this.flowLayoutPanel2.Controls.Add(this.labelControl19);
             this.flowLayoutPanel2.Controls.Add(this.labelControl20);
             this.flowLayoutPanel2.Controls.Add(this.btnAddSplittedInterval);
+            this.flowLayoutPanel2.Controls.Add(this.btn_downloadAll);
             this.flowLayoutPanel2.Controls.Add(this.gridControl2);
             this.flowLayoutPanel2.Controls.Add(this.lblSplitCount);
             this.flowLayoutPanel2.Controls.Add(this.lblTag);
@@ -472,7 +502,6 @@
             this.flowLayoutPanel2.Controls.Add(this.tableLayoutPanel4);
             this.flowLayoutPanel2.Controls.Add(this.tableLayoutPanel3);
             this.flowLayoutPanel2.Controls.Add(this.tableLayoutPanel5);
-            this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel2.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel2.Location = new System.Drawing.Point(1027, 24);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
@@ -540,14 +569,30 @@
             this.btnAddSplittedInterval.TabIndex = 1;
             this.btnAddSplittedInterval.Click += new System.EventHandler(this.btnAddSplittedInterval_ButtonClick);
             // 
+            // btn_downloadAll
+            // 
+            this.btn_downloadAll.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btn_downloadAll.Location = new System.Drawing.Point(703, 146);
+            this.btn_downloadAll.Name = "btn_downloadAll";
+            this.btn_downloadAll.Size = new System.Drawing.Size(88, 19);
+            this.btn_downloadAll.TabIndex = 46;
+            this.btn_downloadAll.Text = "전체 다운로드";
+            this.btn_downloadAll.Visible = false;
+            this.btn_downloadAll.Click += new System.EventHandler(this.btn_downloadAll_Click);
+            // 
             // gridControl2
             // 
-            this.gridControl2.Location = new System.Drawing.Point(3, 146);
+            this.gridControl2.Location = new System.Drawing.Point(3, 171);
             this.gridControl2.MainView = this.gridView2;
             this.gridControl2.Name = "gridControl2";
             this.gridControl2.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemImageComboBox1,
-            this.repositoryItemComboBox2});
+            this.repositoryItemComboBox2,
+            this.repositoryItemImageComboBox2,
+            this.repositoryItemImageComboBox3,
+            this.repositoryItemImageComboBox4,
+            this.repositoryItemImageComboBox5,
+            this.repositoryItemImageComboBox6});
             this.gridControl2.Size = new System.Drawing.Size(785, 282);
             this.gridControl2.TabIndex = 2;
             this.gridControl2.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
@@ -561,7 +606,13 @@
             this.gridColumn3,
             this.gridColumn4,
             this.gridColumn5,
-            this.gridColumn9});
+            this.gridColumn9,
+            this.CSV_ALL,
+            this.gridColumn8,
+            this.gridColumn10,
+            this.gridColumn11,
+            this.gridColumn12,
+            this.gridColumn13});
             this.gridView2.GridControl = this.gridControl2;
             this.gridView2.Name = "gridView2";
             this.gridView2.KeyUp += new System.Windows.Forms.KeyEventHandler(this.gridView2_KeyUp);
@@ -637,11 +688,108 @@
             this.imageCollection2.Images.SetKeyName(0, "NONE");
             this.imageCollection2.Images.SetKeyName(1, "DELETE");
             // 
+            // CSV_ALL
+            // 
+            this.CSV_ALL.Caption = "CSV_ALL";
+            this.CSV_ALL.ColumnEdit = this.repositoryItemImageComboBox2;
+            this.CSV_ALL.FieldName = "Download_ALL";
+            this.CSV_ALL.Name = "CSV_ALL";
+            this.CSV_ALL.Visible = true;
+            this.CSV_ALL.VisibleIndex = 6;
+            // 
+            // repositoryItemImageComboBox2
+            // 
+            this.repositoryItemImageComboBox2.AutoHeight = false;
+            this.repositoryItemImageComboBox2.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.repositoryItemImageComboBox2.Name = "repositoryItemImageComboBox2";
+            this.repositoryItemImageComboBox2.SmallImages = this.imageCollection3;
+            // 
+            // imageCollection3
+            // 
+            this.imageCollection3.ImageStream = ((DevExpress.Utils.ImageCollectionStreamer)(resources.GetObject("imageCollection3.ImageStream")));
+            this.imageCollection3.Images.SetKeyName(0, "none.png");
+            this.imageCollection3.Images.SetKeyName(1, "download.png");
+            // 
+            // gridColumn8
+            // 
+            this.gridColumn8.Caption = "CSV_RAW";
+            this.gridColumn8.ColumnEdit = this.repositoryItemImageComboBox3;
+            this.gridColumn8.FieldName = "Download_RAW";
+            this.gridColumn8.Name = "gridColumn8";
+            this.gridColumn8.Visible = true;
+            this.gridColumn8.VisibleIndex = 7;
+            // 
+            // repositoryItemImageComboBox3
+            // 
+            this.repositoryItemImageComboBox3.AutoHeight = false;
+            this.repositoryItemImageComboBox3.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.repositoryItemImageComboBox3.Name = "repositoryItemImageComboBox3";
+            this.repositoryItemImageComboBox3.SmallImages = this.imageCollection3;
+            // 
+            // gridColumn10
+            // 
+            this.gridColumn10.Caption = "CSV_LPF";
+            this.gridColumn10.ColumnEdit = this.repositoryItemImageComboBox4;
+            this.gridColumn10.FieldName = "Download_LPF";
+            this.gridColumn10.Name = "gridColumn10";
+            this.gridColumn10.Visible = true;
+            this.gridColumn10.VisibleIndex = 8;
+            // 
+            // repositoryItemImageComboBox4
+            // 
+            this.repositoryItemImageComboBox4.AutoHeight = false;
+            this.repositoryItemImageComboBox4.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.repositoryItemImageComboBox4.Name = "repositoryItemImageComboBox4";
+            this.repositoryItemImageComboBox4.SmallImages = this.imageCollection3;
+            // 
+            // gridColumn11
+            // 
+            this.gridColumn11.Caption = "CSV_HPF";
+            this.gridColumn11.ColumnEdit = this.repositoryItemImageComboBox5;
+            this.gridColumn11.FieldName = "Download_HPF";
+            this.gridColumn11.Name = "gridColumn11";
+            this.gridColumn11.Visible = true;
+            this.gridColumn11.VisibleIndex = 9;
+            // 
+            // repositoryItemImageComboBox5
+            // 
+            this.repositoryItemImageComboBox5.AutoHeight = false;
+            this.repositoryItemImageComboBox5.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.repositoryItemImageComboBox5.Name = "repositoryItemImageComboBox5";
+            this.repositoryItemImageComboBox5.SmallImages = this.imageCollection3;
+            // 
+            // gridColumn12
+            // 
+            this.gridColumn12.Caption = "CSV_BPF";
+            this.gridColumn12.ColumnEdit = this.repositoryItemImageComboBox6;
+            this.gridColumn12.FieldName = "Download_BPF";
+            this.gridColumn12.Name = "gridColumn12";
+            this.gridColumn12.Visible = true;
+            this.gridColumn12.VisibleIndex = 10;
+            // 
+            // repositoryItemImageComboBox6
+            // 
+            this.repositoryItemImageComboBox6.AutoHeight = false;
+            this.repositoryItemImageComboBox6.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.repositoryItemImageComboBox6.Name = "repositoryItemImageComboBox6";
+            this.repositoryItemImageComboBox6.SmallImages = this.imageCollection3;
+            // 
+            // gridColumn13
+            // 
+            this.gridColumn13.Caption = "gridColumn13";
+            this.gridColumn13.FieldName = "Seq";
+            this.gridColumn13.Name = "gridColumn13";
+            // 
             // lblSplitCount
             // 
             this.lblSplitCount.Appearance.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold);
             this.lblSplitCount.Appearance.Options.UseFont = true;
-            this.lblSplitCount.Location = new System.Drawing.Point(3, 434);
+            this.lblSplitCount.Location = new System.Drawing.Point(3, 459);
             this.lblSplitCount.Name = "lblSplitCount";
             this.lblSplitCount.Size = new System.Drawing.Size(86, 17);
             this.lblSplitCount.TabIndex = 0;
@@ -651,7 +799,7 @@
             // 
             this.lblTag.Appearance.Font = new System.Drawing.Font("Tahoma", 13F, System.Drawing.FontStyle.Bold);
             this.lblTag.Appearance.Options.UseFont = true;
-            this.lblTag.Location = new System.Drawing.Point(3, 457);
+            this.lblTag.Location = new System.Drawing.Point(3, 482);
             this.lblTag.Name = "lblTag";
             this.lblTag.Size = new System.Drawing.Size(26, 22);
             this.lblTag.TabIndex = 3;
@@ -659,7 +807,7 @@
             // 
             // edtTag
             // 
-            this.edtTag.Location = new System.Drawing.Point(3, 485);
+            this.edtTag.Location = new System.Drawing.Point(3, 510);
             this.edtTag.Name = "edtTag";
             this.edtTag.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Plus)});
@@ -672,7 +820,7 @@
             // 
             this.panelTag.AutoScroll = true;
             this.panelTag.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelTag.Location = new System.Drawing.Point(3, 513);
+            this.panelTag.Location = new System.Drawing.Point(3, 538);
             this.panelTag.Name = "panelTag";
             this.panelTag.Size = new System.Drawing.Size(788, 96);
             this.panelTag.TabIndex = 5;
@@ -695,7 +843,7 @@
             this.tableLayoutPanel4.Controls.Add(this.edtLPFn, 2, 0);
             this.tableLayoutPanel4.Controls.Add(this.edtLPFcutoff, 4, 0);
             this.tableLayoutPanel4.Controls.Add(this.cboLPFbtype, 6, 0);
-            this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 615);
+            this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 640);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
             this.tableLayoutPanel4.RowCount = 1;
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -780,7 +928,7 @@
             this.tableLayoutPanel3.Controls.Add(this.edtHPFn, 2, 0);
             this.tableLayoutPanel3.Controls.Add(this.edtHPFcutoff, 4, 0);
             this.tableLayoutPanel3.Controls.Add(this.cboHPFbtype, 6, 0);
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 647);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 672);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 1;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -858,7 +1006,7 @@
             this.tableLayoutPanel5.Controls.Add(this.chkCustomFilter, 0, 0);
             this.tableLayoutPanel5.Controls.Add(this.btnSaveSplittedInterval, 4, 0);
             this.tableLayoutPanel5.Controls.Add(this.chkForcedImport, 3, 0);
-            this.tableLayoutPanel5.Location = new System.Drawing.Point(3, 679);
+            this.tableLayoutPanel5.Location = new System.Drawing.Point(3, 704);
             this.tableLayoutPanel5.Name = "tableLayoutPanel5";
             this.tableLayoutPanel5.RowCount = 1;
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -873,6 +1021,7 @@
             this.chkCustomFilter.Properties.Caption = "Custom Filter";
             this.chkCustomFilter.Size = new System.Drawing.Size(94, 19);
             this.chkCustomFilter.TabIndex = 2;
+            this.chkCustomFilter.Visible = false;
             this.chkCustomFilter.CheckedChanged += new System.EventHandler(this.chkCustomFilter_CheckedChanged);
             // 
             // btnSaveSplittedInterval
@@ -942,6 +1091,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemComboBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemImageComboBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemImageComboBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.imageCollection3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemImageComboBox3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemImageComboBox4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemImageComboBox5)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemImageComboBox6)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtTag.Properties)).EndInit();
             this.tableLayoutPanel4.ResumeLayout(false);
             this.tableLayoutPanel4.PerformLayout();
@@ -1037,5 +1192,19 @@
         private DevExpress.XtraEditors.Repository.RepositoryItemComboBox repositoryItemComboBox3;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel6;
         private DevExpress.XtraEditors.LabelControl labelControl12;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn8;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn10;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn11;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn12;
+        private DevExpress.XtraGrid.Columns.GridColumn CSV_ALL;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn13;
+        private DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox repositoryItemImageComboBox2;
+        private DevExpress.Utils.ImageCollection imageCollection3;
+        private DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox repositoryItemImageComboBox3;
+        private DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox repositoryItemImageComboBox4;
+        private DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox repositoryItemImageComboBox5;
+        private DevExpress.XtraEditors.Repository.RepositoryItemImageComboBox repositoryItemImageComboBox6;
+        private DevExpress.XtraGrid.Columns.GridColumn gridColumn14;
+        private DevExpress.XtraEditors.SimpleButton btn_downloadAll;
     }
 }

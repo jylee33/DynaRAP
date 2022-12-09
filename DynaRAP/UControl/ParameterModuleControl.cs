@@ -215,6 +215,16 @@ namespace DynaRAP.UControl
                 //MessageBox.Show(responseData);
             }
         }
+
+        public void SaveEqPlot()
+        {
+            //plotControl.PlotSaveRequest();
+
+            string parammoduleSeq = moduleNameList.GetColumnValue("Seq").ToString();
+            string moduleName = moduleNameList.GetColumnValue("ModuleName").ToString();
+            plotControl.SetSelectDataSource(parammoduleSeq, moduleName);
+            plotControl.RefreshPlot();
+        }
         public void SaveChangePlotFromEQ(string paramModuleSeq)
         {
             string moduleName = moduleNameList.GetColumnValue("ModuleName").ToString();

@@ -372,7 +372,7 @@ namespace DynaRAP.UControl
         private void GridView1_CustomDrawRowIndicator(object sender, RowIndicatorCustomDrawEventArgs e)
         {
             if (e.RowHandle >= 0)
-                e.Info.DisplayText = e.RowHandle.ToString();
+                e.Info.DisplayText = (e.RowHandle+1).ToString();
         }
 
         private ResponseDLLParamData GetDllParamDataList()

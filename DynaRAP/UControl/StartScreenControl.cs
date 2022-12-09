@@ -8,6 +8,7 @@ using DynaRAP.TEST;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
 using System.Linq;
@@ -83,6 +84,15 @@ namespace DynaRAP.UControl
             //mainForm.TabbedView1.RemoveDocument(mainForm.ImportModuleControl);
             //mainForm.TabbedView1.RemoveDocument(mainForm.SbModuleControl);
             //mainForm.TabbedView1.RemoveDocument(mainForm.BinModuleControl);
+        }
+
+        private void simpleButton3_Click(object sender, EventArgs e)
+        {
+            ChangeConfigForm form = new ChangeConfigForm();
+            if (form.ShowDialog() == DialogResult.OK)
+            {
+                MessageBox.Show("수정 성공");
+            }
         }
     }
 

@@ -11,12 +11,14 @@ namespace DynaRAP.Data
         public UnmappedParamData()
         {
         }
-        public UnmappedParamData(string unmappedParamName, string paramKey)
+        public UnmappedParamData(string unmappedParamName, string paramKey, string mapping)
         {
             UnmappedParamName = unmappedParamName;
             ParamKey = paramKey;
+            Mapping = mapping;
         }
         public string UnmappedParamName { get; set; }
         public string ParamKey { get; set; }
+        public string Mapping { get; set; }
     }
 }

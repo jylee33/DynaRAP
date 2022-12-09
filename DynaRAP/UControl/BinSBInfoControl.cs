@@ -390,16 +390,19 @@ namespace DynaRAP.UControl
                 PartInfoResponse responseParam = JsonConvert.DeserializeObject<PartInfoResponse>(responseData);
                 if (responseParam.code == 200)
                 {
-                    for(int i=0; i<responseParam.response.paramSet.Count; i++)
+                    if (responseParam.response.paramSet.Count == responseParam.response.data[0].Count)
                     {
-                        if (responseParam.response.paramSet[i].seq == paramSeq)
+                        for (int i = 0; i < responseParam.response.paramSet.Count; i++)
                         {
-                            for (int j = 0; j < responseParam.response.julianSet[0].Count ; j++)
+                            if (responseParam.response.paramSet[i].seq == paramSeq)
                             {
-                                DataRow dataRow = dt.NewRow();
-                                dataRow["julianTime"] = responseParam.response.julianSet[0][i];
-                                dataRow[paramNameList[0]] = responseParam.response.data[j][i];
-                                dt.Rows.Add(dataRow);
+                                for (int j = 0; j < responseParam.response.julianSet[0].Count; j++)
+                                {
+                                    DataRow dataRow = dt.NewRow();
+                                    dataRow["julianTime"] = responseParam.response.julianSet[0][i];
+                                    dataRow[paramNameList[0]] = responseParam.response.data[j][i];
+                                    dt.Rows.Add(dataRow);
+                                }
                             }
                         }
                     }

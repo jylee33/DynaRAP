@@ -252,30 +252,30 @@
     <value>DevExpress.XtraBars.Docking.ControlContainer, DevExpress.XtraBars.v22.1, Version=22.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
   <data name="&gt;&gt;dockPanel2_Container.Parent" xml:space="preserve">
-    <value>panelBinSbList</value>
+    <value>panelSelectPointList</value>
   </data>
   <data name="&gt;&gt;dockPanel2_Container.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="panelBinSbList.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="panelSelectPointList.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
   </data>
-  <data name="panelBinSbList.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="panelSelectPointList.Size" type="System.Drawing.Size, System.Drawing">
     <value>254, 237</value>
   </data>
-  <data name="panelBinSbList.Text" xml:space="preserve">
-    <value>ImportModuleScenarioName</value>
+  <data name="panelSelectPointList.Text" xml:space="preserve">
+    <value>선택 PLOT Point</value>
   </data>
-  <data name="&gt;&gt;panelBinSbList.Name" xml:space="preserve">
-    <value>panelBinSbList</value>
+  <data name="&gt;&gt;panelSelectPointList.Name" xml:space="preserve">
+    <value>panelSelectPointList</value>
   </data>
-  <data name="&gt;&gt;panelBinSbList.Type" xml:space="preserve">
+  <data name="&gt;&gt;panelSelectPointList.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.Docking.DockPanel, DevExpress.XtraBars.v22.1, Version=22.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
-  <data name="&gt;&gt;panelBinSbList.Parent" xml:space="preserve">
+  <data name="&gt;&gt;panelSelectPointList.Parent" xml:space="preserve">
     <value>panelContainer3</value>
   </data>
-  <data name="&gt;&gt;panelBinSbList.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;panelSelectPointList.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
   <data name="dockPanel3_Container.Location" type="System.Drawing.Point, System.Drawing">
@@ -341,6 +341,48 @@
   <data name="&gt;&gt;panelContainer3.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
+  <data name="dockPanel4_Container.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="dockPanel4_Container.Size" type="System.Drawing.Size, System.Drawing">
+    <value>1084, 155</value>
+  </data>
+  <data name="dockPanel4_Container.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;dockPanel4_Container.Name" xml:space="preserve">
+    <value>dockPanel4_Container</value>
+  </data>
+  <data name="&gt;&gt;dockPanel4_Container.Type" xml:space="preserve">
+    <value>DevExpress.XtraBars.Docking.ControlContainer, DevExpress.XtraBars.v22.1, Version=22.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  </data>
+  <data name="&gt;&gt;dockPanel4_Container.Parent" xml:space="preserve">
+    <value>panelSelectPointTable</value>
+  </data>
+  <data name="&gt;&gt;dockPanel4_Container.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="panelSelectPointTable.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 26</value>
+  </data>
+  <data name="panelSelectPointTable.Size" type="System.Drawing.Size, System.Drawing">
+    <value>1084, 155</value>
+  </data>
+  <data name="panelSelectPointTable.Text" xml:space="preserve">
+    <value>선택 CSV TABLE</value>
+  </data>
+  <data name="&gt;&gt;panelSelectPointTable.Name" xml:space="preserve">
+    <value>panelSelectPointTable</value>
+  </data>
+  <data name="&gt;&gt;panelSelectPointTable.Type" xml:space="preserve">
+    <value>DevExpress.XtraBars.Docking.DockPanel, DevExpress.XtraBars.v22.1, Version=22.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  </data>
+  <data name="&gt;&gt;panelSelectPointTable.Parent" xml:space="preserve">
+    <value>panelContainer2</value>
+  </data>
+  <data name="&gt;&gt;panelSelectPointTable.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
   <data name="controlContainer1.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
   </data>
@@ -382,48 +424,6 @@
   </data>
   <data name="&gt;&gt;panelImportViewCsv.ZOrder" xml:space="preserve">
     <value>0</value>
-  </data>
-  <data name="dockPanel4_Container.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="dockPanel4_Container.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1084, 155</value>
-  </data>
-  <data name="dockPanel4_Container.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;dockPanel4_Container.Name" xml:space="preserve">
-    <value>dockPanel4_Container</value>
-  </data>
-  <data name="&gt;&gt;dockPanel4_Container.Type" xml:space="preserve">
-    <value>DevExpress.XtraBars.Docking.ControlContainer, DevExpress.XtraBars.v22.1, Version=22.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
-  </data>
-  <data name="&gt;&gt;dockPanel4_Container.Parent" xml:space="preserve">
-    <value>panelBinTable</value>
-  </data>
-  <data name="&gt;&gt;dockPanel4_Container.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="panelBinTable.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 26</value>
-  </data>
-  <data name="panelBinTable.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1084, 155</value>
-  </data>
-  <data name="panelBinTable.Text" xml:space="preserve">
-    <value>BIN TABLE</value>
-  </data>
-  <data name="&gt;&gt;panelBinTable.Name" xml:space="preserve">
-    <value>panelBinTable</value>
-  </data>
-  <data name="&gt;&gt;panelBinTable.Type" xml:space="preserve">
-    <value>DevExpress.XtraBars.Docking.DockPanel, DevExpress.XtraBars.v22.1, Version=22.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
-  </data>
-  <data name="&gt;&gt;panelBinTable.Parent" xml:space="preserve">
-    <value>panelContainer2</value>
-  </data>
-  <data name="&gt;&gt;panelBinTable.ZOrder" xml:space="preserve">
-    <value>1</value>
   </data>
   <data name="panelContainer2.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 522</value>
@@ -551,6 +551,15 @@
   </data>
   <data name="btnParamModule.Caption" xml:space="preserve">
     <value>파라미터 모듈</value>
+  </data>
+  <data name="barSubItem7.Caption" xml:space="preserve">
+    <value>관리자</value>
+  </data>
+  <data name="barButtonItem5.Caption" xml:space="preserve">
+    <value>분할 데이터 삭제</value>
+  </data>
+  <data name="barButtonItem6.Caption" xml:space="preserve">
+    <value>분할 데이터 기동이름 변경 </value>
   </data>
   <data name="bar1.Text" xml:space="preserve">
     <value>Tools</value>
@@ -859,6 +868,24 @@
     <value>btnParamModule</value>
   </data>
   <data name="&gt;&gt;btnParamModule.Type" xml:space="preserve">
+    <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v22.1, Version=22.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  </data>
+  <data name="&gt;&gt;barSubItem7.Name" xml:space="preserve">
+    <value>barSubItem7</value>
+  </data>
+  <data name="&gt;&gt;barSubItem7.Type" xml:space="preserve">
+    <value>DevExpress.XtraBars.BarSubItem, DevExpress.XtraBars.v22.1, Version=22.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  </data>
+  <data name="&gt;&gt;barButtonItem5.Name" xml:space="preserve">
+    <value>barButtonItem5</value>
+  </data>
+  <data name="&gt;&gt;barButtonItem5.Type" xml:space="preserve">
+    <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v22.1, Version=22.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
+  </data>
+  <data name="&gt;&gt;barButtonItem6.Name" xml:space="preserve">
+    <value>barButtonItem6</value>
+  </data>
+  <data name="&gt;&gt;barButtonItem6.Type" xml:space="preserve">
     <value>DevExpress.XtraBars.BarButtonItem, DevExpress.XtraBars.v22.1, Version=22.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a</value>
   </data>
   <data name="&gt;&gt;bar2.Name" xml:space="preserve">

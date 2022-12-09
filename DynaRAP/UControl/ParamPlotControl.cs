@@ -30,6 +30,7 @@ namespace DynaRAP.UControl
         AdditionalResponse additionalResponse = null;
         List<PlotSourceResponse> plotSourceResponses = null;
         PlotModuleControl plotModuleControlBase = null;
+        DataTable changePlotdt = new DataTable();
         public ParamPlotControl(ParameterModuleControl parameterModuleControl)
         {
             this.parameterModuleControl = parameterModuleControl;
@@ -39,6 +40,7 @@ namespace DynaRAP.UControl
         private void ParamPlotControl_Load(object sender, EventArgs e)
         {
             InitializeGridControl();
+            InitializeChangeGridControl();
         }
         private void InitializeGridControl()
         {
@@ -77,7 +79,27 @@ namespace DynaRAP.UControl
             gridView3.OptionsSelection.MultiSelectMode = DevExpress.XtraGrid.Views.Grid.GridMultiSelectMode.RowSelect;
             gridView3.OptionsSelection.EnableAppearanceFocusedCell = false;
         }
+        private void InitializeChangeGridControl()
+        {
+            //gridView2.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
 
+            //gridView2.OptionsView.ShowColumnHeaders = false;
+            gridView2.OptionsView.ShowGroupPanel = false;
+            gridView2.OptionsView.ShowIndicator = false;
+            gridView2.IndicatorWidth = 40;
+            gridView2.OptionsView.ShowHorizontalLines = DevExpress.Utils.DefaultBoolean.False;
+            gridView2.OptionsView.ShowVerticalLines = DevExpress.Utils.DefaultBoolean.False;
+            gridView2.OptionsView.ColumnAutoWidth = true;
+
+            gridView2.OptionsBehavior.ReadOnly = true;
+            gridView2.OptionsBehavior.Editable = false;
+
+            gridView2.OptionsSelection.MultiSelectMode = DevExpress.XtraGrid.Views.Grid.GridMultiSelectMode.RowSelect;
+            gridView2.OptionsSelection.EnableAppearanceFocusedCell = false;
+            gridView2.OptionsMenu.EnableColumnMenu = false;
+
+
+        }
         private void GridView1_CustomDrawRowIndicator(object sender, DevExpress.XtraGrid.Views.Grid.RowIndicatorCustomDrawEventArgs e)
         {
             if (e.RowHandle >= 0)
@@ -240,14 +262,21 @@ namespace DynaRAP.UControl
 
         public void SetSelectDataSource(string paramModuleSeq, string moduleName)
         {
+            MainForm mainForm = this.ParentForm as MainForm;
+            mainForm.ShowSplashScreenManager("PLOT 데이터를 불러오는 중입니다.. 잠시만 기다려주십시오.");
             this.paramModuleSeq = paramModuleSeq;
             this.moduleName = moduleName;
             //GetSelectDataList(paramModuleSeq);
             GetSelectPlotDataList(paramModuleSeq);
             panelTag.Controls.Clear();
+            mainForm.HideSplashScreenManager();
         }
         public void GetSelectPlotDataList(string paramModuleSeq)
         {
+            changePlotdt = new DataTable();
+            changePlotdt.Columns.Clear();
+            changePlotdt.Columns.Add("PlotName", typeof(string));
+            changePlotdt.Columns.Add("SeriesName", typeof(string));
             string sendData = string.Format(@"
                 {{
                 ""command"":""plot-list"",
@@ -262,15 +291,20 @@ namespace DynaRAP.UControl
                 this.plotSourceResponses = plotListResponse.response;
                 foreach (var list in plotListResponse.response)
                 {
-                    plotGridDataList.Add(new PlotGridData(Utils.base64StringDecoding(list.plotName), list.plotType, list.dataProp.tags , changeSeriesData(list.plotSeries,list.dataProp.tags)));
+                    var plotGridSeriesList = changeSeriesData(Utils.base64StringDecoding(list.plotName), list.plotSeries, list.dataProp.tags);
+                    if (plotGridSeriesList != null)
+                    {
+                        plotGridDataList.Add(new PlotGridData(Utils.base64StringDecoding(list.plotName), list.plotType, list.dataProp.tags, plotGridSeriesList));
+                    }
                 }
             }
             this.gridControl1.DataSource = plotGridDataList;
+            this.gridControl2.DataSource = changePlotdt;
 
             gridView1.RefreshData();
         }
 
-        private List<PlotGridSeries> changeSeriesData(List<PlotSeries> plotSeries,string tag)
+        private List<PlotGridSeries> changeSeriesData(string plotName , List<PlotSeries> plotSeries,string tag)
         {
             List<PlotGridSeries> plotGridSeriesList = new List<PlotGridSeries>();
             foreach (var plotData in plotSeries)
@@ -293,6 +327,7 @@ namespace DynaRAP.UControl
                     {
                         string itemName = string.Format(@"{0}-{1}", Utils.base64StringDecoding(sourceList.sourceName), sourceList.paramKey);
                         plotGridSeries.xAxis = itemName;
+                        plotGridSeries.xParamKey = sourceList.paramKey;
                     }
                 }
                 if (plotData.yAxisSourceType == "eq")
@@ -311,9 +346,31 @@ namespace DynaRAP.UControl
                     {
                         string itemName = string.Format(@"{0}-{1}", Utils.base64StringDecoding(sourceList.sourceName), sourceList.paramKey);
                         plotGridSeries.yAxis = itemName;
+                        plotGridSeries.yParamKey = sourceList.paramKey;
+
                     }
                 }
+                if(plotData.chartType == "Cross Plot")
+                {
+                    if (string.IsNullOrEmpty(plotGridSeries.xAxis) && string.IsNullOrEmpty(plotGridSeries.yAxis))
+                    {
+                        changePlotdt.Rows.Add(plotName, plotGridSeries.seriesName);
+                    }
+                }
+                else
+                {
+                    if (string.IsNullOrEmpty(plotGridSeries.yAxis)|| (plotData.xAxisSourceType != null && string.IsNullOrEmpty(plotGridSeries.xAxis)))
+                    {
+                        changePlotdt.Rows.Add(plotName,plotGridSeries.seriesName);
+                    }
+                }
+
                 plotGridSeriesList.Add(plotGridSeries);
+            }
+            if (plotSeries.Count() != plotGridSeriesList.Count())
+            {
+                plotGridSeriesList = null;
+
             }
             return plotGridSeriesList;
         }
@@ -530,7 +587,10 @@ namespace DynaRAP.UControl
         {
             if (plotModuleControlBase != null)
             {
+                MainForm mainForm = this.ParentForm as MainForm;
+                mainForm.ShowSplashScreenManager("PLOT 데이터를 저장 중입니다.. 잠시만 기다려주십시오.");
                 plotModuleControlBase.SavePlotData("outSide");
+                mainForm.HideSplashScreenManager();
             }
             //GetSelectDataList(paramModuleSeq);
             //PlotRequest plotRequest = new PlotRequest();
@@ -839,6 +899,18 @@ namespace DynaRAP.UControl
             {
                 panelTag.Controls.Clear();
             }
+        }
+
+        public void RefreshPlot()
+        {
+            MainForm mainForm = this.ParentForm as MainForm;
+            mainForm.ShowSplashScreenManager("PLOT 데이터를 Refresh 중입니다.. 잠시만 기다려주십시오.");
+            if (plotModuleControlBase != null)
+            {
+                plotModuleControlBase.RefreshPlot(this.additionalResponse);
+            }
+            mainForm.HideSplashScreenManager();
+
         }
     }
 }

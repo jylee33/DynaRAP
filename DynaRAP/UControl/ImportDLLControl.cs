@@ -191,7 +191,7 @@ namespace DynaRAP.UControl
                 byte[] byte64 = Convert.FromBase64String(dll.dataSetName);
                 string decName = Encoding.UTF8.GetString(byte64);
 
-                dllDataList.Add(new DllData(dll.seq, dll.dataSetCode, decName, dll.dataVersion, dll.createdAt.dateTime, 1, 1));
+                dllDataList.Add(new DllData(dll.seq, dll.dataSetCode, decName, dll.dataVersion, dll.createdAt.dateTime, 1, 1, 1));
             }
             gridControl1.DataSource = dllDataList;
 
@@ -247,6 +247,14 @@ namespace DynaRAP.UControl
             colView.Caption = "보기";
             colView.OptionsColumn.ReadOnly = true;
 
+            GridColumn colModify = gridView1.Columns["Modify"];
+            colModify.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
+            colModify.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
+            colModify.OptionsColumn.FixedWidth = true;
+            colModify.Width = 40;
+            colModify.Caption = "수정";
+            colModify.OptionsColumn.ReadOnly = true;
+
             this.repositoryItemImageComboBox1.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(0, 0));
             this.repositoryItemImageComboBox1.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(1, 1));
             this.repositoryItemImageComboBox1.GlyphAlignment = HorzAlignment.Center;
@@ -258,6 +266,13 @@ namespace DynaRAP.UControl
             this.repositoryItemImageComboBox2.GlyphAlignment = HorzAlignment.Center;
             this.repositoryItemImageComboBox2.Buttons[0].Visible = false;
             this.repositoryItemImageComboBox2.Click += RepositoryItemImageComboBox2_Click;
+
+            this.repositoryItemImageComboBox3.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(0, 0));
+            this.repositoryItemImageComboBox3.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(1, 1));
+            this.repositoryItemImageComboBox3.GlyphAlignment = HorzAlignment.Center;
+            this.repositoryItemImageComboBox3.Buttons[0].Visible = false;
+            this.repositoryItemImageComboBox3.Click += RepositoryItemImageComboBox3_Click;
+
         }
 
         private List<ResponseDLL> GetDllList()
@@ -417,6 +432,38 @@ namespace DynaRAP.UControl
             }
         }
 
+
+        private void RepositoryItemImageComboBox3_Click(object sender, EventArgs e)
+        {
+            DllData dllData = (DllData)gridView1.GetFocusedRow();
+            AddDllForm form = new AddDllForm(dllData);
+            if (form.ShowDialog() == DialogResult.OK)
+            {
+                if (form.Response.code == 200)
+                {
+                    MessageBox.Show("수정 성공");
+                }
+                else
+                {
+                    MessageBox.Show("실패 실패");
+                }
+            }
+
+            dllList = GetDllList();
+            gridControl1.DataSource = null;
+            dllDataList.Clear();
+            foreach (ResponseDLL dll in dllList)
+            {
+                //Decoding
+                byte[] byte64 = Convert.FromBase64String(dll.dataSetName);
+                string decName = Encoding.UTF8.GetString(byte64);
+
+                dllDataList.Add(new DllData(dll.seq, dll.dataSetCode, decName, dll.dataVersion, dll.createdAt.dateTime, 1, 1, 1));
+            }
+            gridControl1.DataSource = dllDataList;
+
+
+        }
         private DllResponse RemoveDll(string seq)
         {
             DllResponse result = null;
@@ -497,7 +544,7 @@ namespace DynaRAP.UControl
                 byte[] byte64 = Convert.FromBase64String(resp.dataSetName);
                 string decName = Encoding.UTF8.GetString(byte64);
 
-                dllDataList.Add(new DllData(resp.seq, resp.dataSetCode, decName, resp.dataVersion, resp.createdAt.dateTime, 1, 1));
+                dllDataList.Add(new DllData(resp.seq, resp.dataSetCode, decName, resp.dataVersion, resp.createdAt.dateTime, 1, 1, 1));
                 this.gridControl1.DataSource = dllDataList;
                 //gridControl1.Update();
                 gridView1.RefreshData();

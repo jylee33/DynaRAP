@@ -115,4 +115,22 @@ namespace DynaRAP.Data
         public ResponseAt responseAt { get; set; }
         public int resultCount { get; set; }
     }
+
+    public class EvaluationConvResponse
+    {
+        public int code { get; set; }
+        public string message { get; set; }
+        public List<double[]> response { get; set; }
+        public ResponseAt responseAt { get; set; }
+        public int resultCount { get; set; }
+    }
+
+    public class EvaluationTimeResponse
+    {
+        public int code { get; set; }
+        public string message { get; set; }
+        public List<string> response { get; set; }
+        public ResponseAt responseAt { get; set; }
+        public int resultCount { get; set; }
+    }
 }

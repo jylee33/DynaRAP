@@ -52,8 +52,9 @@ namespace DynaRAP.UControl
             if (isCompleted)
             {
                 timer.Stop();
-                MessageBox.Show("완료");
+                MessageBox.Show(new Form { TopMost = true },"완료");
                 this.Close();
+                this.Dispose();
             }
 
             if (GetProgress())
@@ -155,9 +156,10 @@ namespace DynaRAP.UControl
                             //if (bFirst)
                             //    MessageBox.Show(result.response.statusMessage);
                             //else
-                                MessageBox.Show("완료");
+                                //MessageBox.Show("완료");
 
                             this.Close();
+                            this.Dispose();
                         }
                         else if (result.response.status.Equals("error"))
                         {
@@ -168,6 +170,7 @@ namespace DynaRAP.UControl
 
                             DialogResult = DialogResult.Cancel;
                             this.Close();
+                            this.Dispose();
                         }
                         else
                         {

@@ -38,6 +38,17 @@ namespace DynaRAP.Data
             Del = del;
             View = view;
         }
+        public DllData(string seq, string dataSetCode, string dataSetName, string dataVersion, string regTime, int del, int view, int modify)
+        {
+            Seq = seq;
+            DataSetCode = dataSetCode;
+            DataSetName = dataSetName;
+            DataVersion = dataVersion;
+            RegTime = regTime;
+            Del = del;
+            View = view;
+            Modify = modify;
+        }
         public string Seq { get; set; }
         public string DataSetCode { get; set; }
         public string DataSetName { get; set; }
@@ -45,5 +56,6 @@ namespace DynaRAP.Data
         public string RegTime { get; set; }
         public int Del { get; set; }
         public int View { get; set; }
+        public int Modify { get; set; }
     }
 }

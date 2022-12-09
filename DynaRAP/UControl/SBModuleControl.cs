@@ -116,13 +116,12 @@ namespace DynaRAP.UControl
             edtOverlap.Properties.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Numeric;
             edtOverlap.Properties.Mask.EditMask = @"d2";
             edtOverlap.Properties.Mask.UseMaskAsDisplayFormat = true;
-
             btnAddParameter.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             btnSaveSplittedParameter.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
-
+            buttonEdit2.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             btnAddParameter.Properties.AllowFocused = false;
             btnSaveSplittedParameter.Properties.AllowFocused = false;
-
+            buttonEdit2.Properties.AllowFocused = false;
             lblValidSBCount.Text = string.Format(Properties.Resources.StringValidSBCount, sbIntervalList.Count);
 
             paramList = GetParamList();
@@ -1088,7 +1087,11 @@ namespace DynaRAP.UControl
                 if(t2 > endTime)
                 {
                     t2 = endTime;
-                    t1 = startTime;
+                    t1 = t2.AddSeconds(-sbLen);
+                    if(t1 < startTime)
+                    {
+                        t1 = startTime;
+                    }
                     if (partType == "zaero")
                     {
                         var temp1 = Utils.GetZaeroJulianFromDate(t1);
@@ -1833,6 +1836,35 @@ namespace DynaRAP.UControl
                 return null;
             }
             return null;
+        }
+
+        private void buttonEdit2_Click(object sender, EventArgs e)
+        {
+            if (sbIntervalList == null || sbIntervalList.Count == 0)
+            {
+                MessageBox.Show("변경할 ShortBlock이 없습니다. 다시 확인해주세요.");
+                return;
+            }
+            int i = 0;
+            foreach (SBIntervalControl sbInterval in sbIntervalList)
+            {
+                if (string.IsNullOrEmpty(changeName.Text))
+                {
+                    sbInterval.Sb.SbName = string.Format("ShortBlock#{1}", changeName.Text, i);
+                    sbInterval.Title = string.Format("ShortBlock#{1}", changeName.Text, i);
+                }
+                else
+                {
+                    sbInterval.Sb.SbName = string.Format("{0}_ShortBlock#{1}", changeName.Text, i);
+                    sbInterval.Title = string.Format("{0}_ShortBlock#{1}", changeName.Text, i);
+                }
+                i++;
+            }
+        }
+
+        private void changeName_ButtonClick(object sender, ButtonPressedEventArgs e)
+        {
+            changeName.Text = String.Empty;
         }
     }
 

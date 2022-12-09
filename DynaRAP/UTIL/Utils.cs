@@ -4,10 +4,13 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using DynaRAP.Data;
 using log4net.Config;
+using Newtonsoft.Json;
 
 namespace DynaRAP.UTIL
 {
@@ -65,6 +68,23 @@ namespace DynaRAP.UTIL
             //DateTime dt = (DateTime)obj;
             DateTime dt = Convert.ToDateTime(obj.ToString());
             string strDate = String.Format("{0}:{1:00}:{2:00}:{3:00}.{4:000000}", dt.DayOfYear, dt.Hour, dt.Minute, dt.Second, dt.TimeOfDay.Milliseconds * 1000);
+
+            return strDate;
+        }
+
+
+        public static string GetJulianFromDate(DateTime dateTime)
+        {
+            string strDate = string.Empty;
+            if (dateTime.Year == DateTime.Now.Year && dateTime.Month == 1 && dateTime.Day == 1)
+            {
+                double millise = Math.Round(dateTime.TimeOfDay.TotalSeconds - Math.Truncate(dateTime.TimeOfDay.TotalSeconds), 7) * 1000000;
+                strDate = String.Format("{0}.{1:00000}", dateTime.DayOfYear, dateTime.Hour, dateTime.Minute, dateTime.Second, millise);
+            } else
+            {
+                double millise = Math.Round(dateTime.TimeOfDay.TotalSeconds - Math.Truncate(dateTime.TimeOfDay.TotalSeconds), 7) * 1000000;
+                strDate = String.Format("{0}:{1:00}:{2:00}:{3:00}.{4:000000}", dateTime.DayOfYear, dateTime.Hour, dateTime.Minute, dateTime.Second, millise);
+            }
 
             return strDate;
         }
@@ -141,6 +161,101 @@ namespace DynaRAP.UTIL
 
                 return responseText;
             }
+            catch (WebException e)
+            {
+                if(e.Response == null)
+                {
+                    log.Error(e.Message);
+                    MessageBox.Show(e.Message);
+                    return null;
+                }
+                using (WebResponse response = e.Response)
+                {
+                    HttpWebResponse httpResponse = (HttpWebResponse)response;
+                    if (httpResponse == null)
+                    {
+                        log.Error(e.Message);
+                        MessageBox.Show(e.Message);
+                        return null;
+                    }
+                    using (Stream data = response.GetResponseStream())
+                    using (var reader = new StreamReader(data))
+                    {
+                        string text = reader.ReadToEnd();
+                        JsonData result = JsonConvert.DeserializeObject<JsonData>(text);
+                        if (result != null)
+                        {
+                            log.Error(e.Message);
+                            log.Error("Code : " +result.code +" Message : "+ result.message);
+                            MessageBox.Show(new Form { TopMost = true }, e.Message);
+                        }
+                        return null;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex.Message);
+                MessageBox.Show(new Form { TopMost = true }, ex.Message);
+                return null;
+            }
+
+        }
+        public static string GetPostDataNew(string url, string sendData)
+        {
+            try
+            {
+                log.Info("url : " + url);
+                log.Info(sendData);
+
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Timeout = 30 * 10000;
+                //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+
+                // POST할 데이타를 Request Stream에 쓴다
+                byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+                request.ContentLength = bytes.Length; // 바이트수 지정
+
+                using (Stream reqStream = request.GetRequestStream())
+                {
+                    reqStream.Write(bytes, 0, bytes.Length);
+                }
+
+                // Response 처리
+                string responseText = string.Empty;
+                using (WebResponse resp = request.GetResponse())
+                {
+                    Stream respStream = resp.GetResponseStream();
+                    using (StreamReader sr = new StreamReader(respStream))
+                    {
+                        responseText = sr.ReadToEnd();
+                    }
+                }
+
+                return responseText;
+            }
+            catch (WebException e)
+            {
+                using (WebResponse response = e.Response)
+                {
+                    HttpWebResponse httpResponse = (HttpWebResponse)response;
+                    using (Stream data = response.GetResponseStream())
+                    using (var reader = new StreamReader(data))
+                    {
+                        string text = reader.ReadToEnd();
+                        JsonData result = JsonConvert.DeserializeObject<JsonData>(text);
+                        if (result != null)
+                        {
+                            log.Error(e.Message);
+                            log.Error("Code : " + result.code + " Message : " + result.message);
+                            MessageBox.Show(string.Format("에러발생\r\nCode : {0} \r\nMessage : {1}", result.code, result.message));
+                        }
+                        return null;
+                    }
+                }
+            }
             catch (Exception ex)
             {
                 log.Error(ex.Message);
@@ -156,6 +271,89 @@ namespace DynaRAP.UTIL
             string deodingData = Encoding.UTF8.GetString(byte64);
             return deodingData;
         }
-           
+
+        public static T DeepClone<T>(T obj)
+        {
+            if (obj == null)
+                throw new ArgumentNullException("Object cannot be null.");
+
+            return (T)Process(obj, new Dictionary<object, object>() { });
+        }
+
+
+        private static object Process(object obj, Dictionary<object, object> circular)
+        {
+            if (obj == null)
+                return null;
+
+
+            Type type = obj.GetType();
+
+
+            if (type.IsValueType || type == typeof(string))
+            {
+                return obj;
+            }
+
+
+            if (type.IsArray)
+            {
+                if (circular.ContainsKey(obj))
+                    return circular[obj];
+
+
+                string typeNoArray = type.FullName.Replace("[]", string.Empty);
+                Type elementType = Type.GetType(typeNoArray + ", " + type.Assembly.FullName);
+                var array = obj as Array;
+                Array arrCopied = Array.CreateInstance(elementType, array.Length);
+                circular[obj] = arrCopied;
+
+
+                for (int i = 0; i < array.Length; i++)
+                {
+                    object element = array.GetValue(i);
+                    object objCopy = null;
+
+
+                    if (element != null && circular.ContainsKey(element))
+                        objCopy = circular[element];
+                    else
+                        objCopy = Process(element, circular);
+
+
+                    arrCopied.SetValue(objCopy, i);
+                }
+
+
+                return Convert.ChangeType(arrCopied, obj.GetType());
+            }
+
+
+            if (type.IsClass)
+            {
+                if (circular.ContainsKey(obj))
+                    return circular[obj];
+
+
+                object objValue = Activator.CreateInstance(obj.GetType());
+                circular[obj] = objValue;
+                FieldInfo[] fields = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+
+
+                foreach (FieldInfo field in fields)
+                {
+                    object fieldValue = field.GetValue(obj);
+                    if (fieldValue == null)
+                        continue;
+
+
+                    object objCopy = circular.ContainsKey(fieldValue) ? circular[fieldValue] : Process(fieldValue, circular);
+                    field.SetValue(objValue, objCopy);
+                }
+                return objValue;
+            }
+            else
+                throw new ArgumentException("Unknown type");
+        }
     }
 }

@@ -125,11 +125,18 @@ namespace DynaRAP.UControl
             mainForm.HideSplashScreenManager();
             if (responseData != null)
             {
-                EvaluationResponse evaluationResponse = JsonConvert.DeserializeObject<EvaluationResponse>(responseData);
-                if (evaluationResponse.response != null && evaluationResponse.response.Count() != 0)
+                try
                 {
-                    dt = GetChartValues(evaluationResponse.response);
-                    AddChartData(selectGridData.eqName);
+                    EvaluationResponse evaluationResponse = JsonConvert.DeserializeObject<EvaluationResponse>(responseData);
+                    if (evaluationResponse.response != null && evaluationResponse.response.Count() != 0)
+                    {
+                        dt = GetChartValues(evaluationResponse.response);
+                        AddChartData(selectGridData.eqName);
+                    }
+                }
+                catch
+                {
+
                 }
             }
         }
@@ -310,6 +317,11 @@ namespace DynaRAP.UControl
                     MessageBox.Show("수식이름 중 비어있는 항목이 있습니다. \n수식이름 입력 후 저장해주세요.");
                     return;
                 }
+                if (gridDataList.Where(x => x.eqName == list.eqName).Count() != 1)
+                {
+                    MessageBox.Show("수식이름 중 같은 항목이 있습니다. \n수식이름을 다르게 입력 후 저장해주세요.");
+                    return;
+                }
                 byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(list.eqName);
                 string encName = Convert.ToBase64String(basebyte);
 
@@ -439,20 +451,37 @@ namespace DynaRAP.UControl
             mainForm.HideSplashScreenManager();
             if (responseData != null)
             {
-                EvaluationResponse evaluationResponse = JsonConvert.DeserializeObject<EvaluationResponse>(responseData);
-                if (evaluationResponse.response != null && evaluationResponse.response.Count() != 0)
+                if (equation.Contains("convh"))
                 {
-                    SaveEquationRequest("saveEq");
-                    //gridView1.SetRowCellValue(gridView1.FocusedRowHandle, "DataCnt", evaluationResponse.response.Count()) ;
-
-                    //foreach (var list in equationResponse.response)
-                    //{
-                    //    list.eqName = Utils.base64StringDecoding(list.eqName);
-                    //    eqGridDataList.Add(new EquationGridData(list));
-                    //}
+                    EvaluationConvResponse evaluationResponse = JsonConvert.DeserializeObject<EvaluationConvResponse>(responseData);
+                    if (evaluationResponse.response != null && evaluationResponse.response.Count() != 0)
+                    {
+                        SaveEquationRequest("saveEq");
+                    }
+                } 
+                else if (equation.Contains("_time"))
+                {
+                    EvaluationTimeResponse evaluationResponse = JsonConvert.DeserializeObject<EvaluationTimeResponse>(responseData);
+                    if (evaluationResponse.response != null && evaluationResponse.response.Count() != 0)
+                    {
+                        SaveEquationRequest("saveEq");
+                    }
                 }
-                //this.gridControl1.DataSource = eqGridDataList;
-                //gridView1.RefreshData();
+                else
+                {
+                    try
+                    {
+                        EvaluationResponse evaluationResponse = JsonConvert.DeserializeObject<EvaluationResponse>(responseData);
+                        if (evaluationResponse.response != null && evaluationResponse.response.Count() != 0)
+                        {
+                            SaveEquationRequest("saveEq");
+                        }
+                    }
+                    catch
+                    {
+
+                    }
+                }
             }
         }
 
@@ -480,6 +509,7 @@ namespace DynaRAP.UControl
             series.ValueScaleType = ScaleType.Numerical;
             series.ValueDataMembers.AddRange(new string[] { "Value" });
             //((XYDiagram)chartControl.Diagram).AxisY.Visibility = DevExpress.Utils.DefaultBoolean.False;
+            ((LineSeriesView)series.View).MarkerVisibility = DevExpress.Utils.DefaultBoolean.True;
             chartControl.Legend.Visibility = DevExpress.Utils.DefaultBoolean.False;
 
             XYDiagram diagram = (XYDiagram)chartControl.Diagram;

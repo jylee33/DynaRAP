@@ -108,7 +108,7 @@ namespace DynaRAP.UControl
             }
 
             chartControl = new ChartControl();
-
+            chartControl.KeyUp += ChartControl_KeyUp;
             chartControl.Series.Clear();
 
             Series series = new Series("Series1", ViewType.Line);
@@ -123,12 +123,23 @@ namespace DynaRAP.UControl
 
             //((XYDiagram)chartControl.Diagram).AxisY.Visibility = DevExpress.Utils.DefaultBoolean.False;
             chartControl.Legend.Visibility = DevExpress.Utils.DefaultBoolean.False;
-               
+             
             XYDiagram diagram = (XYDiagram)chartControl.Diagram;
-            diagram.EnableAxisXScrolling = true;
-            diagram.EnableAxisXZooming = true;
-            //diagram.EnableAxisYScrolling = true;
-            //diagram.EnableAxisYZooming = true;
+            if (CapsLoakActive())
+            {
+                diagram.EnableAxisXScrolling = false;
+                diagram.EnableAxisXZooming = false;
+                diagram.EnableAxisYScrolling = true;
+                diagram.EnableAxisYZooming = true;
+            }
+            else
+            {
+                diagram.EnableAxisXScrolling = true;
+                diagram.EnableAxisXZooming = true;
+                diagram.EnableAxisYScrolling = false;
+                diagram.EnableAxisYZooming = false;
+            }
+         
             diagram.AxisY.WholeRange.AlwaysShowZeroLevel = false;
             diagram.AxisX.DateTimeScaleOptions.ScaleMode = ScaleMode.Manual;
             diagram.AxisX.DateTimeScaleOptions.MeasureUnit = DateTimeMeasureUnit.Millisecond;
@@ -137,7 +148,7 @@ namespace DynaRAP.UControl
             diagram.AxisX.DateTimeScaleOptions.GridSpacing = 1;
             diagram.AxisX.Label.TextPattern = "{A:HH:mm:ss.ffffff}";
             //diag.AxisX.Label.TextPattern = "{A:MMM-dd HH}";
-
+         
             this.rangeControl1.Client = chartControl;
             rangeControl1.RangeChanged += RangeControl1_RangeChanged;
             rangeControl1.ShowLabels = false;
@@ -172,6 +183,32 @@ namespace DynaRAP.UControl
             }
         }
 
+        private void ChartControl_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.CapsLock)
+            {
+                XYDiagram diagram = (XYDiagram)chartControl.Diagram;
+                if (CapsLoakActive())
+                {
+                    diagram.EnableAxisXScrolling = false;
+                    diagram.EnableAxisXZooming = false;
+                    diagram.EnableAxisYScrolling = true;
+                    diagram.EnableAxisYZooming = true;
+                }
+                else
+                {
+                    diagram.EnableAxisXScrolling = true;
+                    diagram.EnableAxisXZooming = true;
+                    diagram.EnableAxisYScrolling = false;
+                    diagram.EnableAxisYZooming = false;
+                }
+            }
+        }
+
+        public static bool CapsLoakActive()
+        {
+            return Control.IsKeyLocked(Keys.CapsLock);
+        }
         private void PanelChart_ClosedPanel(object sender, DockPanelEventArgs e)
         {
         }

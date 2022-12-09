@@ -164,6 +164,7 @@ namespace DynaRAP.Data
         public string presetSeq { get; set; }
         public PropInfo propInfo { get; set; }
         public ParamValueMap paramValueMap { get; set; }
+        public string binSearchSeq { get; set; }
     }
 
     public class ParamValueMap

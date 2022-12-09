@@ -12,6 +12,8 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <TargetFrameworkProfile />
     <PublishUrl>게시\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -24,10 +26,8 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -39,6 +39,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <LangVersion>7.1</LangVersion>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -49,13 +50,18 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <LangVersion>7.1</LangVersion>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>DynaRAP.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DevExpress.Charts.v22.1.Core, Version=22.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.CodeParser.v22.1, Version=22.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
     <Reference Include="DevExpress.Data.Desktop.v22.1, Version=22.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.DataAccess.v22.1, Version=22.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.DataAccess.v22.1.UI, Version=22.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Diagram.v22.1.Core, Version=22.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
     <Reference Include="DevExpress.Drawing.v22.1, Version=22.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
     <Reference Include="DevExpress.Data.v22.1, Version=22.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
     <Reference Include="DevExpress.Images.v22.1, Version=22.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
@@ -65,10 +71,12 @@
     <Reference Include="DevExpress.RichEdit.v22.1.Core, Version=22.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
     <Reference Include="DevExpress.Utils.v22.1, Version=22.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
     <Reference Include="DevExpress.Utils.v22.1.UI, Version=22.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Xpo.v22.1, Version=22.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
     <Reference Include="DevExpress.XtraBars.v22.1, Version=22.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.XtraCharts.v22.1, Version=22.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
     <Reference Include="DevExpress.XtraCharts.v22.1.UI, Version=22.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.XtraCharts.v22.1.Wizard, Version=22.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.XtraDiagram.v22.1, Version=22.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
     <Reference Include="DevExpress.XtraEditors.v22.1, Version=22.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
     <Reference Include="DevExpress.XtraGrid.v22.1, Version=22.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.XtraLayout.v22.1, Version=22.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
@@ -112,6 +120,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Design" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -129,6 +138,7 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\DLL_DATA.cs" />
@@ -140,6 +150,13 @@
     <Compile Include="Data\DataPropResponse.cs" />
     <Compile Include="Data\DllParamDataAddBulkRequest.cs" />
     <Compile Include="Data\CheckParamRequest.cs" />
+    <Compile Include="Data\UploadData.cs" />
+    <Compile Include="Data\ParamDataSelectionData.cs" />
+    <Compile Include="Data\EquationData.cs" />
+    <Compile Include="Data\BINData.cs" />
+    <Compile Include="Data\PlotData.cs" />
+    <Compile Include="Data\ParamModuleResponse.cs" />
+    <Compile Include="Data\ParamModuleData.cs" />
     <Compile Include="Data\SBParamListResponse.cs" />
     <Compile Include="Data\DllParamDataResponse.cs" />
     <Compile Include="Data\DllParamDataListResponse.cs" />
@@ -155,6 +172,12 @@
     <Compile Include="Data\PartInfoResponse.cs" />
     <Compile Include="Data\PropListResponse.cs" />
     <Compile Include="Data\PresetParamData.cs" />
+    <Compile Include="Forms\ChangeConfigForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ChangeConfigForm.Designer.cs">
+      <DependentUpon>ChangeConfigForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\AddDllParamForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -329,11 +352,57 @@
     <Compile Include="TEST\TestWebForm.Designer.cs">
       <DependentUpon>TestWebForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="UControl\BinModuleControl_backup.cs" />
+    <Compile Include="UControl\BinModuleControl_backup.Designer.cs">
+      <DependentUpon>BinModuleControl_backup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\SelectPointTableControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\SelectPointTableControl.Designer.cs">
+      <DependentUpon>SelectPointTableControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\SelectCsvTableControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\SelectCsvTableControl.Designer.cs">
+      <DependentUpon>SelectCsvTableControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\ImportDeleteControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\ImportDeleteControl.Designer.cs">
+      <DependentUpon>ImportDeleteControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\FlyingTypeControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\FlyingTypeControl.Designer.cs">
+      <DependentUpon>FlyingTypeControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\ChangeAxisInfoControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\ChangeAxisInfoControl.Designer.cs">
+      <DependentUpon>ChangeAxisInfoControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\TagControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\TagControl.Designer.cs">
+      <DependentUpon>TagControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="UControl\BinParameterControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="UControl\BinParameterControl.Designer.cs">
       <DependentUpon>BinParameterControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\BinSBSummary.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\BinSBSummary.Designer.cs">
+      <DependentUpon>BinSBSummary.cs</DependentUpon>
     </Compile>
     <Compile Include="UControl\BinSBInfoControl.cs">
       <SubType>UserControl</SubType>
@@ -370,6 +439,12 @@
     </Compile>
     <Compile Include="UControl\ImportDLLControl.Designer.cs">
       <DependentUpon>ImportDLLControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UControl\SBProgressForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UControl\SBProgressForm.Designer.cs">
+      <DependentUpon>SBProgressForm.cs</DependentUpon>
     </Compile>
     <Compile Include="UControl\ImportProgressForm.cs">
       <SubType>Form</SubType>
@@ -458,6 +533,12 @@
     <Compile Include="UControl\MyPotatoChart.Designer.cs">
       <DependentUpon>MyPotatoChart.cs</DependentUpon>
     </Compile>
+    <Compile Include="UControl\ParamModuleSelectControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UControl\ParamModuleSelectControl.Designer.cs">
+      <DependentUpon>ParamModuleSelectControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="UControl\ParamDataSelectControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -506,11 +587,11 @@
     <Compile Include="UControl\SBIntervalControl.Designer.cs">
       <DependentUpon>SBIntervalControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="UControl\BinSelectSBControl.cs">
+    <Compile Include="UControl\BinParameterSelectControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UControl\BinSelectSBControl.Designer.cs">
-      <DependentUpon>BinSelectSBControl.cs</DependentUpon>
+    <Compile Include="UControl\BinParameterSelectControl.Designer.cs">
+      <DependentUpon>BinParameterSelectControl.cs</DependentUpon>
     </Compile>
     <Compile Include="UControl\SBModuleControl.cs">
       <SubType>UserControl</SubType>
@@ -566,6 +647,12 @@
     <Compile Include="UControl\ScenarioSummaryControl.Designer.cs">
       <DependentUpon>ScenarioSummaryControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="UControl\WaitForm1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UControl\WaitForm1.Designer.cs">
+      <DependentUpon>WaitForm1.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserControl1.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -586,6 +673,9 @@
     <Compile Include="XtraForm1.Designer.cs">
       <DependentUpon>XtraForm1.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Forms\ChangeConfigForm.resx">
+      <DependentUpon>ChangeConfigForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\AddDllParamForm.resx">
       <DependentUpon>AddDllParamForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -689,11 +779,35 @@
     <EmbeddedResource Include="TEST\TreeTestForm.resx">
       <DependentUpon>TreeTestForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UControl\BinModuleControl_backup.resx">
+      <DependentUpon>BinModuleControl_backup.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UControl\BinModuleControl.resx">
       <DependentUpon>BinModuleControl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UControl\SelectPointTableControl.resx">
+      <DependentUpon>SelectPointTableControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\SelectCsvTableControl.resx">
+      <DependentUpon>SelectCsvTableControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\ImportDeleteControl.resx">
+      <DependentUpon>ImportDeleteControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\FlyingTypeControl.resx">
+      <DependentUpon>FlyingTypeControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\ChangeAxisInfoControl.resx">
+      <DependentUpon>ChangeAxisInfoControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\TagControl.resx">
+      <DependentUpon>TagControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UControl\BinParameterControl.resx">
       <DependentUpon>BinParameterControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\BinSBSummary.resx">
+      <DependentUpon>BinSBSummary.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\BinSBInfoControl.resx">
       <DependentUpon>BinSBInfoControl.cs</DependentUpon>
@@ -713,6 +827,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\ImportDLLControl.resx">
       <DependentUpon>ImportDLLControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\SBProgressForm.resx">
+      <DependentUpon>SBProgressForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\ImportProgressForm.resx">
       <DependentUpon>ImportProgressForm.cs</DependentUpon>
@@ -750,6 +868,9 @@
     <EmbeddedResource Include="UControl\MyPotatoChart.resx">
       <DependentUpon>MyPotatoChart.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UControl\ParamModuleSelectControl.resx">
+      <DependentUpon>ParamModuleSelectControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UControl\ParamDataSelectControl.resx">
       <DependentUpon>ParamDataSelectControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -774,8 +895,8 @@
     <EmbeddedResource Include="UControl\SBIntervalControl.resx">
       <DependentUpon>SBIntervalControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UControl\BinSelectSBControl.resx">
-      <DependentUpon>BinSelectSBControl.cs</DependentUpon>
+    <EmbeddedResource Include="UControl\BinParameterSelectControl.resx">
+      <DependentUpon>BinParameterSelectControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\SBModuleControl.resx">
       <DependentUpon>SBModuleControl.cs</DependentUpon>
@@ -799,6 +920,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UControl\ScenarioSummaryControl.resx">
       <DependentUpon>ScenarioSummaryControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UControl\WaitForm1.resx">
+      <DependentUpon>WaitForm1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControl1.resx">
       <DependentUpon>UserControl1.cs</DependentUpon>

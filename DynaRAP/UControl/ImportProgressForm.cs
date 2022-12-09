@@ -55,8 +55,9 @@ namespace DynaRAP.UControl
             if (isCompleted)
             {
                 timer.Stop();
-                MessageBox.Show("완료");
+                MessageBox.Show(new Form { TopMost = true }, "완료");
                 this.Close();
+                this.Dispose();
             }
 
             if (GetProgress())
@@ -156,12 +157,13 @@ namespace DynaRAP.UControl
                             isCompleted = true;
                             timer.Stop();
 
-                            if (bFirst)
-                                MessageBox.Show(result.response.statusMessage);
-                            else
-                                MessageBox.Show("완료");
+                            //if (bFirst)
+                            //    MessageBox.Show(result.response.statusMessage);
+                            //else
+                            //    MessageBox.Show("완료");
 
                             this.Close();
+                            this.Dispose();
                         }
                         else if (result.response.status.Equals("error"))
                         {
@@ -173,6 +175,7 @@ namespace DynaRAP.UControl
                             this.notMappedParams = result.response.notMappedParams;
                             DialogResult = DialogResult.Cancel;
                             this.Close();
+                            this.Dispose();
                         }
                         else
                         {

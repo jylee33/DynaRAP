@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.simpleButton3 = new DevExpress.XtraEditors.SimpleButton();
             this.labelControl1 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl2 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl3 = new DevExpress.XtraEditors.LabelControl();
@@ -47,8 +48,8 @@
             this.gridControl1 = new DevExpress.XtraGrid.GridControl();
             this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
-            this.labelControl7 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl6 = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl7 = new DevExpress.XtraEditors.LabelControl();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
@@ -66,11 +67,12 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 120F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 120F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 40F));
+            this.tableLayoutPanel1.Controls.Add(this.simpleButton3, 1, 3);
             this.tableLayoutPanel1.Controls.Add(this.labelControl1, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.labelControl2, 1, 3);
+            this.tableLayoutPanel1.Controls.Add(this.labelControl2, 1, 4);
             this.tableLayoutPanel1.Controls.Add(this.labelControl3, 1, 6);
             this.tableLayoutPanel1.Controls.Add(this.labelControl4, 1, 9);
-            this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 1, 4);
+            this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 1, 5);
             this.tableLayoutPanel1.Controls.Add(this.labelControl5, 2, 3);
             this.tableLayoutPanel1.Controls.Add(this.scenarioSummaryControl1, 2, 4);
             this.tableLayoutPanel1.Controls.Add(this.simpleButton1, 3, 11);
@@ -98,6 +100,16 @@
             this.tableLayoutPanel1.Size = new System.Drawing.Size(1327, 900);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
+            // simpleButton3
+            // 
+            this.simpleButton3.Dock = System.Windows.Forms.DockStyle.Right;
+            this.simpleButton3.Location = new System.Drawing.Point(316, 110);
+            this.simpleButton3.Name = "simpleButton3";
+            this.simpleButton3.Size = new System.Drawing.Size(121, 21);
+            this.simpleButton3.TabIndex = 8;
+            this.simpleButton3.Text = "서버정보 변경";
+            this.simpleButton3.Click += new System.EventHandler(this.simpleButton3_Click);
+            // 
             // labelControl1
             // 
             this.labelControl1.Appearance.Font = new System.Drawing.Font("Tahoma", 13F, System.Drawing.FontStyle.Bold);
@@ -114,11 +126,12 @@
             this.labelControl2.Appearance.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold);
             this.labelControl2.Appearance.Options.UseFont = true;
             this.labelControl2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelControl2.Location = new System.Drawing.Point(43, 110);
+            this.labelControl2.Location = new System.Drawing.Point(43, 137);
             this.labelControl2.Name = "labelControl2";
-            this.labelControl2.Size = new System.Drawing.Size(394, 21);
+            this.labelControl2.Size = new System.Drawing.Size(394, 41);
             this.labelControl2.TabIndex = 0;
             this.labelControl2.Text = "Start";
+            this.labelControl2.Visible = false;
             // 
             // labelControl3
             // 
@@ -130,6 +143,7 @@
             this.labelControl3.Size = new System.Drawing.Size(394, 21);
             this.labelControl3.TabIndex = 0;
             this.labelControl3.Text = "Recent";
+            this.labelControl3.Visible = false;
             // 
             // labelControl4
             // 
@@ -141,6 +155,7 @@
             this.labelControl4.Size = new System.Drawing.Size(394, 21);
             this.labelControl4.TabIndex = 0;
             this.labelControl4.Text = "Help";
+            this.labelControl4.Visible = false;
             // 
             // tableLayoutPanel2
             // 
@@ -149,12 +164,12 @@
             this.tableLayoutPanel2.Controls.Add(this.lblNewScenario, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.lblOpenScenario, 0, 1);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(43, 137);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(43, 184);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 2;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(394, 41);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(394, 15);
             this.tableLayoutPanel2.TabIndex = 1;
             // 
             // lblNewScenario
@@ -168,6 +183,7 @@
             this.lblNewScenario.Size = new System.Drawing.Size(388, 15);
             this.lblNewScenario.TabIndex = 0;
             this.lblNewScenario.Text = "New Scenario...";
+            this.lblNewScenario.Visible = false;
             this.lblNewScenario.Click += new System.EventHandler(this.lblNewScenario_Click);
             // 
             // lblOpenScenario
@@ -181,6 +197,7 @@
             this.lblOpenScenario.Size = new System.Drawing.Size(388, 15);
             this.lblOpenScenario.TabIndex = 1;
             this.lblOpenScenario.Text = "Open Scenario...";
+            this.lblOpenScenario.Visible = false;
             this.lblOpenScenario.Click += new System.EventHandler(this.lblOpenScenario_Click);
             // 
             // labelControl5
@@ -193,6 +210,7 @@
             this.labelControl5.Size = new System.Drawing.Size(601, 21);
             this.labelControl5.TabIndex = 2;
             this.labelControl5.Text = "Scenario Summary";
+            this.labelControl5.Visible = false;
             // 
             // scenarioSummaryControl1
             // 
@@ -205,6 +223,7 @@
             this.tableLayoutPanel1.SetRowSpan(this.scenarioSummaryControl1, 7);
             this.scenarioSummaryControl1.Size = new System.Drawing.Size(841, 712);
             this.scenarioSummaryControl1.TabIndex = 3;
+            this.scenarioSummaryControl1.Visible = false;
             // 
             // simpleButton1
             // 
@@ -214,6 +233,7 @@
             this.simpleButton1.Size = new System.Drawing.Size(114, 21);
             this.simpleButton1.TabIndex = 4;
             this.simpleButton1.Text = "Export";
+            this.simpleButton1.Visible = false;
             // 
             // simpleButton2
             // 
@@ -223,6 +243,7 @@
             this.simpleButton2.Size = new System.Drawing.Size(114, 21);
             this.simpleButton2.TabIndex = 4;
             this.simpleButton2.Text = "Open Scenario";
+            this.simpleButton2.Visible = false;
             // 
             // tableLayoutPanel3
             // 
@@ -251,6 +272,7 @@
             this.hyperlinkLabelControl3.Size = new System.Drawing.Size(388, 15);
             this.hyperlinkLabelControl3.TabIndex = 1;
             this.hyperlinkLabelControl3.Text = "Developer Guide";
+            this.hyperlinkLabelControl3.Visible = false;
             // 
             // hyperlinkLabelControl4
             // 
@@ -263,6 +285,7 @@
             this.hyperlinkLabelControl4.Size = new System.Drawing.Size(388, 15);
             this.hyperlinkLabelControl4.TabIndex = 1;
             this.hyperlinkLabelControl4.Text = "Administration Guide";
+            this.hyperlinkLabelControl4.Visible = false;
             // 
             // hyperlinkLabelControl5
             // 
@@ -275,6 +298,7 @@
             this.hyperlinkLabelControl5.Size = new System.Drawing.Size(388, 18);
             this.hyperlinkLabelControl5.TabIndex = 1;
             this.hyperlinkLabelControl5.Text = "Other Guide";
+            this.hyperlinkLabelControl5.Visible = false;
             // 
             // gridControl1
             // 
@@ -287,6 +311,7 @@
             this.gridControl1.TabIndex = 5;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
+            this.gridControl1.Visible = false;
             // 
             // gridView1
             // 
@@ -309,6 +334,16 @@
             this.tableLayoutPanel4.Size = new System.Drawing.Size(394, 26);
             this.tableLayoutPanel4.TabIndex = 7;
             // 
+            // labelControl6
+            // 
+            this.labelControl6.Appearance.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold);
+            this.labelControl6.Appearance.Options.UseFont = true;
+            this.labelControl6.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.labelControl6.Location = new System.Drawing.Point(299, 3);
+            this.labelControl6.Name = "labelControl6";
+            this.labelControl6.Size = new System.Drawing.Size(92, 20);
+            this.labelControl6.TabIndex = 8;
+            // 
             // labelControl7
             // 
             this.labelControl7.Appearance.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold);
@@ -321,16 +356,6 @@
             this.labelControl7.Size = new System.Drawing.Size(290, 20);
             this.labelControl7.TabIndex = 7;
             this.labelControl7.Text = "Version :";
-            // 
-            // labelControl6
-            // 
-            this.labelControl6.Appearance.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold);
-            this.labelControl6.Appearance.Options.UseFont = true;
-            this.labelControl6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelControl6.Location = new System.Drawing.Point(299, 3);
-            this.labelControl6.Name = "labelControl6";
-            this.labelControl6.Size = new System.Drawing.Size(92, 20);
-            this.labelControl6.TabIndex = 8;
             // 
             // StartScreenControl
             // 
@@ -377,5 +402,6 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
         private DevExpress.XtraEditors.LabelControl labelControl6;
         private DevExpress.XtraEditors.LabelControl labelControl7;
+        private DevExpress.XtraEditors.SimpleButton simpleButton3;
     }
 }

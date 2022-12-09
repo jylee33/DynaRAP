@@ -205,7 +205,7 @@ namespace DynaRAP.UControl
                         moduleControl.RemoveSelectedParams(beforeSeq);
                         beforeSeq = null;
                     }
-                    MessageBox.Show("파라미터 선택에 중복되는 값이 있습니다.");
+                    MessageBox.Show(new Form { TopMost = true }, "파라미터 선택에 중복되는 값이 있습니다.");
                 }
             }
             else

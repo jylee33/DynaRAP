@@ -49,9 +49,11 @@ namespace DynaRAP
         //MgmtPresetGroupControl mgmtPresetGroupControl = null;
         PlotModuleControl plotModuleControl = null;
         ParameterModuleControl parameterModuleControl = null;
-
+        FlyingTypeControl flyingTypeControl = null;
+        ImportDeleteControl importDeleteControl = null;
         CsvTableControl csvTableControl = null;
-
+        SelectCsvTableControl selectCsvTableControl = null;
+        SelectPointTableControl selectPointTableControl = null;
         //DockPanel panelChart = null;
         //ChartControl chartControl = null;
         
@@ -63,14 +65,14 @@ namespace DynaRAP
             }
         }
        
-        public DockPanel PanelBinTable
+        public DockPanel PanelSelectPointTable
         {
-            get { return this.panelBinTable; }
+            get { return this.panelSelectPointTable; }
         }
 
-        public DockPanel PanelBinSbList
+        public DockPanel PanelSelectPointList
         {
-            get { return this.panelBinSbList; }
+            get { return this.panelSelectPointList; }
         }
 
         public DockPanel PanelImportViewCsv
@@ -93,11 +95,23 @@ namespace DynaRAP
             get { return this.panelProperties; }
         }
 
-        public CsvTableControl CsvTableControl 
-        { 
+        public CsvTableControl CsvTableControl
+        {
             get => csvTableControl;
-            set => csvTableControl = value; 
+            set => csvTableControl = value;
         }
+        public SelectCsvTableControl SelectCsvTableControl
+        {
+            get => selectCsvTableControl;
+            set => selectCsvTableControl = value;
+        }
+        public SelectPointTableControl SelectPointTableControl
+        {
+            get => selectPointTableControl;
+            set => selectPointTableControl = value;
+        }
+
+
         public StartScreenControl StartControl { get => startControl; set => startControl = value; }
         public ImportModuleControl FlyingImportModuleControl { get => flyingImportModuleControl; set => flyingImportModuleControl = value; }
         public ImportModuleControl AnalysisImportModuleControl { get => analysisImportModuleControl; set => analysisImportModuleControl = value; }
@@ -308,12 +322,16 @@ public MainForm()
             //{
             //    panelBinTable = dockManager1.AddPanel(DockingStyle.Bottom);
             //}
-            panelBinTable.Name = "panelBinTable";
+            panelSelectPointTable.Name = "panelBinTable";
+            panelSelectPointTable.Text = "선택 Point TABLE";
+            selectCsvTableControl = new SelectCsvTableControl();
+            selectCsvTableControl.Dock = DockStyle.Fill;
+            panelSelectPointTable.Controls.Add(selectCsvTableControl);
             //panelBinTable.Text = "BIN TABLE";
             //BinTableControl binTableCtrl = new BinTableControl();
             //binTableCtrl.Dock = DockStyle.Fill;
             //panelBinTable.Controls.Add(binTableCtrl);
-            panelBinTable.Hide();
+            panelSelectPointTable.Hide();
 
             //panelBinSbList.Name = "panelBinSbList";
             //panelBinSbList.Text = "ShortBlockList";
@@ -329,10 +347,17 @@ public MainForm()
             panelImportViewCsv.Controls.Add(csvTableControl);
             panelImportViewCsv.Hide();
 
+
+            panelSelectPointList.Name = "선택 Plot Point";
+            panelSelectPointList.Text = "선택 Plot Point";
+            selectPointTableControl = new SelectPointTableControl();
+            selectPointTableControl.Dock = DockStyle.Fill;
+            panelSelectPointList.Controls.Add(selectPointTableControl);
+        
             panelScenario.Hide();
             panelOther.Hide();
             panelProperties.Hide();
-
+            panelSelectPointList.Hide();
         }
 
         void LoadWorkspaces()
@@ -415,13 +440,28 @@ public MainForm()
             }
             else if (e.Document.Control is PlotModuleControl)
             {
+                if (MessageBox.Show("저장하지 않은 PLOT은 삭제됩니다. 저장하시겠습니까?", "PLOT 종료", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    plotModuleControl = (PlotModuleControl)e.Document.Control;
+                    plotModuleControl.SavePlotData("inSide");
+                }
                 plotModuleControl = null;
+                panelSelectPointList.Hide();
+                panelSelectPointTable.Hide();
             }
             else if (e.Document.Control is ParameterModuleControl)
             {
                 parameterModuleControl = null;
             }
-
+            else if (e.Document.Control is FlyingTypeControl)
+            {
+                flyingTypeControl = null;
+            }
+            else if (e.Document.Control is ImportDeleteControl)
+            {
+                importDeleteControl = null;
+            }
+            
             //else if (e.Document.Control is MgmtPresetGroupControl)
             //{
             //    mgmtPresetGroupControl = null;
@@ -1032,7 +1072,7 @@ public MainForm()
 
         private void btnSBInfoView_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            SBListControl sbControl = new SBListControl();
+            SBListControl sbControl = new SBListControl(this);
             DockPanel panelSBList = new DockPanel();
 
             panelSBList = this.DockManager1.AddPanel(DockingStyle.Float);
@@ -1058,6 +1098,47 @@ public MainForm()
             else
             {
                 tabbedView1.ActivateDocument(parameterModuleControl);
+            }
+        }
+
+        private void barButtonItem5_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            if (importDeleteControl == null)
+            {
+                importDeleteControl = new ImportDeleteControl();
+                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(importDeleteControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
+                doc.Tag = "분할데이터 삭제";
+                doc.Caption = "분할데이터 삭제";
+                tabbedView1.ActivateDocument(importDeleteControl);
+            }
+            else
+            {
+                tabbedView1.ActivateDocument(importDeleteControl);
+            }
+            
+        }
+
+        private void barButtonItem6_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            if (flyingTypeControl == null)
+            {
+                flyingTypeControl = new FlyingTypeControl();
+                DevExpress.XtraBars.Docking2010.Views.Tabbed.Document doc = tabbedView1.AddDocument(flyingTypeControl) as DevExpress.XtraBars.Docking2010.Views.Tabbed.Document;
+                doc.Tag = "분할데이터 기동이름 변경";
+                doc.Caption = "분할데이터 기동이름 변경";
+                tabbedView1.ActivateDocument(flyingTypeControl);
+            }
+            else
+            {
+                tabbedView1.ActivateDocument(flyingTypeControl);
+            }
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if(MessageBox.Show("DynaRap 프로그램을 종료하시겠습니까?","종료",MessageBoxButtons.YesNo) == DialogResult.No)
+            {
+                e.Cancel = true;
             }
         }
     }

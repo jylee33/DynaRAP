@@ -270,11 +270,23 @@ namespace DynaRAP.UControl
                 string responseData = Utils.GetPostData(ConfigurationManager.AppSettings["UrlParamModule"], sendData);
                 if (responseData != null)
                 {
-                    EvaluationResponse evaluationResponse = JsonConvert.DeserializeObject<EvaluationResponse>(responseData);
-                    if (evaluationResponse.response != null && evaluationResponse.response.Count() != 0)
+                    try
                     {
-                        dt = GetEqValues(evaluationResponse.response);
-                        //AddChartData(paramDataSelection.paramKey);
+                        EvaluationResponse evaluationResponse = JsonConvert.DeserializeObject<EvaluationResponse>(responseData);
+                        if (evaluationResponse.response != null && evaluationResponse.response.Count() != 0)
+                        {
+                            dt = GetEqValues(evaluationResponse.response);
+                            //AddChartData(paramDataSelection.paramKey);
+                        }
+                    }
+                    catch
+                    {
+                        EvaluationConvResponse evaluationResponse = JsonConvert.DeserializeObject<EvaluationConvResponse>(responseData);
+                        if (evaluationResponse.response != null && evaluationResponse.response.Count() != 0)
+                        {
+                            //dt = GetEqValues(evaluationResponse.response);
+                            //AddChartData(paramDataSelection.paramKey);
+                        }
                     }
                 }
             }
@@ -460,7 +472,7 @@ namespace DynaRAP.UControl
                                 {
                                     GridParam param = new GridParam();
                                     param.seq = parameter.seq;
-                                    param.paramKey = Utils.base64StringDecoding(string.Format("{0}_{1}",parameter.eqNo,parameter.eqName));
+                                    param.paramKey = string.Format("{0}_{1}",parameter.eqNo, Utils.base64StringDecoding(parameter.eqName));
                                     paramList.Add(param);
                                     repositoryItemComboBox.Items.Add(param.paramKey);
                                 }
@@ -533,6 +545,8 @@ namespace DynaRAP.UControl
 
         private void SaveSelectData(string type)
         {
+            MainForm mainForm = this.ParentForm as MainForm;
+            mainForm.ShowSplashScreenManager("선택 데이터를 저장 중입니다.. 잠시만 기다려주십시오.");
             SaveParamModuleSelectDataRequest requestParam = new SaveParamModuleSelectDataRequest();
             requestParam.sources = new List<SaveParamModuleSelectDataSource>();
 
@@ -582,6 +596,7 @@ namespace DynaRAP.UControl
             //    }}", comboBoxEdit1.Text.ToLower(), edtSearch.Text);
 
             string responseData = Utils.GetPostData(ConfigurationManager.AppSettings["UrlParamModule"], json);
+            mainForm.HideSplashScreenManager();
             if (responseData != null)
             {
                 JsonData result = JsonConvert.DeserializeObject<JsonData>(responseData);
@@ -590,6 +605,7 @@ namespace DynaRAP.UControl
                     MessageBox.Show(type=="save"? "저장 성공": "전체삭제 성공");
                     GetSelectDataList(paramModuleSeq);
                     parameterModuleControl.GetSelectDataList(paramModuleSeq);
+                    parameterModuleControl.SaveEqPlot();
                 }
                 else
                 {
@@ -858,7 +874,6 @@ namespace DynaRAP.UControl
             return null;
 
         }
-
 
         private void AddChartData(string keyValue, string dataType)
         {

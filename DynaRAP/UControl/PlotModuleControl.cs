@@ -1,4 +1,5 @@
-﻿using DevExpress.XtraBars.Docking2010;
+﻿using DevExpress.XtraBars.Docking;
+using DevExpress.XtraBars.Docking2010;
 using DevExpress.XtraBars.Docking2010.Views.Widget;
 using DevExpress.XtraEditors;
 using DynaRAP.Data;
@@ -47,27 +48,152 @@ namespace DynaRAP.UControl
             //group1.Items.AddRange(new Document[] { view.Documents[0] as Document, view.Documents[1] as Document });
             //view.Controller.Dock(view.Documents[2] as Document, group2);
             //view.Controller.Dock(view.Documents[3] as Document, group3);
-
-            if(plotSourceResponses != null)
+            //DockPanel selectPointPanel = new DockPanel();
+            MainForm mainForm = this.ParentForm as MainForm;
+            mainForm.SelectPointTableControl.ClearPlotPointData();
+            if (plotSourceResponses != null)
             {
                 foreach (var sourceData in plotSourceResponses)
                 {
                     List<dxGridData> dxGridDataList = new List<dxGridData>();
+                    List<PlotPointData> plotPointDatas = new List<PlotPointData>();
                     string plotName = Utils.base64StringDecoding(sourceData.plotName);
+                    PlotAxisInfo plotAxisInfo = new PlotAxisInfo(sourceData);
                     foreach (var plotData in sourceData.plotSeries)
                     {
                         string seriesName = Utils.base64StringDecoding(plotData.seriesName);
-                        dxGridDataList.Add(new dxGridData(plotData, seriesName));
+                        dxGridData dxGridData = new dxGridData(plotData, seriesName);
+                        if (dxGridData.xAxisSourceType == "eq")
+                        {
+                            EQList eQList = additionalResponse.eqlist.Find(x => x.seq == dxGridData.xAxisSourceSeq);
+                            if (eQList != null)
+                            {
+                                string itemName = Utils.base64StringDecoding(eQList.eqName);
+                                dxGridData.xAxis = itemName;
+                            }
+                        }
+                        else
+                        {
+                            SourceList sourceList = additionalResponse.sourceList.Find(x => x.seq == dxGridData.xAxisSourceSeq);
+                            if (sourceList != null)
+                            {
+                                string itemName = string.Format(@"{0}-{1}", Utils.base64StringDecoding(sourceList.sourceName), sourceList.paramKey);
+                                dxGridData.xAxis = itemName;
+                            }
+                        }
+                        if (dxGridData.yAxisSourceType == "eq")
+                        {
+                            EQList eQList = additionalResponse.eqlist.Find(x => x.seq == dxGridData.yAxisSourceSeq);
+                            if (eQList != null)
+                            {
+                                string itemName = Utils.base64StringDecoding(eQList.eqName);
+                                dxGridData.yAxis = itemName;
+                            }
+                        }
+                        else
+                        {
+                            SourceList sourceList = additionalResponse.sourceList.Find(x => x.seq == dxGridData.yAxisSourceSeq);
+                            if (sourceList != null)
+                            {
+                                string itemName = string.Format(@"{0}-{1}", Utils.base64StringDecoding(sourceList.sourceName), sourceList.paramKey);
+                                dxGridData.yAxis = itemName;
+                            }
+                        }
+                        //if (string.IsNullOrEmpty(dxGridData.xAxis) && string.IsNullOrEmpty(dxGridData.yAxis))
+                        //{
+                        //    dxGridDataList = null;
+                        //    break;
+                        //}
+                        dxGridDataList.Add(dxGridData);
                     }
-                    string tagValue = string.Empty;
-                    if(sourceData.dataProp != null)
+                    foreach (var pointData in sourceData.selectPoints)
                     {
-                        tagValue = sourceData.dataProp.tags;
+                        PlotPointData plotPointData = new PlotPointData(pointData);
+                        string sourceType = null;
+                        if (pointData.xSourceType != null)
+                        {
+                            if (pointData.xSourceType == "eq")
+                            {
+                                EQList eQList = additionalResponse.eqlist.Find(x => x.seq == pointData.xSourceSeq);
+                                if (eQList != null)
+                                {
+                                    string itemName = Utils.base64StringDecoding(eQList.eqName);
+                                    plotPointData.xAxisName = itemName;
+                                    plotPointData.xOriginSeq = eQList.moduleSeq;
+                                }
+                            }
+                            else
+                            {
+                                SourceList sourceList = additionalResponse.sourceList.Find(x => x.seq == pointData.xSourceSeq);
+                                if (sourceList != null)
+                                {
+                                    string itemName = string.Format(@"{0}-{1}", Utils.base64StringDecoding(sourceList.sourceName), sourceList.paramKey);
+                                    plotPointData.xAxisName = itemName;
+                                    plotPointData.xOriginSeq = sourceList.sourceSeq;
+                                }
+                            }
+                        }
+                        switch (pointData.ySourceType)
+                        {
+                            case "shortblock":
+                            case "parammodule":
+                                sourceType = pointData.ySourceType.ToUpper();
+                                break;
+                            case "eq":
+                                sourceType = "수식";
+                                break;
+                            case "part":
+                                sourceType = "분할데이터";
+                                break;
+                            case "dll":
+                                sourceType = "기준데이터";
+                                break;
+                            case "bintable":
+                                sourceType = "BIN Table";
+                                break;
+                        }
+                        plotPointData.sourceType = sourceType;
+                        if (pointData.ySourceType != null)
+                        {
+                            if (pointData.ySourceType == "eq")
+                            {
+                                EQList eQList = additionalResponse.eqlist.Find(x => x.seq == pointData.ySourceSeq);
+                                if (eQList != null)
+                                {
+                                    string itemName = Utils.base64StringDecoding(eQList.eqName);
+                                    plotPointData.yAxisName = itemName;
+                                    plotPointData.yOriginSeq = eQList.moduleSeq;
+                                }
+                            }
+                            else
+                            {
+                                SourceList sourceList = additionalResponse.sourceList.Find(x => x.seq == pointData.ySourceSeq);
+                                if (sourceList != null)
+                                {
+                                    string itemName = string.Format(@"{0}-{1}", Utils.base64StringDecoding(sourceList.sourceName), sourceList.paramKey);
+                                    plotPointData.yAxisName = itemName;
+                                    plotPointData.yOriginSeq = sourceList.sourceSeq;
+                                }
+                            }
+                        }
+                        mainForm.SelectPointTableControl.AddPlotPointData(plotPointData);
+                        plotPointDatas.Add(plotPointData);
                     }
-                    DXChartControl chartControl = new DXChartControl(additionalResponse, this, dxGridDataList, tagValue);
-                    this.AddDocument(chartControl, plotName);
+                    if (dxGridDataList != null)
+                    {
+                        string tagValue = string.Empty;
+                        if (sourceData.dataProp != null)
+                        {
+                            tagValue = sourceData.dataProp.tags;
+                        }
+                        DXChartControl chartControl = new DXChartControl(additionalResponse, this, dxGridDataList, tagValue , plotPointDatas, plotAxisInfo, plotName);
+                        this.AddDocument(chartControl, plotName);
+                    }
                 }
             }
+
+            mainForm.PanelSelectPointList.Show();
+
         }
 
         WidgetView view;
@@ -117,11 +243,20 @@ namespace DynaRAP.UControl
 
         private void btnPlotSave_Click(object sender, EventArgs e)
         {
+          
             SavePlotData("inSide");
         }
        
         public void SavePlotData(string location)
         {
+
+            if (location == "outSide" && view.Documents.Count ==0)
+            {
+                return;
+            }
+            MainForm mainForm = this.ParentForm as MainForm;
+            mainForm.ShowSplashScreenManager("PLOT 데이터를 저장 중입니다.. 잠시만 기다려주십시오.");
+
             PlotRequest plotRequest = new PlotRequest();
             plotRequest.command = "save-plot";
             plotRequest.moduleSeq = paramModuleSeq;
@@ -132,29 +267,58 @@ namespace DynaRAP.UControl
                 DXChartControl dXChartControl = (DXChartControl)view.Documents[i].Control;
 
                 Plot plot = new Plot();
+                PlotAxisInfo plotAxisInfo = dXChartControl.GetPlotAxisInfo();
                 byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(view.Documents[i].Caption); ;
                 string encName = Convert.ToBase64String(basebyte);
                 plot.plotName = encName;
                 plot.plotOrder = i.ToString() ;
                 plot.plotType = "1D-Time History";
+                if(plotAxisInfo != null)
+                {
+                    plot.diagramType = plotAxisInfo.diagramType;
+                    plot.xTitle = plotAxisInfo.xTitle;
+                    plot.xMaxRange = plotAxisInfo.xMaxRange;
+                    plot.xMinRange = plotAxisInfo.xMinRange;
+                    plot.xSpacing = plotAxisInfo.xSpacing;
+                    plot.xGridAlign = plotAxisInfo.xGridAlign;
+                    plot.yTitle = plotAxisInfo.yTitle;
+                    plot.yMaxRange = plotAxisInfo.yMaxRange;
+                    plot.yMinRange = plotAxisInfo.yMinRange;
+                    plot.ySpacing = plotAxisInfo.ySpacing;
+                }
 
                 plot.dataProp = new DataProps();
                 plot.dataProp.key = "value";
                 plot.dataProp.tags = dXChartControl.getTagValue();
                 plot.plotSeries = new List<PlotSeries>();
                 List<dxGridData> seriesDataList = dXChartControl.getSeriesInfo();
-                foreach(var seriesData in seriesDataList)
+
+                if (seriesDataList != null)
                 {
-                    byte[] byteName = System.Text.Encoding.UTF8.GetBytes(seriesData.seriesName); ;
-                    string seriesName = Convert.ToBase64String(byteName);
-                    PlotSeries plotSereis = new PlotSeries(seriesData, seriesName);
-                    plot.plotSeries.Add(plotSereis);
+                    foreach (var seriesData in seriesDataList)
+                    {
+                        if (seriesData.seriesName != null)
+                        {
+                            byte[] byteName = System.Text.Encoding.UTF8.GetBytes(seriesData.seriesName); ;
+                            string seriesName = Convert.ToBase64String(byteName);
+                            PlotSeries plotSereis = new PlotSeries(seriesData, seriesName);
+                            plot.plotSeries.Add(plotSereis);
+                        }
+                    }
+                }
+                plot.selectPoints = new List<PlotPoint>();
+                List<PlotPointData> selectPonits = dXChartControl.GetPlotPointDatas();
+                foreach (var selectPoint in selectPonits)
+                {
+                    plot.selectPoints.Add(new PlotPoint(selectPoint));
                 }
                 plotRequest.plots.Add(plot);
             }
             var json = JsonConvert.SerializeObject(plotRequest);
 
             string responseData = Utils.GetPostData(ConfigurationManager.AppSettings["UrlParamModule"], json);
+
+            mainForm.HideSplashScreenManager();
             if (responseData != null)
             {
                 JsonData result = JsonConvert.DeserializeObject<JsonData>(responseData);
@@ -222,7 +386,21 @@ namespace DynaRAP.UControl
         public string GetDocumentName()
         {
             Document document = view.ActiveDocument as Document;
-            return document.Caption;
+            if (document != null)
+            {
+                return document.Caption;
+            }
+            return null;
+        }
+
+        public void RefreshPlot(AdditionalResponse newAdditionalResponse)
+        {
+            this.additionalResponse = newAdditionalResponse;
+            for (int i = 0; i < view.Documents.Count; i++)
+            {
+                DXChartControl dXChartControl = (DXChartControl)view.Documents[i].Control;
+                dXChartControl.ChangeSourceList(additionalResponse);
+            }
         }
     }
 }

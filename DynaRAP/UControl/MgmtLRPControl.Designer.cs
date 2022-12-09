@@ -39,12 +39,13 @@
             this.RefSeq = new DevExpress.XtraTreeList.Columns.TreeListColumn();
             this.RefSubSeq = new DevExpress.XtraTreeList.Columns.TreeListColumn();
             this.sharedImageCollection1 = new DevExpress.Utils.SharedImageCollection(this.components);
-            this.panelControl1 = new DevExpress.XtraEditors.PanelControl();
-            this.xtraScrollableControl1 = new DevExpress.XtraEditors.XtraScrollableControl();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.treeList2 = new DevExpress.XtraTreeList.TreeList();
             this.treeListColumn1 = new DevExpress.XtraTreeList.Columns.TreeListColumn();
             this.treeListColumn2 = new DevExpress.XtraTreeList.Columns.TreeListColumn();
             this.treeListColumn3 = new DevExpress.XtraTreeList.Columns.TreeListColumn();
+            this.panelControl1 = new DevExpress.XtraEditors.PanelControl();
+            this.xtraScrollableControl1 = new DevExpress.XtraEditors.XtraScrollableControl();
             this.lblTag = new DevExpress.XtraEditors.LabelControl();
             this.edtTag = new DevExpress.XtraEditors.ButtonEdit();
             this.btnAddExtra = new DevExpress.XtraEditors.ButtonEdit();
@@ -57,8 +58,8 @@
             this.labelControl22 = new DevExpress.XtraEditors.LabelControl();
             this.btnDeleteParameter = new DevExpress.XtraEditors.SimpleButton();
             this.labelControl19 = new DevExpress.XtraEditors.LabelControl();
+            this.edtParamKey = new DevExpress.XtraEditors.TextEdit();
             this.edtAdams = new DevExpress.XtraEditors.TextEdit();
-            this.btnLink = new DevExpress.XtraEditors.SimpleButton();
             this.btnPropertyConfig = new DevExpress.XtraEditors.SimpleButton();
             this.btnModifyParameter = new DevExpress.XtraEditors.SimpleButton();
             this.edtZaero = new DevExpress.XtraEditors.TextEdit();
@@ -99,8 +100,7 @@
             this.edtLrpZ = new DevExpress.XtraEditors.TextEdit();
             this.edtLrpY = new DevExpress.XtraEditors.TextEdit();
             this.edtLrpX = new DevExpress.XtraEditors.TextEdit();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.edtParamKey = new DevExpress.XtraEditors.TextEdit();
+            this.btnLink = new DevExpress.XtraEditors.SimpleButton();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -108,12 +108,14 @@
             ((System.ComponentModel.ISupportInitialize)(this.treeList1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.sharedImageCollection1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.sharedImageCollection1.ImageSource)).BeginInit();
+            this.tableLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.treeList2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.panelControl1)).BeginInit();
             this.panelControl1.SuspendLayout();
             this.xtraScrollableControl1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.treeList2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtTag.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnAddExtra.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.edtParamKey.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtAdams.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtZaero.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtGrt.Properties)).BeginInit();
@@ -130,8 +132,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.edtLrpZ.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtLrpY.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtLrpX.Properties)).BeginInit();
-            this.tableLayoutPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.edtParamKey.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -230,6 +230,62 @@
             this.sharedImageCollection1.ImageSource.Images.SetKeyName(1, "file.png");
             this.sharedImageCollection1.ParentControl = this;
             // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.ColumnCount = 3;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 90F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 280F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel1.Controls.Add(this.treeList2, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.panelControl1, 2, 0);
+            this.tableLayoutPanel1.Controls.Add(this.btnLink, 0, 0);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 1;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1091, 1145);
+            this.tableLayoutPanel1.TabIndex = 7;
+            // 
+            // treeList2
+            // 
+            this.treeList2.Columns.AddRange(new DevExpress.XtraTreeList.Columns.TreeListColumn[] {
+            this.treeListColumn1,
+            this.treeListColumn2,
+            this.treeListColumn3});
+            this.treeList2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeList2.ImageIndexFieldName = "DirName";
+            this.treeList2.Location = new System.Drawing.Point(93, 3);
+            this.treeList2.Name = "treeList2";
+            this.treeList2.Size = new System.Drawing.Size(274, 1139);
+            this.treeList2.TabIndex = 2;
+            this.treeList2.RowClick += new DevExpress.XtraTreeList.RowClickEventHandler(this.treeList2_RowClick);
+            this.treeList2.FocusedNodeChanged += new DevExpress.XtraTreeList.FocusedNodeChangedEventHandler(this.treeList2_FocusedNodeChanged);
+            // 
+            // treeListColumn1
+            // 
+            this.treeListColumn1.Caption = "ID";
+            this.treeListColumn1.FieldName = "ID";
+            this.treeListColumn1.Name = "treeListColumn1";
+            this.treeListColumn1.Visible = true;
+            this.treeListColumn1.VisibleIndex = 1;
+            // 
+            // treeListColumn2
+            // 
+            this.treeListColumn2.Caption = "ParentID";
+            this.treeListColumn2.FieldName = "ParentID";
+            this.treeListColumn2.Name = "treeListColumn2";
+            this.treeListColumn2.Visible = true;
+            this.treeListColumn2.VisibleIndex = 2;
+            // 
+            // treeListColumn3
+            // 
+            this.treeListColumn3.Caption = "파라미터";
+            this.treeListColumn3.FieldName = "paramKey";
+            this.treeListColumn3.Name = "treeListColumn3";
+            this.treeListColumn3.Visible = true;
+            this.treeListColumn3.VisibleIndex = 0;
+            // 
             // panelControl1
             // 
             this.panelControl1.Controls.Add(this.xtraScrollableControl1);
@@ -300,45 +356,6 @@
             this.xtraScrollableControl1.Name = "xtraScrollableControl1";
             this.xtraScrollableControl1.Size = new System.Drawing.Size(711, 1135);
             this.xtraScrollableControl1.TabIndex = 0;
-            // 
-            // treeList2
-            // 
-            this.treeList2.Columns.AddRange(new DevExpress.XtraTreeList.Columns.TreeListColumn[] {
-            this.treeListColumn1,
-            this.treeListColumn2,
-            this.treeListColumn3});
-            this.treeList2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.treeList2.ImageIndexFieldName = "DirName";
-            this.treeList2.Location = new System.Drawing.Point(93, 3);
-            this.treeList2.Name = "treeList2";
-            this.treeList2.Size = new System.Drawing.Size(274, 1139);
-            this.treeList2.TabIndex = 2;
-            this.treeList2.RowClick += new DevExpress.XtraTreeList.RowClickEventHandler(this.treeList2_RowClick);
-            this.treeList2.FocusedNodeChanged += new DevExpress.XtraTreeList.FocusedNodeChangedEventHandler(this.treeList2_FocusedNodeChanged);
-            // 
-            // treeListColumn1
-            // 
-            this.treeListColumn1.Caption = "ID";
-            this.treeListColumn1.FieldName = "ID";
-            this.treeListColumn1.Name = "treeListColumn1";
-            this.treeListColumn1.Visible = true;
-            this.treeListColumn1.VisibleIndex = 1;
-            // 
-            // treeListColumn2
-            // 
-            this.treeListColumn2.Caption = "ParentID";
-            this.treeListColumn2.FieldName = "ParentID";
-            this.treeListColumn2.Name = "treeListColumn2";
-            this.treeListColumn2.Visible = true;
-            this.treeListColumn2.VisibleIndex = 2;
-            // 
-            // treeListColumn3
-            // 
-            this.treeListColumn3.Caption = "파라미터";
-            this.treeListColumn3.FieldName = "paramKey";
-            this.treeListColumn3.Name = "treeListColumn3";
-            this.treeListColumn3.Visible = true;
-            this.treeListColumn3.VisibleIndex = 0;
             // 
             // lblTag
             // 
@@ -442,9 +459,9 @@
             this.labelControl22.Appearance.Options.UseFont = true;
             this.labelControl22.Location = new System.Drawing.Point(3, 129);
             this.labelControl22.Name = "labelControl22";
-            this.labelControl22.Size = new System.Drawing.Size(50, 13);
+            this.labelControl22.Size = new System.Drawing.Size(22, 13);
             this.labelControl22.TabIndex = 0;
-            this.labelControl22.Text = "파트(위치)";
+            this.labelControl22.Text = "위치";
             // 
             // btnDeleteParameter
             // 
@@ -465,6 +482,16 @@
             this.labelControl19.TabIndex = 0;
             this.labelControl19.Text = "부가정보";
             // 
+            // edtParamKey
+            // 
+            this.edtParamKey.EditValue = "";
+            this.edtParamKey.Enabled = false;
+            this.edtParamKey.Location = new System.Drawing.Point(3, 11);
+            this.edtParamKey.Name = "edtParamKey";
+            this.edtParamKey.Properties.ReadOnly = true;
+            this.edtParamKey.Size = new System.Drawing.Size(222, 22);
+            this.edtParamKey.TabIndex = 10;
+            // 
             // edtAdams
             // 
             this.edtAdams.EditValue = "";
@@ -472,16 +499,6 @@
             this.edtAdams.Name = "edtAdams";
             this.edtAdams.Size = new System.Drawing.Size(222, 22);
             this.edtAdams.TabIndex = 10;
-            // 
-            // btnLink
-            // 
-            this.btnLink.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.btnLink.Location = new System.Drawing.Point(3, 529);
-            this.btnLink.Name = "btnLink";
-            this.btnLink.Size = new System.Drawing.Size(84, 87);
-            this.btnLink.TabIndex = 21;
-            this.btnLink.Text = "<= 연결 =>";
-            this.btnLink.Click += new System.EventHandler(this.btnLink_Click);
             // 
             // btnPropertyConfig
             // 
@@ -515,9 +532,9 @@
             this.labelControl20.Appearance.Options.UseFont = true;
             this.labelControl20.Location = new System.Drawing.Point(3, 84);
             this.labelControl20.Name = "labelControl20";
-            this.labelControl20.Size = new System.Drawing.Size(50, 13);
+            this.labelControl20.Size = new System.Drawing.Size(22, 13);
             this.labelControl20.TabIndex = 0;
-            this.labelControl20.Text = "파트(부분)";
+            this.labelControl20.Text = "파트";
             // 
             // labelControl25
             // 
@@ -888,32 +905,15 @@
             this.edtLrpX.Size = new System.Drawing.Size(86, 22);
             this.edtLrpX.TabIndex = 3;
             // 
-            // tableLayoutPanel1
+            // btnLink
             // 
-            this.tableLayoutPanel1.ColumnCount = 3;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 90F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 280F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.Controls.Add(this.treeList2, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.panelControl1, 2, 0);
-            this.tableLayoutPanel1.Controls.Add(this.btnLink, 0, 0);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 1;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1091, 1145);
-            this.tableLayoutPanel1.TabIndex = 7;
-            // 
-            // edtParamKey
-            // 
-            this.edtParamKey.EditValue = "";
-            this.edtParamKey.Enabled = false;
-            this.edtParamKey.Location = new System.Drawing.Point(3, 11);
-            this.edtParamKey.Name = "edtParamKey";
-            this.edtParamKey.Properties.ReadOnly = true;
-            this.edtParamKey.Size = new System.Drawing.Size(222, 22);
-            this.edtParamKey.TabIndex = 10;
+            this.btnLink.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.btnLink.Location = new System.Drawing.Point(3, 529);
+            this.btnLink.Name = "btnLink";
+            this.btnLink.Size = new System.Drawing.Size(84, 87);
+            this.btnLink.TabIndex = 21;
+            this.btnLink.Text = "<= 연결 =>";
+            this.btnLink.Click += new System.EventHandler(this.btnLink_Click);
             // 
             // MgmtLRPControl
             // 
@@ -930,13 +930,15 @@
             ((System.ComponentModel.ISupportInitialize)(this.treeList1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.sharedImageCollection1.ImageSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.sharedImageCollection1)).EndInit();
+            this.tableLayoutPanel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.treeList2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.panelControl1)).EndInit();
             this.panelControl1.ResumeLayout(false);
             this.xtraScrollableControl1.ResumeLayout(false);
             this.xtraScrollableControl1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.treeList2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtTag.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnAddExtra.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.edtParamKey.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtAdams.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtZaero.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtGrt.Properties)).EndInit();
@@ -953,8 +955,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.edtLrpZ.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtLrpY.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.edtLrpX.Properties)).EndInit();
-            this.tableLayoutPanel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.edtParamKey.Properties)).EndInit();
             this.ResumeLayout(false);
 
         }

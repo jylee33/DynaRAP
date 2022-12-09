@@ -22,7 +22,7 @@ namespace DynaRAP.Forms
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
        
         DllResponse response = null;
-
+        DllData dllData = null;
         public DllResponse Response { get => response; set => response = value; }
 
         public AddDllForm()
@@ -31,15 +31,35 @@ namespace DynaRAP.Forms
 
             XmlConfigurator.Configure(new FileInfo("log4net.xml"));
         }
+        public AddDllForm(DllData dllData)
+        {
+            this.dllData = dllData;
+            InitializeComponent();
+
+            XmlConfigurator.Configure(new FileInfo("log4net.xml"));
+        }
 
         private void AddDllForm_Load(object sender, EventArgs e)
         {
-
+            if(dllData != null)
+            {
+                this.Text = "기준데이터 변경";
+                btnAdd.Text = "수정";
+                edtDataSetCode.Text = dllData.DataSetCode;
+                edtDataSetName.Text = dllData.DataSetName;
+                edtDataSetVersion.Text = dllData.DataVersion;
+            }
         }
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            response = AddDll();
+            if (this.Text == "기준데이터 추가")
+            {
+                response = AddDll();
+            } else
+            {
+                response = ModifyDll();
+            }
 
             if (response.code == 200)
             {
@@ -76,6 +96,67 @@ namespace DynaRAP.Forms
                 ""dataVersion"":""{2}""
                 }}"
                 , edtDataSetCode.Text, encName, edtDataSetVersion.Text);
+
+                log.Info("url : " + url);
+                log.Info(sendData);
+
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Timeout = 30 * 1000;
+                //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+
+                // POST할 데이타를 Request Stream에 쓴다
+                byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+                request.ContentLength = bytes.Length; // 바이트수 지정
+
+                using (Stream reqStream = request.GetRequestStream())
+                {
+                    reqStream.Write(bytes, 0, bytes.Length);
+                }
+
+                // Response 처리
+                string responseText = string.Empty;
+                using (WebResponse resp = request.GetResponse())
+                {
+                    Stream respStream = resp.GetResponseStream();
+                    using (StreamReader sr = new StreamReader(respStream))
+                    {
+                        responseText = sr.ReadToEnd();
+                    }
+                }
+
+                //Console.WriteLine(responseText);
+                result = JsonConvert.DeserializeObject<DllResponse>(responseText);
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex.Message);
+                MessageBox.Show(ex.Message);
+                return null;
+            }
+            return result;
+        }
+        private DllResponse ModifyDll()
+        {
+            DllResponse result = null;
+            try
+            {
+                //Encoding
+                byte[] basebyte = System.Text.Encoding.UTF8.GetBytes(edtDataSetName.Text);
+                string encName = Convert.ToBase64String(basebyte);
+
+                string url = ConfigurationManager.AppSettings["UrlDLL"];
+
+                string sendData = string.Format(@"
+                {{
+                ""command"":""modify"",
+                ""seq"":""{0}"",
+                ""dataSetCode"":""{1}"",
+                ""dataSetName"":""{2}"",
+                ""dataVersion"":""{3}""
+                }}"
+                ,dllData.Seq, edtDataSetCode.Text, encName, edtDataSetVersion.Text);
 
                 log.Info("url : " + url);
                 log.Info(sendData);

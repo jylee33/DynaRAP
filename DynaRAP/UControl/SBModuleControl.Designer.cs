@@ -87,6 +87,11 @@
             this.labelControl4 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl6 = new DevExpress.XtraEditors.LabelControl();
             this.labelControl14 = new DevExpress.XtraEditors.LabelControl();
+            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.labelControl15 = new DevExpress.XtraEditors.LabelControl();
+            this.labelControl18 = new DevExpress.XtraEditors.LabelControl();
+            this.changeName = new DevExpress.XtraEditors.ButtonEdit();
+            this.buttonEdit2 = new DevExpress.XtraEditors.ButtonEdit();
             this.labelControl17 = new DevExpress.XtraEditors.LabelControl();
             this.separatorControl4 = new DevExpress.XtraEditors.SeparatorControl();
             this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
@@ -125,6 +130,9 @@
             this.tableLayoutPanel8.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cboParameter.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
+            this.tableLayoutPanel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.changeName.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.buttonEdit2.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.separatorControl4)).BeginInit();
             this.tableLayoutPanel6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.separatorControl5)).BeginInit();
@@ -219,6 +227,7 @@
             this.panelData.Controls.Add(this.labelControl4);
             this.panelData.Controls.Add(this.labelControl6);
             this.panelData.Controls.Add(this.labelControl14);
+            this.panelData.Controls.Add(this.tableLayoutPanel2);
             this.panelData.Controls.Add(this.labelControl17);
             this.panelData.Controls.Add(this.separatorControl4);
             this.panelData.Controls.Add(this.tableLayoutPanel6);
@@ -725,9 +734,72 @@
             this.labelControl14.Text = "ShortBlock 설정 정보로 구간 분할 예상 값을 표현합니다. 구간 정보가 이상 없으면 분할 구간을 저장하세요.\r\nShortBlock 은 수동" +
     "으로 구간을 추가할 수 없습니다. 분할 시간과 Overlap 값으로 자동 분할 됩니다.";
             // 
+            // tableLayoutPanel2
+            // 
+            this.tableLayoutPanel2.ColumnCount = 3;
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 170F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 140F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel2.Controls.Add(this.labelControl15, 0, 0);
+            this.tableLayoutPanel2.Controls.Add(this.labelControl18, 1, 1);
+            this.tableLayoutPanel2.Controls.Add(this.changeName, 1, 0);
+            this.tableLayoutPanel2.Controls.Add(this.buttonEdit2, 2, 0);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 1160);
+            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
+            this.tableLayoutPanel2.RowCount = 2;
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 36F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(623, 63);
+            this.tableLayoutPanel2.TabIndex = 45;
+            // 
+            // labelControl15
+            // 
+            this.labelControl15.Appearance.Font = new System.Drawing.Font("Tahoma", 10F, System.Drawing.FontStyle.Bold);
+            this.labelControl15.Appearance.Options.UseFont = true;
+            this.labelControl15.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.labelControl15.Location = new System.Drawing.Point(3, 3);
+            this.labelControl15.Name = "labelControl15";
+            this.labelControl15.Size = new System.Drawing.Size(164, 18);
+            this.labelControl15.TabIndex = 6;
+            this.labelControl15.Text = "ShortBlock명 일괄변경";
+            // 
+            // labelControl18
+            // 
+            this.tableLayoutPanel2.SetColumnSpan(this.labelControl18, 2);
+            this.labelControl18.Location = new System.Drawing.Point(173, 27);
+            this.labelControl18.Name = "labelControl18";
+            this.labelControl18.Size = new System.Drawing.Size(264, 30);
+            this.labelControl18.TabIndex = 1;
+            this.labelControl18.Text = "입력 값_ShortBlock#번호 로 일괄변경 됩니다.\r\n빈값 입력시 ShortBlock#번호 로 일괄변경 됩니다.\r\n";
+            // 
+            // changeName
+            // 
+            this.changeName.Location = new System.Drawing.Point(173, 3);
+            this.changeName.Name = "changeName";
+            this.changeName.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Close)});
+            this.changeName.Size = new System.Drawing.Size(132, 22);
+            this.changeName.TabIndex = 7;
+            this.changeName.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.changeName_ButtonClick);
+            // 
+            // buttonEdit2
+            // 
+            this.buttonEdit2.EditValue = "변경";
+            this.buttonEdit2.Location = new System.Drawing.Point(313, 3);
+            this.buttonEdit2.Name = "buttonEdit2";
+            this.buttonEdit2.Properties.Appearance.Options.UseTextOptions = true;
+            this.buttonEdit2.Properties.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.buttonEdit2.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.OK)});
+            this.buttonEdit2.Properties.ReadOnly = true;
+            this.buttonEdit2.Size = new System.Drawing.Size(104, 22);
+            this.buttonEdit2.TabIndex = 13;
+            this.buttonEdit2.Click += new System.EventHandler(this.buttonEdit2_Click);
+            // 
             // labelControl17
             // 
-            this.labelControl17.Location = new System.Drawing.Point(3, 1160);
+            this.labelControl17.Location = new System.Drawing.Point(3, 1229);
             this.labelControl17.Name = "labelControl17";
             this.labelControl17.Size = new System.Drawing.Size(153, 15);
             this.labelControl17.TabIndex = 16;
@@ -737,7 +809,7 @@
             // 
             this.separatorControl4.BackColor = System.Drawing.Color.White;
             this.separatorControl4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.separatorControl4.Location = new System.Drawing.Point(3, 1181);
+            this.separatorControl4.Location = new System.Drawing.Point(3, 1250);
             this.separatorControl4.Name = "separatorControl4";
             this.separatorControl4.Padding = new System.Windows.Forms.Padding(9, 10, 9, 10);
             this.separatorControl4.Size = new System.Drawing.Size(623, 1);
@@ -754,7 +826,7 @@
             this.tableLayoutPanel6.Controls.Add(this.labelControl30, 0, 0);
             this.tableLayoutPanel6.Controls.Add(this.labelControl31, 1, 0);
             this.tableLayoutPanel6.Controls.Add(this.labelControl13, 3, 0);
-            this.tableLayoutPanel6.Location = new System.Drawing.Point(0, 1185);
+            this.tableLayoutPanel6.Location = new System.Drawing.Point(0, 1254);
             this.tableLayoutPanel6.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel6.Name = "tableLayoutPanel6";
             this.tableLayoutPanel6.RowCount = 1;
@@ -810,7 +882,7 @@
             // 
             this.separatorControl5.BackColor = System.Drawing.Color.White;
             this.separatorControl5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.separatorControl5.Location = new System.Drawing.Point(3, 1222);
+            this.separatorControl5.Location = new System.Drawing.Point(3, 1291);
             this.separatorControl5.Name = "separatorControl5";
             this.separatorControl5.Padding = new System.Windows.Forms.Padding(9, 10, 9, 10);
             this.separatorControl5.Size = new System.Drawing.Size(623, 1);
@@ -820,7 +892,7 @@
             // 
             this.flowLayoutPanel2.AutoScroll = true;
             this.flowLayoutPanel2.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 1229);
+            this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 1298);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
             this.flowLayoutPanel2.Size = new System.Drawing.Size(623, 22);
             this.flowLayoutPanel2.TabIndex = 25;
@@ -834,7 +906,7 @@
             this.tableLayoutPanel3.Controls.Add(this.lblValidSBCount, 0, 0);
             this.tableLayoutPanel3.Controls.Add(this.btnSaveSplittedParameter, 1, 0);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 1257);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 1326);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 1;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -909,6 +981,10 @@
             this.tableLayoutPanel8.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cboParameter.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
+            this.tableLayoutPanel2.ResumeLayout(false);
+            this.tableLayoutPanel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.changeName.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.buttonEdit2.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.separatorControl4)).EndInit();
             this.tableLayoutPanel6.ResumeLayout(false);
             this.tableLayoutPanel6.PerformLayout();
@@ -992,5 +1068,10 @@
         private DevExpress.XtraEditors.PanelControl panelControl1;
         private DevExpress.XtraGrid.GridControl gridControl2;
         private DevExpress.XtraGrid.Views.Grid.GridView gridView2;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+        private DevExpress.XtraEditors.LabelControl labelControl15;
+        private DevExpress.XtraEditors.LabelControl labelControl18;
+        private DevExpress.XtraEditors.ButtonEdit changeName;
+        private DevExpress.XtraEditors.ButtonEdit buttonEdit2;
     }
 }

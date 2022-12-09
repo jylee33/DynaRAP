@@ -30,7 +30,7 @@ namespace DynaRAP.UControl
     public partial class ImportModuleControl : DevExpress.XtraEditors.XtraUserControl
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        
+
         string selectedFuselage = string.Empty;
         Dictionary<string, List<string>> dicData = new Dictionary<string, List<string>>();
         List<ImportParamControl> paramControlList = new List<ImportParamControl>();
@@ -106,8 +106,8 @@ namespace DynaRAP.UControl
             btnSaveSplittedInterval.Properties.AllowFocused = false;
 
             btnAddParameter.Enabled = false;
-            
-            if(intervalList == null)
+
+            if (intervalList == null)
             {
                 intervalList = new List<ImportIntervalData>();
             }
@@ -130,6 +130,8 @@ namespace DynaRAP.UControl
             cboHPFbtype.Properties.Items.Add("low");
             cboHPFbtype.Properties.Items.Add("high");
             cboHPFbtype.SelectedIndex = 2;
+
+            btn_downloadAll.Visible = false;
         }
 
         private void InitializeGridControl1()
@@ -175,14 +177,14 @@ namespace DynaRAP.UControl
             //colName.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
             colName.OptionsColumn.FixedWidth = true;
             colName.Width = 240;
-            colName.Caption = "UnmappedParamName";
+            colName.Caption = "ParamName";
             colName.OptionsColumn.ReadOnly = true;
         }
 
         private void InitializeGridControl3()
         {
 
-          
+
             gridView3.OptionsView.ShowColumnHeaders = true;
             gridView3.OptionsView.ShowGroupPanel = false;
             gridView3.OptionsView.ShowIndicator = true;
@@ -251,7 +253,7 @@ namespace DynaRAP.UControl
                 //Console.WriteLine(responseText);
                 result = JsonConvert.DeserializeObject<ListParamJsonData>(responseText);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 log.Error(ex.Message);
                 MessageBox.Show(ex.Message);
@@ -271,15 +273,12 @@ namespace DynaRAP.UControl
             repositoryItemComboBox2.SelectedIndexChanged += RepositoryItemComboBox2_SelectedIndexChanged;
             repositoryItemComboBox2.BeforePopup += RepositoryItemComboBox2_BeforePopup;
 
-            string importType = ConfigurationManager.AppSettings["ImportType"];
+            //string importType = ConfigurationManager.AppSettings["ImportType"];
 
-            string[] types = importType.Split(',');
+            //string[] types = importType.Split(',');
 
             repositoryItemComboBox2.Items.Clear();
-            foreach (string type in types)
-            {
-                repositoryItemComboBox2.Items.Add(type);
-            }
+            GetFlyingType();
 
             gridView2.OptionsView.ShowColumnHeaders = true;
             gridView2.OptionsView.ShowGroupPanel = false;
@@ -311,6 +310,51 @@ namespace DynaRAP.UControl
             colDel.Caption = "삭제";
             colDel.OptionsColumn.ReadOnly = true;
 
+            GridColumn colDownloadAll = gridView2.Columns["Download_ALL"];
+            colDownloadAll.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
+            colDownloadAll.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
+            colDownloadAll.OptionsColumn.FixedWidth = true;
+            colDownloadAll.Width = 80;
+            colDownloadAll.Caption = "CSV_All";
+            colDownloadAll.OptionsColumn.ReadOnly = true;
+            colDownloadAll.Visible = false;
+
+            GridColumn colDownloadRaw = gridView2.Columns["Download_RAW"];
+            colDownloadRaw.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
+            colDownloadRaw.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
+            colDownloadRaw.OptionsColumn.FixedWidth = true;
+            colDownloadRaw.Width = 80;
+            colDownloadRaw.Caption = "CSV_RAW";
+            colDownloadRaw.OptionsColumn.ReadOnly = true;
+            colDownloadRaw.Visible = false;
+
+            GridColumn colDownloadLPF = gridView2.Columns["Download_LPF"];
+            colDownloadLPF.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
+            colDownloadLPF.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
+            colDownloadLPF.OptionsColumn.FixedWidth = true;
+            colDownloadLPF.Width = 80;
+            colDownloadLPF.Caption = "CSV_LPF";
+            colDownloadLPF.OptionsColumn.ReadOnly = true;
+            colDownloadLPF.Visible = false;
+
+            GridColumn colDownloadHPF = gridView2.Columns["Download_HPF"];
+            colDownloadHPF.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
+            colDownloadHPF.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
+            colDownloadHPF.OptionsColumn.FixedWidth = true;
+            colDownloadHPF.Width = 80;
+            colDownloadHPF.Caption = "CSV_HPF";
+            colDownloadHPF.OptionsColumn.ReadOnly = true;
+            colDownloadHPF.Visible = false;
+
+            GridColumn colDownloadBPF = gridView2.Columns["Download_BPF"];
+            colDownloadBPF.AppearanceHeader.TextOptions.HAlignment = HorzAlignment.Center;
+            colDownloadBPF.AppearanceCell.TextOptions.HAlignment = HorzAlignment.Center;
+            colDownloadBPF.OptionsColumn.FixedWidth = true;
+            colDownloadBPF.Width = 80;
+            colDownloadBPF.Caption = "CSV_BPF";
+            colDownloadBPF.OptionsColumn.ReadOnly = true;
+            colDownloadBPF.Visible = false;
+
             this.repositoryItemImageComboBox1.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(0, 0));
             this.repositoryItemImageComboBox1.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(1, 1));
 
@@ -318,12 +362,101 @@ namespace DynaRAP.UControl
             this.repositoryItemImageComboBox1.Buttons[0].Visible = false;
 
             this.repositoryItemImageComboBox1.Click += RepositoryItemImageComboBox1_Click;
+
+
+            this.repositoryItemImageComboBox2.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(0, 0));
+            this.repositoryItemImageComboBox2.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(1, 1));
+
+            this.repositoryItemImageComboBox2.GlyphAlignment = HorzAlignment.Center;
+            this.repositoryItemImageComboBox2.Buttons[0].Visible = false;
+
+            this.repositoryItemImageComboBox2.Click += RepositoryItemImageComboBox2_Click;
+
+            this.repositoryItemImageComboBox3.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(0, 0));
+            this.repositoryItemImageComboBox3.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(1, 1));
+
+            this.repositoryItemImageComboBox3.GlyphAlignment = HorzAlignment.Center;
+            this.repositoryItemImageComboBox3.Buttons[0].Visible = false;
+
+            this.repositoryItemImageComboBox3.Click += RepositoryItemImageComboBox3_Click;
+
+            this.repositoryItemImageComboBox4.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(0, 0));
+            this.repositoryItemImageComboBox4.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(1, 1));
+
+            this.repositoryItemImageComboBox4.GlyphAlignment = HorzAlignment.Center;
+            this.repositoryItemImageComboBox4.Buttons[0].Visible = false;
+
+            this.repositoryItemImageComboBox4.Click += RepositoryItemImageComboBox4_Click;
+
+
+            this.repositoryItemImageComboBox5.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(0, 0));
+            this.repositoryItemImageComboBox5.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(1, 1));
+
+            this.repositoryItemImageComboBox5.GlyphAlignment = HorzAlignment.Center;
+            this.repositoryItemImageComboBox5.Buttons[0].Visible = false;
+
+            this.repositoryItemImageComboBox5.Click += RepositoryItemImageComboBox5_Click;
+
+            this.repositoryItemImageComboBox6.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(0, 0));
+            this.repositoryItemImageComboBox6.Items.Add(new DevExpress.XtraEditors.Controls.ImageComboBoxItem(1, 1));
+
+            this.repositoryItemImageComboBox6.GlyphAlignment = HorzAlignment.Center;
+            this.repositoryItemImageComboBox6.Buttons[0].Visible = false;
+
+            this.repositoryItemImageComboBox6.Click += RepositoryItemImageComboBox6_Click;
         }
 
         private void RepositoryItemImageComboBox1_Click(object sender, EventArgs e)
         {
             gridView2.DeleteRow(gridView2.FocusedRowHandle);
             lblSplitCount.Text = string.Format(Properties.Resources.StringSplitCount, intervalList.Count);
+        }
+        private void RepositoryItemImageComboBox2_Click(object sender, EventArgs e)
+        {
+            int row = gridView2.FocusedRowHandle;
+            string importType = gridView2.GetRowCellValue(row, "ImportType") == null ? "" : gridView2.GetRowCellValue(row, "ImportType").ToString();
+            string partSeq = gridView2.GetRowCellValue(row, "Seq") == null ? "" : gridView2.GetRowCellValue(row, "Seq").ToString();
+            string partName = gridView2.GetRowCellValue(row, "SplitName") == null ? "" : gridView2.GetRowCellValue(row, "SplitName").ToString();
+
+            GetPartData(partName, importType, partSeq, "A", true);
+        }
+        private void RepositoryItemImageComboBox3_Click(object sender, EventArgs e)
+        {
+            int row = gridView2.FocusedRowHandle;
+            string importType = gridView2.GetRowCellValue(row, "ImportType") == null ? "" : gridView2.GetRowCellValue(row, "ImportType").ToString();
+            string partSeq = gridView2.GetRowCellValue(row, "Seq") == null ? "" : gridView2.GetRowCellValue(row, "Seq").ToString();
+            string partName = gridView2.GetRowCellValue(row, "SplitName") == null ? "" : gridView2.GetRowCellValue(row, "SplitName").ToString();
+
+            GetPartData(partName, importType, partSeq, "N", true);
+        }
+
+        private void RepositoryItemImageComboBox4_Click(object sender, EventArgs e)
+        {
+            int row = gridView2.FocusedRowHandle;
+            string importType = gridView2.GetRowCellValue(row, "ImportType") == null ? "" : gridView2.GetRowCellValue(row, "ImportType").ToString();
+            string partSeq = gridView2.GetRowCellValue(row, "Seq") == null ? "" : gridView2.GetRowCellValue(row, "Seq").ToString();
+            string partName = gridView2.GetRowCellValue(row, "SplitName") == null ? "" : gridView2.GetRowCellValue(row, "SplitName").ToString();
+
+            GetPartData(partName, importType, partSeq, "L", true);
+        }
+
+        private void RepositoryItemImageComboBox5_Click(object sender, EventArgs e)
+        {
+            int row = gridView2.FocusedRowHandle;
+            string importType = gridView2.GetRowCellValue(row, "ImportType") == null ? "" : gridView2.GetRowCellValue(row, "ImportType").ToString();
+            string partSeq = gridView2.GetRowCellValue(row, "Seq") == null ? "" : gridView2.GetRowCellValue(row, "Seq").ToString();
+            string partName = gridView2.GetRowCellValue(row, "SplitName") == null ? "" : gridView2.GetRowCellValue(row, "SplitName").ToString();
+
+            GetPartData(partName, importType, partSeq, "H", true);
+        }
+        private void RepositoryItemImageComboBox6_Click(object sender, EventArgs e)
+        {
+            int row = gridView2.FocusedRowHandle;
+            string importType = gridView2.GetRowCellValue(row, "ImportType") == null ? "" : gridView2.GetRowCellValue(row, "ImportType").ToString();
+            string partSeq = gridView2.GetRowCellValue(row, "Seq") == null ? "" : gridView2.GetRowCellValue(row, "Seq").ToString();
+            string partName = gridView2.GetRowCellValue(row, "SplitName") == null ? "" : gridView2.GetRowCellValue(row, "SplitName").ToString();
+
+            GetPartData(partName, importType, partSeq, "B", true);
         }
 
         private void RepositoryItemComboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -389,6 +522,22 @@ namespace DynaRAP.UControl
                 e.Info.DisplayText = e.RowHandle.ToString();
         }
 
+        public void GetFlyingType()
+        {
+            string sendData = string.Format(@"
+                {{
+                ""command"":""flight-type""
+                }}");
+            string responseData = Utils.GetPostData(ConfigurationManager.AppSettings["UrlImport"], sendData);
+            if (responseData != null)
+            {
+                FlyingTpyeResponse flyingTpyeResponse = JsonConvert.DeserializeObject<FlyingTpyeResponse>(responseData);
+                foreach (var list in flyingTpyeResponse.response)
+                {
+                    repositoryItemComboBox2.Items.Add(Utils.base64StringDecoding(list.typeName));
+                }
+            }
+        }
         private void InitializePresetList()
         {
             try
@@ -494,9 +643,13 @@ namespace DynaRAP.UControl
             }
 
             MainForm mainForm = this.ParentForm as MainForm;
+            mainForm.ShowSplashScreenManager("데이터 파일을 불러오는 중입니다.. 잠시만 기다려주십시오.");
             mainForm.PanelImportViewCsv.Show();
             mainForm.CsvTableControl.CsvFilePath = this.csvFilePath;
+            mainForm.CsvTableControl.ImportType = this.importType;
+           
             mainForm.CsvTableControl.FillGrid();
+            mainForm.HideSplashScreenManager();
         }
 
 
@@ -543,6 +696,164 @@ namespace DynaRAP.UControl
             }
         }
 
+        private void GetPartData(string partName, string importType, string partSeq, string filterType, bool bDownload = false)
+        {
+            try
+            {
+                string url = ConfigurationManager.AppSettings["UrlPart"];
+
+                if (bDownload)
+                {
+                    url += "/d";
+                }
+
+                string sendData = string.Format(@"
+                {{
+                ""command"":""row-data"",
+                ""partSeq"":""{0}"",
+                ""julianRange"":["""", """"],
+                ""filterType"": ""{1}""
+                }}"
+                , partSeq , filterType);
+
+                log.Info("url : " + url);
+                log.Info(sendData);
+
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Timeout = 30 * 1000;
+                //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+
+                // POST할 데이타를 Request Stream에 쓴다
+                byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+                request.ContentLength = bytes.Length; // 바이트수 지정
+
+                using (Stream reqStream = request.GetRequestStream())
+                {
+                    reqStream.Write(bytes, 0, bytes.Length);
+                }
+
+                //// Response 처리
+                //string responseText = string.Empty;
+                //using (WebResponse resp = request.GetResponse())
+                //{
+                //    Stream respStream = resp.GetResponseStream();
+                //    using (StreamReader sr = new StreamReader(respStream))
+                //    {
+                //        responseText = sr.ReadToEnd();
+                //    }
+                //}
+
+                SaveFileDialog dlg = new SaveFileDialog();
+                string flyingName = lblFlyingData.Text;
+                if (flyingName.IndexOf(".") != -1)
+                {
+                    flyingName = flyingName.Substring(0, flyingName.LastIndexOf("."));
+                }
+                if (flyingName.IndexOf("\\") != -1)
+                {
+                    flyingName = flyingName.Substring(flyingName.LastIndexOf("\\")+1);
+                }
+                string fileTypeName = null;
+                switch (filterType)
+                {
+                    case "N":
+                        fileTypeName = "RAW";
+                        break;
+                    case "L":
+                        fileTypeName = "LPF";
+                        break;
+                    case "H":
+                        fileTypeName = "HPF";
+                        break;
+                    case "B":
+                        fileTypeName = "BPF";
+                        break;
+                    case "A":
+                        fileTypeName = "ALL";
+                        break;
+
+                }
+                dlg.FileName = string.Format("{0}_{1}_{2}_{3}", flyingName, importType, partName, fileTypeName);
+                if (filterType == "A" || filterType == "Z")
+                {
+                    if (filterType == "Z")
+                    {
+                        dlg.FileName = string.Format("{0}_{1}", flyingName, importType);
+                    }
+                    dlg.Filter = "ZIP Folders(.ZIP)| *.zip";
+                }
+                else
+                {
+                    dlg.Filter = "Comma Separated Value files (CSV)|*.csv";
+                }
+                dlg.Title = "Save a CSV File";
+
+                if (dlg.ShowDialog() == DialogResult.OK)
+                {
+                    string fileName = dlg.FileName;
+
+                    var buff = new byte[1024];
+                    int pos = 0;
+                    int count;
+                    if (filterType == "A" || filterType == "Z")
+                    {
+                        using (WebResponse resp = request.GetResponse())
+                        {
+                            using (Stream respStream = resp.GetResponseStream())
+                            {
+                                using (FileStream fs = new FileStream(fileName, FileMode.Create))
+                                {
+                                    do
+                                    {
+                                        count = respStream.Read(buff, pos, buff.Length);
+                                        fs.Write(buff, 0, count);
+                                    } while (count > 0);
+
+                                    fs.Close();
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        string responseText = string.Empty;
+                        using (WebResponse resp = request.GetResponse())
+                        {
+                            Stream respStream = resp.GetResponseStream();
+                            using (StreamReader sr = new StreamReader(respStream))
+                            {
+                                responseText = sr.ReadToEnd();
+                            }
+                        }
+
+                        FileStream fs = new FileStream(fileName, FileMode.Append, FileAccess.Write);
+                        StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
+                        sw.WriteLine(responseText);
+                        sw.Close();
+                        fs.Close();
+                    }
+
+                    //string fileName = dlg.FileName;
+
+                    //FileStream fs = new FileStream(fileName, FileMode.Append, FileAccess.Write);
+                    //StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
+                    //sw.WriteLine(responseText);
+                    //sw.Close();
+                    //fs.Close();
+
+                }
+
+                //Console.WriteLine(responseText);
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex.Message);
+                MessageBox.Show(ex.Message);
+            }
+
+        }
         private void ChartControl_OnSelectedRange(object sender, SelectedRangeEventArgs e)
         {
             ImportParamControl me = sender as ImportParamControl;
@@ -551,7 +862,7 @@ namespace DynaRAP.UControl
 
             Debug.Print(string.Format("-----> MinValue : {0}, MaxValue : {1}", minValue, maxValue));
 
-            foreach(ImportParamControl ctrl in paramControlList)
+            foreach (ImportParamControl ctrl in paramControlList)
             {
                 if (ctrl == me)
                     continue;
@@ -574,16 +885,16 @@ namespace DynaRAP.UControl
 
         private void AddSplittedInterval()
         {
-            if(minValue == null || maxValue == null)
+            if (minValue == null || maxValue == null)
             {
-                if(paramControlList.Count == 0)
+                if (paramControlList.Count == 0)
                 {
                     MessageBox.Show(Properties.Resources.StringAddParameter);
                     return;
                 }
                 else
                 {
-                    ImportParamControl paramCtrl =  paramControlList[0] as ImportParamControl;
+                    ImportParamControl paramCtrl = paramControlList[0] as ImportParamControl;
                     paramCtrl.Sync();
                 }
             }
@@ -597,7 +908,7 @@ namespace DynaRAP.UControl
             DataTable dt = null;
             int recordCnt = 0;
 
-            if(paramControlList != null && paramControlList.Count > 0)
+            if (paramControlList != null && paramControlList.Count > 0)
             {
                 //DateTime sTime = Convert.ToDateTime(minValue.ToString());
                 //DateTime eTime = Convert.ToDateTime(maxValue.ToString());
@@ -621,14 +932,14 @@ namespace DynaRAP.UControl
             {
                 flowLayoutPanel4.Height += SPLIT_HEIGHT;
             }*/
-            if(intervalList == null)
+            if (intervalList == null)
             {
                 intervalList = new List<ImportIntervalData>();
             }
             DateTime min = (DateTime)minValue;
             DateTime max = (DateTime)maxValue;
 
-            intervalList.Add(new ImportIntervalData("", "", min.ToString("yyyy-MM-dd HH:mm:ss.ffffff"), max.ToString("yyyy-MM-dd HH:mm:ss.ffffff"), recordCnt.ToString(), 1));
+            intervalList.Add(new ImportIntervalData("", "", min.ToString("yyyy-MM-dd HH:mm:ss.ffffff"), max.ToString("yyyy-MM-dd HH:mm:ss.ffffff"), recordCnt.ToString(), 1, 1, 1 ,1 ,1 ,1));
             this.gridControl2.DataSource = intervalList;
             gridView2.RefreshData();
 
@@ -667,7 +978,7 @@ namespace DynaRAP.UControl
 
         private void btnSaveSplittedInterval_ButtonClick(object sender, EventArgs e)
         {
-            if(cboImportType.SelectedIndex < 0)
+            if (cboImportType.SelectedIndex < 0)
             {
                 MessageBox.Show("입력타입을 선택하세요.");
                 return;
@@ -683,6 +994,30 @@ namespace DynaRAP.UControl
             {
                 MessageBox.Show("분할 구간이 없습니다.");
                 return;
+            }
+
+            for (int i = 0; i < gridView2.RowCount; i++)
+            {
+                string startTime = gridView2.GetRowCellValue(i, "StartTime") == null ? "" : gridView2.GetRowCellValue(i, "StartTime").ToString();
+                string endTime = gridView2.GetRowCellValue(i, "EndTime") == null ? "" : gridView2.GetRowCellValue(i, "EndTime").ToString();
+                DateTime startDateTime = DateTime.Parse(startTime);
+                DateTime endDateTime = DateTime.Parse(endTime);
+                for (int j = 0; j < gridView2.RowCount; j++)
+                {
+                    if (i == j)
+                    {
+                        continue;
+                    }
+                    string nextStartTime = gridView2.GetRowCellValue(j, "StartTime") == null ? "" : gridView2.GetRowCellValue(j, "StartTime").ToString();
+                    string nextEndTime = gridView2.GetRowCellValue(j, "EndTime") == null ? "" : gridView2.GetRowCellValue(j, "EndTime").ToString();
+                    DateTime nextStartDateTime = DateTime.Parse(nextStartTime);
+                    DateTime nextEndDateTime = DateTime.Parse(nextEndTime);
+                    if((startDateTime <= nextStartDateTime && endDateTime > nextStartDateTime) || (startDateTime > nextEndDateTime && endDateTime <= nextEndDateTime))
+                    {
+                        MessageBox.Show("분할 구간이 겹쳐져 있는 구간이 있습니다.");
+                        return;
+                    }
+                }
             }
 
             bool bResult = Import();
@@ -732,7 +1067,7 @@ namespace DynaRAP.UControl
                     {
                         paramKey = "skip";
                     }
-                    if(import.tempMappingParams.ContainsKey(paramName) == false)
+                    if (import.tempMappingParams.ContainsKey(paramName) == false)
                         import.tempMappingParams.Add(paramName, paramKey);
                 }
 
@@ -825,11 +1160,12 @@ namespace DynaRAP.UControl
                             List<UnmappedParamData> unmappedList = new List<UnmappedParamData>();
                             foreach (string type in form.NotMappedParams)
                             {
-                                unmappedList.Add(new UnmappedParamData(type, "skip"));
+                                unmappedList.Add(new UnmappedParamData(type, "skip", "Unmapped"));
                             }
                             this.gridControl1.DataSource = unmappedList;
                             gridView1.RefreshData();
                         }
+                        ChangeGridContorl2();
                     }
                 }
             }
@@ -841,6 +1177,112 @@ namespace DynaRAP.UControl
             }
 
             return true;
+        }
+
+        private void ChangeGridContorl2()
+        {
+            List<ResponsePart> partLst = GetPartList(uploadSeq);
+            foreach (var part in partLst)
+            {
+                string partName = Utils.base64StringDecoding(part.partName);
+                intervalList.Find(x => x.SplitName == partName).Seq = part.seq;
+            }
+            this.gridControl2.DataSource = intervalList;
+
+
+            GridColumn colDel = gridView2.Columns["Del"];
+            colDel.VisibleIndex = -1;
+
+            GridColumn colDownloadAll = gridView2.Columns["Download_ALL"];
+            colDownloadAll.Visible = true;
+
+            GridColumn colDownloadRaw = gridView2.Columns["Download_RAW"];
+            colDownloadRaw.Visible = true;
+
+            GridColumn colDownloadLPF = gridView2.Columns["Download_LPF"];
+            colDownloadLPF.Visible = true;
+
+            GridColumn colDownloadHPF = gridView2.Columns["Download_HPF"];
+            colDownloadHPF.Visible = true;
+
+            GridColumn colDownloadBPF = gridView2.Columns["Download_BPF"];
+            colDownloadBPF.Visible = true;
+
+            GridColumn colType = gridView2.Columns["ImportType"];
+            colType.Width = 100;
+
+            //btn_downloadAll.Visible = true;
+            btnAddSplittedInterval.Visible = false;
+        }
+        private List<ResponsePart> GetPartList(string uploadSeq)
+        {
+            try
+            {
+                string url = ConfigurationManager.AppSettings["UrlPart"];
+
+
+                string sendData = string.Format(@"
+            {{
+            ""command"":""list"",
+            ""registerUid"":"""",
+            ""uploadSeq"":""{0}"",
+            ""pageNo"":1,
+            ""pageSize"":3000
+            }}"
+                , uploadSeq);
+
+                log.Info("url : " + url);
+                log.Info(sendData);
+
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                request.Timeout = 30 * 1000;
+                //request.Headers.Add("Authorization", "BASIC SGVsbG8=");
+
+                // POST할 데이타를 Request Stream에 쓴다
+                byte[] bytes = Encoding.ASCII.GetBytes(sendData);
+                request.ContentLength = bytes.Length; // 바이트수 지정
+
+                using (Stream reqStream = request.GetRequestStream())
+                {
+                    reqStream.Write(bytes, 0, bytes.Length);
+                }
+
+                // Response 처리
+                string responseText = string.Empty;
+                using (WebResponse resp = request.GetResponse())
+                {
+                    Stream respStream = resp.GetResponseStream();
+                    using (StreamReader sr = new StreamReader(respStream))
+                    {
+                        responseText = sr.ReadToEnd();
+                    }
+                }
+
+                //Console.WriteLine(responseText);
+                PartListResponse result = JsonConvert.DeserializeObject<PartListResponse>(responseText);
+
+                if (result != null)
+                {
+                    if (result.code != 200)
+                    {
+                        return null;
+                    }
+                    else
+                    {
+                        return result.response;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex.Message);
+                MessageBox.Show(ex.Message);
+                return null;
+            }
+            return null;
+
         }
 
         private void AddDataProp()
@@ -858,13 +1300,14 @@ namespace DynaRAP.UControl
                 string encName = Convert.ToBase64String(basebyte);
 
                 string tagValues = string.Empty;
-                foreach(ButtonEdit btn in this.panelTag.Controls)
+                foreach (ButtonEdit btn in this.panelTag.Controls)
                 {
                     tagValues += btn.Text + ",";
                 }
-
-                tagValues = tagValues.Substring(0, tagValues.LastIndexOf(","));
-
+                if (tagValues != null && tagValues != "" && tagValues.LastIndexOf(",") != -1)
+                {
+                    tagValues = tagValues.Substring(0, tagValues.LastIndexOf(","));
+                }
                 //Encoding
                 byte[] basebyte2 = System.Text.Encoding.UTF8.GetBytes(tagValues);
                 string encValue = Convert.ToBase64String(basebyte2);
@@ -937,22 +1380,24 @@ namespace DynaRAP.UControl
 
         private void lblFlyingData_Click(object sender, EventArgs e)
         {
+            MainForm mainForm = this.ParentForm as MainForm;
             btnAddParameter.Enabled = false;
             headerRow = string.Empty;
 
             OpenFileDialog dlg = new OpenFileDialog();
             //dlg.InitialDirectory = "C:\\";
-            dlg.Filter = "Excel files (*.xls, *.xlsx)|*.xls; *.xlsx|Comma Separated Value files (CSV)|*.csv|모든 파일 (*.*)|*.*";
+            //dlg.Filter = "Excel files (*.xls, *.xlsx)|*.xls; *.xlsx|Comma Separated Value files (CSV)|*.csv|모든 파일 (*.*)|*.*";
             //dlg.Filter = "Comma Separated Value files (CSV)|*.csv";
 
 #if !DEBUG
             if (dlg.ShowDialog() == DialogResult.OK)
 #endif
             {
+                mainForm.ShowSplashScreenManager("선택한 데이터 파일을 불러오는 중 입니다.. 잠시만 기다려주십시오.");
 #if DEBUG
                 // screen init
                 luePresetList.EditValue = "";
-                
+
                 gridControl1.DataSource = null;
                 gridView1.RefreshData();
 
@@ -972,15 +1417,19 @@ namespace DynaRAP.UControl
 
                 if (importType == ImportType.FLYING)
                 {
+                   
                     //csvFilePath = @"C:\temp\a.xls";
-                    //csvFilePath = @"C:\temp\XFA1_0001_1(원본).csv"; 
-                    csvFilePath = @"C:\temp\xfa1_0001_1_test.csv"; 
+                    csvFilePath = @"C:\temp\xfa2_0003_test1208.csv";
+                    //csvFilePath = @"C:\temp\XFA1_0001_1(원본).csv";
+                    //csvFilePath = @"C:\temp\XFA1_1107.csv";
                     lblFlyingData.Text = csvFilePath;
                 }
                 else
                 {
                     //csvFilePath = @"C:\temp\ANAYSIS_ZAERO_LOADMOD_WING_RH_220816.dat";
-                    csvFilePath = @"C:\temp\anaysis_zaero_loadmod_wing_rh_220816.dat";
+                    //csvFilePath = @"C:\temp\anaysis_zaero_loadmod_wing_rh_220816.dat";
+                    csvFilePath = @"C:\temp\ANAYSIS_ZAERO_LD_LI212A5R2_M06_00k_abc001_AtoA_MD.dat";
+                    
                     lblFlyingData.Text = csvFilePath;
                 }
                 StreamReader sr = new StreamReader(csvFilePath);
@@ -1007,7 +1456,7 @@ namespace DynaRAP.UControl
                         if (idx == 0)
                         {
                             this.headerRow = line;
-                            headerRow = headerRow.Substring(0, headerRow.LastIndexOf(','));
+                            //headerRow = headerRow.Substring(0, headerRow.LastIndexOf(','));
                             dicData.Clear();
                             for (i = 0; i < data.Length; i++)
                             {
@@ -1090,7 +1539,7 @@ namespace DynaRAP.UControl
                         {
                             data = data.Where((source, index) => string.IsNullOrEmpty(source) == false).ToArray();
 
-                            if(data[0].StartsWith("-"))
+                            if (data[0].StartsWith("-"))
                             {
                                 continue;
                             }
@@ -1121,6 +1570,7 @@ namespace DynaRAP.UControl
                 btnAddParameter.Enabled = true;
 
                 CheckParam();
+                mainForm.HideSplashScreenManager();
             }
         }
 
@@ -1207,7 +1657,28 @@ namespace DynaRAP.UControl
                         List<UnmappedParamData> unmappedList = new List<UnmappedParamData>();
                         foreach (string type in result.response.notMappedParams)
                         {
-                            unmappedList.Add(new UnmappedParamData(type, "skip"));
+                            unmappedList.Add(new UnmappedParamData(type, "skip", "Unmapped"));
+                        }
+                        foreach (var type in result.response.mappedParams)
+                        {
+                            switch (dataType)
+                            {
+                                case "gtp":
+                                    unmappedList.Add(new UnmappedParamData(type.paramKey, type.grtKey, "Mapped"));
+                                    break;
+                                case "fltp": 
+                                    unmappedList.Add(new UnmappedParamData(type.paramKey, type.fltpKey, "Mapped"));
+                                    break;
+                                case "flts": 
+                                    unmappedList.Add(new UnmappedParamData(type.paramKey, type.fltsKey, "Mapped"));
+                                    break;
+                                case "adams": 
+                                    unmappedList.Add(new UnmappedParamData(type.paramKey, type.adamsKey, "Mapped"));
+                                    break;
+                                case "zaero": 
+                                    unmappedList.Add(new UnmappedParamData(type.paramKey, type.zaeroKey, "Mapped"));
+                                    break;
+                            }
                         }
                         this.gridControl1.DataSource = unmappedList;
                         gridView1.RefreshData();
@@ -1375,6 +1846,16 @@ namespace DynaRAP.UControl
                 gridView2.RefreshData();
 
             }
+        }
+
+        private void btn_downloadAll_Click(object sender, EventArgs e)
+        {
+            int row = 0;
+            string importType = gridView2.GetRowCellValue(row, "ImportType") == null ? "" : gridView2.GetRowCellValue(row, "ImportType").ToString();
+            string partSeq = gridView2.GetRowCellValue(row, "Seq") == null ? "" : gridView2.GetRowCellValue(row, "Seq").ToString();
+            string partName = gridView2.GetRowCellValue(row, "SplitName") == null ? "" : gridView2.GetRowCellValue(row, "SplitName").ToString();
+
+            GetPartData(partName, importType, partSeq, "Z", true);
         }
     }
 

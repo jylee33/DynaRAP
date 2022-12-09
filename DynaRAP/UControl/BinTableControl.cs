@@ -74,13 +74,15 @@ namespace DynaRAP.UControl
                 GetShortBlockParamList();
                 foreach (var paramData in pickUpParamList[2].userParamTable.Select((value, index) => new { value, index }))
                 {
-                    string showName = string.Format("{0}-{1}({2}-{3})", paramDataList[0].propInfo.paramUnit, paramDataList[2].propInfo.paramUnit, paramData.value.min, paramData.value.max);
+                    //string showName = string.Format("{0}-{1}({2}-{3})", paramDataList[0].propInfo.paramUnit, paramDataList[2].propInfo.paramUnit, paramData.value.min, paramData.value.max);
+                    string showName = string.Format("{0}-{1} ({2} ~ {3})", string.Format("{0}({1})", paramDataList[0].propInfo.propCode, paramDataList[0].propInfo.paramUnit), string.Format("{0}({1})", paramDataList[2].propInfo.propCode, paramDataList[2].propInfo.paramUnit), paramData.value.min, paramData.value.max);
                     AddTabPage(showName, valueName + paramData.value.min, paramDataList[1], paramDataList[0], pickUpParamList[2].paramSeq, paramData.value, paramData.index);
                 }
             } else
             {
                 string valueName = paramDataList[0].paramKey + paramDataList[1].paramKey;
-                string showName = string.Format("{0}-{1}", paramDataList[0].propInfo.paramUnit, paramDataList[1].propInfo.paramUnit);
+                string showName = string.Format("{0}-{1}", string.Format("{0}({1})", paramDataList[0].propInfo.propCode, paramDataList[0].propInfo.paramUnit), string.Format("{0}({1})", paramDataList[1].propInfo.propCode, paramDataList[1].propInfo.paramUnit));
+                //string showName = string.Format("{0}-{1}", paramDataList[0].propInfo.paramUnit, paramDataList[1].propInfo.paramUnit);
                 GetShortBlockParamList();
                 AddTabPage2D(showName, valueName, paramDataList[0], paramDataList[1]);
             }
@@ -159,7 +161,8 @@ namespace DynaRAP.UControl
                 foreach (var paramData in allParamList)
                 {
                     BINParamCombo combo = new BINParamCombo();
-                    combo.seq = paramData.paramValueMap.seq;
+                    //combo.seq = paramData.paramValueMap.seq;
+                    combo.seq = paramData.binSearchSeq;
                     combo.paramKey = paramData.paramKey;
                     paramComboList.Add(combo);
                 }
@@ -172,7 +175,7 @@ namespace DynaRAP.UControl
                 cboParam.Properties.PopulateColumns();
                 cboParam.Properties.Columns["paramKey"].Width = 800;
 
-                cboParam.EditValue = allParamList[0].paramValueMap.seq;
+                cboParam.EditValue = allParamList[0].binSearchSeq;
                 //cboParam.Properties.
             }
             cboType.Properties.Items.Add("평균 RMS크기");
@@ -237,8 +240,11 @@ namespace DynaRAP.UControl
 
             }
 
-            firstColNameList.Add(keyName, header.propInfo.paramUnit);
-            dt.Columns.Add(header.propInfo.paramUnit);
+            //firstColNameList.Add(keyName, header.propInfo.paramUnit);
+            firstColNameList.Add(keyName, string.Format("{0}({1})", header.propInfo.propCode, header.propInfo.paramUnit));
+            
+            //dt.Columns.Add(header.propInfo.paramUnit);
+            dt.Columns.Add(string.Format("{0}({1})", header.propInfo.propCode, header.propInfo.paramUnit));
             foreach (var list in pickUpParamList.Find(x => x.paramSeq == header.seq).userParamTable)
             {
                 dt.Columns.Add(string.Format("{0}-{1}", list.min, list.max));
@@ -269,14 +275,15 @@ namespace DynaRAP.UControl
             foreach (var list in countSeqDic.Keys.Select((value, index) => new { value, index }))
             {
                 DataRow dataRow = dt.NewRow();
-                dataRow[header.propInfo.paramUnit] = list.value.range;
+                //dataRow[header.propInfo.paramUnit] = list.value.range;
+                dataRow[string.Format("{0}({1})", header.propInfo.propCode, header.propInfo.paramUnit)] = list.value.range;
                 foreach (var dic2 in countSeqDic[list.value].Keys.Select((value, index) => new { value, index }))
                 {
                     if (countSeqDic[list.value][dic2.value].shortblcokSeqList.Count() != 0)
                     {
                         dynamic calulateData = CalculateSBData(list.index, dic2.index, indexZ, countSeqDic[list.value][dic2.value].shortblcokSeqList);
                         countSeqDic[list.value][dic2.value].jsonResult = calulateData;
-                        if (calulateData != null)
+                        if (calulateData != null && calulateData[selectParamSeq] != null)
                         {
                             Summary summaryData = JsonConvert.DeserializeObject<Summary>(calulateData[selectParamSeq].ToString());
                             double viewValue = 0;
@@ -379,8 +386,11 @@ namespace DynaRAP.UControl
 
             }
 
-            firstColNameList.Add(keyName, header.propInfo.paramUnit);
-            dt.Columns.Add(header.propInfo.paramUnit);
+            //firstColNameList.Add(keyName, header.propInfo.paramUnit);
+            firstColNameList.Add(keyName, string.Format("{0}({1})", header.propInfo.propCode, header.propInfo.paramUnit));
+
+            //dt.Columns.Add(header.propInfo.paramUnit);
+            dt.Columns.Add(string.Format("{0}({1})", header.propInfo.propCode, header.propInfo.paramUnit));
             foreach (var list in pickUpParamList.Find(x => x.paramSeq == header.seq).userParamTable)
             {
                 dt.Columns.Add(string.Format("{0}-{1}", list.min, list.max));
@@ -409,7 +419,8 @@ namespace DynaRAP.UControl
             foreach (var list in countSeqDic.Keys.Select((value, index) => new { value, index }))
             {
                 DataRow dataRow = dt.NewRow();
-                dataRow[header.propInfo.paramUnit] = list.value.range;
+                //dataRow[header.propInfo.paramUnit] = list.value.range;
+                dataRow[string.Format("{0}({1})", header.propInfo.propCode, header.propInfo.paramUnit)] = list.value.range;
                 foreach (var dic2 in countSeqDic[list.value].Keys.Select((value, index) => new { value, index }))
                 {
                     dataRow[dic2.value.range] = countSeqDic[list.value][dic2.value].shortblcokSeqList.Count();
@@ -562,12 +573,14 @@ namespace DynaRAP.UControl
 
             gridControl.DataSource = dt;
 
-            gridBand1.Caption = row.propInfo.paramUnit;
+            //gridBand1.Caption = row.propInfo.paramUnit;
+            gridBand1.Caption = string.Format("{0}({1})", row.propInfo.propCode, row.propInfo.paramUnit);
             gridBand1.AppearanceHeader.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
             //gridBand1.AppearanceHeader.BackColor = Color.Gray;
             //gridBand1.Columns.Clear();
 
-            BandedGridColumn colIndex = bandedGridView.Columns[header.propInfo.paramUnit];
+            //BandedGridColumn colIndex = bandedGridView.Columns[header.propInfo.paramUnit];
+            BandedGridColumn colIndex = bandedGridView.Columns[string.Format("{0}({1})", header.propInfo.propCode, header.propInfo.paramUnit)];
             //BandedGridColumn colIndex = bandedGridView.Columns["Q"];
             colIndex.OptionsColumn.FixedWidth = true;
             colIndex.Width = 80;
@@ -650,10 +663,13 @@ namespace DynaRAP.UControl
 
             gridControl.DataSource = dt;
 
-            gridBand1.Caption = row.propInfo.paramUnit;
+            //gridBand1.Caption = row.propInfo.paramUnit;
+
+            gridBand1.Caption = string.Format("{0}({1})", row.propInfo.propCode, row.propInfo.paramUnit);
             gridBand1.AppearanceHeader.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
 
-            BandedGridColumn colIndex = bandedGridView.Columns[header.propInfo.paramUnit];
+            //BandedGridColumn colIndex = bandedGridView.Columns[header.propInfo.paramUnit];
+            BandedGridColumn colIndex = bandedGridView.Columns[string.Format("{0}({1})", header.propInfo.propCode, header.propInfo.paramUnit)];
             colIndex.OptionsColumn.FixedWidth = true;
             colIndex.Width = 80;
             colIndex.OptionsColumn.AllowFocus = false;

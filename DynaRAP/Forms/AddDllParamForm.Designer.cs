@@ -103,7 +103,7 @@
             this.Controls.Add(this.edtParamName);
             this.Controls.Add(this.labelControl1);
             this.Name = "AddDllParamForm";
-            this.Text = "DLL 파라미터 추가";
+            this.Text = "기준데이터 파라미터추가";
             this.Load += new System.EventHandler(this.AddDllParamForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.edtParamName.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cboParameterType.Properties)).EndInit();
