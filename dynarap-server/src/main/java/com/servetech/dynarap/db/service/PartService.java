@@ -10,6 +10,7 @@ import com.servetech.dynarap.db.type.LongDate;
 import com.servetech.dynarap.db.type.String64;
 import com.servetech.dynarap.ext.HandledServiceException;
 import com.servetech.dynarap.vo.*;
+import org.objectweb.asm.Handle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,7 +78,14 @@ public class PartService {
             params.put("uploadSeq", uploadSeq == null || uploadSeq.isEmpty() ? null : uploadSeq);
             params.put("startIndex", (pageNo - 1) * pageSize);
             params.put("pageSize", pageSize);
-            return partMapper.selectPartList(params);
+            List<PartVO> parts = partMapper.selectPartList(params);
+            if (parts == null) new ArrayList<>();
+            for (PartVO part : parts) {
+                RawVO.Upload uploadInfo = rawService.getUploadBySeq(part.getUploadSeq());
+                if (uploadInfo != null)
+                    part.setDataType(uploadInfo.getDataType());
+            }
+            return parts;
         } catch(Exception e) {
             throw new HandledServiceException(410, e.getMessage());
         }
@@ -98,7 +106,13 @@ public class PartService {
         try {
             Map<String, Object> params = new HashMap<>();
             params.put("seq", partSeq);
-            return partMapper.selectPartBySeq(params);
+            PartVO part = partMapper.selectPartBySeq(params);
+            if (part != null) {
+                RawVO.Upload uploadInfo = rawService.getUploadBySeq(part.getUploadSeq());
+                if (uploadInfo != null)
+                    part.setDataType(uploadInfo.getDataType());
+            }
+            return part;
         } catch(Exception e) {
             throw new HandledServiceException(410, e.getMessage());
         }
@@ -563,6 +577,106 @@ public class PartService {
             params.put("blockSeq", blockSeq);
             params.put("unionParamSeq", unionParamSeq);
             return partMapper.selectShortBlockParamData(params);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    public void deleteShortBlockByPartList(List<PartVO> partList) throws HandledServiceException {
+        try {
+            for (PartVO part : partList) {
+                List<ShortBlockVO.Meta> blockMetas = getShortBlockMetaList(part.getSeq());
+                if (blockMetas == null) continue;
+                for (ShortBlockVO.Meta meta : blockMetas) {
+                    deleteShortBlockParamsByMetaSeq(meta.getSeq());
+                    deleteShortBlockParamValByMetaSeq(meta.getSeq());
+                    deleteShortBlockByMetaSeq(meta.getSeq());
+                    deleteShortBlockRawByMetaSeq(meta.getSeq());
+                    deleteShortBlockMetaBySeq(meta.getSeq());
+                }
+            }
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    public void deleteShortBlockParamsByMetaSeq(CryptoField blockMetaSeq) throws HandledServiceException {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("blockMetaSeq", blockMetaSeq);
+            partMapper.deleteShortBlockParamsByMetaSeq(params);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    public void deleteShortBlockParamValByMetaSeq(CryptoField blockMetaSeq) throws HandledServiceException {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("blockMetaSeq", blockMetaSeq);
+            partMapper.deleteShortBlockParamValByMetaSeq(params);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    public void deleteShortBlockByMetaSeq(CryptoField blockMetaSeq) throws HandledServiceException {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("blockMetaSeq", blockMetaSeq);
+            partMapper.deleteShortBlockByMetaSeq(params);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    public void deleteShortBlockRawByMetaSeq(CryptoField blockMetaSeq) throws HandledServiceException {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("blockMetaSeq", blockMetaSeq);
+            partMapper.deleteShortBlockRawByMetaSeq(params);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    public void deleteShortBlockMetaBySeq(CryptoField blockMetaSeq) throws HandledServiceException {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("blockMetaSeq", blockMetaSeq);
+            partMapper.deleteShortBlockMetaBySeq(params);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    public void deletePartList(List<PartVO> partList) throws HandledServiceException {
+        try {
+            for (PartVO part : partList) {
+                deletePartRawByPart(part.getSeq());
+                deletePartBySeq(part.getSeq());
+            }
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    public void deletePartRawByPart(CryptoField partSeq) throws HandledServiceException {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("partSeq", partSeq);
+            partMapper.deletePartRawBySeq(params);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+
+    public void deletePartBySeq(CryptoField partSeq) throws HandledServiceException{
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("partSeq", partSeq);
+            partMapper.deletePartBySeq(params);
         } catch(Exception e) {
             throw new HandledServiceException(410, e.getMessage());
         }

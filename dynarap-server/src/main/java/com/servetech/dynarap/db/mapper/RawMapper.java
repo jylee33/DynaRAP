@@ -253,4 +253,50 @@ public interface RawMapper {
     })
     void deleteDataPropBySeq(Map<String, Object> params) throws Exception;
 
+    @Delete({
+            "<script>" +
+                    "delete from dynarap_raw_upload " +
+                    "where seq = #{uploadSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "</script>"
+    })
+    void deleteRawUploadBySeq(Map<String, Object> params) throws Exception;
+
+
+    @Select({
+            "<script>" +
+                    "select * from dynarap_raw_flight_type " +
+                    "order by typeCode asc" +
+                    "</script>"
+    })
+    List<RawVO.FlightType> selectFlightTypeList() throws Exception;
+
+    @Insert({
+            "<script>" +
+                    "insert into dynarap_raw_flight_type (" +
+                    "typeCode, typeName, createdAt" +
+                    ") values (" +
+                    "#{typeCode}" +
+                    ",#{typeName,javaType=java.lang.String,jdbcType=VARCHAR,typeHandler=String64}" +
+                    ",#{createdAt,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=LongDate}" +
+                    ")" +
+                    "</script>"
+    })
+    void insertFlightType(RawVO.FlightType flightType) throws Exception;
+
+    @Update({
+            "<script>" +
+                    " update dynarap_raw_flight_type set " +
+                    " typeName = #{typeName,javaType=java.lang.String,jdbcType=VARCHAR,typeHandler=String64} " +
+                    " where typeCode = #{typeCode} " +
+                    "</script>"
+    })
+    void updateFlightType(RawVO.FlightType flightType) throws Exception;
+
+     @Delete({
+             "<script>" +
+                     "delete from dynarap_raw_flight_type where typeCode = #{typeCode}" +
+                     "</script>"
+     })
+    void deleteFlightType(Map<String, Object> params) throws Exception;
+
 }

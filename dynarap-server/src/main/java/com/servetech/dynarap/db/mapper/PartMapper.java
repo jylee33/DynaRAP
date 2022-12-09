@@ -99,12 +99,62 @@ public interface PartMapper {
 
     @Delete({
             "<script>" +
+                    "delete from dynarap_part_raw " +
+                    "where partSeq = #{partSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField}" +
+                    "</script>"
+    })
+    void deletePartRawBySeq(Map<String, Object> params) throws Exception;
+
+    @Delete({
+            "<script>" +
                     "delete from dynarap_part " +
                     "where uploadSeq = #{uploadSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField}" +
                     "</script>"
     })
     void deletePartByUploadSeq(Map<String, Object> params) throws Exception;
 
+
+    @Delete({
+            "<script>" +
+                    "delete from dynarap_sblock_meta " +
+                    "where seq = #{blockMetaSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "</script>"
+    })
+    void deleteShortBlockMetaBySeq(Map<String, Object> params) throws Exception;
+
+    @Delete({
+            "<script>" +
+                    "delete from dynarap_sblock_param " +
+                    "where blockMetaSeq = #{blockMetaSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "</script>"
+    })
+    void deleteShortBlockParamsByMetaSeq(Map<String, Object> params) throws Exception;
+
+    @Delete({
+            "<script>" +
+                    "delete from dynarap_sblock_param_val " +
+                    "where blockMetaSeq = #{blockMetaSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "</script>"
+    })
+    void deleteShortBlockParamValByMetaSeq(Map<String, Object> params) throws Exception;
+
+    @Delete({
+            "<script>" +
+                    "delete from dynarap_sblock " +
+                    "where blockMetaSeq = #{blockMetaSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField} " +
+                    "</script>"
+    })
+    void deleteShortBlockByMetaSeq(Map<String, Object> params) throws Exception;
+
+    @Delete({
+            "<script>" +
+                    "delete from dynarap_sblock_raw " +
+                    "where blockSeq in (" +
+                    "   select seq from dynarap_sblock " +
+                    "   where blockMetaSeq = #{blockMetaSeq,javaType=java.lang.Long,jdbcType=BIGINT,typeHandler=CryptoField}) " +
+                    "</script>"
+    })
+    void deleteShortBlockRawByMetaSeq(Map<String, Object> params) throws Exception;
 
     @Select({
             "<script>" +

@@ -38,6 +38,14 @@ public class RawVO implements IFlexibleValue {
     }
 
     @Data
+    public static class FlightType {
+        private String typeCode;
+        private String64 typeName;
+        private transient LongDate createdAt;
+        private transient boolean mark;
+    }
+
+    @Data
     public static class Upload {
         private CryptoField seq;
         private String uploadId;

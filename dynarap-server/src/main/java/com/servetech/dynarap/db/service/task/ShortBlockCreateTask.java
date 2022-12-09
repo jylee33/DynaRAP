@@ -1,13 +1,18 @@
 package com.servetech.dynarap.db.service.task;
 
+import com.servetech.dynarap.DynaRAPServerApplication;
+import com.servetech.dynarap.config.ServerConstants;
 import com.servetech.dynarap.db.service.ParamService;
 import com.servetech.dynarap.db.service.PartService;
 import com.servetech.dynarap.db.service.RawService;
 import com.servetech.dynarap.db.type.CryptoField;
 import com.servetech.dynarap.db.type.String64;
 import com.servetech.dynarap.vo.*;
+import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.data.redis.core.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.Async;
@@ -15,19 +20,21 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.*;
 
+import static com.servetech.dynarap.db.service.task.PartImportTask.join;
+
 @Component
 public class ShortBlockCreateTask {
     private static final Logger logger = LoggerFactory.getLogger(ShortBlockCreateTask.class);
+
+    @Value("${dynarap.process.path}")
+    private String processPath;
 
     private ListOperations<String, String> listOps;
     private ZSetOperations<String, String> zsetOps;
@@ -50,6 +57,10 @@ public class ShortBlockCreateTask {
             @Override
             public void run() {
                 Connection conn = null;
+                if (processPath == null || processPath.isEmpty()) {
+                    Environment env = DynaRAPServerApplication.global.getEnvironment();
+                    processPath = env.getProperty("dynarap.process.path");
+                }
 
                 try {
                     DataSource ds = jdbcTemplate.getDataSource();
@@ -83,14 +94,16 @@ public class ShortBlockCreateTask {
                             // parameter 처리.
                             ResultSet rs = stmt.executeQuery(
                                     "select seq from dynarap_preset_param " +
-                                            "where paramPack = " + p.getParamPack().originOf() + " " +
-                                            "  and paramSeq = " + p.getParamSeq().originOf() + " " +
-                                            "union " +
-                                            "select seq from dynarap_notmapped_param " +
-                                            "where uploadSeq = " + shortBlockMeta.getPartInfo().getUploadSeq().originOf() + " " +
+                                            " where presetPack = " + shortBlockMeta.getPartInfo().getPresetPack().originOf() +
+                                            "  and presetSeq = " + shortBlockMeta.getPartInfo().getPresetSeq().originOf() +
                                             "  and paramPack = " + p.getParamPack().originOf() + " " +
                                             "  and paramSeq = " + p.getParamSeq().originOf() + " " +
-                                            "limit 0, 1");
+                                            " union " +
+                                            " select seq from dynarap_notmapped_param " +
+                                            " where uploadSeq = " + shortBlockMeta.getPartInfo().getUploadSeq().originOf() + " " +
+                                            "  and paramPack = " + p.getParamPack().originOf() + " " +
+                                            "  and paramSeq = " + p.getParamSeq().originOf() + " " +
+                                            " limit 0, 1");
 
                             if (!rs.next()) {
                                 logger.info("[[[[[ " + p.getParamKey() + " not found on part info");
@@ -237,6 +250,7 @@ public class ShortBlockCreateTask {
                                     zsetOps.removeRangeByScore("S" + shortBlock.getSeq().originOf() + ".N" + param.getUnionParamSeq(), 0, Integer.MAX_VALUE);
                                     zsetOps.removeRangeByScore("S" + shortBlock.getSeq().originOf() + ".L" + param.getUnionParamSeq(), 0, Integer.MAX_VALUE);
                                     zsetOps.removeRangeByScore("S" + shortBlock.getSeq().originOf() + ".H" + param.getUnionParamSeq(), 0, Integer.MAX_VALUE);
+                                    zsetOps.removeRangeByScore("S" + shortBlock.getSeq().originOf() + ".B" + param.getUnionParamSeq(), 0, Integer.MAX_VALUE);
                                 }
 
                                 // dump part raw from raw_temp table
@@ -305,27 +319,66 @@ public class ShortBlockCreateTask {
                                 for (ShortBlockVO.Param param : shortBlockMeta.getShortBlockParamList()) {
                                     if (param.getUnionParamSeq() == null || param.getUnionParamSeq() == 0) continue;
 
+                                    // param from part
+                                    String ppQuery = "select ifnull(max(seq),0) from dynarap_notmapped_param where " +
+                                        " paramPack = " + param.getParamPack().originOf() +
+                                        " and paramSeq = " + param.getParamSeq().originOf() +
+                                        " and uploadSeq = " + shortBlockMeta.getPartInfo().getUploadSeq().originOf() + " limit 0, 1";
+                                    ResultSet rs_pp = stmt.executeQuery(ppQuery);
+                                    Long referenceSeq = 0L;
+                                    if (rs_pp.next()) {
+                                      referenceSeq = rs_pp.getLong(1);
+                                    }
+                                    rs_pp.close();
+
+                                    if (referenceSeq == 0L) {
+                                      ppQuery = "select ifnull(max(seq),0) from dynarap_preset_param " +
+                                              " where presetPack = " + shortBlockMeta.getPartInfo().getPresetPack().originOf() +
+                                              " and presetSeq = " + shortBlockMeta.getPartInfo().getPresetSeq().originOf() +
+                                              " and paramPack = " + param.getParamPack().originOf() +
+                                          " and paramSeq = " + param.getParamSeq().originOf() + " limit 0, 1";
+                                      rs_pp = stmt.executeQuery(ppQuery);
+                                      if (rs_pp.next()) {
+                                        referenceSeq = rs_pp.getLong(1);
+                                      }
+                                      rs_pp.close();
+                                    }
+
+                                    if (referenceSeq == 0L) {
+                                      logger.debug("[[[[[ not found referenceSeq = " + param.getUnionParamSeq() + " ]]]]]");
+                                      continue;
+                                    }
+
                                     // part 데이터에서 param에 해당 하는 내용을 가져와서 sblock에 넣어주기.
                                     pstmt.setLong(1, shortBlock.getPartSeq().originOf());
                                     pstmt.setInt(2, minRowNo);
                                     pstmt.setInt(3, maxRowNo);
-                                    pstmt.setLong(4, param.getUnionParamSeq());
+                                    pstmt.setLong(4, referenceSeq);
                                     rs = pstmt.executeQuery();
 
                                     String rowKey = "S" + shortBlock.getSeq().originOf() + ".N" + param.getUnionParamSeq();
                                     String lpfKey = "S" + shortBlock.getSeq().originOf() + ".L" + param.getUnionParamSeq();
                                     String hpfKey = "S" + shortBlock.getSeq().originOf() + ".H" + param.getUnionParamSeq();
+                                    String bpfKey = "S" + shortBlock.getSeq().originOf() + ".B" + param.getUnionParamSeq();
 
                                     int countTotal = 0;
                                     double sumTotal = 0.0;
                                     double sumLpfTotal = 0.0;
                                     double sumHpfTotal = 0.0;
+                                    double sumBpfTotal = 0.0;
                                     double blockMin = Integer.MAX_VALUE;
                                     double blockMax = Integer.MIN_VALUE;
                                     double blockLpfMin = Integer.MAX_VALUE;
                                     double blockLpfMax = Integer.MIN_VALUE;
                                     double blockHpfMin = Integer.MAX_VALUE;
                                     double blockHpfMax = Integer.MIN_VALUE;
+                                    double blockBpfMin = Integer.MAX_VALUE;
+                                    double blockBpfMax = Integer.MIN_VALUE;
+
+                                    List<Double> blockData = new ArrayList<>();
+                                    List<Double> blockLpfData = new ArrayList<>();
+                                    List<Double> blockHpfData = new ArrayList<>();
+                                    List<Double> blockBpfData = new ArrayList<>();
 
                                     int batchCount = 1;
                                     while (rs.next()) {
@@ -335,6 +388,8 @@ public class ShortBlockCreateTask {
                                             rowId = String.format("%.05f", rs.getDouble("offsetTimeAt"));
 
                                         Double dblVal = rs.getDouble("paramVal");
+
+                                        //logger.debug("[[[[[ " + shortBlock.getSeq().originOf() + "," + param.getUnionParamSeq() + "," + rowNo + " ]]]]]");
 
                                         zsetOps.addIfAbsent("S" + shortBlock.getSeq().originOf() + ".R", rowId, rowNo);
 
@@ -356,9 +411,13 @@ public class ShortBlockCreateTask {
                                         pstmt_insert.setString(8, rs.getString("paramValStr"));
 
                                         Double lpfVal = getFilteredVal(
-                                                "P" + shortBlockMeta.getPartInfo().getSeq().originOf() + ".N" + param.getUnionParamSeq(), "lpf", rowId, dblVal);
+                                                "P" + shortBlockMeta.getPartInfo().getSeq().originOf() + ".N" + referenceSeq, "lpf", rowId, dblVal);
                                         Double hpfVal = getFilteredVal(
-                                                "P" + shortBlockMeta.getPartInfo().getSeq().originOf() + ".N" + param.getUnionParamSeq(), "hpf", rowId, dblVal);
+                                                "P" + shortBlockMeta.getPartInfo().getSeq().originOf() + ".N" + referenceSeq, "hpf", rowId, dblVal);
+                                        Double bpfVal = getFilteredVal(
+                                                "P" + shortBlockMeta.getPartInfo().getSeq().originOf() + ".N" + referenceSeq, "bpf", rowId, dblVal);
+
+                                        //logger.debug("[[[[[ " + referenceSeq + ", " + param.getUnionParamSeq() + " ]]]]]");
 
                                         pstmt_insert.setDouble(9, lpfVal);
                                         pstmt_insert.setDouble(10, hpfVal);
@@ -376,20 +435,38 @@ public class ShortBlockCreateTask {
                                             zsetOps.add(rowKey, rowId + ":" + dblVal, rowNo);
                                             zsetOps.add(lpfKey, rowId + ":" + lpfVal, rowNo);
                                             zsetOps.add(hpfKey, rowId + ":" + hpfVal, rowNo);
+                                            zsetOps.add(bpfKey, rowId + ":" + bpfVal, rowNo);
+
+                                            blockData.add(dblVal);
+                                            blockLpfData.add(lpfVal);
+                                            blockHpfData.add(hpfVal);
+                                            blockBpfData.add(bpfVal);
+
+                                            //logger.debug("[[[[[ " + rowKey + " inserted... ]]]]]");
                                         }
-                                        else
+                                        else {
+                                            blockData.add(0.0);
+                                            blockLpfData.add(0.0);
+                                            blockHpfData.add(0.0);
+                                            blockBpfData.add(0.0);
+
                                             zsetOps.add(rowKey, rowId + ":" + rs.getString("paramValStr"), rowNo);
+                                            //logger.debug("[[[[[ " + rowKey + " inserted... ]]]]]");
+                                        }
 
                                         sumTotal += dblVal;
                                         sumLpfTotal += lpfVal;
                                         sumHpfTotal += hpfVal;
+                                        sumBpfTotal += bpfVal;
 
                                         blockMin = Math.min(blockMin, dblVal);
                                         blockMax = Math.max(blockMax, dblVal);
-                                        blockLpfMin = Math.min(blockLpfMin, dblVal);
-                                        blockLpfMax = Math.max(blockLpfMax, dblVal);
-                                        blockHpfMin = Math.min(blockHpfMin, dblVal);
-                                        blockHpfMax = Math.max(blockHpfMax, dblVal);
+                                        blockLpfMin = Math.min(blockLpfMin, lpfVal);
+                                        blockLpfMax = Math.max(blockLpfMax, lpfVal);
+                                        blockHpfMin = Math.min(blockHpfMin, hpfVal);
+                                        blockHpfMax = Math.max(blockHpfMax, hpfVal);
+                                        blockBpfMin = Math.min(blockBpfMin, bpfVal);
+                                        blockBpfMax = Math.max(blockBpfMax, bpfVal);
 
                                         countTotal++;
                                     }
@@ -403,21 +480,77 @@ public class ShortBlockCreateTask {
                                     pstmt.clearParameters();
 
                                     if (countTotal > 0) {
+                                        ShortBlockFactor sbf = getShortBlockFactors(
+                                                processPath, "10", "0.4", "",
+                                                blockData);
+                                        ShortBlockFactor sbfLpf = getShortBlockFactors(
+                                                processPath, "10", "0.4", "low",
+                                                blockLpfData);
+                                        ShortBlockFactor sbfHpf = getShortBlockFactors(
+                                                processPath, "10", "0.4", "high",
+                                                blockHpfData);
+                                        ShortBlockFactor sbfBpf = getShortBlockFactors(
+                                                processPath, "10", "0.4", "high",
+                                                blockBpfData);
+
                                         // 파라미터 평균, 민맥스 처리
                                         Statement stmt_block = conn.createStatement();
                                         stmt_block.executeUpdate("insert into dynarap_sblock_param_val (" +
-                                                "blockMetaSeq,blockSeq,unionParamSeq,psd,rms,n0,zarray,zPeak,zValley," +
-                                                "blockMin,blockMax,blockAvg,blockLpfMin,blockLpfMax,blockLpfAvg,blockHpfMin,blockHpfMax,blockHpfAvg)" +
+                                                "blockMetaSeq,blockSeq,unionParamSeq,psd,frequency,rms,n0,zarray,peak," +
+                                                "lpfPsd,lpfFrequency,lpfRms,lpfN0,lpfZarray,lpfPeak," +
+                                                "hpfPsd,hpfFrequency,hpfRms,hpfN0,hpfZarray,hpfPeak," +
+                                                "bpfPsd,bpfFrequency,bpfRms,bpfN0,bpfZarray,bpfPeak," +
+                                                "blockMin,blockMax,blockAvg,blockLpfMin,blockLpfMax,blockLpfAvg,blockHpfMin,blockHpfMax,blockHpfAvg," +
+                                                "blockBpfMin,blockBpfMax,blockBpfAvg)" +
                                                 " values (" +
                                                 "" + shortBlockMeta.getSeq().originOf() + "" +
                                                 "," + shortBlock.getSeq().originOf() + "" +
                                                 "," + param.getUnionParamSeq() + "" +
-                                                "," + 0 + "" +
-                                                "," + 0 + "" +
-                                                "," + 0 + "" +
-                                                ",'" + 0 + "'" +
-                                                "," + 0 + "" +
-                                                "," + 0 + "" +
+                                                ",'" + ((sbf.getPsd() == null) ? "[]" : ServerConstants.GSON.toJson(sbf.getPsd())) + "'" +
+                                                ",'" + ((sbf.getFrequency() == null) ? "[]" : ServerConstants.GSON.toJson(sbf.getFrequency())) + "'" +
+                                                "," + sbf.getRms() + "" +
+                                                "," + sbf.getN0() + "" +
+                                                ",'" + ((sbf.getZarray() == null) ? "[]" : ServerConstants.GSON.toJson(sbf.getZarray())) + "'" +
+                                                ",'" + ((sbf.getPeak() == null) ? "[]" : ServerConstants.GSON.toJson(sbf.getPeak())) + "'" +
+                                                ",'" + ((sbfLpf.getPsd() == null) ? "[]" : ServerConstants.GSON.toJson(sbfLpf.getPsd())) + "'" +
+                                                ",'" + ((sbfLpf.getFrequency() == null) ? "[]" : ServerConstants.GSON.toJson(sbfLpf.getFrequency())) + "'" +
+                                                "," + sbfLpf.getRms() + "" +
+                                                "," + sbfLpf.getN0() + "" +
+                                                ",'" + ((sbfLpf.getZarray() == null) ? "[]" : ServerConstants.GSON.toJson(sbfLpf.getZarray())) + "'" +
+                                                ",'" + ((sbfLpf.getPeak() == null) ? "[]" : ServerConstants.GSON.toJson(sbfLpf.getPeak())) + "'" +
+                                                ",'" + ((sbfHpf.getPsd() == null) ? "[]" : ServerConstants.GSON.toJson(sbfHpf.getPsd())) + "'" +
+                                                ",'" + ((sbfHpf.getFrequency() == null) ? "[]" : ServerConstants.GSON.toJson(sbfHpf.getFrequency())) + "'" +
+                                                "," + sbfHpf.getRms() + "" +
+                                                "," + sbfHpf.getN0() + "" +
+                                                ",'" + ((sbfHpf.getZarray() == null) ? "[]" : ServerConstants.GSON.toJson(sbfHpf.getZarray())) + "'" +
+                                                ",'" + ((sbfHpf.getPeak() == null) ? "[]" : ServerConstants.GSON.toJson(sbfHpf.getPeak())) + "'" +
+                                                ",'" + ((sbfBpf.getPsd() == null) ? "[]" : ServerConstants.GSON.toJson(sbfBpf.getPsd())) + "'" +
+                                                ",'" + ((sbfBpf.getFrequency() == null) ? "[]" : ServerConstants.GSON.toJson(sbfBpf.getFrequency())) + "'" +
+                                                "," + sbfBpf.getRms() + "" +
+                                                "," + sbfBpf.getN0() + "" +
+                                                ",'" + ((sbfBpf.getZarray() == null) ? "[]" : ServerConstants.GSON.toJson(sbfBpf.getZarray())) + "'" +
+                                                ",'" + ((sbfBpf.getPeak() == null) ? "[]" : ServerConstants.GSON.toJson(sbfBpf.getPeak())) + "'" +
+
+                                                /*
+                                                ",''" +
+                                                ",''" +
+                                                "," + 0.0 + "" +
+                                                "," + 0.0 + "" +
+                                                ",''" +
+                                                ",''" +
+                                                ",''" +
+                                                ",''" +
+                                                "," + 0.0 + "" +
+                                                "," + 0.0 + "" +
+                                                ",''" +
+                                                ",''" +
+                                                ",''" +
+                                                ",''" +
+                                                "," + 0.0 + "" +
+                                                "," + 0.0 + "" +
+                                                ",''" +
+                                                ",''" + */
+
                                                 "," + blockMin + "" +
                                                 "," + blockMax + "" +
                                                 "," + (sumTotal / countTotal) + "" +
@@ -426,7 +559,10 @@ public class ShortBlockCreateTask {
                                                 "," + (sumLpfTotal / countTotal) + "" +
                                                 "," + blockHpfMin + "" +
                                                 "," + blockHpfMax + "" +
-                                                "," + (sumHpfTotal / countTotal) + ")");
+                                                "," + (sumHpfTotal / countTotal) + "" +
+                                                "," + blockBpfMin + "" +
+                                                "," + blockBpfMax + "" +
+                                                "," + (sumBpfTotal / countTotal) + ")");
                                         stmt_block.close();
                                     }
                                 }
@@ -439,7 +575,7 @@ public class ShortBlockCreateTask {
                                 stmt.close();
                                 pstmt.close();
 
-                                logger.info("[[[[[ part data dump completed (" + (System.currentTimeMillis() - jobStartAt) + " msec)" );
+                                logger.info("[[[[[ shortblock data dump completed (" + (System.currentTimeMillis() - jobStartAt) + " msec)" );
                             }
                         }
 
@@ -478,21 +614,184 @@ public class ShortBlockCreateTask {
             rows = zsetOps.rangeByScore(
                     rowKey.replaceAll(".N", ".L"), 0, Integer.MAX_VALUE, rank, rank + 1);
         }
-        else {
+        else if (filterType.equals("hpf")) {
             rows = zsetOps.rangeByScore(
                     rowKey.replaceAll(".N", ".H"), 0, Integer.MAX_VALUE, rank, rank + 1);
+        }
+        else {
+            rows = zsetOps.rangeByScore(
+                    rowKey.replaceAll(".N", ".B"), 0, Integer.MAX_VALUE, rank, rank + 1);
         }
 
         if (rows != null && rows.size() > 0) {
             Iterator<String> iterRows = rows.iterator();
             if (iterRows.hasNext()) {
                 String dataKey = iterRows.next();
-                String[] splitData = dataKey.split(":");
-                return Double.parseDouble(splitData[1]);
+                String julianTime = dataKey.substring(0, dataKey.lastIndexOf(":"));
+                Double dblVal = Double.parseDouble(dataKey.substring(dataKey.lastIndexOf(":") + 1));
+                return dblVal;
             }
         }
 
         return 0.0;
+    }
+
+    public ShortBlockFactor getShortBlockFactors(String processPath, String n, String cutoff, String btype,
+                                                 List<Double> blockData) throws IOException, InterruptedException {
+        ProcessBuilder builder = new ProcessBuilder();
+
+        File fTemp = new File(processPath,
+                System.currentTimeMillis() + ".dat");
+        FileOutputStream fos = new FileOutputStream(fTemp);
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
+        bw.write(join(blockData, ","));
+        bw.flush();
+        bw.close();
+
+        ShortBlockFactor sbf = new ShortBlockFactor();
+
+        // psd
+        builder.command(processPath + "shortblock_psd.bat",
+                fTemp.getAbsolutePath(), n, cutoff, btype == null ? "" : btype);
+
+        Process process = builder.start();
+        StringBuilder sbFilterResult = new StringBuilder();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+        String psdResult = null;
+        String frequencyResult = null;
+        String pline = null;
+        while ((pline = reader.readLine()) != null) {
+            if (pline.startsWith("result1=")) {
+                psdResult = pline.substring("result1=".length());
+                if (psdResult.endsWith(","))
+                    psdResult = psdResult.substring(0, psdResult.length() - 1);
+            }
+            else if (pline.startsWith("result2=")) {
+                frequencyResult = pline.substring("result2=".length());
+                if (frequencyResult.endsWith(","))
+                    frequencyResult = frequencyResult.substring(0, frequencyResult.length() - 1);
+            }
+            sbFilterResult.append(pline + "\n");
+        }
+        process.waitFor();
+
+        logger.debug("[[[[[ psdResult = " + psdResult);
+        logger.debug("[[[[[ frequencyResult = " + frequencyResult);
+
+        sbf.setPsd(parseDoubleArray(psdResult));
+        sbf.setFrequency(parseDoubleArray(frequencyResult));
+
+        // rms
+        builder = new ProcessBuilder();
+        builder.command(processPath + "shortblock_rms.bat",
+                fTemp.getAbsolutePath(), n, cutoff, btype == null ? "" : btype);
+
+        process = builder.start();
+        sbFilterResult = new StringBuilder();
+        reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+        String rms = null;
+        String n0 = null;
+        pline = null;
+
+        while ((pline = reader.readLine()) != null) {
+            if (pline.startsWith("result1=")) {
+                rms = pline.substring("result1=".length());
+            }
+            else if (pline.startsWith("result2=")) {
+                n0 = pline.substring("result2=".length());
+            }
+            sbFilterResult.append(pline + "\n");
+        }
+        process.waitFor();
+
+        logger.debug("[[[[[ rms = " + rms);
+        logger.debug("[[[[[ n0 = " + n0);
+
+        if (rms != null) {
+            try {
+                sbf.setRms(Double.parseDouble(rms));
+            } catch (NumberFormatException nfe) {
+                sbf.setRms(0.0);
+            }
+        }
+
+        if (n0 != null) {
+            try {
+                sbf.setN0(Double.parseDouble(n0));
+            } catch (NumberFormatException nfe) {
+                sbf.setN0(0.0);
+            }
+        }
+
+        // peak
+        builder = new ProcessBuilder();
+        builder.command(processPath + "shortblock_peak.bat",
+                fTemp.getAbsolutePath(), n, cutoff, btype == null ? "" : btype);
+
+        process = builder.start();
+        sbFilterResult = new StringBuilder();
+        reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+        String peakResult = null;
+        pline = null;
+
+        while ((pline = reader.readLine()) != null) {
+            if (pline.startsWith("result1=")) {
+                peakResult = pline.substring("result1=".length());
+                if (peakResult.endsWith(","))
+                    peakResult = peakResult.substring(0, peakResult.length() - 1);
+            }
+            sbFilterResult.append(pline + "\n");
+        }
+        process.waitFor();
+
+        logger.debug("[[[[[ peakResult = " + peakResult);
+
+        if (peakResult != null) {
+            sbf.setPeak(parseDoubleArray(peakResult));
+
+            if (sbf.getRms() != null) {
+                // zarray
+                List<Double> zarray = new ArrayList<>();
+                for (Double peak : sbf.getPeak()) {
+                    if (sbf.getRms() == 0)
+                        zarray.add(0.0);
+                    else
+                        zarray.add(peak / sbf.getRms());
+                }
+                sbf.setZarray(zarray);
+            }
+        }
+
+        //if (fTemp.exists()) fTemp.delete();
+
+        return sbf;
+    }
+
+    public static List<Double> parseDoubleArray(String source) {
+        if (source == null || source.isEmpty()) return new ArrayList<>();
+        String[] splitSource = source.split(",");
+        List<Double> result = new ArrayList<>();
+        for (String ss : splitSource) {
+            try {
+                result.add(Double.parseDouble(ss));
+            } catch(NumberFormatException nfe) {
+                result.add(0.0);
+            }
+        }
+        return result;
+    }
+
+    @Data
+    public static class ShortBlockFactor {
+        private List<Double> psd;
+        private List<Double> frequency;
+        private Double rms;
+        private Double n0;
+        private List<Double> peak;
+        private List<Double> zarray;
     }
 
     public static class Builder {

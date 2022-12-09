@@ -307,11 +307,8 @@ public class RawService {
             if (uploadReq == null)
                 throw new Exception("요청 형식이 올바르지 않습니다. 파라미터를 확인하세요.");
 
-            if (uploadReq.getSourcePath().contains("C:\\")
-                || uploadReq.getSourcePath().contains("c:\\")) {
-                uploadReq.setSourcePath(uploadReq.getSourcePath().toLowerCase(Locale.ROOT));
-                uploadReq.setSourcePath(uploadReq.getSourcePath().replaceAll("\\\\", "/"));
-                uploadReq.setSourcePath(uploadReq.getSourcePath().replaceAll("c:/", staticLocation.substring("file:".length())));
+            if (uploadReq.getSourcePath() != null) {
+                uploadReq.setSourcePath("E:\\" + uploadReq.getSourcePath().substring("E:\\".length()));
             }
 
             File fStatic = new File(uploadReq.getSourcePath());
@@ -786,4 +783,47 @@ public class RawService {
         }
     }
 
+    public void deleteRawUploadBySeq(CryptoField uploadSeq) throws HandledServiceException {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("uploadSeq", uploadSeq);
+            rawMapper.deleteRawUploadBySeq(params);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    public List<RawVO.FlightType> getFlightTypeList() throws HandledServiceException {
+        try {
+            return rawMapper.selectFlightTypeList();
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    public void insertFlightType(RawVO.FlightType flightType) throws HandledServiceException {
+        try {
+            rawMapper.insertFlightType(flightType);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    public void updateFlightType(RawVO.FlightType flightType) throws HandledServiceException {
+        try {
+            rawMapper.updateFlightType(flightType);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
+
+    public void deleteFlightType(String typeCode) throws HandledServiceException {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("typeCode", typeCode);
+            rawMapper.deleteFlightType(params);
+        } catch(Exception e) {
+            throw new HandledServiceException(410, e.getMessage());
+        }
+    }
 }

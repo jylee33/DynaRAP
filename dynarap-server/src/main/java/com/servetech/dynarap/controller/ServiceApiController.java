@@ -15,11 +15,13 @@ import com.servetech.dynarap.ext.ResponseHelper;
 import com.servetech.dynarap.vo.*;
 import org.jsoup.internal.StringUtil;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,10 +30,17 @@ import java.io.*;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Controller
 @RequestMapping(value = "/api/{serviceVersion}")
 public class ServiceApiController extends ApiController {
+    private static final Logger logger = LoggerFactory.getLogger(ServiceApiController.class);
+
     @Value("${neoulsoft.auth.client-id}")
     private String authClientId;
 
@@ -52,7 +61,7 @@ public class ServiceApiController extends ApiController {
     @RequestMapping(value = "/param-module")
     @ResponseBody
     public Object apiParamModule(HttpServletRequest request, @PathVariable String serviceVersion,
-                         @RequestBody JsonObject payload, Authentication authentication) throws HandledServiceException {
+                                 @RequestBody JsonObject payload, Authentication authentication) throws HandledServiceException {
         /*
         String accessToken = request.getHeader("Authorization");
         if (accessToken == null || (!accessToken.startsWith("bearer") && !accessToken.startsWith("Bearer")))
@@ -146,8 +155,7 @@ public class ServiceApiController extends ApiController {
                         oldProp.setPropValue(new String64(value));
                         oldProp.setUpdatedAt(LongDate.now());
                         getService(RawService.class).updateDataProp(oldProp);
-                    }
-                    else {
+                    } else {
                         DataPropVO dataProp = new DataPropVO();
                         dataProp.setPropName(new String64(key));
                         dataProp.setPropValue(new String64(value));
@@ -162,8 +170,7 @@ public class ServiceApiController extends ApiController {
                     if (prop.isMarked() == false)
                         getService(RawService.class).deleteDataPropBySeq(prop.getSeq());
                 }
-            }
-            else {
+            } else {
                 if (props.size() > 0) {
                     for (DataPropVO prop : props)
                         getService(RawService.class).deleteDataPropBySeq(prop.getSeq());
@@ -188,8 +195,7 @@ public class ServiceApiController extends ApiController {
                 // 레퍼런스가 있으면 삭제 플래그만
                 paramModule.setDeleted(true);
                 getService(ParamModuleService.class).updateParamModule(paramModule);
-            }
-            else {
+            } else {
                 // 레퍼런스가 없으면 완전 삭제
                 // TODO : 데이터 삭제 redis
                 getService(ParamModuleService.class).deleteParamModule(moduleSeq);
@@ -211,13 +217,17 @@ public class ServiceApiController extends ApiController {
             paramModule.setCopyFromSeq(oldParamModule.getSeq());
             paramModule.setOriginInfo(oldParamModule);
             paramModule.setCreatedAt(LongDate.now());
+            paramModule.setModuleName(new String64(oldParamModule.getModuleName().originOf() + "_Copy"));
             getService(ParamModuleService.class).insertParamModule(paramModule);
-            if (paramModule.getDataProp() != null && paramModule.getDataProp().size() > 0) {
-                Set<String> keys = paramModule.getDataProp().keySet();
+
+            if (oldParamModule.getDataProp() != null && oldParamModule.getDataProp().size() > 0) {
+                paramModule.setDataProp(new HashMap<>());
+
+                Set<String> keys = oldParamModule.getDataProp().keySet();
                 Iterator<String> iterKeys = keys.iterator();
                 while (iterKeys.hasNext()) {
                     String key = iterKeys.next();
-                    String value = paramModule.getDataProp().get(key);
+                    String value = oldParamModule.getDataProp().get(key);
 
                     DataPropVO dataProp = new DataPropVO();
                     dataProp.setPropName(new String64(key));
@@ -226,9 +236,17 @@ public class ServiceApiController extends ApiController {
                     dataProp.setReferenceKey(paramModule.getSeq());
                     dataProp.setUpdatedAt(LongDate.now());
                     getService(RawService.class).insertDataProp(dataProp);
+                    paramModule.getDataProp().put(key, value);
                 }
-                paramModule = getService(ParamModuleService.class).getParamModuleBySeq(paramModule.getSeq());
             }
+
+            // source
+            // eq
+            // plot
+            // plot sources
+            // plot series
+            // plot save
+
 
             oldParamModule.setReferenced(true);
             getService(ParamModuleService.class).updateParamModule(oldParamModule);
@@ -250,8 +268,8 @@ public class ServiceApiController extends ApiController {
             if (!checkJsonEmpty(payload, "keyword"))
                 keyword = payload.get("keyword").getAsString();
 
-            if (keyword == null || keyword.isEmpty())
-                throw new HandledServiceException(411, "검색 키워드를 입력하세요.");
+//            if (keyword == null || keyword.isEmpty())
+//                throw new HandledServiceException(411, "검색 키워드를 입력하세요.");
 
             if (sourceType.equalsIgnoreCase("part")) {
                 List<PartVO> parts = getService(ParamModuleService.class).getPartListByKeyword(keyword);
@@ -277,8 +295,7 @@ public class ServiceApiController extends ApiController {
                     }
                 }
                 return ResponseHelper.response(200, "Success - ParamModule Source Search", availParts);
-            }
-            else if (sourceType.equalsIgnoreCase("shortblock")) {
+            } else if (sourceType.equalsIgnoreCase("shortblock")) {
                 List<ShortBlockVO> shortBlocks = getService(ParamModuleService.class).getShortBlockListByKeyword(keyword);
                 if (shortBlocks == null) shortBlocks = new ArrayList<>();
 
@@ -305,22 +322,44 @@ public class ServiceApiController extends ApiController {
                     shortBlock.setParams(sparams);
                 }
                 return ResponseHelper.response(200, "Success - ParamModule Source Search", availBlocks);
-            }
-            else if (sourceType.equalsIgnoreCase("dll")) {
+            } else if (sourceType.equalsIgnoreCase("dll")) {
                 List<DLLVO> dlls = getService(ParamModuleService.class).getDLLListByKeyword(keyword);
                 if (dlls == null) dlls = new ArrayList<>();
                 for (DLLVO dll : dlls) {
                     dll.setParams(getService(DLLService.class).getDLLParamList(dll.getSeq()));
                 }
                 return ResponseHelper.response(200, "Success - ParamModule Source Search", dlls);
-            }
-            else if (sourceType.equalsIgnoreCase("parammodule")) {
+            } else if (sourceType.equalsIgnoreCase("parammodule")) {
                 List<ParamModuleVO> paramModules = getService(ParamModuleService.class).getParamModuleListByKeyword(keyword);
                 if (paramModules == null) paramModules = new ArrayList<>();
                 for (ParamModuleVO paramModule : paramModules) {
                     paramModule.setEquations(getService(ParamModuleService.class).getParamModuleEqList(paramModule.getSeq()));
                 }
                 return ResponseHelper.response(200, "Success - ParamModule Source Search", paramModules);
+            } else if (sourceType.equalsIgnoreCase("bintable")) {
+                List<BinTableVO> binTables = getService(BinTableService.class).getBinTableListByKeyword(keyword);
+                if (binTables == null) binTables = new ArrayList<>();
+                List<BinTableVO> validBinTables = new ArrayList<>();
+                for (BinTableVO binTable : binTables) {
+                    // shortblock params.
+                    String jarrParams = hashOps.get("BT" + binTable.getSeq().originOf(), "PARAMS");
+                    if (jarrParams == null || jarrParams.isEmpty()) continue;
+                    Type paramType = new TypeToken<List<String>>() {
+                    }.getType();
+                    List<String> binParams = ServerConstants.GSON.fromJson(jarrParams, paramType);
+                    if (binParams == null || binParams.size() == 0) continue;
+                    List<ShortBlockVO.Param> sparams = new ArrayList<>();
+                    for (String binParam : binParams) {
+                        CryptoField seq = CryptoField.decode(binParam, 0L);
+                        ShortBlockVO.Param sparam = getService(ParamService.class).getShortBlockParamBySeq(seq);
+                        if (sparam == null) continue;
+                        sparams.add(sparam);
+                    }
+                    if (sparams.size() == 0) continue;
+                    binTable.setParams(sparams);
+                    validBinTables.add(binTable);
+                }
+                return ResponseHelper.response(200, "Success - ParamModule Source Search", validBinTables);
             }
 
             throw new HandledServiceException(411, "지원하지 않는 소스 형식입니다.");
@@ -405,7 +444,7 @@ public class ServiceApiController extends ApiController {
             if (!checkJsonEmpty(payload, "sources"))
                 jarrSources = payload.get("sources").getAsJsonArray();
 
-            List<String> sourceTypes = Arrays.asList("part", "shortblock", "dll", "parammodule");
+            List<String> sourceTypes = Arrays.asList("part", "shortblock", "dll", "parammodule", "bintable");
 
             if (jarrSources.size() > 0) {
                 if (paramSources == null) paramSources = new ArrayList<>();
@@ -439,14 +478,12 @@ public class ServiceApiController extends ApiController {
                     if (findSource != null) {
                         moduleSource.setModuleSeq(moduleSeq);
                         getService(ParamModuleService.class).updateParamModuleSource(moduleSource);
-                    }
-                    else {
+                    } else {
                         moduleSource.setModuleSeq(moduleSeq);
                         getService(ParamModuleService.class).insertParamModuleSource(moduleSource);
                     }
                 }
-            }
-            else {
+            } else {
                 // 모두 삭제된 것으로 간주함.
                 getService(ParamModuleService.class).deleteParamModuleSourceByModuleSeq(moduleSeq);
             }
@@ -497,7 +534,7 @@ public class ServiceApiController extends ApiController {
             if (jobjSource == null)
                 throw new HandledServiceException(411, "저장 형식이 올바르지 않습니다.");
 
-            List<String> sourceTypes = Arrays.asList("part", "shortblock", "dll", "parammodule");
+            List<String> sourceTypes = Arrays.asList("part", "shortblock", "dll", "parammodule", "bintable");
 
             ParamModuleVO.Source moduleSource = ServerConstants.GSON.fromJson(jobjSource, ParamModuleVO.Source.class);
             if (moduleSource.getSourceType() == null || moduleSource.getSourceType().isEmpty()
@@ -515,8 +552,7 @@ public class ServiceApiController extends ApiController {
             if (findSource != null) {
                 moduleSource.setModuleSeq(moduleSeq);
                 getService(ParamModuleService.class).updateParamModuleSource(moduleSource);
-            }
-            else {
+            } else {
                 moduleSource.setModuleSeq(moduleSeq);
                 getService(ParamModuleService.class).insertParamModuleSource(moduleSource);
             }
@@ -562,6 +598,8 @@ public class ServiceApiController extends ApiController {
 
             if (moduleSeq == null || moduleSeq.isEmpty() || eqSeq == null || eqSeq.isEmpty())
                 throw new HandledServiceException(411, "파라미터를 확인하세요.");
+
+            //ParamModuleVO.Equation equation = getService(ParamModuleService.class).getParamModuleEqBySeq(eqSeq);
 
             String jsonData = hashOps.get("PM" + moduleSeq.originOf(), "E" + eqSeq.originOf());
             if (jsonData == null || jsonData.isEmpty())
@@ -623,8 +661,7 @@ public class ServiceApiController extends ApiController {
                             continue;
                         }
                         findEquation = equation;
-                    }
-                    else {
+                    } else {
                         try {
                             getService(ParamModuleService.class).updateParamModuleEq(equation);
                         } catch (HandledServiceException hse) {
@@ -671,8 +708,7 @@ public class ServiceApiController extends ApiController {
                     if (paramEquation.isMark() == false)
                         getService(ParamModuleService.class).deleteParamModuleEq(paramEquation.getSeq());
                 }
-            }
-            else {
+            } else {
                 // 기존 수식 삭제. => 저장되는 equations가 없으면 모두 삭제.
                 getService(ParamModuleService.class).deleteParamModuleEqByModuleSeq(moduleSeq);
                 paramModule.setEquations(new ArrayList<>());
@@ -719,9 +755,43 @@ public class ServiceApiController extends ApiController {
             if (moduleSeq == null || moduleSeq.isEmpty())
                 throw new HandledServiceException(411, "파라미터를 확인하세요.");
 
-            List<ParamModuleVO.Plot> plots = getService(ParamModuleService.class).getParamModulePlotList(moduleSeq);
+            // all sources.
+            equationHelper.setListOps(listOps);
+            equationHelper.setHashOps(hashOps);
+            equationHelper.setZsetOps(zsetOps);
 
-            return ResponseHelper.response(200, "Success - ParamModule Plot List", plots);
+            equationHelper.loadParamModuleData(moduleSeq);
+
+            ParamModuleVO paramModule = equationHelper.getParamModule(moduleSeq);
+            JsonObject jobjSources = new JsonObject();
+            jobjSources.add("sourceList", ServerConstants.GSON.toJsonTree(paramModule.getSources()));
+            jobjSources.add("eqList", ServerConstants.GSON.toJsonTree(paramModule.getEquations()));
+
+            List<ParamModuleVO.Plot> plots = getService(ParamModuleService.class).getParamModulePlotList(moduleSeq);
+            if (plots == null) plots = new ArrayList<>();
+
+            for (ParamModuleVO.Plot plot : plots) {
+                plot.setDataProp(getService(RawService.class).getDataPropListToMap("plot", plot.getSeq()));
+
+                plot.setPlotSeries(getService(ParamModuleService.class).getParamModulePlotSeriesList(plot.getSeq()));
+                if (plot.getPlotSeries() == null) plot.setPlotSeries(new ArrayList<>());
+
+                plot.setPlotSourceList(getService(ParamModuleService.class).getParamModulePlotSourceList(moduleSeq, plot.getSeq()));
+                if (plot.getPlotSourceList() == null) plot.setPlotSourceList(new ArrayList<>());
+
+                List<List<Object>> plotDataList = new ArrayList<>();
+                plot.setPlotSources(new ArrayList<>());
+
+                for (ParamModuleVO.Plot.Source plotSource : plot.getPlotSourceList()) {
+                    plot.getPlotSources().add(ParamModuleVO.Plot.Source.getSimple(plotSource));
+                    List<Object> plotData = equationHelper.loadPlotData(moduleSeq, ParamModuleVO.Plot.Source.getSimple(plotSource));
+                    plotDataList.add(plotData);
+                }
+
+                plot.setSelectPoints(getService(ParamModuleService.class).getPlotSavePointList(moduleSeq, plot.getSeq()));
+            }
+
+            return ResponseHelper.response(200, "Success - ParamModule Plot List", plots.size(), plots, jobjSources);
         }
 
         if (command.equals("plot-data")) {
@@ -748,6 +818,9 @@ public class ServiceApiController extends ApiController {
 
             plotInfo.setDataProp(getService(RawService.class).getDataPropListToMap("plot", plotInfo.getSeq()));
 
+            plotInfo.setPlotSeries(getService(ParamModuleService.class).getParamModulePlotSeriesList(plotSeq));
+            if (plotInfo.getPlotSeries() == null) plotInfo.setPlotSeries(new ArrayList<>());
+
             plotInfo.setPlotSourceList(getService(ParamModuleService.class).getParamModulePlotSourceList(moduleSeq, plotSeq));
             if (plotInfo.getPlotSourceList() == null) plotInfo.setPlotSourceList(new ArrayList<>());
 
@@ -761,6 +834,8 @@ public class ServiceApiController extends ApiController {
                 plotDataList.add(plotData);
             }
 
+            plotInfo.setSelectPoints(getService(ParamModuleService.class).getPlotSavePointList(moduleSeq, plotInfo.getSeq()));
+
             return ResponseHelper.response(200, "Success - ParamModule Plot Data", 0, plotDataList, plotInfo);
         }
 
@@ -771,6 +846,18 @@ public class ServiceApiController extends ApiController {
 
             if (moduleSeq == null || moduleSeq.isEmpty())
                 throw new HandledServiceException(411, "파라미터를 확인하세요.");
+
+            // all sources.
+            equationHelper.setListOps(listOps);
+            equationHelper.setHashOps(hashOps);
+            equationHelper.setZsetOps(zsetOps);
+
+            equationHelper.loadParamModuleData(moduleSeq);
+
+            ParamModuleVO paramModule = equationHelper.getParamModule(moduleSeq);
+            JsonObject jobjSources = new JsonObject();
+            jobjSources.add("sourceList", ServerConstants.GSON.toJsonTree(paramModule.getSources()));
+            jobjSources.add("eqList", ServerConstants.GSON.toJsonTree(paramModule.getEquations()));
 
             // plot은 레퍼런스가 없음.
             // 기존 플랏 삭제
@@ -785,7 +872,7 @@ public class ServiceApiController extends ApiController {
                 for (int i = 0; i < jarrPlots.size(); i++) {
                     JsonObject jobjPlot = jarrPlots.get(i).getAsJsonObject();
                     if (checkJsonEmpty(jobjPlot, "plotName")) continue;
-                    if (checkJsonEmpty(jobjPlot, "sources")) continue;
+                    if (checkJsonEmpty(jobjPlot, "plotSeries")) continue;
 
                     String plotType = "";
                     if (!checkJsonEmpty(jobjPlot, "plotType"))
@@ -802,7 +889,8 @@ public class ServiceApiController extends ApiController {
                     plots.add(plot);
 
                     if (!checkJsonEmpty(jobjPlot, "dataProp")) {
-                        Type type = new TypeToken<Map<String, String>>(){}.getType();
+                        Type type = new TypeToken<Map<String, String>>() {
+                        }.getType();
                         Map<String, String> dataProp = ServerConstants.GSON.fromJson(
                                 jobjPlot.get("dataProp").getAsJsonObject(), type);
                         Set<String> keys = dataProp.keySet();
@@ -822,61 +910,40 @@ public class ServiceApiController extends ApiController {
                         plot.setDataProp(getService(RawService.class).getDataPropListToMap("plot", plot.getSeq()));
                     }
 
-                    JsonArray jarrSources = jobjPlot.get("sources").getAsJsonArray();
-                    List<String> sourceTypes = Arrays.asList("part", "shortblock", "dll", "parammodule", "eq");
-
-                    plot.setPlotSourceList(new ArrayList<>());
-                    if (jarrSources.size() > 0) {
-                        for (int j = 0; j < jarrSources.size(); j++) {
-                            JsonObject jobjSource = jarrSources.get(j).getAsJsonObject();
-                            String sourceType = "";
-                            if (!checkJsonEmpty(jobjSource, "sourceType"))
-                                sourceType = jobjSource.get("sourceType").getAsString();
-
-                            CryptoField sourceSeq = CryptoField.LZERO;
-                            if (!checkJsonEmpty(jobjSource, "sourceSeq"))
-                                sourceSeq = CryptoField.decode(jobjSource.get("sourceSeq").getAsString(), 0L);
-
-                            ParamModuleVO.Plot.Source plotSource = new ParamModuleVO.Plot.Source();
-                            if (!sourceType.equals("eq")) {
-                                ParamModuleVO.Source paramSource = getService(ParamModuleService.class).getParamModuleSourceBySeq(sourceSeq);
-                                if (paramSource == null) continue;
-                                plotSource.setModuleSeq(moduleSeq);
-                                plotSource.setPlotSeq(plot.getSeq());
-                                plotSource.setSourceType(sourceType);
-                                plotSource.setSourceSeq(sourceSeq);
-                                plotSource.setJulianStartAt(paramSource.getJulianStartAt());
-                                plotSource.setJulianEndAt(paramSource.getJulianEndAt());
-                                plotSource.setOffsetStartAt(paramSource.getOffsetStartAt());
-                                plotSource.setOffsetEndAt(paramSource.getOffsetEndAt());
-                            }
-                            else {
-                                ParamModuleVO.Equation eq = getService(ParamModuleService.class).getParamModuleEqBySeq(sourceSeq);
-                                if (eq == null) continue;
-                                plotSource.setModuleSeq(moduleSeq);
-                                plotSource.setPlotSeq(plot.getSeq());
-                                plotSource.setSourceType(sourceType);
-                                plotSource.setSourceSeq(sourceSeq);
-                                plotSource.setJulianStartAt(eq.getJulianStartAt());
-                                plotSource.setJulianEndAt(eq.getJulianEndAt());
-                                plotSource.setOffsetStartAt(eq.getOffsetStartAt());
-                                plotSource.setOffsetEndAt(eq.getOffsetEndAt());
-                            }
-                            getService(ParamModuleService.class).insertParamModulePlotSource(plotSource);
-                            plot.getPlotSourceList().add(plotSource);
+                    JsonArray jarrSeries = jobjPlot.get("plotSeries").getAsJsonArray();
+                    plot.setPlotSeries(new ArrayList<>());
+                    if (jarrSeries.size() > 0) {
+                        for (int j = 0; j < jarrSeries.size(); j++) {
+                            JsonObject jobjSeries = jarrSeries.get(j).getAsJsonObject();
+                            ParamModuleVO.Plot.Series plotSeries = ServerConstants.GSON.fromJson(jobjSeries, ParamModuleVO.Plot.Series.class);
+                            plotSeries.setPlotSeq(plot.getSeq());
+                            plotSeries.setModuleSeq(plot.getModuleSeq());
+                            getService(ParamModuleService.class).insertParamModulePlotSeries(plotSeries);
+                            plot.getPlotSeries().add(plotSeries);
                         }
+                    }
 
-                        if (plot.getPlotSourceList().size() > 0) {
-                            plot.setPlotSources(new ArrayList<>());
-                            for (ParamModuleVO.Plot.Source plotSource : plot.getPlotSourceList()) {
-                                plot.getPlotSources().add(ParamModuleVO.Plot.Source.getSimple(plotSource));
+                    // remove old points
+                    getService(ParamModuleService.class).deletePlotSavePoint(moduleSeq, plot.getSeq());
+
+                    if (!checkJsonEmpty(jobjPlot, "selectPoints")) {
+                        JsonArray jarrSavePoints = jobjPlot.get("selectPoints").getAsJsonArray();
+                        plot.setSelectPoints(new ArrayList<>());
+                        if (jarrSavePoints.size() > 0) {
+                            for (int j = 0; j < jarrSavePoints.size(); j++) {
+                                JsonObject jobjSavePoint = jarrSavePoints.get(j).getAsJsonObject();
+                                ParamModuleVO.Plot.SavePoint savePoint = ServerConstants.GSON.fromJson(jobjSavePoint, ParamModuleVO.Plot.SavePoint.class);
+                                savePoint.setPlotSeq(plot.getSeq());
+                                savePoint.setModuleSeq(plot.getModuleSeq());
+                                getService(ParamModuleService.class).insertPlotSavePoint(savePoint);
+                                plot.getSelectPoints().add(savePoint);
                             }
                         }
                     }
                 }
             }
 
-            return ResponseHelper.response(200, "Success - ParamModule Save Plot", plots);
+            return ResponseHelper.response(200, "Success - ParamModule Save Plot", plots.size(), plots, jobjSources);
         }
 
         if (command.equals("save-plot-single")) {
@@ -911,8 +978,7 @@ public class ServiceApiController extends ApiController {
                 }
                 if (plot == null)
                     throw new HandledServiceException(411, "해당 파라미터 모듈의 Plot 이 아닙니다.");
-            }
-            else {
+            } else {
                 plot = new ParamModuleVO.Plot();
                 plot.setModuleSeq(moduleSeq);
                 plot.setPlotName(String64.decode(jobjPlot.get("plotName").getAsString()));
@@ -926,7 +992,8 @@ public class ServiceApiController extends ApiController {
             if (!checkJsonEmpty(jobjPlot, "dataProp")) {
                 getService(RawService.class).deleteDataPropByType("plot", plot.getSeq());
 
-                Type type = new TypeToken<Map<String, String>>(){}.getType();
+                Type type = new TypeToken<Map<String, String>>() {
+                }.getType();
                 Map<String, String> dataProp = ServerConstants.GSON.fromJson(
                         jobjPlot.get("dataProp").getAsJsonObject(), type);
                 Set<String> keys = dataProp.keySet();
@@ -976,8 +1043,7 @@ public class ServiceApiController extends ApiController {
                         plotSource.setJulianEndAt(paramSource.getJulianEndAt());
                         plotSource.setOffsetStartAt(paramSource.getOffsetStartAt());
                         plotSource.setOffsetEndAt(paramSource.getOffsetEndAt());
-                    }
-                    else {
+                    } else {
                         ParamModuleVO.Equation eq = getService(ParamModuleService.class).getParamModuleEqBySeq(sourceSeq);
                         if (eq == null) continue;
                         plotSource.setModuleSeq(moduleSeq);
@@ -1002,6 +1068,80 @@ public class ServiceApiController extends ApiController {
             }
 
             return ResponseHelper.response(200, "Success - ParamModule Save Plot Single", plot);
+        }
+
+        if (command.equals("find-source")) {
+            CryptoField moduleSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "moduleSeq"))
+                moduleSeq = CryptoField.decode(payload.get("moduleSeq").getAsString(), 0L);
+
+            CryptoField eqSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "eqSeq"))
+                eqSeq = CryptoField.decode(payload.get("eqSeq").getAsString(), 0L);
+
+            String xValue = "";
+            if (!checkJsonEmpty(payload, "xValue"))
+                xValue = payload.get("xValue").getAsString();
+
+            String yValue = "";
+            if (!checkJsonEmpty(payload, "yValue"))
+                yValue = payload.get("yValue").getAsString();
+
+            String chartType = "";
+            if (!checkJsonEmpty(payload, "chartType"))
+                chartType = payload.get("chartType").getAsString();
+
+            int pointIndex = 0;
+            if (!checkJsonEmpty(payload, "pointIndex"))
+                pointIndex = payload.get("pointIndex").getAsInt();
+
+            if (moduleSeq == null || moduleSeq.isEmpty() || eqSeq == null || eqSeq.isEmpty()
+                    || chartType == null || chartType.isEmpty())
+                throw new HandledServiceException(411, "파라미터를 확인하세요.");
+
+            // all sources.
+            equationHelper.setListOps(listOps);
+            equationHelper.setHashOps(hashOps);
+            equationHelper.setZsetOps(zsetOps);
+
+            equationHelper.loadParamModuleData(moduleSeq);
+            ParamModuleVO paramModule = equationHelper.getParamModule(moduleSeq);
+
+            if (paramModule.getEqMap() == null || paramModule.getEqMap().size() == 0)
+                throw new HandledServiceException(404, "파라미터 모듈에 수식 정보가 없습니다.");
+
+            JsonObject jobjOutput = new JsonObject();
+
+            ParamModuleVO.Equation eq = paramModule.getEqMap().get("E" + eqSeq.originOf());
+            if (eq == null)
+                throw new HandledServiceException(404, "파라미터 모듈에 수식 정보가 없습니다.");
+
+            if (chartType.equalsIgnoreCase("Potato")) {
+                if (!eq.getEquation().contains("convh"))
+                    throw new HandledServiceException(404, "Convex Hull 수식이 아닙니다.");
+
+                boolean validConvexHull = equationHelper.findConvexHullTime(paramModule, eq, xValue, yValue, jobjOutput);
+                if (validConvexHull == false)
+                    throw new HandledServiceException(411, jobjOutput.get("message").getAsString());
+            }
+            else if (chartType.equalsIgnoreCase("CrossPlot")) {
+                if (eq.getData() == null || eq.getData().size() == 0
+                        || eq.getData().size() <= pointIndex) {
+                    throw new HandledServiceException(404, "수식 데이터가 조건에 맞지 않습니다.");
+                }
+
+                if (!eq.getEquation().contains("min") && !eq.getEquation().contains("max"))
+                    throw new HandledServiceException(404, "수식 데이터가 조건에 맞지 않습니다.");
+
+                boolean validCrossPlot = equationHelper.findCrossPlotTime(paramModule, eq, xValue, yValue, pointIndex, jobjOutput);
+                if (validCrossPlot == false)
+                    throw new HandledServiceException(411, jobjOutput.get("message").getAsString());
+            }
+            else {
+                throw new HandledServiceException(411, "지원하지 않는 형식입니다.");
+            }
+
+            return ResponseHelper.response(200, "Success - ParamModule FindSource", jobjOutput);
         }
 
         if (command.equals("remove-plot")) {
@@ -1125,7 +1265,7 @@ public class ServiceApiController extends ApiController {
     @RequestMapping(value = "/bin-table")
     @ResponseBody
     public Object apiBinTable(HttpServletRequest request, @PathVariable String serviceVersion,
-                            @RequestBody JsonObject payload, Authentication authentication) throws HandledServiceException {
+                              @RequestBody JsonObject payload, Authentication authentication) throws HandledServiceException {
         /*
         String accessToken = request.getHeader("Authorization");
         if (accessToken == null || (!accessToken.startsWith("bearer") && !accessToken.startsWith("Bearer")))
@@ -1181,6 +1321,199 @@ public class ServiceApiController extends ApiController {
             getService(BinTableService.class).deleteBinTableMeta(binMetaSeq);
 
             return ResponseHelper.response(200, "Success - BinTable Deleted", "");
+        }
+
+        if (command.equals("clear-summary")) {
+            CryptoField binMetaSeq = CryptoField.LZERO;
+            if (checkJsonEmpty(payload, "binMetaSeq"))
+                binMetaSeq = CryptoField.decode(payload.get("binMetaSeq").getAsString(), 0L);
+
+            if (binMetaSeq == null || binMetaSeq.isEmpty())
+                throw new HandledServiceException(404, "파라미터를 확인하세요.");
+
+            String jsonCellList = hashOps.get("BT" + binMetaSeq.originOf(), "CELL");
+            List<String> cells = new ArrayList<>();
+            if (jsonCellList != null && !jsonCellList.isEmpty()) {
+                Type cellType = new TypeToken<List<String>>() {
+                }.getType();
+                cells = ServerConstants.GSON.fromJson(jsonCellList, cellType);
+            }
+
+            String jsonParamList = hashOps.get("BT" + binMetaSeq.originOf(), "PARAMS");
+            List<String> params = new ArrayList<>();
+            if (jsonParamList != null && !jsonParamList.isEmpty()) {
+                Type paramType = new TypeToken<List<String>>() {
+                }.getType();
+                params = ServerConstants.GSON.fromJson(jsonParamList, paramType);
+            }
+
+            for (String cell : cells) {
+                hashOps.delete("BT" + binMetaSeq.originOf() + "." + cell);
+                for (String param : params) {
+                    hashOps.delete("BT" + binMetaSeq.originOf() + "." + cell + "." + param);
+                }
+            }
+
+            hashOps.delete("BT" + binMetaSeq.originOf(), "CELL");
+            hashOps.delete("BT" + binMetaSeq.originOf(), "PARAMS");
+
+            return ResponseHelper.response(200, "Success - BinTable summary cleared.", "");
+        }
+
+        if (command.equals("calculate")) {
+            BinTableVO.CalculateRequest calRequest = ServerConstants.GSON.fromJson(payload, BinTableVO.CalculateRequest.class);
+            BinTableVO.BinSummary binSummary = getService(BinTableService.class).calculateBinSummary(user.getUid(), calRequest);
+            return ResponseHelper.response(200, "Success - BinTable summary saved", binSummary);
+        }
+
+        if (command.equals("load")) {
+            CryptoField binMetaSeq = CryptoField.LZERO;
+            if (checkJsonEmpty(payload, "binMetaSeq"))
+                binMetaSeq = CryptoField.decode(payload.get("binMetaSeq").getAsString(), 0L);
+
+            if (binMetaSeq == null || binMetaSeq.isEmpty())
+                throw new HandledServiceException(404, "파라미터를 확인하세요.");
+
+            JsonArray cellIndexes = null;
+            if (checkJsonEmpty(payload, "indexes"))
+                cellIndexes = payload.get("indexes").getAsJsonArray();
+
+            String responseType = "list";
+            if (checkJsonEmpty(payload, "responseType"))
+                responseType = payload.get("responseType").getAsString();
+
+            String jsonCellList = hashOps.get("BT" + binMetaSeq.originOf(), "CELL");
+            List<String> cells = new ArrayList<>();
+            if (jsonCellList != null && !jsonCellList.isEmpty()) {
+                Type cellType = new TypeToken<List<String>>() {
+                }.getType();
+                cells = ServerConstants.GSON.fromJson(jsonCellList, cellType);
+            }
+
+            String jsonParamList = hashOps.get("BT" + binMetaSeq.originOf(), "PARAMS");
+            List<String> params = new ArrayList<>();
+            if (jsonParamList != null && !jsonParamList.isEmpty()) {
+                Type paramType = new TypeToken<List<String>>() {
+                }.getType();
+                params = ServerConstants.GSON.fromJson(jsonParamList, paramType);
+            }
+
+            List<BinTableVO.BinSummary> binSummaries = new ArrayList<>();
+            Map<String, BinTableVO.BinSummary> mapSummaries = new HashMap<>();
+
+            for (String cell : cells) {
+                if (cellIndexes != null && cellIndexes.size() > 0) {
+                    boolean requested = false;
+                    for (int i = 0; i < cellIndexes.size(); i++) {
+                        if (cellIndexes.get(i).getAsString().equals(cell)) {
+                            requested = true;
+                            break;
+                        }
+                    }
+                    if (requested == false) continue;
+                } else {
+                    // no condition -> all list
+                }
+
+                BinTableVO.BinSummary binSummary = new BinTableVO.BinSummary();
+                binSummary.setBinMetaSeq(binMetaSeq);
+                binSummary.setSummary(new HashMap<>());
+
+                String[] typeSet = new String[]{"", ".L", ".H", ".B"};
+                for (String param : params) {
+                    binSummary.getSummary().put(param, new HashMap<>());
+
+                    for (String type : typeSet) {
+                        BinTableVO.BinSummary.SummaryItem summaryItem = new BinTableVO.BinSummary.SummaryItem();
+
+                        String min = hashOps.get("BT" + binMetaSeq.originOf() + "." + cell + "." + param, "MIN" + type);
+                        if (min != null && !min.isEmpty())
+                            summaryItem.setMin(Double.parseDouble(min));
+
+                        String max = hashOps.get("BT" + binMetaSeq.originOf() + "." + cell + "." + param, "MAX" + type);
+                        if (max != null && !max.isEmpty())
+                            summaryItem.setMax(Double.parseDouble(max));
+
+                        String avg = hashOps.get("BT" + binMetaSeq.originOf() + "." + cell + "." + param, "AVG" + type);
+                        if (avg != null && !avg.isEmpty())
+                            summaryItem.setAvg(Double.parseDouble(avg));
+
+                        String psd = hashOps.get("BT" + binMetaSeq.originOf() + "." + cell + "." + param, "PSD" + type);
+                        if (psd != null && !psd.isEmpty()) {
+                            Type psdType = new TypeToken<List<Double>>() {
+                            }.getType();
+                            List<Double> psdList = ServerConstants.GSON.fromJson(psd, psdType);
+                            summaryItem.setPsd(psdList);
+                        }
+
+                        String freq = hashOps.get("BT" + binMetaSeq.originOf() + "." + cell + "." + param, "FREQ" + type);
+                        if (freq != null && !freq.isEmpty()) {
+                            Type freqType = new TypeToken<List<Double>>() {
+                            }.getType();
+                            List<Double> freqList = ServerConstants.GSON.fromJson(freq, freqType);
+                            summaryItem.setFrequency(freqList);
+                        }
+
+                        String rms = hashOps.get("BT" + binMetaSeq.originOf() + "." + cell + "." + param, "RMS" + type);
+                        if (rms != null && !rms.isEmpty()) {
+                            Type rmsType = new TypeToken<List<Double>>() {
+                            }.getType();
+                            List<Double> rmsList = ServerConstants.GSON.fromJson(rms, rmsType);
+                            summaryItem.setRms(rmsList);
+                        }
+
+                        String avg_rms = hashOps.get("BT" + binMetaSeq.originOf() + "." + cell + "." + param, "AVG.RMS" + type);
+                        if (avg_rms != null && !avg_rms.isEmpty())
+                            summaryItem.setAvg_rms(Double.parseDouble(avg_rms));
+
+                        String n0 = hashOps.get("BT" + binMetaSeq.originOf() + "." + cell + "." + param, "N0" + type);
+                        if (n0 != null && !n0.isEmpty()) {
+                            Type n0Type = new TypeToken<List<Double>>() {
+                            }.getType();
+                            List<Double> n0List = ServerConstants.GSON.fromJson(n0, n0Type);
+                            summaryItem.setN0(n0List);
+                        }
+
+                        String zeta = hashOps.get("BT" + binMetaSeq.originOf() + "." + cell + "." + param, "ZETA" + type);
+                        if (zeta != null && !zeta.isEmpty()) {
+                            Type zetaType = new TypeToken<List<Double>>() {
+                            }.getType();
+                            List<Double> zetaList = ServerConstants.GSON.fromJson(zeta, zetaType);
+                            summaryItem.setZeta(zetaList);
+                        }
+
+                        String burstFactor = hashOps.get("BT" + binMetaSeq.originOf() + "." + cell + "." + param, "BF" + type);
+                        if (burstFactor != null && !burstFactor.isEmpty())
+                            summaryItem.setBurstFactor(Double.parseDouble(burstFactor));
+
+                        String rmsToPeak = hashOps.get("BT" + binMetaSeq.originOf() + "." + cell + "." + param, "RTP" + type);
+                        if (rmsToPeak != null && !rmsToPeak.isEmpty()) {
+                            Type rmsToPeakType = new TypeToken<List<Double>>() {
+                            }.getType();
+                            List<Double> rmsToPeakList = ServerConstants.GSON.fromJson(rmsToPeak, rmsToPeakType);
+                            summaryItem.setRmsToPeak(rmsToPeakList);
+                        }
+
+                        String maxRmsToPeak = hashOps.get("BT" + binMetaSeq.originOf() + "." + cell + "." + param, "MRTP" + type);
+                        if (maxRmsToPeak != null && !maxRmsToPeak.isEmpty())
+                            summaryItem.setMaxRmsToPeak(Double.parseDouble(maxRmsToPeak));
+
+                        String maxLoadAccel = hashOps.get("BT" + binMetaSeq.originOf() + "." + cell + "." + param, "MLA" + type);
+                        if (maxLoadAccel != null && !maxLoadAccel.isEmpty())
+                            summaryItem.setMaxLoadAccel(Double.parseDouble(maxLoadAccel));
+
+                        binSummary.getSummary().get(param).put(
+                                type.equals(".L") ? "lpf" : type.equals(".H") ? "hpf" : type.equals(".B") ? "bpf" : "normal",
+                                summaryItem);
+                    }
+                }
+
+                binSummaries.add(binSummary);
+                mapSummaries.put(cell, binSummary);
+            }
+
+            return ResponseHelper.response(200, "Success - BinTable summary loaded",
+                    responseType.equals("list") ? binSummaries : ServerConstants.GSON.toJsonTree(mapSummaries));
         }
 
         throw new HandledServiceException(411, "명령이 정의되지 않았습니다.");
@@ -1420,7 +1753,7 @@ public class ServiceApiController extends ApiController {
                 JsonObject jobjParam = jarrBulk.get(i).getAsJsonObject();
                 try {
                     getService(ParamService.class).insertPresetParam(jobjParam);
-                } catch(HandledServiceException hse) {
+                } catch (HandledServiceException hse) {
                     // skip insert
                 }
             }
@@ -1542,8 +1875,7 @@ public class ServiceApiController extends ApiController {
                 jarrRows = new JsonArray();
                 jarrRows.add(0);
                 jarrRows.add(Integer.MAX_VALUE);
-            }
-            else if (jarrRows.size() < 2) {
+            } else if (jarrRows.size() < 2) {
                 jarrRows.add(Integer.MAX_VALUE);
             }
 
@@ -1559,7 +1891,7 @@ public class ServiceApiController extends ApiController {
                 List<Object> filteredData = new ArrayList<>();
                 for (DLLVO.Raw dr : rawData) {
                     if (dr.getRowNo() >= jarrRows.get(0).getAsInt()
-                        && dr.getRowNo() <= jarrRows.get(1).getAsInt()) {
+                            && dr.getRowNo() <= jarrRows.get(1).getAsInt()) {
                         if (dllParam.getParamType().equalsIgnoreCase("string"))
                             filteredData.add(dr.getParamValStr());
                         else
@@ -1576,8 +1908,7 @@ public class ServiceApiController extends ApiController {
 
             if (resultDataType.equals("map")) {
                 jobjResult.add("data", ServerConstants.GSON.toJsonTree(paramValueMap));
-            }
-            else {
+            } else {
                 jobjResult.add("data", ServerConstants.GSON.toJsonTree(paramValueArray));
             }
 
@@ -1632,14 +1963,12 @@ public class ServiceApiController extends ApiController {
                             jarrRows.set(1, new JsonPrimitive(Integer.MAX_VALUE));
 
                         getService(DLLService.class).deleteDLLDataByRow(dllSeq, jarrRows.get(0).getAsInt(), jarrRows.get(1).getAsInt());
-                    }
-                    else {
+                    } else {
                         // 모두 삭제
                         getService(DLLService.class).deleteDLLData(dllSeq);
                     }
                 }
-            }
-            else {
+            } else {
                 // row 조건에 따라서 지우기, 해당 row 전체 삭제만 있음.
                 if (jarrRows != null && jarrRows.size() == 2) {
                     if (jarrRows.get(1).getAsInt() == 0)
@@ -1733,6 +2062,103 @@ public class ServiceApiController extends ApiController {
             return ResponseHelper.response(200, "Success - Create cache done", jobjResult);
         }
 
+        if (command.equals("remove-upload")) {
+            CryptoField uploadSeq = CryptoField.LZERO;
+            if (!checkJsonEmpty(payload, "uploadSeq"))
+                uploadSeq = CryptoField.decode(payload.get("uploadSeq").getAsString(), 0L);
+
+            if (uploadSeq == null || uploadSeq.isEmpty())
+                throw new HandledServiceException(404, "필요 파라미터가 누락됐습니다.");
+
+            // part
+            // shortblock
+
+            List<PartVO> partList = getService(PartService.class).getPartList(user.getUid(), uploadSeq, 1, 999999);
+            if (partList == null || partList.size() == 0)
+                throw new HandledServiceException(411, "분할데이터가 없습니다.");
+
+            // param-module check.
+            List<ParamModuleVO.Source> sources = getService(ParamModuleService.class).getReferencedSourceList(partList);
+            if (sources != null || sources.size() > 0)
+                throw new HandledServiceException(411, "분할데이터가 사용중입니다.");
+
+            getService(PartService.class).deleteShortBlockByPartList(partList);
+            getService(PartService.class).deletePartList(partList);
+            getService(RawService.class).deleteRawUploadBySeq(uploadSeq);
+
+            return ResponseHelper.response(200, "Success - Remove part by upload", "");
+        }
+
+        if (command.equals("flight-type")) {
+            List<RawVO.FlightType> flightTypes = getService(RawService.class).getFlightTypeList();
+            return ResponseHelper.response(200, "Success - FlightType List", flightTypes);
+        }
+
+        if (command.equals("save-flight-type")) {
+            List<RawVO.FlightType> flightTypes = getService(RawService.class).getFlightTypeList();
+            if (flightTypes == null) flightTypes = new ArrayList<>();
+            for (RawVO.FlightType ft : flightTypes)
+                ft.setMark(false);
+
+            JsonArray reqList = null;
+            if (!checkJsonEmpty(payload, "flightTypes"))
+                reqList = payload.get("flightTypes").getAsJsonArray();
+
+            if (reqList != null && reqList.size() > 0) {
+                for (int i = 0; i < reqList.size(); i++) {
+                    JsonObject jobjType = reqList.get(i).getAsJsonObject();
+                    if (checkJsonEmpty(jobjType, "typeCode") || checkJsonEmpty(jobjType, "typeName"))
+                        continue;
+
+                    String typeCode = jobjType.get("typeCode").getAsString();
+                    String64 typeName = String64.decode(jobjType.get("typeName").getAsString());
+
+                    RawVO.FlightType findType = null;
+                    for (RawVO.FlightType ft : flightTypes) {
+                        if (ft.getTypeCode().equals(typeCode)) {
+                            findType = ft;
+                            break;
+                        }
+                    }
+
+                    if (findType != null) {
+                        findType.setTypeName(typeName);
+                        getService(RawService.class).updateFlightType(findType);
+                        findType.setMark(true);
+                    }
+                    else {
+                        RawVO.FlightType newType = new RawVO.FlightType();
+                        newType.setTypeCode(typeCode);
+                        newType.setTypeName(typeName);
+                        newType.setCreatedAt(LongDate.now());
+                        getService(RawService.class).insertFlightType(newType);
+                    }
+                }
+            }
+
+            for (RawVO.FlightType ft : flightTypes) {
+                if (ft.isMark() == false)
+                    getService(RawService.class).deleteFlightType(ft.getTypeCode());
+            }
+
+            flightTypes = getService(RawService.class).getFlightTypeList();
+
+            return ResponseHelper.response(200, "Success - FlightType Save", flightTypes);
+        }
+
+        if (command.equals("remove-flight-type")) {
+            String typeCode = "";
+            if (!checkJsonEmpty(payload, "typeCode"))
+                typeCode = payload.get("typeCode").getAsString();
+
+            if (typeCode == null || typeCode.isEmpty())
+                throw new HandledServiceException(411, "파라미터를 확인하세요.");
+
+            getService(RawService.class).deleteFlightType(typeCode);
+
+            return ResponseHelper.response(200, "Success - FlightType Remove", "");
+        }
+
         if (command.equals("check-done")) {
             CryptoField uploadSeq = CryptoField.LZERO;
             if (!checkJsonEmpty(payload, "uploadSeq"))
@@ -1766,6 +2192,15 @@ public class ServiceApiController extends ApiController {
 
             if ((headerRow == null || headerRow.isEmpty()) && (importFilePath == null || importFilePath.isEmpty()))
                 throw new HandledServiceException(404, "파라미터를 확인하세요.");
+
+            logger.debug("[[[[[ headerRow=" + headerRow + ":: ]]]]]");
+
+            /*
+            if (!headerRow.contains("DL001_DEG")) {
+              if (!headerRow.trim().endsWith(","))
+                headerRow += ",";
+              headerRow += "DL001_DEG";
+            } */
 
             CryptoField presetSeq = CryptoField.LZERO;
             if (!checkJsonEmpty(payload, "presetSeq"))
@@ -1819,8 +2254,7 @@ public class ServiceApiController extends ApiController {
                         mappedIndexes.add(i);
                     }
                 }
-            }
-            else {
+            } else {
                 if (presetParams == null) presetParams = new ArrayList<>();
                 Map<String, ParamVO> adamsMap = new LinkedHashMap<>();
                 Map<String, ParamVO> zaeroMap = new LinkedHashMap<>();
@@ -1829,13 +2263,13 @@ public class ServiceApiController extends ApiController {
                     zaeroMap.put(param.getZaeroKey(), param);
                 }
 
-                // File loading
-                if (importFilePath.contains("C:\\")
-                    || importFilePath.contains("c:\\")) {
-                    importFilePath = importFilePath.toLowerCase(Locale.ROOT);
-                    importFilePath = importFilePath.replaceAll("\\\\", "/");
-                    importFilePath = importFilePath.replaceAll("c:/", staticLocation.substring("file:".length()));
+                if (importFilePath != null) {
+                    importFilePath = "E:\\" + importFilePath.substring("E:\\".length());
                 }
+
+                File fStatic = new File(importFilePath);
+                if (fStatic == null || !fStatic.exists())
+                    throw new HandledServiceException(404, "파일을 찾을 수 없습니다. [" + importFilePath + "]");
 
                 List<String> allParams = null;
                 List<List<Double>> allData = null;
@@ -1909,7 +2343,7 @@ public class ServiceApiController extends ApiController {
 
                     br.close();
                     fis.close();
-                } catch(IOException ex) {
+                } catch (IOException ex) {
                     ex.printStackTrace();
                     throw new HandledServiceException(411, "분석중 오류가 발생했습니다. " + ex.getMessage());
                 }
@@ -1922,8 +2356,7 @@ public class ServiceApiController extends ApiController {
 
                     if (pi == null) {
                         notMappedParams.add(p);
-                    }
-                    else {
+                    } else {
                         mappedParams.add(pi);
                     }
                 }
@@ -1956,10 +2389,53 @@ public class ServiceApiController extends ApiController {
         throw new HandledServiceException(411, "명령이 정의되지 않았습니다.");
     }
 
+    private void flushResponse(HttpServletResponse response, String flushData, String outFileName) throws HandledServiceException {
+        response.setHeader("Content-Type", "application/octet-stream");
+        response.addHeader("Content-Disposition",
+                "attachment; filename=\"" + outFileName + "\";");
+        response.addHeader("Content-Transfer-Encoding", "binary");
+
+        try {
+            byte[] outBuf = flushData.getBytes(StandardCharsets.UTF_8);
+            OutputStream os = response.getOutputStream();
+            os.write(outBuf, 0, outBuf.length);
+            os.flush();
+        } catch (IOException ioe) {
+            throw new HandledServiceException(411, ioe.getMessage());
+        }
+    }
+
+    private void flushResponseZip(HttpServletResponse response, List<File> fileOut, String outFileName) throws HandledServiceException {
+        response.setContentType("application/zip");
+        response.setHeader("Content-Disposition", "attachment;filename=\"" + outFileName + "\";");
+
+        try (ZipOutputStream zipOutputStream = new ZipOutputStream(response.getOutputStream())) {
+            for (File file : fileOut) {
+                FileSystemResource fileSystemResource = new FileSystemResource(file.getAbsolutePath());
+                ZipEntry zipEntry = new ZipEntry(fileSystemResource.getFilename());
+                zipEntry.setSize(fileSystemResource.contentLength());
+                zipEntry.setTime(System.currentTimeMillis());
+
+                zipOutputStream.putNextEntry(zipEntry);
+
+                StreamUtils.copy(fileSystemResource.getInputStream(), zipOutputStream);
+                zipOutputStream.closeEntry();
+            }
+
+            zipOutputStream.finish();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            for (File file : fileOut) {
+                if (file.exists()) file.delete();
+            }
+        }
+    }
+
     @RequestMapping(value = "/part/d")
     public void apiPartDownload(HttpServletRequest request, HttpServletResponse response,
-                                      @PathVariable String serviceVersion,
-                                      @RequestBody JsonObject payload, Authentication authentication) throws HandledServiceException {
+                                @PathVariable String serviceVersion,
+                                @RequestBody JsonObject payload, Authentication authentication) throws HandledServiceException {
         UserVO user = getService(UserService.class).getUser("admin@dynarap@dynarap");
 
         if (checkJsonEmpty(payload, "command"))
@@ -1997,8 +2473,7 @@ public class ServiceApiController extends ApiController {
                     }
                     params.add(param);
                 }
-            }
-            else {
+            } else {
                 for (int i = 0; i < jarrParams.size(); i++) {
                     Long paramKey = CryptoField.decode(jarrParams.get(i).getAsString(), 0L).originOf();
                     ParamVO param = getService(ParamService.class).getPresetParamBySeq(new CryptoField(paramKey));
@@ -2036,85 +2511,166 @@ public class ServiceApiController extends ApiController {
                 jobjResult.add("paramSet", ServerConstants.GSON.toJsonTree(params));
                 jobjResult.add("julianSet", ServerConstants.GSON.toJsonTree(new ArrayList<String>()));
                 jobjResult.add("data", ServerConstants.GSON.toJsonTree(rowData));
-            }
-            else {
+
+                StringBuilder sbOut = new StringBuilder();
+                sbOut.append("DATE,");
+                for (ParamVO p : params) sbOut.append(p.getParamKey().replaceAll(",", "_")).append(",");
+                sbOut.append("\n");
+                sbOut.append(",");
+                for (ParamVO p : params) sbOut.append(",");
+                sbOut.append("\n");
+
+                flushResponse(response, sbOut.toString(), "P_" + partInfo.getPartName().originOf() + "_" + filterType + ".csv");
+            } else {
                 Set<String> listSet = zsetOps.rangeByScore("P" + partInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE);
                 if (listSet == null || listSet.size() == 0) {
                     jobjResult.add("paramSet", ServerConstants.GSON.toJsonTree(params));
                     jobjResult.add("julianSet", ServerConstants.GSON.toJsonTree(new ArrayList<String>()));
                     jobjResult.add("data", ServerConstants.GSON.toJsonTree(rowData));
-                }
-                else {
-                    String julianStart = listSet.iterator().next();
-                    Long startRowAt = zsetOps.score("P" + partInfo.getSeq().originOf() + ".R", julianStart).longValue();
 
-                    Long rankFrom = zsetOps.rank("P" + partInfo.getSeq().originOf() + ".R", julianFrom);
-                    if (rankFrom == null) {
-                        julianFrom = zsetOps.rangeByScore("P" + partInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE).iterator().next();
-                        rankFrom = zsetOps.rank("P" + partInfo.getSeq().originOf() + ".R", julianFrom);
-                    }
-                    Long rankTo = zsetOps.rank("P" + partInfo.getSeq().originOf() + ".R", julianTo);
-                    if (rankTo == null) {
-                        julianTo = zsetOps.reverseRangeByScore("P" + partInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE).iterator().next();
-                        rankTo = zsetOps.rank("P" + partInfo.getSeq().originOf() + ".R", julianTo);
-                    }
+                    StringBuilder sbOut = new StringBuilder();
+                    sbOut.append("DATE,");
+                    for (ParamVO p : params) sbOut.append(p.getParamKey().replaceAll(",", "_")).append(",");
+                    sbOut.append("\n");
+                    sbOut.append(",");
+                    for (ParamVO p : params) sbOut.append(",");
+                    sbOut.append("\n");
 
-                    rowData = new LinkedHashMap<>();
-                    for (ParamVO p : params) {
-                        listSet = zsetOps.rangeByScore(
-                                "P" + partInfo.getSeq().originOf() + "." + filterType + p.getReferenceSeq(), startRowAt + rankFrom, startRowAt + rankTo);
+                    flushResponse(response, sbOut.toString(), "P_" + partInfo.getPartName().originOf() + "_" + filterType + ".csv");
+                } else {
+                    if (!filterType.equals("A")) {
+                        String julianStart = listSet.iterator().next();
+                        Long startRowAt = zsetOps.score("P" + partInfo.getSeq().originOf() + ".R", julianStart).longValue();
 
-                        Iterator<String> iterListSet = listSet.iterator();
-                        while (iterListSet.hasNext()) {
-                            String rowVal = iterListSet.next();
-                            String julianTime = rowVal.substring(0, rowVal.lastIndexOf(":"));
-                            List<Double> rowList = rowData.get(julianTime);
-                            if (rowList == null) {
-                                rowList = new ArrayList<>();
-                                rowData.put(julianTime, rowList);
-                            }
-                            Double dblVal = Double.parseDouble(rowVal.substring(rowVal.lastIndexOf(":") + 1));
-                            rowList.add(dblVal);
+                        Long rankFrom = zsetOps.rank("P" + partInfo.getSeq().originOf() + ".R", julianFrom);
+                        if (rankFrom == null) {
+                            julianFrom = zsetOps.rangeByScore("P" + partInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE).iterator().next();
+                            rankFrom = zsetOps.rank("P" + partInfo.getSeq().originOf() + ".R", julianFrom);
                         }
+                        Long rankTo = zsetOps.rank("P" + partInfo.getSeq().originOf() + ".R", julianTo);
+                        if (rankTo == null) {
+                            julianTo = zsetOps.reverseRangeByScore("P" + partInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE).iterator().next();
+                            rankTo = zsetOps.rank("P" + partInfo.getSeq().originOf() + ".R", julianTo);
+                        }
+
+                        rowData = new LinkedHashMap<>();
+                        for (ParamVO p : params) {
+                            listSet = zsetOps.rangeByScore(
+                                    "P" + partInfo.getSeq().originOf() + "." + filterType + p.getReferenceSeq(), startRowAt + rankFrom, startRowAt + rankTo);
+
+                            Iterator<String> iterListSet = listSet.iterator();
+                            while (iterListSet.hasNext()) {
+                                String rowVal = iterListSet.next();
+                                String julianTime = rowVal.substring(0, rowVal.lastIndexOf(":"));
+                                List<Double> rowList = rowData.get(julianTime);
+                                if (rowList == null) {
+                                    rowList = new ArrayList<>();
+                                    rowData.put(julianTime, rowList);
+                                }
+                                Double dblVal = Double.parseDouble(rowVal.substring(rowVal.lastIndexOf(":") + 1));
+                                rowList.add(dblVal);
+                            }
+                        }
+
+                        jobjResult.add("paramSet", ServerConstants.GSON.toJsonTree(params));
+                        jobjResult.add("julianSet", ServerConstants.GSON.toJsonTree(Arrays.asList(rowData.keySet())));
+                        jobjResult.add("data", ServerConstants.GSON.toJsonTree(rowData.values()));
+
+                        StringBuilder sbOut = new StringBuilder();
+                        sbOut.append("DATE,");
+                        for (ParamVO p : params) sbOut.append(p.getParamKey().replaceAll(",", "_")).append(",");
+                        sbOut.append("\n");
+                        sbOut.append(",");
+                        for (ParamVO p : params) sbOut.append(",");
+                        sbOut.append("\n");
+
+                        // flush data
+                        Set<String> keys = rowData.keySet();
+                        Iterator<String> iterKeys = keys.iterator();
+                        while (iterKeys.hasNext()) {
+                            String time = iterKeys.next();
+                            List<Double> row = rowData.get(time);
+                            sbOut.append(time).append(",");
+                            for (Double d : row) sbOut.append(d).append(",");
+                            sbOut.append("\n");
+                        }
+
+                        flushResponse(response, sbOut.toString(), "P_" + partInfo.getPartName().originOf() + "_" + filterType + ".csv");
+                    } else {
+                        // N,L,H,B making and compress.
+                        String[] filterTypes = new String[]{"N", "L", "H", "B"};
+                        List<File> fileOut = new ArrayList<>();
+
+                        for (String ft : filterTypes) {
+                            listSet = zsetOps.rangeByScore("P" + partInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE);
+                            String julianStart = listSet.iterator().next();
+                            Long startRowAt = zsetOps.score("P" + partInfo.getSeq().originOf() + ".R", julianStart).longValue();
+
+                            Long rankFrom = zsetOps.rank("P" + partInfo.getSeq().originOf() + ".R", julianFrom);
+                            if (rankFrom == null) {
+                                julianFrom = zsetOps.rangeByScore("P" + partInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE).iterator().next();
+                                rankFrom = zsetOps.rank("P" + partInfo.getSeq().originOf() + ".R", julianFrom);
+                            }
+                            Long rankTo = zsetOps.rank("P" + partInfo.getSeq().originOf() + ".R", julianTo);
+                            if (rankTo == null) {
+                                julianTo = zsetOps.reverseRangeByScore("P" + partInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE).iterator().next();
+                                rankTo = zsetOps.rank("P" + partInfo.getSeq().originOf() + ".R", julianTo);
+                            }
+
+                            rowData = new LinkedHashMap<>();
+                            for (ParamVO p : params) {
+                                listSet = zsetOps.rangeByScore(
+                                        "P" + partInfo.getSeq().originOf() + "." + ft + p.getReferenceSeq(), startRowAt + rankFrom, startRowAt + rankTo);
+
+                                Iterator<String> iterListSet = listSet.iterator();
+                                while (iterListSet.hasNext()) {
+                                    String rowVal = iterListSet.next();
+                                    String julianTime = rowVal.substring(0, rowVal.lastIndexOf(":"));
+                                    List<Double> rowList = rowData.get(julianTime);
+                                    if (rowList == null) {
+                                        rowList = new ArrayList<>();
+                                        rowData.put(julianTime, rowList);
+                                    }
+                                    Double dblVal = Double.parseDouble(rowVal.substring(rowVal.lastIndexOf(":") + 1));
+                                    rowList.add(dblVal);
+                                }
+                            }
+
+                            StringBuilder sbOut = new StringBuilder();
+                            sbOut.append("DATE,");
+                            for (ParamVO p : params) sbOut.append(p.getParamKey().replaceAll(",", "_")).append(",");
+                            sbOut.append("\n");
+                            sbOut.append(",");
+                            for (ParamVO p : params) sbOut.append(",");
+                            sbOut.append("\n");
+
+                            // flush data
+                            Set<String> keys = rowData.keySet();
+                            Iterator<String> iterKeys = keys.iterator();
+                            while (iterKeys.hasNext()) {
+                                String time = iterKeys.next();
+                                List<Double> row = rowData.get(time);
+                                sbOut.append(time).append(",");
+                                for (Double d : row) sbOut.append(d).append(",");
+                                sbOut.append("\n");
+                            }
+
+                            try {
+                                File fSave = new File(processPath, "P_" + partInfo.getPartName().originOf() + "_" + ft + ".csv");
+                                FileOutputStream fos = new FileOutputStream(fSave);
+                                BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
+                                bw.write(sbOut.toString(), 0, sbOut.length());
+                                bw.flush();
+                                bw.close();
+                                fileOut.add(fSave);
+                            } catch (IOException ioe) {
+                                ioe.printStackTrace();
+                            }
+                        }
+
+                        flushResponseZip(response, fileOut, "P_" + partInfo.getPartName().originOf() + ".zip");
                     }
-
-                    jobjResult.add("paramSet", ServerConstants.GSON.toJsonTree(params));
-                    jobjResult.add("julianSet", ServerConstants.GSON.toJsonTree(Arrays.asList(rowData.keySet())));
-                    jobjResult.add("data", ServerConstants.GSON.toJsonTree(rowData.values()));
                 }
-            }
-
-            StringBuilder sbOut = new StringBuilder();
-            sbOut.append("DATE,");
-            for (ParamVO p : params) sbOut.append(p.getParamKey().replaceAll(",", "_")).append(",");
-            sbOut.append("\n");
-            sbOut.append(",");
-            for (ParamVO p : params) sbOut.append(",");
-            sbOut.append("\n");
-
-            // flush data
-            Set<String> keys = rowData.keySet();
-            Iterator<String> iterKeys = keys.iterator();
-            while (iterKeys.hasNext()) {
-                String time = iterKeys.next();
-                List<Double> row = rowData.get(time);
-                sbOut.append(time).append(",");
-                for (Double d : row) sbOut.append(d).append(",");
-                sbOut.append("\n");
-            }
-
-            response.setHeader("Content-Type", "application/octet-stream");
-            response.addHeader("Content-Disposition",
-                    "attachment; filename=\"part_" + System.currentTimeMillis() + ".csv\";");
-            response.addHeader("Content-Transfer-Encoding", "binary");
-
-            try {
-                byte[] outBuf = sbOut.toString().getBytes(StandardCharsets.UTF_8);
-                OutputStream os = response.getOutputStream();
-                os.write(outBuf, 0, outBuf.length);
-                os.flush();
-            } catch(IOException ioe) {
-                throw new HandledServiceException(411, ioe.getMessage());
             }
         }
 
@@ -2148,8 +2704,7 @@ public class ServiceApiController extends ApiController {
                     }
                     params.add(param);
                 }
-            }
-            else {
+            } else {
                 for (int i = 0; i < jarrParams.size(); i++) {
                     Long paramKey = CryptoField.decode(jarrParams.get(i).getAsString(), 0L).originOf();
                     ParamVO param = getService(ParamService.class).getPresetParamBySeq(new CryptoField(paramKey));
@@ -2221,7 +2776,7 @@ public class ServiceApiController extends ApiController {
                 OutputStream os = response.getOutputStream();
                 os.write(outBuf, 0, outBuf.length);
                 os.flush();
-            } catch(IOException ioe) {
+            } catch (IOException ioe) {
                 throw new HandledServiceException(411, ioe.getMessage());
             }
         }
@@ -2230,7 +2785,7 @@ public class ServiceApiController extends ApiController {
     @RequestMapping(value = "/part")
     @ResponseBody
     public Object apiPart(HttpServletRequest request, @PathVariable String serviceVersion,
-                         @RequestBody JsonObject payload, Authentication authentication) throws HandledServiceException {
+                          @RequestBody JsonObject payload, Authentication authentication) throws HandledServiceException {
         /*
         String accessToken = request.getHeader("Authorization");
         if (accessToken == null || (!accessToken.startsWith("bearer") && !accessToken.startsWith("Bearer")))
@@ -2370,7 +2925,7 @@ public class ServiceApiController extends ApiController {
             // 정상 수정 되면 lpf, hpf 새로 생성해야함. => 개별로 처리되지 않기 때문에.. 전체 필터 적용 후 업데이트
             try {
                 updateFilterData(partSeq);
-            } catch(Exception e) {
+            } catch (Exception e) {
                 throw new HandledServiceException(411, e.getMessage());
             }
 
@@ -2407,8 +2962,7 @@ public class ServiceApiController extends ApiController {
                     }
                     params.add(param);
                 }
-            }
-            else {
+            } else {
                 for (int i = 0; i < jarrParams.size(); i++) {
                     Long paramKey = CryptoField.decode(jarrParams.get(i).getAsString(), 0L).originOf();
                     ParamVO param = getService(ParamService.class).getPresetParamBySeq(new CryptoField(paramKey));
@@ -2526,8 +3080,7 @@ public class ServiceApiController extends ApiController {
                     }
                     params.add(param);
                 }
-            }
-            else {
+            } else {
                 for (int i = 0; i < jarrParams.size(); i++) {
                     Long paramKey = CryptoField.decode(jarrParams.get(i).getAsString(), 0L).originOf();
                     ParamVO param = getService(ParamService.class).getPresetParamBySeq(new CryptoField(paramKey));
@@ -2578,8 +3131,8 @@ public class ServiceApiController extends ApiController {
 
     @RequestMapping(value = "/shortblock/d")
     public void apiShortBlockDownload(HttpServletRequest request, HttpServletResponse response,
-                                @PathVariable String serviceVersion,
-                                @RequestBody JsonObject payload, Authentication authentication) throws HandledServiceException {
+                                      @PathVariable String serviceVersion,
+                                      @RequestBody JsonObject payload, Authentication authentication) throws HandledServiceException {
         UserVO user = getService(UserService.class).getUser("admin@dynarap@dynarap");
 
         if (checkJsonEmpty(payload, "command"))
@@ -2606,35 +3159,49 @@ public class ServiceApiController extends ApiController {
                 jarrParams = payload.get("paramSet").getAsJsonArray();
             List<ParamVO> params = new ArrayList<>();
 
-            if (jarrParams == null || jarrParams.size() == 0) {
-                List<String> paramSet = listOps.range("S" + blockInfo.getSeq().originOf(), 0, Integer.MAX_VALUE);
-                for (String p : paramSet) {
-                    ParamVO param = getService(ParamService.class).getPresetParamBySeq(
-                            new CryptoField(Long.parseLong(p.substring(1))));
-                    if (param == null) {
-                        param = getService(ParamService.class).getNotMappedParamBySeq(
-                                new CryptoField(Long.parseLong(p.substring(1))));
-                        if (param == null) continue;
+            // all params.
+            List<CryptoField> paramList = getService(ParamService.class).getShortBlockParamList(blockSeq);
+            if (paramList == null) paramList = new ArrayList<>();
+
+            for (CryptoField seq : paramList) {
+                ShortBlockVO.Param sparam = getService(ParamService.class).getShortBlockParamBySeq(seq);
+                ParamVO param = null;
+
+                List<ParamVO> presetParams = getService(ParamService.class).getPresetParamList(
+                        partInfo.getPresetPack(), partInfo.getPresetSeq(), sparam.getParamPack(), sparam.getParamSeq(), 1, 9999);
+                if (presetParams == null) presetParams = new ArrayList<>();
+
+                for (ParamVO p : presetParams) {
+                    logger.debug("[[[[[ " + p.getReferenceSeq() + ", " + sparam.getUnionParamSeq() + " ]]]]]");
+                    if (p.getReferenceSeq().longValue() == sparam.getUnionParamSeq().longValue()) {
+                        param = p;
+                        break;
                     }
+                }
+                if (param != null)
                     params.add(param);
+            }
+
+            List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
+            if (notMappedParams != null && notMappedParams.size() > 0) {
+                for (ParamVO p : notMappedParams) {
+                    params.add(p);
                 }
             }
-            else {
+
+            List<ParamVO> activeParams = new ArrayList<>();
+            if (jarrParams != null && jarrParams.size() > 0) {
                 for (int i = 0; i < jarrParams.size(); i++) {
-                    Long paramKey = CryptoField.decode(jarrParams.get(i).getAsString(), 0L).originOf();
-                    ShortBlockVO.Param sparam = getService(ParamService.class).getShortBlockParamBySeq(new CryptoField(paramKey));
-                    ParamVO param = getService(ParamService.class).getParamBySeq(sparam.getParamSeq());
-                    if (param != null) {
-                        param.setReferenceSeq(sparam.getUnionParamSeq());
-                        params.add(param);
+                    String paramSeq = jarrParams.get(i).getAsString();
+                    for (ParamVO p : params) {
+                        if (p.getSeq().valueOf().equals(paramSeq)) {
+                            activeParams.add(p);
+                            break;
+                        }
                     }
                 }
-
-                List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
-                if (notMappedParams != null && notMappedParams.size() > 0) {
-                    for (ParamVO p : notMappedParams)
-                        params.add(p);
-                }
+            } else {
+                activeParams = new ArrayList<>(params);
             }
 
             JsonArray jarrJulian = payload.get("julianRange").getAsJsonArray();
@@ -2653,88 +3220,246 @@ public class ServiceApiController extends ApiController {
 
             LinkedHashMap<String, List<Double>> rowData = new LinkedHashMap<>();
             if (julianFrom == null || julianFrom.isEmpty() || julianTo == null || julianTo.isEmpty()) {
-                jobjResult.add("paramSet", ServerConstants.GSON.toJsonTree(params));
+                jobjResult.add("paramSet", ServerConstants.GSON.toJsonTree(activeParams));
                 jobjResult.add("julianSet", ServerConstants.GSON.toJsonTree(new ArrayList<String>()));
                 jobjResult.add("data", ServerConstants.GSON.toJsonTree(rowData));
-            }
-            else {
+
+                StringBuilder sbOut = new StringBuilder();
+                sbOut.append("DATE,");
+                for (ParamVO p : params) sbOut.append(p.getParamKey().replaceAll(",", "_")).append(",");
+                sbOut.append("\n");
+                sbOut.append(",");
+                for (ParamVO p : params) sbOut.append(",");
+                sbOut.append("\n");
+
+                flushResponse(response, sbOut.toString(), "S_" + blockInfo.getBlockName().originOf() + "_" + filterType + ".csv");
+            } else {
                 Set<String> listSet = zsetOps.rangeByScore("S" + blockInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE);
                 if (listSet == null || listSet.size() == 0) {
-                    jobjResult.add("paramSet", ServerConstants.GSON.toJsonTree(params));
+                    jobjResult.add("paramSet", ServerConstants.GSON.toJsonTree(activeParams));
                     jobjResult.add("julianSet", ServerConstants.GSON.toJsonTree(new ArrayList<String>()));
                     jobjResult.add("data", ServerConstants.GSON.toJsonTree(rowData));
-                }
-                else {
-                    String julianStart = listSet.iterator().next();
-                    Long startRowAt = zsetOps.score("S" + blockInfo.getSeq().originOf() + ".R", julianStart).longValue();
 
-                    Long rankFrom = zsetOps.rank("S" + blockInfo.getSeq().originOf() + ".R", julianFrom);
-                    if (rankFrom == null) {
-                        julianFrom = zsetOps.rangeByScore("S" + blockInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE).iterator().next();
-                        rankFrom = zsetOps.rank("S" + blockInfo.getSeq().originOf() + ".R", julianFrom);
-                    }
-                    Long rankTo = zsetOps.rank("S" + blockInfo.getSeq().originOf() + ".R", julianTo);
-                    if (rankTo == null) {
-                        julianTo = zsetOps.reverseRangeByScore("S" + blockInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE).iterator().next();
-                        rankTo = zsetOps.rank("S" + blockInfo.getSeq().originOf() + ".R", julianTo);
-                    }
+                    StringBuilder sbOut = new StringBuilder();
+                    sbOut.append("DATE,");
+                    for (ParamVO p : params) sbOut.append(p.getParamKey().replaceAll(",", "_")).append(",");
+                    sbOut.append("\n");
+                    sbOut.append(",");
+                    for (ParamVO p : params) sbOut.append(",");
+                    sbOut.append("\n");
 
-                    rowData = new LinkedHashMap<>();
-                    for (ParamVO p : params) {
-                        listSet = zsetOps.rangeByScore(
-                                "S" + blockInfo.getSeq().originOf() + "." + filterType + p.getReferenceSeq(), startRowAt + rankFrom, startRowAt + rankTo);
+                    flushResponse(response, sbOut.toString(), "S_" + blockInfo.getBlockName().originOf() + "_" + filterType + ".csv");
+                } else {
+                    if (!(filterType.equals("A") || filterType.equals("Z"))) {
+                        String julianStart = listSet.iterator().next();
+                        Long startRowAt = zsetOps.score("S" + blockInfo.getSeq().originOf() + ".R", julianStart).longValue();
 
-                        Iterator<String> iterListSet = listSet.iterator();
-                        while (iterListSet.hasNext()) {
-                            String rowVal = iterListSet.next();
-                            String julianTime = rowVal.substring(0, rowVal.lastIndexOf(":"));
-                            List<Double> rowList = rowData.get(julianTime);
-                            if (rowList == null) {
-                                rowList = new ArrayList<>();
-                                rowData.put(julianTime, rowList);
-                            }
-                            Double dblVal = Double.parseDouble(rowVal.substring(rowVal.lastIndexOf(":") + 1));
-                            rowList.add(dblVal);
+                        Long rankFrom = zsetOps.rank("S" + blockInfo.getSeq().originOf() + ".R", julianFrom);
+                        if (rankFrom == null) {
+                            julianFrom = zsetOps.rangeByScore("S" + blockInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE).iterator().next();
+                            rankFrom = zsetOps.rank("S" + blockInfo.getSeq().originOf() + ".R", julianFrom);
                         }
+                        Long rankTo = zsetOps.rank("S" + blockInfo.getSeq().originOf() + ".R", julianTo);
+                        if (rankTo == null) {
+                            julianTo = zsetOps.reverseRangeByScore("S" + blockInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE).iterator().next();
+                            rankTo = zsetOps.rank("S" + blockInfo.getSeq().originOf() + ".R", julianTo);
+                        }
+
+                        rowData = new LinkedHashMap<>();
+                        for (ParamVO p : activeParams) {
+                            listSet = zsetOps.rangeByScore(
+                                    "S" + blockInfo.getSeq().originOf() + "." + filterType + p.getReferenceSeq(), startRowAt + rankFrom, startRowAt + rankTo);
+
+                            Iterator<String> iterListSet = listSet.iterator();
+                            while (iterListSet.hasNext()) {
+                                String rowVal = iterListSet.next();
+                                String julianTime = rowVal.substring(0, rowVal.lastIndexOf(":"));
+                                List<Double> rowList = rowData.get(julianTime);
+                                if (rowList == null) {
+                                    rowList = new ArrayList<>();
+                                    rowData.put(julianTime, rowList);
+                                }
+                                Double dblVal = Double.parseDouble(rowVal.substring(rowVal.lastIndexOf(":") + 1));
+                                rowList.add(dblVal);
+                            }
+                        }
+
+                        StringBuilder sbOut = new StringBuilder();
+                        sbOut.append("DATE,");
+                        for (ParamVO p : params) sbOut.append(p.getParamKey().replaceAll(",", "_")).append(",");
+                        sbOut.append("\n");
+                        sbOut.append(",");
+                        for (ParamVO p : params) sbOut.append(",");
+                        sbOut.append("\n");
+
+                        // flush data
+                        Set<String> keys = rowData.keySet();
+                        Iterator<String> iterKeys = keys.iterator();
+                        while (iterKeys.hasNext()) {
+                            String time = iterKeys.next();
+                            List<Double> row = rowData.get(time);
+                            sbOut.append(time).append(",");
+                            for (Double d : row) sbOut.append(d).append(",");
+                            sbOut.append("\n");
+                        }
+
+                        flushResponse(response, sbOut.toString(), "S_" + blockInfo.getBlockName().originOf() + "_" + filterType + ".csv");
                     }
+                    else if (filterType.equals("A")) {
+                        // N,L,H,B making and compress.
+                        String[] filterTypes = new String[]{"N", "L", "H", "B"};
+                        List<File> fileOut = new ArrayList<>();
 
-                    jobjResult.add("paramSet", ServerConstants.GSON.toJsonTree(params));
-                    jobjResult.add("julianSet", ServerConstants.GSON.toJsonTree(Arrays.asList(rowData.keySet())));
-                    jobjResult.add("data", ServerConstants.GSON.toJsonTree(rowData.values()));
+                        for (String ft : filterTypes) {
+                            listSet = zsetOps.rangeByScore("S" + blockInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE);
+
+                            String julianStart = listSet.iterator().next();
+                            Long startRowAt = zsetOps.score("S" + blockInfo.getSeq().originOf() + ".R", julianStart).longValue();
+
+                            Long rankFrom = zsetOps.rank("S" + blockInfo.getSeq().originOf() + ".R", julianFrom);
+                            if (rankFrom == null) {
+                                julianFrom = zsetOps.rangeByScore("S" + blockInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE).iterator().next();
+                                rankFrom = zsetOps.rank("S" + blockInfo.getSeq().originOf() + ".R", julianFrom);
+                            }
+                            Long rankTo = zsetOps.rank("S" + blockInfo.getSeq().originOf() + ".R", julianTo);
+                            if (rankTo == null) {
+                                julianTo = zsetOps.reverseRangeByScore("S" + blockInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE).iterator().next();
+                                rankTo = zsetOps.rank("S" + blockInfo.getSeq().originOf() + ".R", julianTo);
+                            }
+
+                            rowData = new LinkedHashMap<>();
+                            for (ParamVO p : activeParams) {
+                                listSet = zsetOps.rangeByScore(
+                                        "S" + blockInfo.getSeq().originOf() + "." + ft + p.getReferenceSeq(), startRowAt + rankFrom, startRowAt + rankTo);
+
+                                Iterator<String> iterListSet = listSet.iterator();
+                                while (iterListSet.hasNext()) {
+                                    String rowVal = iterListSet.next();
+                                    String julianTime = rowVal.substring(0, rowVal.lastIndexOf(":"));
+                                    List<Double> rowList = rowData.get(julianTime);
+                                    if (rowList == null) {
+                                        rowList = new ArrayList<>();
+                                        rowData.put(julianTime, rowList);
+                                    }
+                                    Double dblVal = Double.parseDouble(rowVal.substring(rowVal.lastIndexOf(":") + 1));
+                                    rowList.add(dblVal);
+                                }
+                            }
+
+                            StringBuilder sbOut = new StringBuilder();
+                            sbOut.append("DATE,");
+                            for (ParamVO p : params) sbOut.append(p.getParamKey().replaceAll(",", "_")).append(",");
+                            sbOut.append("\n");
+                            sbOut.append(",");
+                            for (ParamVO p : params) sbOut.append(",");
+                            sbOut.append("\n");
+
+                            // flush data
+                            Set<String> keys = rowData.keySet();
+                            Iterator<String> iterKeys = keys.iterator();
+                            while (iterKeys.hasNext()) {
+                                String time = iterKeys.next();
+                                List<Double> row = rowData.get(time);
+                                sbOut.append(time).append(",");
+                                for (Double d : row) sbOut.append(d).append(",");
+                                sbOut.append("\n");
+                            }
+
+                            try {
+                                File fSave = new File(processPath, "S_" + blockInfo.getBlockName().originOf() + "_" + ft + ".csv");
+                                FileOutputStream fos = new FileOutputStream(fSave);
+                                BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
+                                bw.write(sbOut.toString(), 0, sbOut.length());
+                                bw.flush();
+                                bw.close();
+                                fileOut.add(fSave);
+                            } catch (IOException ioe) {
+                                ioe.printStackTrace();
+                            }
+                        }
+
+                        flushResponseZip(response, fileOut, "S_" + blockInfo.getBlockName().originOf() + ".zip");
+                    }
+                    else if (filterType.equals("Z")) {
+                        List<ShortBlockVO> blocks = getService(PartService.class).getShortBlockList(user.getUid(), partInfo.getSeq(), 1, 99999);
+                        List<File> fileOut = new ArrayList<>();
+
+                        for (ShortBlockVO block : blocks) {
+                            // N,L,H,B making and compress.
+                            String[] filterTypes = new String[]{"N", "L", "H", "B"};
+
+                            for (String ft : filterTypes) {
+                                listSet = zsetOps.rangeByScore("S" + block.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE);
+
+                                String julianStart = listSet.iterator().next();
+                                Long startRowAt = zsetOps.score("S" + block.getSeq().originOf() + ".R", julianStart).longValue();
+
+                                Long rankFrom = zsetOps.rank("S" + block.getSeq().originOf() + ".R", julianFrom);
+                                if (rankFrom == null) {
+                                    julianFrom = zsetOps.rangeByScore("S" + block.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE).iterator().next();
+                                    rankFrom = zsetOps.rank("S" + block.getSeq().originOf() + ".R", julianFrom);
+                                }
+                                Long rankTo = zsetOps.rank("S" + block.getSeq().originOf() + ".R", julianTo);
+                                if (rankTo == null) {
+                                    julianTo = zsetOps.reverseRangeByScore("S" + block.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE).iterator().next();
+                                    rankTo = zsetOps.rank("S" + block.getSeq().originOf() + ".R", julianTo);
+                                }
+
+                                rowData = new LinkedHashMap<>();
+                                for (ParamVO p : activeParams) {
+                                    listSet = zsetOps.rangeByScore(
+                                            "S" + block.getSeq().originOf() + "." + ft + p.getReferenceSeq(), startRowAt + rankFrom, startRowAt + rankTo);
+
+                                    Iterator<String> iterListSet = listSet.iterator();
+                                    while (iterListSet.hasNext()) {
+                                        String rowVal = iterListSet.next();
+                                        String julianTime = rowVal.substring(0, rowVal.lastIndexOf(":"));
+                                        List<Double> rowList = rowData.get(julianTime);
+                                        if (rowList == null) {
+                                            rowList = new ArrayList<>();
+                                            rowData.put(julianTime, rowList);
+                                        }
+                                        Double dblVal = Double.parseDouble(rowVal.substring(rowVal.lastIndexOf(":") + 1));
+                                        rowList.add(dblVal);
+                                    }
+                                }
+
+                                StringBuilder sbOut = new StringBuilder();
+                                sbOut.append("DATE,");
+                                for (ParamVO p : params) sbOut.append(p.getParamKey().replaceAll(",", "_")).append(",");
+                                sbOut.append("\n");
+                                sbOut.append(",");
+                                for (ParamVO p : params) sbOut.append(",");
+                                sbOut.append("\n");
+
+                                // flush data
+                                Set<String> keys = rowData.keySet();
+                                Iterator<String> iterKeys = keys.iterator();
+                                while (iterKeys.hasNext()) {
+                                    String time = iterKeys.next();
+                                    List<Double> row = rowData.get(time);
+                                    sbOut.append(time).append(",");
+                                    for (Double d : row) sbOut.append(d).append(",");
+                                    sbOut.append("\n");
+                                }
+
+                                try {
+                                    File fSave = new File(processPath, "S_" + block.getBlockName().originOf() + "_" + ft + ".csv");
+                                    FileOutputStream fos = new FileOutputStream(fSave);
+                                    BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
+                                    bw.write(sbOut.toString(), 0, sbOut.length());
+                                    bw.flush();
+                                    bw.close();
+                                    fileOut.add(fSave);
+                                } catch (IOException ioe) {
+                                    ioe.printStackTrace();
+                                }
+                            }
+                        }
+
+                        flushResponseZip(response, fileOut, "P_" + partInfo.getPartName().originOf() + "_shortblocks.zip");
+                    }
                 }
-            }
-
-            StringBuilder sbOut = new StringBuilder();
-            sbOut.append("DATE,");
-            for (ParamVO p : params) sbOut.append(p.getParamKey().replaceAll(",", "_")).append(",");
-            sbOut.append("\n");
-            sbOut.append(",");
-            for (ParamVO p : params) sbOut.append(",");
-            sbOut.append("\n");
-
-            // flush data
-            Set<String> keys = rowData.keySet();
-            Iterator<String> iterKeys = keys.iterator();
-            while (iterKeys.hasNext()) {
-                String time = iterKeys.next();
-                List<Double> row = rowData.get(time);
-                sbOut.append(time).append(",");
-                for (Double d : row) sbOut.append(d).append(",");
-                sbOut.append("\n");
-            }
-
-            response.setHeader("Content-Type", "application/octet-stream");
-            response.addHeader("Content-Disposition",
-                    "attachment; filename=\"shortblock_" + System.currentTimeMillis() + ".csv\";");
-            response.addHeader("Content-Transfer-Encoding", "binary");
-
-            try {
-                byte[] outBuf = sbOut.toString().getBytes(StandardCharsets.UTF_8);
-                OutputStream os = response.getOutputStream();
-                os.write(outBuf, 0, outBuf.length);
-                os.flush();
-            } catch(IOException ioe) {
-                throw new HandledServiceException(411, ioe.getMessage());
             }
         }
 
@@ -2757,40 +3482,54 @@ public class ServiceApiController extends ApiController {
                 jarrParams = payload.get("paramSet").getAsJsonArray();
             List<ParamVO> params = new ArrayList<>();
 
-            if (jarrParams == null || jarrParams.size() == 0) {
-                List<String> paramSet = listOps.range("S" + blockInfo.getSeq().originOf(), 0, Integer.MAX_VALUE);
-                for (String p : paramSet) {
-                    ParamVO param = getService(ParamService.class).getPresetParamBySeq(
-                            new CryptoField(Long.parseLong(p.substring(1))));
-                    if (param == null) {
-                        param = getService(ParamService.class).getNotMappedParamBySeq(
-                                new CryptoField(Long.parseLong(p.substring(1))));
-                        if (param == null) continue;
+            // all params.
+            List<CryptoField> paramList = getService(ParamService.class).getShortBlockParamList(blockSeq);
+            if (paramList == null) paramList = new ArrayList<>();
+
+            for (CryptoField seq : paramList) {
+                ShortBlockVO.Param sparam = getService(ParamService.class).getShortBlockParamBySeq(seq);
+                ParamVO param = null;
+
+                List<ParamVO> presetParams = getService(ParamService.class).getPresetParamList(
+                        partInfo.getPresetPack(), partInfo.getPresetSeq(), sparam.getParamPack(), sparam.getParamSeq(), 1, 9999);
+                if (presetParams == null) presetParams = new ArrayList<>();
+
+                for (ParamVO p : presetParams) {
+                    logger.debug("[[[[[ " + p.getReferenceSeq() + ", " + sparam.getUnionParamSeq() + " ]]]]]");
+                    if (p.getReferenceSeq().longValue() == sparam.getUnionParamSeq().longValue()) {
+                        param = p;
+                        break;
                     }
+                }
+                if (param != null)
                     params.add(param);
+            }
+
+            List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
+            if (notMappedParams != null && notMappedParams.size() > 0) {
+                for (ParamVO p : notMappedParams) {
+                    params.add(p);
                 }
             }
-            else {
+
+            List<ParamVO> activeParams = new ArrayList<>();
+            if (jarrParams != null && jarrParams.size() > 0) {
                 for (int i = 0; i < jarrParams.size(); i++) {
-                    Long paramKey = CryptoField.decode(jarrParams.get(i).getAsString(), 0L).originOf();
-                    ShortBlockVO.Param sparam = getService(ParamService.class).getShortBlockParamBySeq(new CryptoField(paramKey));
-                    ParamVO param = getService(ParamService.class).getParamBySeq(sparam.getParamSeq());
-                    if (param != null) {
-                        param.setReferenceSeq(sparam.getUnionParamSeq());
-                        params.add(param);
+                    String paramSeq = jarrParams.get(i).getAsString();
+                    for (ParamVO p : params) {
+                        if (p.getSeq().valueOf().equals(paramSeq)) {
+                            activeParams.add(p);
+                            break;
+                        }
                     }
                 }
-
-                List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
-                if (notMappedParams != null && notMappedParams.size() > 0) {
-                    for (ParamVO p : notMappedParams)
-                        params.add(p);
-                }
+            } else {
+                activeParams = new ArrayList<>(params);
             }
 
             List<String> julianData = new ArrayList<>();
             LinkedHashMap<String, List<Double>> paramData = new LinkedHashMap<>();
-            for (ParamVO p : params) {
+            for (ParamVO p : activeParams) {
                 Set<String> listSet = zsetOps.rangeByScore(
                         "S" + blockInfo.getSeq().originOf() + "." + filterType + p.getReferenceSeq(), 0, Integer.MAX_VALUE);
                 if (listSet == null || listSet.size() == 0) continue;
@@ -2841,7 +3580,7 @@ public class ServiceApiController extends ApiController {
                 OutputStream os = response.getOutputStream();
                 os.write(outBuf, 0, outBuf.length);
                 os.flush();
-            } catch(IOException ioe) {
+            } catch (IOException ioe) {
                 throw new HandledServiceException(411, ioe.getMessage());
             }
         }
@@ -2912,18 +3651,24 @@ public class ServiceApiController extends ApiController {
             List<CryptoField> paramList = getService(ParamService.class).getShortBlockParamList(blockSeq);
             if (paramList == null) paramList = new ArrayList<>();
 
-            List<ParamVO> presetParams = getService(ParamService.class).getPresetParamList(
-                    partInfo.getPresetPack(), partInfo.getPresetSeq(), CryptoField.LZERO, CryptoField.LZERO, 1, 9999);
-            if (presetParams == null) presetParams = new ArrayList<>();
-
             for (CryptoField seq : paramList) {
                 ShortBlockVO.Param sparam = getService(ParamService.class).getShortBlockParamBySeq(seq);
                 ParamVO param = null;
+
+                List<ParamVO> presetParams = getService(ParamService.class).getPresetParamList(
+                        partInfo.getPresetPack(), partInfo.getPresetSeq(), sparam.getParamPack(), sparam.getParamSeq(), 1, 9999);
+                if (presetParams == null) presetParams = new ArrayList<>();
+
                 for (ParamVO p : presetParams) {
-                    if (p.getParamPack().equals(sparam.getParamPack()) && p.getSeq().equals(sparam.getParamSeq())) {
+                    logger.debug("[[[[[ " + p.getReferenceSeq() + ", " + sparam.getUnionParamSeq() + " ]]]]]");
+                    if (p.getReferenceSeq().longValue() == sparam.getUnionParamSeq().longValue()) {
                         param = p;
                         break;
                     }
+                    //if (p.getParamPack().equals(sparam.getParamPack()) && p.getSeq().equals(sparam.getParamSeq())) {
+                    //    param = p;
+                    //    break;
+                    //}
                 }
                 if (param != null) {
                     resultParams.add(param);
@@ -2979,35 +3724,49 @@ public class ServiceApiController extends ApiController {
                 jarrParams = payload.get("paramSet").getAsJsonArray();
             List<ParamVO> params = new ArrayList<>();
 
-            if (jarrParams == null || jarrParams.size() == 0) {
-                List<String> paramSet = listOps.range("S" + blockInfo.getSeq().originOf(), 0, Integer.MAX_VALUE);
-                for (String p : paramSet) {
-                    ParamVO param = getService(ParamService.class).getPresetParamBySeq(
-                            new CryptoField(Long.parseLong(p.substring(1))));
-                    if (param == null) {
-                        param = getService(ParamService.class).getNotMappedParamBySeq(
-                                new CryptoField(Long.parseLong(p.substring(1))));
-                        if (param == null) continue;
+            // all params.
+            List<CryptoField> paramList = getService(ParamService.class).getShortBlockParamList(blockSeq);
+            if (paramList == null) paramList = new ArrayList<>();
+
+            for (CryptoField seq : paramList) {
+                ShortBlockVO.Param sparam = getService(ParamService.class).getShortBlockParamBySeq(seq);
+                ParamVO param = null;
+
+                List<ParamVO> presetParams = getService(ParamService.class).getPresetParamList(
+                        partInfo.getPresetPack(), partInfo.getPresetSeq(), sparam.getParamPack(), sparam.getParamSeq(), 1, 9999);
+                if (presetParams == null) presetParams = new ArrayList<>();
+
+                for (ParamVO p : presetParams) {
+                    logger.debug("[[[[[ " + p.getReferenceSeq() + ", " + sparam.getUnionParamSeq() + " ]]]]]");
+                    if (p.getReferenceSeq().longValue() == sparam.getUnionParamSeq().longValue()) {
+                        param = p;
+                        break;
                     }
+                }
+                if (param != null)
                     params.add(param);
+            }
+
+            List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
+            if (notMappedParams != null && notMappedParams.size() > 0) {
+                for (ParamVO p : notMappedParams) {
+                    params.add(p);
                 }
             }
-            else {
+
+            List<ParamVO> activeParams = new ArrayList<>();
+            if (jarrParams != null && jarrParams.size() > 0) {
                 for (int i = 0; i < jarrParams.size(); i++) {
-                    Long paramKey = CryptoField.decode(jarrParams.get(i).getAsString(), 0L).originOf();
-                    ShortBlockVO.Param sparam = getService(ParamService.class).getShortBlockParamBySeq(new CryptoField(paramKey));
-                    ParamVO param = getService(ParamService.class).getParamBySeq(sparam.getParamSeq());
-                    if (param != null) {
-                        param.setReferenceSeq(sparam.getUnionParamSeq());
-                        params.add(param);
+                    String paramSeq = jarrParams.get(i).getAsString();
+                    for (ParamVO p : params) {
+                        if (p.getSeq().valueOf().equals(paramSeq)) {
+                            activeParams.add(p);
+                            break;
+                        }
                     }
                 }
-
-                List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
-                if (notMappedParams != null && notMappedParams.size() > 0) {
-                    for (ParamVO p : notMappedParams)
-                        params.add(p);
-                }
+            } else {
+                activeParams = new ArrayList<>(params);
             }
 
             JsonArray jarrJulian = payload.get("julianRange").getAsJsonArray();
@@ -3025,7 +3784,7 @@ public class ServiceApiController extends ApiController {
             }
 
             if (julianFrom == null || julianFrom.isEmpty() || julianTo == null || julianTo.isEmpty()) {
-                jobjResult.add("paramSet", ServerConstants.GSON.toJsonTree(params));
+                jobjResult.add("paramSet", ServerConstants.GSON.toJsonTree(activeParams));
                 jobjResult.add("julianSet", ServerConstants.GSON.toJsonTree(new ArrayList<String>()));
                 jobjResult.add("data", ServerConstants.GSON.toJsonTree(new LinkedHashMap<String, List<Double>>()));
                 return ResponseHelper.response(200, "Success - rowData", jobjResult);
@@ -3033,7 +3792,7 @@ public class ServiceApiController extends ApiController {
 
             Set<String> listSet = zsetOps.rangeByScore("S" + blockInfo.getSeq().originOf() + ".R", 0, Integer.MAX_VALUE);
             if (listSet == null || listSet.size() == 0) {
-                jobjResult.add("paramSet", ServerConstants.GSON.toJsonTree(params));
+                jobjResult.add("paramSet", ServerConstants.GSON.toJsonTree(activeParams));
                 jobjResult.add("julianSet", ServerConstants.GSON.toJsonTree(new ArrayList<String>()));
                 jobjResult.add("data", ServerConstants.GSON.toJsonTree(new LinkedHashMap<String, List<Double>>()));
                 return ResponseHelper.response(200, "Success - rowData", jobjResult);
@@ -3054,7 +3813,7 @@ public class ServiceApiController extends ApiController {
             }
 
             LinkedHashMap<String, List<Double>> rowData = new LinkedHashMap<>();
-            for (ParamVO p : params) {
+            for (ParamVO p : activeParams) {
                 listSet = zsetOps.rangeByScore(
                         "S" + blockInfo.getSeq().originOf() + "." + filterType + p.getReferenceSeq(), startRowAt + rankFrom, startRowAt + rankTo);
 
@@ -3072,7 +3831,7 @@ public class ServiceApiController extends ApiController {
                 }
             }
 
-            jobjResult.add("paramSet", ServerConstants.GSON.toJsonTree(params));
+            jobjResult.add("paramSet", ServerConstants.GSON.toJsonTree(activeParams));
             jobjResult.add("julianSet", ServerConstants.GSON.toJsonTree(Arrays.asList(rowData.keySet())));
             jobjResult.add("data", ServerConstants.GSON.toJsonTree(rowData.values()));
 
@@ -3098,40 +3857,54 @@ public class ServiceApiController extends ApiController {
                 jarrParams = payload.get("paramSet").getAsJsonArray();
             List<ParamVO> params = new ArrayList<>();
 
-            if (jarrParams == null || jarrParams.size() == 0) {
-                List<String> paramSet = listOps.range("S" + blockInfo.getSeq().originOf(), 0, Integer.MAX_VALUE);
-                for (String p : paramSet) {
-                    ParamVO param = getService(ParamService.class).getPresetParamBySeq(
-                            new CryptoField(Long.parseLong(p.substring(1))));
-                    if (param == null) {
-                        param = getService(ParamService.class).getNotMappedParamBySeq(
-                                new CryptoField(Long.parseLong(p.substring(1))));
-                        if (param == null) continue;
+            // all params.
+            List<CryptoField> paramList = getService(ParamService.class).getShortBlockParamList(blockSeq);
+            if (paramList == null) paramList = new ArrayList<>();
+
+            for (CryptoField seq : paramList) {
+                ShortBlockVO.Param sparam = getService(ParamService.class).getShortBlockParamBySeq(seq);
+                ParamVO param = null;
+
+                List<ParamVO> presetParams = getService(ParamService.class).getPresetParamList(
+                        partInfo.getPresetPack(), partInfo.getPresetSeq(), sparam.getParamPack(), sparam.getParamSeq(), 1, 9999);
+                if (presetParams == null) presetParams = new ArrayList<>();
+
+                for (ParamVO p : presetParams) {
+                    logger.debug("[[[[[ " + p.getReferenceSeq() + ", " + sparam.getUnionParamSeq() + " ]]]]]");
+                    if (p.getReferenceSeq().longValue() == sparam.getUnionParamSeq().longValue()) {
+                        param = p;
+                        break;
                     }
+                }
+                if (param != null)
                     params.add(param);
+            }
+
+            List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
+            if (notMappedParams != null && notMappedParams.size() > 0) {
+                for (ParamVO p : notMappedParams) {
+                    params.add(p);
                 }
             }
-            else {
+
+            List<ParamVO> activeParams = new ArrayList<>();
+            if (jarrParams != null && jarrParams.size() > 0) {
                 for (int i = 0; i < jarrParams.size(); i++) {
-                    Long paramKey = CryptoField.decode(jarrParams.get(i).getAsString(), 0L).originOf();
-                    ShortBlockVO.Param sparam = getService(ParamService.class).getShortBlockParamBySeq(new CryptoField(paramKey));
-                    ParamVO param = getService(ParamService.class).getParamBySeq(sparam.getParamSeq());
-                    if (param != null) {
-                        param.setReferenceSeq(sparam.getUnionParamSeq());
-                        params.add(param);
+                    String paramSeq = jarrParams.get(i).getAsString();
+                    for (ParamVO p : params) {
+                        if (p.getSeq().valueOf().equals(paramSeq)) {
+                            activeParams.add(p);
+                            break;
+                        }
                     }
                 }
-
-                List<ParamVO> notMappedParams = getService(ParamService.class).getNotMappedParams(partInfo.getUploadSeq());
-                if (notMappedParams != null && notMappedParams.size() > 0) {
-                    for (ParamVO p : notMappedParams)
-                        params.add(p);
-                }
+            } else {
+                activeParams = new ArrayList<>(params);
             }
 
             List<String> julianData = new ArrayList<>();
             LinkedHashMap<String, List<Double>> paramData = new LinkedHashMap<>();
-            for (ParamVO p : params) {
+            for (ParamVO p : activeParams) {
                 Set<String> listSet = zsetOps.rangeByScore(
                         "S" + blockInfo.getSeq().originOf() + "." + filterType + p.getReferenceSeq(), 0, Integer.MAX_VALUE);
                 if (listSet == null || listSet.size() == 0) continue;
@@ -3162,8 +3935,8 @@ public class ServiceApiController extends ApiController {
     @RequestMapping(value = "/data-prop")
     @ResponseBody
     public Object apiDataProp(HttpServletRequest request, HttpServletResponse response,
-                                @PathVariable String serviceVersion,
-                                @RequestBody JsonObject payload, Authentication authentication) throws HandledServiceException {
+                              @PathVariable String serviceVersion,
+                              @RequestBody JsonObject payload, Authentication authentication) throws HandledServiceException {
         /*
         String accessToken = request.getHeader("Authorization");
         if (accessToken == null || (!accessToken.startsWith("bearer") && !accessToken.startsWith("Bearer")))

@@ -6,6 +6,7 @@ import com.google.gson.JsonPrimitive;
 import com.servetech.dynarap.config.ServerConstants;
 import com.servetech.dynarap.controller.ApiController;
 import com.servetech.dynarap.db.type.CryptoField;
+import com.servetech.dynarap.ext.ConvexHull;
 import com.servetech.dynarap.ext.HandledServiceException;
 import com.servetech.dynarap.vo.*;
 import org.apache.catalina.Server;
@@ -49,6 +50,8 @@ public class EquationHelper {
     public void loadParamModuleData(CryptoField moduleSeq, boolean forced) throws HandledServiceException {
         ParamModuleVO paramModule = paramModuleData.get(moduleSeq.valueOf());
 
+        List<ParamModuleVO.Equation> lazyLoadEqs = new ArrayList<>();
+
         if (paramModule == null || forced) {
             paramModule = ApiController.getService(ParamModuleService.class).getParamModuleBySeq(moduleSeq);
             paramModule.setSources(ApiController.getService(ParamModuleService.class).getParamModuleSourceList(moduleSeq));
@@ -69,6 +72,9 @@ public class EquationHelper {
                 } else if (source.getSourceType().equalsIgnoreCase("parammodule")) {
                     loadEquationData(source);
                     paramModule.getParamData().put(source.getSourceNo() + "_" + source.getEquation().getEqNo(), source);
+                } else if (source.getSourceType().equalsIgnoreCase("bintable")) {
+                    loadBintableData(source);
+                    paramModule.getParamData().put(source.getSourceNo() + "_" + source.getParam().getParamKey(), source);
                 }
             }
 
@@ -77,13 +83,85 @@ public class EquationHelper {
 
             for (ParamModuleVO.Equation equation : paramModule.getEquations()) {
                 loadEquationData(equation);
-                if (paramModule.getEqMap() == null)
-                    paramModule.setEqMap(new LinkedHashMap<>());
-                paramModule.getEqMap().put(equation.getEqNo(), equation);
+                if (equation.isLazyLoad()) {
+                    lazyLoadEqs.add(equation);
+                }
+                else {
+                    if (paramModule.getEqMap() == null)
+                        paramModule.setEqMap(new LinkedHashMap<>());
+                    paramModule.getEqMap().put(equation.getEqNo(), equation);
+                }
             }
         }
 
         paramModuleData.put(moduleSeq.valueOf(), paramModule);
+
+        if (lazyLoadEqs.size() > 0) {
+            for (ParamModuleVO.Equation eq : lazyLoadEqs) {
+                try {
+                    JsonArray jarrData = tryCalculate(paramModule, eq.getEquation(), 0L);
+
+                    List<Object> data = new ArrayList<>();
+                    List<Double[]> convhData = new ArrayList<>();
+
+                    for (int i = 0; i < jarrData.size(); i++) {
+                        if (jarrData.get(i).isJsonNull())
+                            data.add(null);
+                        else if (jarrData.get(i).isJsonPrimitive()) {
+                            if (jarrData.get(i).getAsJsonPrimitive().isString())
+                                data.add(jarrData.get(i).getAsString());
+                            else
+                                data.add(jarrData.get(i).getAsDouble());
+                        }
+                        else if (jarrData.get(i).isJsonArray()) {
+                            // for convh
+                            data.add(jarrData.get(i).getAsJsonArray());
+                            Double[] convhItem = new Double[] {
+                                    jarrData.get(i).getAsJsonArray().get(0).getAsDouble(),
+                                    jarrData.get(i).getAsJsonArray().get(1).getAsDouble()
+                            };
+                            convhData.add(convhItem);
+                        }
+                    }
+
+                    if (convhData != null && convhData.size() > 0)
+                        eq.setData(new ArrayList<>());
+                    else
+                        eq.setData(data);
+                    eq.setConvhData(convhData);
+
+                    if (eq.getEquation().contains("_time")) {
+                        List<String> timeSet = new ArrayList<>();
+                        for (Object time : data) {
+                            timeSet.add((String) time);
+                        }
+                        eq.setTimeSet(timeSet);
+
+                        hashOps.put("PM" + eq.getModuleSeq().originOf(), "E" + eq.getSeq().originOf() + ".TimeSet",
+                                ServerConstants.GSON.toJson(eq.getTimeSet()));
+                    }
+                    else {
+                        String jsonData = hashOps.get("PM" + eq.getModuleSeq().originOf(), "E" + eq.getSeq().originOf() + ".TimeSet");
+                        if (jsonData != null && !jsonData.isEmpty()) {
+                            jarrData = ServerConstants.GSON.fromJson(jsonData, JsonArray.class);
+                            List<String> timeSet = new ArrayList<>();
+                            for (int i = 0; i < jarrData.size(); i++)
+                                timeSet.add(jarrData.get(i).getAsString());
+                            eq.setTimeSet(timeSet);
+                        }
+                    }
+
+                    eq.setDataCount(data == null ? 0 : data.size());
+
+                    if (paramModule.getEqMap() == null)
+                        paramModule.setEqMap(new LinkedHashMap<>());
+                    paramModule.getEqMap().put(eq.getEqNo(), eq);
+                } catch(HandledServiceException hse) {
+                    throw hse;
+                }
+            }
+            lazyLoadEqs.clear();
+        }
     }
 
     public ParamModuleVO getParamModule(CryptoField moduleSeq) throws HandledServiceException {
@@ -187,8 +265,15 @@ public class EquationHelper {
             //reCalculate = true;
 
             if (reCalculate) {
-                tryCalculate(paramModule, equations.get(i));
+                JsonArray calResult = tryCalculate(paramModule, equations.get(i));
+                if (calResult != null)
+                  equations.get(i).setDataCount(calResult.size());
                 paramModule.getEqMap().put(equations.get(i).getEqNo(), equations.get(i));
+            }
+            else {
+                if (equations.get(i).getData() == null) {
+                    loadEquationData(equations.get(i));
+                }
             }
         }
     }
@@ -202,27 +287,345 @@ public class EquationHelper {
     }
 
     private JsonArray tryCalculate(ParamModuleVO paramModule, String eq, Long eqSeq) throws HandledServiceException {
-        // 싱글 파라미터 처리 (lrp xyz, shortblock psd,rms,n0)
+        // check convh
+        if (eq.contains("convh(")) {
+            eq = eq.replaceAll("\\\\", "");
+            List<String> sensors = ServerConstants.extractParams(eq, "{", "}");
+            List<Object> resultSet = new ArrayList<>();
+
+            // not match convh
+            if (sensors != null && sensors.size() != 2) {
+                if (eqSeq > 0L) {
+                    hashOps.put("PM" + paramModule.getSeq().originOf(), "E" + eqSeq,
+                            "[]");
+                }
+                return ServerConstants.GSON.fromJson("[]", JsonArray.class);
+            }
+
+            // 센서 포함 수식. -> 계산 결과가 배열로 나옴.
+            List<Object> src0 = null;
+            List<Object> src1 = null;
+
+            ParamModuleVO.Source partSource = paramModule.getParamData().get(sensors.get(0));
+            if (partSource != null) {
+                if (sensors.get(0).endsWith("_H") || sensors.get(0).contains("_H_")) {
+                    src0 = partSource.getHpfData();
+                } else if (sensors.get(0).endsWith("_L") || sensors.get(0).contains("_L_")) {
+                    src0 = partSource.getLpfData();
+                } else if (sensors.get(0).endsWith("_B") || sensors.get(0).contains("_B_")) {
+                    src0 = partSource.getBpfData();
+                } else {
+                    src0 = partSource.getData();
+                }
+            } else {
+                ParamModuleVO.Equation equation = paramModule.getEqMap().get(sensors.get(0));
+                if (equation != null) {
+                    if (equation.getData() == null) {
+                        loadEquationData(equation);
+                    }
+                    src0 = equation.getData();
+                }
+            }
+
+            partSource = paramModule.getParamData().get(sensors.get(1));
+            if (partSource != null) {
+                if (sensors.get(1).endsWith("_H") || sensors.get(1).contains("_H_")) {
+                    src1 = partSource.getHpfData();
+                } else if (sensors.get(1).endsWith("_L") || sensors.get(1).contains("_L_")) {
+                    src1 = partSource.getLpfData();
+                } else if (sensors.get(1).endsWith("_B") || sensors.get(1).contains("_B_")) {
+                    src1 = partSource.getBpfData();
+                } else {
+                    src1 = partSource.getData();
+                }
+            } else {
+                ParamModuleVO.Equation equation = paramModule.getEqMap().get(sensors.get(1));
+                if (equation != null) {
+                    if (equation.getData() == null) {
+                        loadEquationData(equation);
+                    }
+                    src1 = equation.getData();
+                }
+            }
+
+            if (src0 == null || src1 == null || src0.size() != src1.size())
+                throw new HandledServiceException(411, "ConvexHull 계산을 위해서는 데이터수가 일치해야합니다.");
+
+            List<ConvexHull.Point> cps = new ArrayList<>();
+            for (int i = 0; i < src0.size(); i++) {
+                cps.add(new ConvexHull.Point((Double) src0.get(i), (Double) src1.get(i)));
+            }
+            List<ConvexHull.Point> hull = ConvexHull.makeHull(cps);
+            if (hull == null) hull = new ArrayList<>();
+            List<List<Double>> hullArr = new ArrayList<>();
+            for (ConvexHull.Point p : hull) {
+                List<Double> hullItem = new ArrayList<>();
+                hullItem.add(p.x);
+                hullItem.add(p.y);
+                hullArr.add(hullItem);
+            }
+
+            if (eqSeq > 0L) {
+                hashOps.put("PM" + paramModule.getSeq().originOf(), "E" + eqSeq,
+                        ServerConstants.GSON.toJson(hullArr));
+            }
+            return ServerConstants.GSON.fromJson(ServerConstants.GSON.toJson(hullArr), JsonArray.class);
+        }
+
+        // 싱글 파라미터 처리 (lrp xyz, shortblock min,max,avg,rms,n0)
         Set<String> paramSet = paramModule.getParamData().keySet();
         Iterator<String> iterParamSet = paramSet.iterator();
         while (iterParamSet.hasNext()) {
             String paramKey = iterParamSet.next();
             ParamModuleVO.Source paramSource = paramModule.getParamData().get(paramKey);
 
-            // lrp 처리
-            if (paramKey.startsWith("P") || paramKey.startsWith("S")) {
-                if (paramSource.getParam() != null) {
-                    eq = eq.replaceAll("\\{" + paramKey + "_X\\}", "(" + paramSource.getParam().getLrpX() + ")");
-                    eq = eq.replaceAll("\\{" + paramKey + "_Y\\}", "(" + paramSource.getParam().getLrpY() + ")");
-                    eq = eq.replaceAll("\\{" + paramKey + "_Z\\}", "(" + paramSource.getParam().getLrpZ() + ")");
+            if (paramSource.getParam() != null) {
+                eq = eq.replaceAll("\\{" + paramKey + "_X\\}", "(" + paramSource.getParam().getLrpX() + ")");
+                eq = eq.replaceAll("\\{" + paramKey + "_Y\\}", "(" + paramSource.getParam().getLrpY() + ")");
+                eq = eq.replaceAll("\\{" + paramKey + "_Z\\}", "(" + paramSource.getParam().getLrpZ() + ")");
+            }
+
+            if (paramKey.startsWith("P")) {
+                if (eq.contains(paramKey + "_time")) {
+                    if (eqSeq > 0L) {
+                        hashOps.put("PM" + paramModule.getSeq().originOf(), "E" + eqSeq,
+                                ServerConstants.GSON.toJson(paramSource.getTimeSet()));
+                    }
+                    return ServerConstants.GSON.fromJson(ServerConstants.GSON.toJson(paramSource.getTimeSet()), JsonArray.class);
+                }
+            }
+
+            // shortblock 싱글 처리
+            if (paramKey.startsWith("S")) {
+                if (eq.contains(paramKey + "_time")) {
+                    if (eqSeq > 0L) {
+                        hashOps.put("PM" + paramModule.getSeq().originOf(), "E" + eqSeq,
+                                ServerConstants.GSON.toJson(paramSource.getTimeSet()));
+                    }
+                    return ServerConstants.GSON.fromJson(ServerConstants.GSON.toJson(paramSource.getTimeSet()), JsonArray.class);
                 }
 
-                // shortblock 싱글 처리
-                if (paramKey.startsWith("S")) {
-                    if (paramSource.getParamData() != null) {
-                        eq = eq.replaceAll("\\{" + paramKey + "_psd\\}", "(" + paramSource.getParamData().getPsd() + ")");
-                        eq = eq.replaceAll("\\{" + paramKey + "_rms\\}", "(" + paramSource.getParamData().getRms() + ")");
-                        eq = eq.replaceAll("\\{" + paramKey + "_n0\\}", "(" + paramSource.getParamData().getN0() + ")");
+                if (paramSource.getParamData() != null) {
+                    if (eq.contains(paramKey + "_L_psd") || eq.contains(paramKey + "_H_psd") || eq.contains(paramKey + "_B_psd") || eq.contains(paramKey + "_psd")) {
+                        if (eq.contains(paramKey + "_L_psd")) {
+                            if (eqSeq > 0L) {
+                                hashOps.put("PM" + paramModule.getSeq().originOf(), "E" + eqSeq,
+                                        paramSource.getParamData().getLpfPsd());
+                            }
+                            return ServerConstants.GSON.fromJson(paramSource.getParamData().getLpfPsd(), JsonArray.class);
+                        }
+                        else if (eq.contains(paramKey + "_H_psd")) {
+                            if (eqSeq > 0L) {
+                                hashOps.put("PM" + paramModule.getSeq().originOf(), "E" + eqSeq,
+                                        paramSource.getParamData().getHpfPsd());
+                            }
+                            return ServerConstants.GSON.fromJson(paramSource.getParamData().getHpfPsd(), JsonArray.class);
+                        }
+                        else if (eq.contains(paramKey + "_B_psd")) {
+                            if (eqSeq > 0L) {
+                                hashOps.put("PM" + paramModule.getSeq().originOf(), "E" + eqSeq,
+                                        paramSource.getParamData().getBpfPsd());
+                            }
+                            return ServerConstants.GSON.fromJson(paramSource.getParamData().getBpfPsd(), JsonArray.class);
+                        }
+                        else {
+                            if (eqSeq > 0L) {
+                                hashOps.put("PM" + paramModule.getSeq().originOf(), "E" + eqSeq,
+                                        paramSource.getParamData().getPsd());
+                            }
+                            return ServerConstants.GSON.fromJson(paramSource.getParamData().getPsd(), JsonArray.class);
+                        }
+                    }
+                    if (eq.contains(paramKey + "_L_freq") || eq.contains(paramKey + "_H_freq") || eq.contains(paramKey + "_B_freq") || eq.contains(paramKey + "_freq")) {
+                        if (eq.contains(paramKey + "_L_freq")) {
+                            if (eqSeq > 0L) {
+                                hashOps.put("PM" + paramModule.getSeq().originOf(), "E" + eqSeq,
+                                        paramSource.getParamData().getLpfFrequency());
+                            }
+                            return ServerConstants.GSON.fromJson(paramSource.getParamData().getLpfFrequency(), JsonArray.class);
+                        }
+                        else if (eq.contains(paramKey + "_H_freq")) {
+                            if (eqSeq > 0L) {
+                                hashOps.put("PM" + paramModule.getSeq().originOf(), "E" + eqSeq,
+                                        paramSource.getParamData().getHpfFrequency());
+                            }
+                            return ServerConstants.GSON.fromJson(paramSource.getParamData().getHpfFrequency(), JsonArray.class);
+                        }
+                        else if (eq.contains(paramKey + "_B_freq")) {
+                            if (eqSeq > 0L) {
+                                hashOps.put("PM" + paramModule.getSeq().originOf(), "E" + eqSeq,
+                                        paramSource.getParamData().getBpfFrequency());
+                            }
+                            return ServerConstants.GSON.fromJson(paramSource.getParamData().getBpfFrequency(), JsonArray.class);
+                        }
+                        else {
+                            if (eqSeq > 0L) {
+                                hashOps.put("PM" + paramModule.getSeq().originOf(), "E" + eqSeq,
+                                        paramSource.getParamData().getFrequency());
+                            }
+                            return ServerConstants.GSON.fromJson(paramSource.getParamData().getFrequency(), JsonArray.class);
+                        }
+                    }
+
+                    if (eq.contains(paramKey + "_L_peak") || eq.contains(paramKey + "_H_peak") || eq.contains(paramKey + "_B_peak") || eq.contains(paramKey + "_peak")) {
+                        if (eq.contains(paramKey + "_L_peak")) {
+                            if (eqSeq > 0L) {
+                                hashOps.put("PM" + paramModule.getSeq().originOf(), "E" + eqSeq,
+                                        paramSource.getParamData().getLpfPeak());
+                            }
+                            return ServerConstants.GSON.fromJson(paramSource.getParamData().getLpfPeak(), JsonArray.class);
+                        }
+                        else if (eq.contains(paramKey + "_H_peak")) {
+                            if (eqSeq > 0L) {
+                                hashOps.put("PM" + paramModule.getSeq().originOf(), "E" + eqSeq,
+                                        paramSource.getParamData().getHpfPeak());
+                            }
+                            return ServerConstants.GSON.fromJson(paramSource.getParamData().getHpfPeak(), JsonArray.class);
+                        }
+                        else if (eq.contains(paramKey + "_B_peak")) {
+                            if (eqSeq > 0L) {
+                                hashOps.put("PM" + paramModule.getSeq().originOf(), "E" + eqSeq,
+                                        paramSource.getParamData().getBpfPeak());
+                            }
+                            return ServerConstants.GSON.fromJson(paramSource.getParamData().getBpfPeak(), JsonArray.class);
+                        }
+                        else {
+                            if (eqSeq > 0L) {
+                                hashOps.put("PM" + paramModule.getSeq().originOf(), "E" + eqSeq,
+                                        paramSource.getParamData().getPeak());
+                            }
+                            return ServerConstants.GSON.fromJson(paramSource.getParamData().getPeak(), JsonArray.class);
+                        }
+                    }
+
+                    if (eq.contains(paramKey + "_L_zarray") || eq.contains(paramKey + "_H_zarray") || eq.contains(paramKey + "_B_zarray") || eq.contains(paramKey + "_zarray")) {
+                        if (eq.contains(paramKey + "_L_zarray")) {
+                            if (eqSeq > 0L) {
+                                hashOps.put("PM" + paramModule.getSeq().originOf(), "E" + eqSeq,
+                                        paramSource.getParamData().getLpfZarray());
+                            }
+                            return ServerConstants.GSON.fromJson(paramSource.getParamData().getLpfZarray(), JsonArray.class);
+                        }
+                        else if (eq.contains(paramKey + "_H_zarray")) {
+                            if (eqSeq > 0L) {
+                                hashOps.put("PM" + paramModule.getSeq().originOf(), "E" + eqSeq,
+                                        paramSource.getParamData().getHpfZarray());
+                            }
+                            return ServerConstants.GSON.fromJson(paramSource.getParamData().getHpfZarray(), JsonArray.class);
+                        }
+                        else if (eq.contains(paramKey + "_B_zarray")) {
+                            if (eqSeq > 0L) {
+                                hashOps.put("PM" + paramModule.getSeq().originOf(), "E" + eqSeq,
+                                        paramSource.getParamData().getBpfZarray());
+                            }
+                            return ServerConstants.GSON.fromJson(paramSource.getParamData().getBpfZarray(), JsonArray.class);
+                        }
+                        else {
+                            if (eqSeq > 0L) {
+                                hashOps.put("PM" + paramModule.getSeq().originOf(), "E" + eqSeq,
+                                        paramSource.getParamData().getZarray());
+                            }
+                            return ServerConstants.GSON.fromJson(paramSource.getParamData().getZarray(), JsonArray.class);
+                        }
+                    }
+
+                    eq = eq.replaceAll("\\{" + paramKey + "_L_min\\}", "(" + paramSource.getParamData().getBlockLpfMin() + ")");
+                    eq = eq.replaceAll("\\{" + paramKey + "_L_max\\}", "(" + paramSource.getParamData().getBlockLpfMax() + ")");
+                    eq = eq.replaceAll("\\{" + paramKey + "_L_avg\\}", "(" + paramSource.getParamData().getBlockLpfAvg() + ")");
+                    eq = eq.replaceAll("\\{" + paramKey + "_L_rms\\}", "(" + paramSource.getParamData().getLpfRms() + ")");
+                    eq = eq.replaceAll("\\{" + paramKey + "_L_n0\\}", "(" + paramSource.getParamData().getLpfN0() + ")");
+
+                    eq = eq.replaceAll("\\{" + paramKey + "_H_min\\}", "(" + paramSource.getParamData().getBlockHpfMin() + ")");
+                    eq = eq.replaceAll("\\{" + paramKey + "_H_max\\}", "(" + paramSource.getParamData().getBlockHpfMax() + ")");
+                    eq = eq.replaceAll("\\{" + paramKey + "_H_avg\\}", "(" + paramSource.getParamData().getBlockHpfAvg() + ")");
+                    eq = eq.replaceAll("\\{" + paramKey + "_H_rms\\}", "(" + paramSource.getParamData().getHpfRms() + ")");
+                    eq = eq.replaceAll("\\{" + paramKey + "_H_n0\\}", "(" + paramSource.getParamData().getHpfN0() + ")");
+
+                    eq = eq.replaceAll("\\{" + paramKey + "_B_min\\}", "(" + paramSource.getParamData().getBlockBpfMin() + ")");
+                    eq = eq.replaceAll("\\{" + paramKey + "_B_max\\}", "(" + paramSource.getParamData().getBlockBpfMax() + ")");
+                    eq = eq.replaceAll("\\{" + paramKey + "_B_avg\\}", "(" + paramSource.getParamData().getBlockBpfAvg() + ")");
+                    eq = eq.replaceAll("\\{" + paramKey + "_B_rms\\}", "(" + paramSource.getParamData().getBpfRms() + ")");
+                    eq = eq.replaceAll("\\{" + paramKey + "_B_n0\\}", "(" + paramSource.getParamData().getBpfN0() + ")");
+
+                    eq = eq.replaceAll("\\{" + paramKey + "_min\\}", "(" + paramSource.getParamData().getBlockMin() + ")");
+                    eq = eq.replaceAll("\\{" + paramKey + "_max\\}", "(" + paramSource.getParamData().getBlockMax() + ")");
+                    eq = eq.replaceAll("\\{" + paramKey + "_avg\\}", "(" + paramSource.getParamData().getBlockAvg() + ")");
+                    eq = eq.replaceAll("\\{" + paramKey + "_rms\\}", "(" + paramSource.getParamData().getRms() + ")");
+                    eq = eq.replaceAll("\\{" + paramKey + "_n0\\}", "(" + paramSource.getParamData().getN0() + ")");
+                }
+            }
+
+            // bintable single
+            if (paramKey.startsWith("B")) {
+                if (paramSource.getBinSummaries() != null) {
+                    Set<String> cells = paramSource.getBinSummaries().keySet();
+                    Iterator<String> iterCells = cells.iterator();
+                    while (iterCells.hasNext()) {
+                        String cell = iterCells.next();
+                        BinTableVO.BinSummary binSummary = paramSource.getBinSummaries().get(cell);
+                        if (binSummary == null) continue;
+
+                        // source has only one, bpf
+                        BinTableVO.BinSummary.SummaryItem summaryItem = binSummary.getSummary().values().iterator().next().get("bpf");
+
+                        if (eq.contains(paramKey + "_" + cell + "_psd")) {
+                            if (eqSeq > 0L) {
+                                hashOps.put("PM" + paramModule.getSeq().originOf(), "E" + eqSeq,
+                                        ServerConstants.GSON.toJson(summaryItem.getPsd()));
+                            }
+                            return ServerConstants.GSON.fromJson(ServerConstants.GSON.toJson(summaryItem.getPsd()), JsonArray.class);
+                        }
+
+                        if (eq.contains(paramKey + "_" + cell + "_freq")) {
+                            if (eqSeq > 0L) {
+                                hashOps.put("PM" + paramModule.getSeq().originOf(), "E" + eqSeq,
+                                        ServerConstants.GSON.toJson(summaryItem.getFrequency()));
+                            }
+                            return ServerConstants.GSON.fromJson(ServerConstants.GSON.toJson(summaryItem.getFrequency()), JsonArray.class);
+                        }
+
+                        if (eq.contains(paramKey + "_" + cell + "_rms")) {
+                            if (eqSeq > 0L) {
+                                hashOps.put("PM" + paramModule.getSeq().originOf(), "E" + eqSeq,
+                                        ServerConstants.GSON.toJson(summaryItem.getRms()));
+                            }
+                            return ServerConstants.GSON.fromJson(ServerConstants.GSON.toJson(summaryItem.getRms()), JsonArray.class);
+                        }
+
+                        if (eq.contains(paramKey + "_" + cell + "_n0")) {
+                            if (eqSeq > 0L) {
+                                hashOps.put("PM" + paramModule.getSeq().originOf(), "E" + eqSeq,
+                                        ServerConstants.GSON.toJson(summaryItem.getN0()));
+                            }
+                            return ServerConstants.GSON.fromJson(ServerConstants.GSON.toJson(summaryItem.getN0()), JsonArray.class);
+                        }
+
+                        if (eq.contains(paramKey + "_" + cell + "_zeta")) {
+                            if (eqSeq > 0L) {
+                                hashOps.put("PM" + paramModule.getSeq().originOf(), "E" + eqSeq,
+                                        ServerConstants.GSON.toJson(summaryItem.getZeta()));
+                            }
+                            return ServerConstants.GSON.fromJson(ServerConstants.GSON.toJson(summaryItem.getZeta()), JsonArray.class);
+                        }
+
+                        if (eq.contains(paramKey + "_" + cell + "_rtp")) {
+                            if (eqSeq > 0L) {
+                                hashOps.put("PM" + paramModule.getSeq().originOf(), "E" + eqSeq,
+                                        ServerConstants.GSON.toJson(summaryItem.getRmsToPeak()));
+                            }
+                            return ServerConstants.GSON.fromJson(ServerConstants.GSON.toJson(summaryItem.getRmsToPeak()), JsonArray.class);
+                        }
+
+                        eq = eq.replaceAll("\\{" + paramKey + "_" + cell + "_min\\}", "(" + summaryItem.getMin() + ")");
+                        eq = eq.replaceAll("\\{" + paramKey + "_" + cell + "_max\\}", "(" + summaryItem.getMax() + ")");
+                        eq = eq.replaceAll("\\{" + paramKey + "_" + cell + "_avg\\}", "(" + summaryItem.getAvg() + ")");
+
+                        eq = eq.replaceAll("\\{" + paramKey + "_" + cell + "_avgrms\\}", "(" + summaryItem.getAvg_rms() + ")");
+                        eq = eq.replaceAll("\\{" + paramKey + "_" + cell + "_avgn0\\}", "(" + summaryItem.getAvg_n0() + ")");
+                        eq = eq.replaceAll("\\{" + paramKey + "_" + cell + "_bf\\}", "(" + summaryItem.getBurstFactor() + ")");
+
+                        eq = eq.replaceAll("\\{" + paramKey + "_" + cell + "_maxrtp\\}", "(" + summaryItem.getMaxRmsToPeak() + ")");
+                        eq = eq.replaceAll("\\{" + paramKey + "_" + cell + "_maxla\\}", "(" + summaryItem.getMaxLoadAccel() + ")");
                     }
                 }
             }
@@ -263,12 +666,15 @@ public class EquationHelper {
             for (String sensor : sensors) {
                 ParamModuleVO.Source partSource = paramModule.getParamData().get(sensor);
                 if (partSource != null) {
-                    if (sensor.contains("_hpf")) {
+                    if (sensor.endsWith("_H") || sensor.contains("_H_")) {
                         sensorData.put(sensor, partSource.getHpfData());
                         outBound = Math.max(outBound, partSource.getHpfData().size());
-                    } else if (sensor.contains("_lpf")) {
+                    } else if (sensor.endsWith("_L") || sensor.contains("_L_")) {
                         sensorData.put(sensor, partSource.getLpfData());
                         outBound = Math.max(outBound, partSource.getLpfData().size());
+                    } else if (sensor.endsWith("_B") || sensor.contains("_B_")) {
+                        sensorData.put(sensor, partSource.getBpfData());
+                        outBound = Math.max(outBound, partSource.getBpfData().size());
                     } else {
                         sensorData.put(sensor, partSource.getData());
                         outBound = Math.max(outBound, partSource.getData().size());
@@ -277,8 +683,12 @@ public class EquationHelper {
                 else {
                     ParamModuleVO.Equation equation = paramModule.getEqMap().get(sensor);
                     if (equation != null) {
+                        if (equation.getData() == null) {
+                          loadEquationData(equation);
+                        }
                         sensorData.put(sensor, equation.getData());
-                        outBound = Math.max(outBound, equation.getData().size());
+                        if (equation.getData() != null)
+                          outBound = Math.max(outBound, equation.getData().size());
                     }
                 }
             }
@@ -287,12 +697,13 @@ public class EquationHelper {
                 String calcEq = eq;
                 for (String sensor : sensors) {
                     List<Object> data = sensorData.get(sensor);
+                    if (data == null) continue;
 
                     Double calcVal = 0.0;
                     if (data.size() > i) {
                         try {
                             calcVal = Double.parseDouble(data.get(i) + "");
-                        } catch(NumberFormatException nfe) {
+                        } catch (NumberFormatException nfe) {
                             throw new HandledServiceException(411, "문자를 계산에 사용할 수 없음.");
                         }
                     }
@@ -300,16 +711,64 @@ public class EquationHelper {
                     calcEq = calcEq.replaceAll("\\{" + sensor + "\\}", "(" + calcVal + ")");
                 }
 
-                Double qVal = 0.0;
-                try {
-                    ScriptEngineManager mgr = new ScriptEngineManager();
-                    ScriptEngine engine = mgr.getEngineByName("JavaScript");
-                    qVal = (Double) engine.eval(calcEq);
-                } catch(Exception e) {
-                    throw new HandledServiceException(411, "스크립트로 계산할 수 없음 [" + calcEq + "]");
-                }
+                if (outBound > 1) {
+                    Double qVal = 0.0;
+                    try {
+                        ScriptEngineManager mgr = new ScriptEngineManager();
+                        ScriptEngine engine = mgr.getEngineByName("JavaScript");
+                        qVal = (Double) engine.eval(calcEq);
+                    } catch (Exception e) {
+                        throw new HandledServiceException(411, "스크립트로 계산할 수 없음 [" + calcEq + "]");
+                    }
 
-                resultSet.add(qVal);
+                    resultSet.add(qVal);
+                }
+                else if (outBound == 1) {
+                    if (calcEq.startsWith("[") && calcEq.endsWith("]")) {
+                        // 수식 처리로 된 것들.
+                        String[] eqSplit = calcEq.substring(1, calcEq.length() - 1).split(",");
+                        for (String partEq : eqSplit) {
+                            if (partEq.contains("\"")) partEq = partEq.replaceAll("\\\"", "");
+
+                            Double qVal = 0.0;
+                            try {
+                                ScriptEngineManager mgr = new ScriptEngineManager();
+                                ScriptEngine engine = mgr.getEngineByName("JavaScript");
+                                qVal = (Double) engine.eval(partEq.trim());
+                                resultSet.add(qVal);
+                            } catch (Exception e) {
+                                try {
+                                    qVal = Double.parseDouble(partEq.trim());
+                                    resultSet.add(qVal);
+                                } catch(Exception ex) {
+                                    System.out.println("스크립트로 계산할 수 없음 [" + partEq + "]");
+                                    resultSet.add(partEq.trim());
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        if (calcEq.contains(","))
+                            throw new HandledServiceException(411, "해석할 수 없는 수식입니다. [" + calcEq + "]");
+
+                        if (calcEq.contains("\"")) {
+                            resultSet.add(calcEq.trim());
+                        }
+                        else {
+                            // 단일 식 혹은 배열 -> 수식을 배열로 바꿔서 결과 도출.
+                            Double qVal = 0.0;
+                            try {
+                                ScriptEngineManager mgr = new ScriptEngineManager();
+                                ScriptEngine engine = mgr.getEngineByName("JavaScript");
+                                qVal = (Double) engine.eval(calcEq.trim());
+                                resultSet.add(qVal);
+                            } catch (Exception e) {
+                                System.out.println("스크립트로 계산할 수 없음 [" + calcEq + "]");
+                                resultSet.add(qVal);
+                            }
+                        }
+                    }
+                }
             }
         }
         else {
@@ -385,12 +844,15 @@ public class EquationHelper {
         for (String sensor : partSensors) {
             ParamModuleVO.Source partSource = paramModule.getParamData().get(sensor);
             if (partSource != null) {
-                if (sensor.contains("_hpf")) {
+                if (sensor.endsWith("_H") || sensor.contains("_H_")) {
                     sensorData.put(sensor, partSource.getHpfData());
                     outBound = Math.max(outBound, partSource.getHpfData().size());
-                } else if (sensor.contains("_lpf")) {
+                } else if (sensor.endsWith("_L") || sensor.contains("_L_")) {
                     sensorData.put(sensor, partSource.getLpfData());
                     outBound = Math.max(outBound, partSource.getLpfData().size());
+                } else if (sensor.endsWith("_B") || sensor.contains("_B_")) {
+                    sensorData.put(sensor, partSource.getBpfData());
+                    outBound = Math.max(outBound, partSource.getBpfData().size());
                 } else {
                     sensorData.put(sensor, partSource.getData());
                     outBound = Math.max(outBound, partSource.getData().size());
@@ -457,12 +919,15 @@ public class EquationHelper {
         for (String sensor : partSensors) {
             ParamModuleVO.Source partSource = paramModule.getParamData().get(sensor);
             if (partSource != null) {
-                if (sensor.contains("_hpf")) {
+                if (sensor.endsWith("_H") || sensor.contains("_H_")) {
                     sensorData.put(sensor, partSource.getHpfData());
                     outBound = Math.max(outBound, partSource.getHpfData().size());
-                } else if (sensor.contains("_lpf")) {
+                } else if (sensor.endsWith("_L") || sensor.contains("_L_")) {
                     sensorData.put(sensor, partSource.getLpfData());
                     outBound = Math.max(outBound, partSource.getLpfData().size());
+                } else if (sensor.endsWith("_B") || sensor.contains("_B_")) {
+                    sensorData.put(sensor, partSource.getBpfData());
+                    outBound = Math.max(outBound, partSource.getBpfData().size());
                 } else {
                     sensorData.put(sensor, partSource.getData());
                     outBound = Math.max(outBound, partSource.getData().size());
@@ -528,12 +993,15 @@ public class EquationHelper {
         for (String sensor : partSensors) {
             ParamModuleVO.Source partSource = paramModule.getParamData().get(sensor);
             if (partSource != null) {
-                if (sensor.contains("_hpf")) {
+                if (sensor.endsWith("_H") || sensor.contains("_H_")) {
                     sensorData.put(sensor, partSource.getHpfData());
                     outBound = Math.max(outBound, partSource.getHpfData().size());
-                } else if (sensor.contains("_lpf")) {
+                } else if (sensor.endsWith("_L") || sensor.contains("_L_")) {
                     sensorData.put(sensor, partSource.getLpfData());
                     outBound = Math.max(outBound, partSource.getLpfData().size());
+                } else if (sensor.endsWith("_B") || sensor.contains("_B_")) {
+                    sensorData.put(sensor, partSource.getBpfData());
+                    outBound = Math.max(outBound, partSource.getBpfData().size());
                 } else {
                     sensorData.put(sensor, partSource.getData());
                     outBound = Math.max(outBound, partSource.getData().size());
@@ -641,6 +1109,7 @@ public class EquationHelper {
         List<Object> data = new ArrayList<>();
         List<Object> lpfData = new ArrayList<>();
         List<Object> hpfData = new ArrayList<>();
+        List<Object> bpfData = new ArrayList<>();
 
         listSet = zsetOps.rangeByScore(
                 "P" + partInfo.getSeq().originOf() + ".N" +  + param.getReferenceSeq(), startRowAt + rankFrom, startRowAt + rankTo);
@@ -674,10 +1143,21 @@ public class EquationHelper {
             hpfData.add(dblVal);
         }
 
+        listSet = zsetOps.rangeByScore(
+                "P" + partInfo.getSeq().originOf() + ".B" +  + param.getReferenceSeq(), startRowAt + rankFrom, startRowAt + rankTo);
+
+        iterListSet = listSet.iterator();
+        while (iterListSet.hasNext()) {
+            String rowVal = iterListSet.next();
+            Double dblVal = Double.parseDouble(rowVal.substring(rowVal.lastIndexOf(":") + 1));
+            bpfData.add(dblVal);
+        }
+
         source.setTimeSet(timeSet);
         source.setData(data);
         source.setLpfData(lpfData);
         source.setHpfData(hpfData);
+        source.setBpfData(hpfData);
 
         source.setDataCount(data == null ? 0 : data.size());
     }
@@ -738,6 +1218,7 @@ public class EquationHelper {
         List<Object> data = new ArrayList<>();
         List<Object> lpfData = new ArrayList<>();
         List<Object> hpfData = new ArrayList<>();
+        List<Object> bpfData = new ArrayList<>();
 
         listSet = zsetOps.rangeByScore(
                 "S" + blockInfo.getSeq().originOf() + ".N" + param.getReferenceSeq(), startRowAt + rankFrom, startRowAt + rankTo);
@@ -771,12 +1252,45 @@ public class EquationHelper {
             hpfData.add(dblVal);
         }
 
+        listSet = zsetOps.rangeByScore(
+                "S" + blockInfo.getSeq().originOf() + ".B" + param.getReferenceSeq(), startRowAt + rankFrom, startRowAt + rankTo);
+
+        iterListSet = listSet.iterator();
+        while (iterListSet.hasNext()) {
+            String rowVal = iterListSet.next();
+            Double dblVal = Double.parseDouble(rowVal.substring(rowVal.lastIndexOf(":") + 1));
+            bpfData.add(dblVal);
+        }
+
         source.setTimeSet(timeSet);
         source.setData(data);
         source.setLpfData(lpfData);
         source.setHpfData(hpfData);
+        source.setBpfData(bpfData);
 
         source.setDataCount(data == null ? 0 : data.size());
+    }
+
+    private void loadBintableData(ParamModuleVO.Source source) throws HandledServiceException {
+        BinTableVO binTableInfo = ApiController.getService(BinTableService.class).getBinTableBySeq(source.getSourceSeq());
+        if (binTableInfo == null) throw new HandledServiceException(411, "BinTable 정보 조회 실패");
+
+        Long paramKey = source.getParamSeq().originOf();
+        ShortBlockVO.Param sbParam = ApiController.getService(ParamService.class).getShortBlockParamBySeq(new CryptoField(paramKey));
+        if (sbParam == null)
+            throw new HandledServiceException(411, "파라미터 조회 실패");
+
+        ParamVO param = ApiController.getService(ParamService.class).getParamBySeq(sbParam.getParamSeq());
+        param.setReferenceSeq(sbParam.getUnionParamSeq());
+
+        source.setParam(param);
+        source.setSourceNo("B" + binTableInfo.getSeq().originOf());
+        source.setParamKey(param.getParamKey());
+        source.setSourceName(binTableInfo.getMetaName());
+
+        // bintable info setting. bin summary loading
+        source.setBinSummaries(ApiController.getService(BinTableService.class).loadBinTableSummary(
+                source.getSourceSeq(), sbParam.getSeq().valueOf()));
     }
 
     private void loadDllData(ParamModuleVO.Source source) throws HandledServiceException {
@@ -827,6 +1341,7 @@ public class EquationHelper {
 
         JsonArray jarrData = ServerConstants.GSON.fromJson(jsonData, JsonArray.class);
         List<Object> data = new ArrayList<>();
+        List<Double[]> convhData = new ArrayList<>();
 
         for (int i = 0; i < jarrData.size(); i++) {
             if (jarrData.get(i).isJsonNull())
@@ -837,9 +1352,21 @@ public class EquationHelper {
                 else
                     data.add(jarrData.get(i).getAsDouble());
             }
+            else if (jarrData.get(i).isJsonArray()) {
+                data.add(jarrData.get(i).getAsJsonArray());
+                Double[] convhItem = new Double[] {
+                        jarrData.get(i).getAsJsonArray().get(0).getAsDouble(),
+                        jarrData.get(i).getAsJsonArray().get(1).getAsDouble()
+                };
+                convhData.add(convhItem);
+            }
         }
 
-        source.setData(data);
+        if (convhData != null && convhData.size() > 0)
+            source.setData(new ArrayList<>());
+        else
+            source.setData(data);
+        source.setConvhData(convhData);
 
         jsonData = hashOps.get("PM" + paramModule.getSeq().originOf(), "E" + equation.getSeq().originOf() + ".TimeSet");
         if (jsonData != null && !jsonData.isEmpty()) {
@@ -858,14 +1385,27 @@ public class EquationHelper {
         // E<seq>.TimeSet = []
         // E<seq> = []
         String jsonData = hashOps.get("PM" + equation.getModuleSeq().originOf(), "E" + equation.getSeq().originOf());
+        JsonArray jarrData = null;
+
         if (jsonData == null || jsonData.isEmpty()) {
             equation.setData(new ArrayList<>());
             equation.setTimeSet(new ArrayList<>());
+            equation.setDataCount(0);
+            equation.setLazyLoad(true);
             return;
         }
 
-        JsonArray jarrData = ServerConstants.GSON.fromJson(jsonData, JsonArray.class);
+        jarrData = ServerConstants.GSON.fromJson(jsonData, JsonArray.class);
+
+        if (jarrData == null || jarrData.size() == 0) {
+            equation.setData(new ArrayList<>());
+            equation.setTimeSet(new ArrayList<>());
+            equation.setDataCount(0);
+            return;
+        }
+
         List<Object> data = new ArrayList<>();
+        List<Double[]> convhData = new ArrayList<>();
 
         for (int i = 0; i < jarrData.size(); i++) {
             if (jarrData.get(i).isJsonNull())
@@ -876,20 +1416,249 @@ public class EquationHelper {
                 else
                     data.add(jarrData.get(i).getAsDouble());
             }
+            else if (jarrData.get(i).isJsonArray()) {
+                // for convh
+                data.add(jarrData.get(i).getAsJsonArray());
+                Double[] convhItem = new Double[] {
+                        jarrData.get(i).getAsJsonArray().get(0).getAsDouble(),
+                        jarrData.get(i).getAsJsonArray().get(1).getAsDouble()
+                };
+                convhData.add(convhItem);
+            }
         }
 
-        equation.setData(data);
+        if (convhData != null && convhData.size() > 0)
+            equation.setData(new ArrayList<>());
+        else
+            equation.setData(data);
+        equation.setConvhData(convhData);
 
-        jsonData = hashOps.get("PM" + equation.getModuleSeq().originOf(), "E" + equation.getSeq().originOf() + ".TimeSet");
-        if (jsonData != null && !jsonData.isEmpty()) {
-            jarrData = ServerConstants.GSON.fromJson(jsonData, JsonArray.class);
+        if (equation.getEquation().contains("_time")) {
             List<String> timeSet = new ArrayList<>();
-            for (int i = 0; i < jarrData.size(); i++)
-                timeSet.add(jarrData.get(i).getAsString());
-
+            for (Object time : data) {
+                timeSet.add((String) time);
+            }
             equation.setTimeSet(timeSet);
+
+            hashOps.put("PM" + equation.getModuleSeq().originOf(), "E" + equation.getSeq().originOf() + ".TimeSet",
+                    ServerConstants.GSON.toJson(equation.getTimeSet()));
+        }
+        else {
+            jsonData = hashOps.get("PM" + equation.getModuleSeq().originOf(), "E" + equation.getSeq().originOf() + ".TimeSet");
+            if (jsonData != null && !jsonData.isEmpty()) {
+                jarrData = ServerConstants.GSON.fromJson(jsonData, JsonArray.class);
+                List<String> timeSet = new ArrayList<>();
+                for (int i = 0; i < jarrData.size(); i++)
+                    timeSet.add(jarrData.get(i).getAsString());
+                equation.setTimeSet(timeSet);
+            }
         }
 
         equation.setDataCount(data == null ? 0 : data.size());
     }
+
+    public boolean findConvexHullTime(ParamModuleVO paramModule, ParamModuleVO.Equation equation,
+                                      String xValue, String yValue, JsonObject jobjOutput) throws HandledServiceException {
+        String eq = equation.getEquation();
+
+        eq = eq.replaceAll("\\\\", "");
+        List<String> sensors = ServerConstants.extractParams(eq, "{", "}");
+
+        // not match convh
+        if (sensors != null && sensors.size() != 2) {
+            jobjOutput.addProperty("message", "Convex Hull 형식이 맞지 않습니다.");
+            return false;
+        }
+
+        // 센서 포함 수식. -> 계산 결과가 배열로 나옴.
+        List<Object> src0 = null;
+        List<Object> src1 = null;
+
+        CryptoField src0PartSeq = null;
+        CryptoField src0BlockSeq = null;
+        CryptoField src0EqSeq = null;
+        CryptoField src1PartSeq = null;
+        CryptoField src1BlockSeq = null;
+        CryptoField src1EqSeq = null;
+
+        List<String> src0TimeSet = null;
+        List<String> src1TimeSet = null;
+
+        ParamModuleVO.Source partSource = paramModule.getParamData().get(sensors.get(0));
+        if (partSource != null) {
+            if (sensors.get(0).endsWith("_H") || sensors.get(0).contains("_H_")) {
+                src0 = partSource.getHpfData();
+            } else if (sensors.get(0).endsWith("_L") || sensors.get(0).contains("_L_")) {
+                src0 = partSource.getLpfData();
+            } else if (sensors.get(0).endsWith("_B") || sensors.get(0).contains("_B_")) {
+                src0 = partSource.getBpfData();
+            } else {
+                src0 = partSource.getData();
+            }
+            if (partSource.getSourceType().equals("part"))
+                src0PartSeq = partSource.getSourceSeq();
+            else if (partSource.getSourceType().equals("shortblock"))
+                src0BlockSeq = partSource.getSourceSeq();
+            src0TimeSet = partSource.getTimeSet();
+        } else {
+            ParamModuleVO.Equation eqSource = paramModule.getEqMap().get(sensors.get(0));
+            if (eqSource != null) {
+                if (eqSource.getData() == null) {
+                    loadEquationData(eqSource);
+                }
+                src0 = eqSource.getData();
+                src0EqSeq = eqSource.getSeq();
+                src0TimeSet = eqSource.getTimeSet();
+            }
+        }
+
+        partSource = paramModule.getParamData().get(sensors.get(1));
+        if (partSource != null) {
+            if (sensors.get(1).endsWith("_H") || sensors.get(1).contains("_H_")) {
+                src1 = partSource.getHpfData();
+            } else if (sensors.get(1).endsWith("_L") || sensors.get(1).contains("_L_")) {
+                src1 = partSource.getLpfData();
+            } else if (sensors.get(1).endsWith("_B") || sensors.get(1).contains("_B_")) {
+                src1 = partSource.getBpfData();
+            } else {
+                src1 = partSource.getData();
+            }
+            if (partSource.getSourceType().equals("part"))
+                src1PartSeq = partSource.getSourceSeq();
+            else if (partSource.getSourceType().equals("shortblock"))
+                src1BlockSeq = partSource.getSourceSeq();
+            src1TimeSet = partSource.getTimeSet();
+        } else {
+            ParamModuleVO.Equation eqSource = paramModule.getEqMap().get(sensors.get(1));
+            if (eqSource != null) {
+                if (eqSource.getData() == null) {
+                    loadEquationData(eqSource);
+                }
+                src1 = eqSource.getData();
+                src1EqSeq = eqSource.getSeq();
+                src1TimeSet = eqSource.getTimeSet();
+            }
+        }
+
+        if (src0 == null || src1 == null || src0.size() != src1.size()) {
+            jobjOutput.addProperty("message", "ConvexHull 계산을 위해서는 데이터수가 일치해야합니다.");
+            return false;
+        }
+
+        if (src0TimeSet == null || src1TimeSet == null || src0TimeSet.size() != src1TimeSet.size()) {
+            jobjOutput.addProperty("message", "Convex Hull 타임테이블이 올바르지 않습니다.");
+            return false;
+        }
+
+        double xVal = Double.parseDouble(xValue);
+        double yVal = Double.parseDouble(yValue);
+        List<String> timeSet = new ArrayList<>();
+
+        for (int i = 0; i < src0.size(); i++) {
+            double x = (Double) src0.get(i);
+            double y = (Double) src1.get(i);
+            if (xVal == x && yVal == y)
+                timeSet.add(src0TimeSet.get(i));
+        }
+
+        jobjOutput.addProperty("partSeq", (src0PartSeq == null) ? "" : src0PartSeq.valueOf());
+        jobjOutput.addProperty("blockSeq", (src0BlockSeq == null) ? "" : src0BlockSeq.valueOf());
+        jobjOutput.addProperty("eqSeq", (src0EqSeq == null) ? "" : src0EqSeq.valueOf());
+        jobjOutput.add("timeSet", ServerConstants.GSON.toJsonTree(timeSet));
+        return true;
+    }
+
+    public boolean findCrossPlotTime(ParamModuleVO paramModule, ParamModuleVO.Equation equation,
+                                      String xValue, String yValue, int pointIndex, JsonObject jobjOutput) throws HandledServiceException {
+        String eq = equation.getEquation();
+
+        eq = eq.trim();
+        eq = eq.replaceAll("\\\\", "");
+
+        if (!eq.startsWith("[") && !eq.endsWith("]")) {
+            jobjOutput.addProperty("message", "수식 데이터가 조건에 맞지 않습니다. (Not Array Format)");
+            return false;
+        }
+
+        eq = eq.substring(1, eq.length() - 1); // trim [, ]
+        String[] eqSplit = eq.split(",");
+        if (eqSplit == null || eqSplit.length == 0) {
+            jobjOutput.addProperty("message", "수식 데이터가 조건에 맞지 않습니다. (No Data)");
+            return false;
+        }
+
+        if (eqSplit.length <= pointIndex) {
+            jobjOutput.addProperty("message", "수식 데이터가 조건에 맞지 않습니다. (IndexOutOfBound)");
+            return false;
+        }
+
+        String targetEq = eqSplit[pointIndex];
+        if (!targetEq.contains("min") && !targetEq.contains("max")) {
+            jobjOutput.addProperty("message", "수식 데이터가 조건에 맞지 않습니다. (min, max function NotFound)");
+            return false;
+        }
+
+        List<String> sensors = ServerConstants.extractParams(targetEq, "{", "}");
+        if (sensors == null || sensors.size() != 1) {
+            jobjOutput.addProperty("message", "수식 데이터가 조건에 맞지 않습니다. (NotSupport Multiple Sensors)");
+            return false;
+        }
+
+        List<Object> src0 = null;
+
+        CryptoField src0PartSeq = null;
+        CryptoField src0BlockSeq = null;
+        CryptoField src0EqSeq = null;
+
+        List<String> src0TimeSet = null;
+
+        ParamModuleVO.Source partSource = paramModule.getParamData().get(sensors.get(0));
+        if (partSource != null) {
+            if (sensors.get(0).endsWith("_H") || sensors.get(0).contains("_H_")) {
+                src0 = partSource.getHpfData();
+            } else if (sensors.get(0).endsWith("_L") || sensors.get(0).contains("_L_")) {
+                src0 = partSource.getLpfData();
+            } else if (sensors.get(0).endsWith("_B") || sensors.get(0).contains("_B_")) {
+                src0 = partSource.getBpfData();
+            } else {
+                src0 = partSource.getData();
+            }
+            if (partSource.getSourceType().equals("part"))
+                src0PartSeq = partSource.getSourceSeq();
+            else if (partSource.getSourceType().equals("shortblock"))
+                src0BlockSeq = partSource.getSourceSeq();
+            src0TimeSet = partSource.getTimeSet();
+        } else {
+            ParamModuleVO.Equation eqSource = paramModule.getEqMap().get(sensors.get(0));
+            if (eqSource != null) {
+                if (eqSource.getData() == null) {
+                    loadEquationData(eqSource);
+                }
+                src0 = eqSource.getData();
+                src0EqSeq = eqSource.getSeq();
+                src0TimeSet = eqSource.getTimeSet();
+            }
+        }
+
+        if (src0 == null || src0.size() == 0 || src0TimeSet == null || src0TimeSet.size() == 0) {
+            jobjOutput.addProperty("message", "수식 데이터가 조건에 맞지 않습니다. (No SourceData or TimeSet)");
+            return false;
+        }
+
+        double findVal = Double.parseDouble(yValue);
+        List<String> timeSet = new ArrayList<>();
+
+        for (int i = 0; i < src0.size(); i++) {
+            double v = (Double) src0.get(i);
+            if (findVal == v)
+                timeSet.add(src0TimeSet.get(i));
+        }
+
+        jobjOutput.addProperty("partSeq", (src0PartSeq == null) ? "" : src0PartSeq.valueOf());
+        jobjOutput.addProperty("blockSeq", (src0BlockSeq == null) ? "" : src0BlockSeq.valueOf());
+        jobjOutput.addProperty("eqSeq", (src0EqSeq == null) ? "" : src0EqSeq.valueOf());
+        jobjOutput.add("timeSet", ServerConstants.GSON.toJsonTree(timeSet));
+        return true;
+    }
+
 }

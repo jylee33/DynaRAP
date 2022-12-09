@@ -398,6 +398,7 @@ public class PartImportTask {
                                         zsetOps.removeRangeByScore("P" + currentPart.getSeq().originOf() + ".N" + param.getReferenceSeq(), 0, Integer.MAX_VALUE);
                                         zsetOps.removeRangeByScore("P" + currentPart.getSeq().originOf() + ".L" + param.getReferenceSeq(), 0, Integer.MAX_VALUE);
                                         zsetOps.removeRangeByScore("P" + currentPart.getSeq().originOf() + ".H" + param.getReferenceSeq(), 0, Integer.MAX_VALUE);
+                                        zsetOps.removeRangeByScore("P" + currentPart.getSeq().originOf() + ".B" + param.getReferenceSeq(), 0, Integer.MAX_VALUE);
                                     }
 
                                     // 동압 있으면
@@ -431,7 +432,7 @@ public class PartImportTask {
                                         if (!rs_q.next()) {
                                             rs_q.close();
                                             stmt_q.executeUpdate("insert into dynarap_notmapped_param (uploadSeq,paramPack,paramSeq,notMappedParamKey) " +
-                                                    "values (" + rawUpload.getSeq().originOf() + ", " + qParam.getSeq().originOf() + ", " + qParam.getParamPack().originOf() + ", 'Dynamic Pressure')");
+                                                    "values (" + rawUpload.getSeq().originOf() + ", " + qParam.getParamPack().originOf() + ", " + qParam.getSeq().originOf() + ", 'Dynamic Pressure')");
                                             rs_q = stmt_q.executeQuery("select last_insert_id() from dynarap_notmapped_param limit 0, 1");
                                             rs_q.next();
                                         }
@@ -443,6 +444,7 @@ public class PartImportTask {
                                         zsetOps.removeRangeByScore("P" + currentPart.getSeq().originOf() + ".N" + qParam.getReferenceSeq(), 0, Integer.MAX_VALUE);
                                         zsetOps.removeRangeByScore("P" + currentPart.getSeq().originOf() + ".L" + qParam.getReferenceSeq(), 0, Integer.MAX_VALUE);
                                         zsetOps.removeRangeByScore("P" + currentPart.getSeq().originOf() + ".H" + qParam.getReferenceSeq(), 0, Integer.MAX_VALUE);
+                                        zsetOps.removeRangeByScore("P" + currentPart.getSeq().originOf() + ".B" + qParam.getReferenceSeq(), 0, Integer.MAX_VALUE);
 
                                         stmt_q.close();
                                     }
@@ -527,12 +529,27 @@ public class PartImportTask {
                                         ScriptEngine engine = mgr.getEngineByName("JavaScript");
                                         qVal = (Double) engine.eval(equation);
                                     } catch(Exception e) {
-                                        logger.debug("[[[[[ 동압 결과 오류... ");
+                                        logger.debug("[[[[[ 동압 결과 오류... " + equation);
                                         qVal = 0.0;
                                     }
 
                                     String rowKey = "P" + currentPart.getSeq().originOf() + ".N" + qParam.getReferenceSeq();
-                                    zsetOps.add(rowKey, julianTimeAt + ":" + qVal, rowNo);
+                                    zsetOps.add(rowKey, julianTimeAt + ":" + qVal, rowNo); // 동압 저장..
+                                    logger.debug("[[[[[ 동압 결과 저장 ... " + rowKey + " ]]]]]");
+
+                                    String insertQuery = "insert into dynarap_part_raw (" +
+                                            "partSeq,presetParamSeq,rowNo,julianTimeAt,offsetTimeAt,paramVal,paramValStr,lpf,hpf" +
+                                            ") values (" +
+                                            currentPart.getSeq().originOf() + "," +
+                                            qParam.getReferenceSeq() + "," +
+                                            rowNo + "," +
+                                            "'" + julianTimeAt + "'," +
+                                            PartService.getJulianTimeOffset(startJulianTime, julianTimeAt) + "," +
+                                            qVal + "," +
+                                            "'',0.0,0.0)";
+                                    //logger.debug("[[[[[ " + insertQuery + "]]]]]");
+
+                                    stmt.executeUpdate(insertQuery);
                                 }
 
                                 zsetOps.add("P" + currentPart.getSeq().originOf() + ".R", julianTimeAt, rowNo);
@@ -597,6 +614,8 @@ public class PartImportTask {
                             for (ParamVO param : mappedParams) {
                                 String rowKey = "P" + part.getSeq().originOf() + ".N" + param.getReferenceSeq();
 
+                                logger.debug("[[[[[ processing " + rowKey);
+
                                 listSet = zsetOps.rangeByScore(
                                         rowKey, startRowAt + rankFrom, startRowAt + rankTo);
                                 Iterator<String> iterListSet = listSet.iterator();
@@ -612,8 +631,21 @@ public class PartImportTask {
                                     pvs.add(dblVal);
                                 }
 
-                                applyFilterData(processPath, zsetOps,"lpf", "10", "0.4", "", part, param, jts, pvs, startRowAt + rankFrom);
-                                applyFilterData(processPath, zsetOps,"hpf", "10", "0.02", "high", part, param, jts, pvs, startRowAt + rankFrom);
+                                List<Double> lpfSet = applyFilterData(processPath, zsetOps,"lpf",
+                                    rawUpload.getUploadRequest().getLpfOption().getN(),
+                                    rawUpload.getUploadRequest().getLpfOption().getCutoff(),
+                                    rawUpload.getUploadRequest().getLpfOption().getBtype(),
+                                    part, param, jts, pvs, startRowAt + rankFrom);
+                                List<Double> hpfSet = applyFilterData(processPath, zsetOps,"hpf",
+                                    rawUpload.getUploadRequest().getHpfOption().getN(),
+                                    rawUpload.getUploadRequest().getHpfOption().getCutoff(),
+                                    rawUpload.getUploadRequest().getHpfOption().getBtype(),
+                                    part, param, jts, pvs, startRowAt + rankFrom);
+                                List<Double> bpfSet = applyFilterData(processPath, zsetOps,"bpf",
+                                        rawUpload.getUploadRequest().getHpfOption().getN(),
+                                        rawUpload.getUploadRequest().getHpfOption().getCutoff(),
+                                        rawUpload.getUploadRequest().getHpfOption().getBtype(),
+                                        part, param, jts, lpfSet, startRowAt + rankFrom);
                             }
 
                             part.setLpfDone(true);
@@ -668,7 +700,7 @@ public class PartImportTask {
         return resultSet;
     }
 
-    public static void applyFilterData(String processPath, ZSetOperations<String, String> zsetOps,
+    public static List<Double> applyFilterData(String processPath, ZSetOperations<String, String> zsetOps,
                                        String filterType, String n, String cutoff, String btype,
                                  PartVO part, ParamVO param,
                                  List<String> jts, List<Double> pvs, long rowNo) throws IOException, InterruptedException {
@@ -682,13 +714,15 @@ public class PartImportTask {
         bw.flush();
         bw.close();
 
+        logger.debug("[[[[[ " + fTemp.getAbsolutePath() + ", " + fTemp.exists() + " ]]]]]");
+
         if (filterType.equals("lpf")) {
-            builder.command(processPath + "lpf_filter.sh",
-                    fTemp.getAbsolutePath(), "10", "0.4");
+            builder.command(processPath + "lpf_filter.bat",
+                    fTemp.getAbsolutePath(), n, cutoff, btype == null ? "low" : btype);
         }
-        else if (filterType.equals("hpf")) {
-            builder.command(processPath + "hpf_filter.sh",
-                    fTemp.getAbsolutePath(), "10", "0.02");
+        else if (filterType.equals("hpf") || filterType.equals("bpf")) {
+            builder.command(processPath + "hpf_filter.bat",
+                    fTemp.getAbsolutePath(), n, cutoff, btype == null ? "high" : btype);
         }
 
         Process process = builder.start();
@@ -707,26 +741,42 @@ public class PartImportTask {
         }
         process.waitFor();
 
+        logger.debug("[[[[[ filterResult = " + filterResult);
+        //if (fTemp.exists()) fTemp.delete();
+
         // extract result1
         String[] splitData = null;
         if (filterResult != null && !filterResult.isEmpty())
             splitData = filterResult.split(",");
 
-        if (splitData == null || jts.size() != splitData.length) {
-            logger.debug("[[[[[ 해석 결과와 길이가 같지 않음. [" + param.getParamKey() + "]");
-            return;
+        if (splitData == null) {
+          logger.debug("[[[[[ 필터값이 없음. [" + param.getParamKey() + "]");
+          return new ArrayList<>();
         }
+        //if (splitData == null || jts.size() != splitData.length) {
+        //    logger.debug("[[[[[ 해석 결과와 길이가 같지 않음. [" + param.getParamKey() + "]");
+        //    return;
+        //}
 
         String rowKey = "P" + part.getSeq().originOf() + ".L" + param.getReferenceSeq();
         if (filterType.equals("hpf"))
             rowKey = "P" + part.getSeq().originOf() + ".H" + param.getReferenceSeq();
+        else if (filterType.equals("bpf"))
+            rowKey = "P" + part.getSeq().originOf() + ".B" + param.getReferenceSeq();
 
-        for (int i = 0; i < jts.size(); i++) {
-            zsetOps.addIfAbsent(rowKey, jts.get(i) + ":" + splitData[i], (int) (rowNo + i));
+        List<Double> resultSet = new ArrayList<>();
+        int outBound = Math.max(jts.size(), splitData.length);
+        for (int i = 0; i < outBound; i++) {
+            String splitVal = "0.0";
+            if (i < splitData.length) splitVal = splitData[i];
+            zsetOps.addIfAbsent(rowKey, jts.get(i) + ":" + splitVal, (int) (rowNo + i));
             logger.debug("[[[[[ " + rowKey + ", julianTime = " + jts.get(i) + ", rowNo = " + (rowNo + i));
+            resultSet.add(Double.parseDouble(splitVal));
         }
 
         logger.debug("[[[[[ " + filterType + " is done... " + part.getSeq().originOf());
+
+        return resultSet;
     }
 
     public static String join(List<Double> dblData, String delim) {

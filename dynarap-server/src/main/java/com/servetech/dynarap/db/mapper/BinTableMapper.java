@@ -2,6 +2,7 @@ package com.servetech.dynarap.db.mapper;
 
 import com.servetech.dynarap.db.type.CryptoField;
 import com.servetech.dynarap.vo.BinTableVO;
+import com.servetech.dynarap.vo.PartVO;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -108,6 +109,20 @@ public interface BinTableMapper {
                     "</script>"
     })
     List<BinTableVO.BinParam> selectBinTableParamList(Map<String, Object> params) throws Exception;
+
+    @Select({
+            "<script>" +
+                    "select a.* from dynarap_bin_meta a " +
+                    "where a.metaName like concat('%', #{keyword}, '%') " +
+                    "or a.seq in (" +
+                    "       select seq from dynarap_data_prop " +
+                    "       where referenceType = 'bintable' " +
+                    "       and propName in ('tags', 'Tags') " +
+                    "       and propValue like concat('%', #{keyword}, '%')) " +
+                    "order by a.metaName asc " +
+                    "</script>"
+    })
+    List<BinTableVO> selectBinTableListByKeyword(Map<String, Object> params) throws Exception;
 
     @Insert({
             "<script>" +
